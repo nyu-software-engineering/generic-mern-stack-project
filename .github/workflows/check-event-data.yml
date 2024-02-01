@@ -18,4 +18,5 @@ jobs:
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: |
+          echo "github CONTEXT:"
           echo "$GITHUB_CONTEXT"
