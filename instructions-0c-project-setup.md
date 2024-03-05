@@ -127,7 +127,7 @@ Once a particular sprint has begun, all issues representing tasks that have been
 
 ### GitHub task boards
 
-Each team must create a Task Board for each of the four Sprints following [these setup instructions](https://knowledge.kitchen/content/courses/agile-development-and-devops/scrum/github-task-boards/) (these use the "Classic" type of Task Boards available on GitHub).
+Each team must create a Task Board for each of the four Sprints following [these setup instructions](https://knowledge.kitchen/content/courses/agile-development-and-devops/scrum/github-project-management/).
 
 View a [video overview of setting up a Task Board on GitHub](https://youtu.be/Qasz5fhxIqE).
 
