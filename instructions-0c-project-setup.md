@@ -129,8 +129,6 @@ Once a particular sprint has begun, all issues representing tasks that have been
 
 Each team must create a Task Board for each of the four Sprints following [these setup instructions](https://knowledge.kitchen/content/courses/agile-development-and-devops/scrum/github-project-management/).
 
-View a [video overview of setting up a Task Board on GitHub](https://youtu.be/Qasz5fhxIqE).
-
 ### Git/GitHub workflow
 
 When in development, teams are expected to follow the [feature branch workflow](https://knowledge.kitchen/content/courses/agile-development-and-devops/slides/feature-branch-workflow/), where all changes are made in branches, peer reviews are done via pull requests, and approved changes are merged into the `main` branch, which is always in a deployable state.
