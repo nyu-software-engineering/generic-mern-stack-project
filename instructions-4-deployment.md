@@ -4,7 +4,7 @@ Each team must deploy their completed software applications to a [Digital Ocean 
 
 ## Specific requirements
 
-- Credentials for logging into databases, APIs, or other remote services, must never be shared in version control. They are usually stored in private settings files, such as `.env` or similar, which are not included in the version control repository.
+- Credentials or URIs for logging into databases, APIs, or other remote services, must never be shared in version control. They are usually stored in private settings files, such as `.env` or similar, which are not included in the version control repository.
 - Each project must deploy their application front-and-back-ends using Digital Ocean. Use the Digital Ocean referral link shared by the instructor, which should grant you far more than enough credits to use Digital Ocean without cost.
 - Submit a link to your front-end code live on the web, and include that link on your `README.md` document.
 
@@ -24,3 +24,5 @@ Individuals will be graded, in part, according to...
 - proper adherence to the [Feature Branch git workflow](https://knowledge.kitchen/content/courses/agile-development-and-devops/slides/feature-branch-workflow/)
 - the [proper setup and maintenance of a GitHub repository](./instructions-0c-project-setup.md)
 - the quality of the work as a whole
+
+Any `.env` files necessary for the functioning of the project must be submitted to admins/managers via the team's messenger channel.

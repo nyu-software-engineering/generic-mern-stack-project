@@ -18,6 +18,7 @@ The following requirements outline what must be, must not be, and may be done du
 - Any front-end dynamic functionality, such as buttons that change something on the screen when clicked, or search fields that filter results as they are typed into, must be implemented in the front-end.
 - If your app will eventually have user registration and login functionality, all front-end screens to support this must be created, although they can be non-functional for now.
 - Instructions on how to set up and run the project must be included in the `README.md` file in version control. It must be possible for anybody to follow the instructions on the `README.md` to build and run the entire project on their local machines.
+- Credentials or URIs for logging into databases, APIs, or other remote services, must never be shared in version control. They are usually stored in private settings files, such as `.env` or similar, which are not included in the version control repository.
 
 ### May...
 
@@ -40,3 +41,5 @@ Individuals will be graded, in part, according to...
 - proper adherence to the [Feature Branch git workflow](https://knowledge.kitchen/content/courses/agile-development-and-devops/slides/feature-branch-workflow/)
 - the [proper setup and maintenance of a GitHub repository](./instructions-0c-project-setup.md)
 - the quality of the work as a whole
+
+Any `.env` files necessary for the functioning of the project must be submitted to admins/managers via the team's messenger channel.
