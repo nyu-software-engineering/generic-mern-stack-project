@@ -18,7 +18,7 @@ Discord is each team's primary communication tool. Each member's communications 
 
 Each team **must have at least one Discord channel** where the professor, and any course assistants, graders, and tutors are also invited to be members:
 
-Channel names must be short and consistent. For example, if a team is named `octopus`, their main channel should be called `team-octopus`
+Channel names must be short and consistent. For example, if a team is named `octopus`, their main channel should be called `octopus`.
 
 - use this channel for general team communication
 - individual participation in this and other channels may be used towards each member's grade
