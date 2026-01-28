@@ -131,7 +131,7 @@ Each team must create a Task Board for each of the four Sprints following [these
 
 ### Git/GitHub workflow
 
-When in development, teams are expected to follow the [feature branch workflow](https://knowledge.kitchen/content/courses/agile-development-and-devops/slides/feature-branch-workflow/), where all changes are made in branches, peer reviews are done via pull requests, and approved changes are merged into the `main` branch, which is always in a deployable state.
+When in development, teams are expected to follow the [feature branch workflow](https://knowledge.kitchen/content/courses/agile-development-and-devops/slides/feature-branch-workflow/), where all changes are made in branches, peer reviews are done via pull requests, and approved changes are merged into the `main`/`master` branch, which is always in a deployable state.
 
 Team members must make these feature branches in the shared team repository, not in a fork or other copy of the repository.
 
