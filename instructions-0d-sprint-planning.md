@@ -11,11 +11,11 @@ Each team will hold a [Sprint Planning session](https://knowledge.kitchen/conten
 Each User Story added to the Sprint Backlog must...
 
 - follow the basic requirements for User Stories
-- be assigned the `Sprint N` Milestone, where `N` is the number of the current sprint, in GitHub's Issue tracker
+- be assigned the [`Sprint N` Label](./instructions-0c-project-setup#github-issue-milestones), where `N` is the number of the current sprint, in GitHub's Issue tracker
 
 User stories may optionally also...
 
-- include [Acceptance Criteria](https://knowledge.kitchen/content/courses/agile-development-and-devops/slides/scrum/#61) included in it [as a checklist](GitHub_for_team_collaboration#Creating_a_new_issue)
+- include [Acceptance Criteria](https://knowledge.kitchen/content/courses/agile-development-and-devops/slides/scrum/#61) included in it [as a checklist](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/about-tasklists#creating-tasklists)
 - include an Estimation of Effort, which teams calculate following the Planning Poker effort estimation processes
 
 ### Breaking User Stories into Tasks
@@ -29,7 +29,7 @@ Tasks should typically be doable by, at most, one person in one day. But in a cl
 Each task must...
 
 - be made its own Issue in GitHub's Issue tracker
-- be assigned the '`Sprint N`' milestone, where `N` is the number of the current sprint.
+- be assigned the '`Sprint N`' label, where `N` is the number of the current sprint.
 - be labeled with the '`task`' label to differentiate it within GitHub's Issue tracker from '`user story`' Issues
 - include in its initial description the Issue number of the User Story from which it was derived, e.g. `Related to user story #22`
 
@@ -39,7 +39,7 @@ This initial product backlog must include '`spikes`' for investigating which tec
 
 - These spikes are highest priority and must be completed as soon as possible during the Sprint.
 
-Spikes must be given the '`spike`' label and the '`Sprint N`' milestone, where `N` is the number of the current sprint, in GitHub's issue tracker
+Spikes must be given the '`spike`' label and the '`Sprint N`' label, where `N` is the number of the current sprint, in GitHub's issue tracker
 
 ### Planning poker cards
 
@@ -49,7 +49,7 @@ If a team chooses to go with the Planning Poker estimation method, the team must
 
 - it's ok to design your own cards if you have visually or conceptually creative team members
 - it is not ok to use Planning Poker software in place of physical cards - doing so goes against the raison d'être of Scrum
-- create a Spike for this task in GitHub's Issue tracker, by creating an Issue with the labels, 'spike' and the milestone 'Sprint N', where N is the number of the current sprint.
+- create a Spike for this task in GitHub's Issue tracker, by creating an Issue with the labels, 'spike' and the label 'Sprint N', where N is the number of the current sprint.
 - assign this GitHub issue to one of the team members
 
 ### Setting up the task board

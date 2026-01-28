@@ -98,7 +98,7 @@ Use [this example .gitignore file for Node.js-based web apps](https://gist.githu
 
 ### GitHub Issue labels
 
-Each team must create a set of **labels** for using within GitHub's Issues tracker. Labels allow you to tag an issue in a particular category or context for easy filtering later.
+Each team must create a set of [Labels](https://docs.github.com/en/issues/using-labels-and-milestones-to-track-work/managing-labels) for using within GitHub's Issues tracker. Labels allow you to tag an issue in a particular category or context for easy filtering later.
 
 Begin by creating the following labels. Once you begin development, every Issue in GitHub's Issues tracker must be assigned one of these labels:
 
@@ -108,9 +108,13 @@ Begin by creating the following labels. Once you begin development, every Issue 
 
 Feel free to create other labels that are useful to your team.
 
-### GitHub Issue milestones
+### GitHub Issue Milestones
 
-Each team must have a set of Milestones to represent each Sprint within GitHub's Issues tracker:
+**The problem with GitHub's Milestones**: GitHub's project management tools include "[Milestones](https://docs.github.com/en/issues/using-labels-and-milestones-to-track-work/about-milestones)", which are tags that can be associated with any Issue. For example, you could use this to create a "`Sprint 1`" Milestone and mark User Stories that you intend to work on during Sprint 1 with this milestone. In GitHub, only one Milestone can be associated with any Issue. But we will often start work on a User Story during one Sprint but continue working on it in the next. So, we would need to mark that User Story as being related to multiple Sprints. **GitHub's Milestones feature doesn't work for us**.
+
+**The solution**: Instead, use GitHub's Labels feature to allow associating any given User Stories one or more Sprints, as needed. You can add as many Labels to a given Issue as you wish.
+
+**What to do**: Each team must have a set of Labels to represent each Sprint within GitHub's Issues tracker:
 
 - `Sprint 0`
 - `Sprint 1`
@@ -118,12 +122,7 @@ Each team must have a set of Milestones to represent each Sprint within GitHub's
 - `Sprint 3`
 - `Sprint 4`
 
-What to include in each Milestone's settings:
-
-- a description of the big picture idea of what the Sprint is aiming to achieve
-- the due date for the Sprint, as indicated by the due date of the Stakeholder Demos on the course schedule
-
-Once a particular sprint has begun, all issues representing tasks that have been decided to be addressed within that sprint must be assigned to the proper Milestone representing that sprint.
+Once a particular Sprint has begun, all Issues representing User Stories, Tasks, or Spikes that have been decided to be addressed within that Sprint must be assigned to the proper Label representing that Sprint.
 
 ### GitHub task boards
 
