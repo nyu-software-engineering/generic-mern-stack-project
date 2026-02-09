@@ -22,9 +22,10 @@ Each team must have completed and [demo'd](https://knowledge.kitchen/content/cou
 
 Individuals will be graded, in part, according to...
 
-- individual code contributions, as visible through [git logs](https://github.com/bloombar/git-developer-contribution-analysis) - make sure you commit your own work!
+- individual code contributions, as visible through `git log` - it is your responsibility to make sure you commit your own work using your own git/GitHub accounts with the [correct settings](https://knowledge.kitchen/content/courses/software-engineering/slides/git-and-github/#104).
 - proper adherence to the [Feature Branch git workflow](https://knowledge.kitchen/content/courses/agile-development-and-devops/slides/feature-branch-workflow/)
-- the [proper setup and maintenance of a GitHub repository](./instructions-0c-project-setup.md)
-- the quality of the work as a whole
+- the [proper setup and maintenance of a GitHub repository](./instructions-0c-project-setup.md) that tracks all work
+- the [proper coding conventions](https://knowledge.kitchen/content/courses/agile-development-and-devops/conventions/)
+- the quality of the work as a whole, given the number of people on the team
 
 Any `.env` files necessary for the functioning of the project must be submitted to admins/managers via the team's messenger channel.
