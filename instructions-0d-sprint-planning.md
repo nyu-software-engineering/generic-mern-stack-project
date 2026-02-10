@@ -1,5 +1,7 @@
 # Sprint Planning
 
+Instructions for **Sprint 0**, **Part D** of the mobile web app software development project.
+
 Scrum follows a specific process by which teams plan the work that will be done in a given sprint.
 
 ## Creating the Sprint Backlog

@@ -1,5 +1,7 @@
 # Front-End Development
 
+Instructions for **Sprint 1** of the mobile web app software development project.
+
 Each team must have completed and [demo'd](https://knowledge.kitchen/content/courses/agile-development-and-devops/slides/scrum/#91) the working front-end of their group project by the end of the corresponding Sprint.
 
 ## Technical requirements

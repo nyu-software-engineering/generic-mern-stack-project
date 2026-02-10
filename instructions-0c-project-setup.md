@@ -1,5 +1,7 @@
 # Project Kickoff
 
+Instructions for **Sprint 0**, **Part C** of the mobile web app software development project.
+
 Every individual and group must complete the following kickoff process to have the tools setup to allow them to collaborate effectively on team projects.
 
 ## Assign roles

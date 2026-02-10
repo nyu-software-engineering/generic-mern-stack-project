@@ -1,5 +1,7 @@
 # Database Integration
 
+Instructions for **Sprint 3** of the mobile web app software development project.
+
 Each team must have completed and [demo'd](https://knowledge.kitchen/content/courses/agile-development-and-devops/scrum/stakeholder-demos/) the integration of a database into their software application projects by the end of the corresponding Sprint.
 
 ## Technical requirements

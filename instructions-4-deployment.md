@@ -1,5 +1,7 @@
 # Deployment
 
+Instructions for **Sprint 4** of the mobile web app software development project.
+
 Each team must deploy their completed software applications to a [Digital Ocean Droplet](https://www.digitalocean.com/products/droplets/).
 
 ## Specific requirements

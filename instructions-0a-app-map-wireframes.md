@@ -1,5 +1,7 @@
 # App Map & Wireframes
 
+Instructions for **Sprint 0**, **Part A** of the mobile web app software development project.
+
 Create an **app map** and a complete set of **wireframe diagrams** for the [Minimum Viable Product](https://en.wikipedia.org/wiki/Minimum_viable_product) (MVP) of your application.
 
 ## Software

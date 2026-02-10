@@ -1,5 +1,7 @@
 # Prototyping
 
+Instructions for **Sprint 0**, **Part B** of the mobile web app software development project.
+
 Create a clickable/tappable mobile prototype for the Minimum Viable Product (MVP) of your application. Use wireframe diagrams as the screens in the prototype.
 
 ## Software
