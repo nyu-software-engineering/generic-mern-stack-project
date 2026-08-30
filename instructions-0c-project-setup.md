@@ -12,13 +12,13 @@ Each team will decide, using whatever decision-making process they prefer, on wh
 - these roles must shift every Sprint, so each team member should fill each role at least once.
 - each team must announce which team members are **Scrum Master** and **Product Owner** at the start of each Sprint
 
-## Set up Discord channels
+## Set up team communication channels
 
-Discord is each team's primary communication tool. Each member's communications and contributions within Discord are tracked and may be used towards grading.
+The messaging app specified by your instructor is each team's primary communication tool. Each member's communications and contributions within it are tracked and may be used towards grading.
 
 ### Public communications channels
 
-Each team **must have at least one Discord channel** where the professor, and any course assistants, graders, and tutors are also invited to be members:
+Each team **must have at least one shared channel** in the course messaging app where the professor, and any course assistants, graders, and tutors are also invited to be members:
 
 Channel names must be short and consistent. For example, if a team is named `octopus`, their main channel should be called `octopus`.
 
@@ -69,7 +69,7 @@ To create it, exactly one member of the team - decide among yourselves who - cli
 
 Every other team member then clones that one shared repository. Nobody else forks it, and nobody forks a teammate's copy - doing so would leave the team with several separate projects instead of the single shared one that everyone contributes to.
 
-Post the web address of the team's repository in the team's Discord channel once it exists.
+Share the web address of the team's repository using the messaging app specified by your instructor, once it exists.
 
 There are several key files that all repositories must have properly set up.
 
