@@ -63,7 +63,15 @@ Each team member must understand that their contributions are only visible if th
 
 ### GitHub repository
 
-GitHub repositories have been created for each team and are in the control of the team. There are several key files that all repositories must have properly set up.
+Each team has **one** GitHub repository, shared by the whole team, and it is in the control of the team.
+
+To create it, exactly one member of the team - decide among yourselves who - clicks the `Fork` button on the instructor's project repository to make a copy of it in their own GitHub account. That member then gives everyone else access to it: in the new repository's `Settings` tab, under `Collaborators and teams`, add each teammate and the course admins by their GitHub usernames.
+
+Every other team member then clones that one shared repository. Nobody else forks it, and nobody forks a teammate's copy - doing so would leave the team with several separate projects instead of the single shared one that everyone contributes to.
+
+Post the web address of the team's repository in the team's Discord channel once it exists.
+
+There are several key files that all repositories must have properly set up.
 
 #### README.md
 
@@ -134,7 +142,9 @@ Each team must create a Task Board for each of the four Sprints following [these
 
 When in development, teams are expected to follow the [feature branch workflow](https://knowledge.kitchen/content/courses/agile-development-and-devops/slides/feature-branch-workflow/), where all changes are made in branches, peer reviews are done via pull requests, and approved changes are merged into the `main`/`master` branch, which is always in a deployable state.
 
-Team members must make these feature branches in the shared team repository, not in a fork or other copy of the repository.
+Team members must make these feature branches in the shared team repository itself, not in further forks or other copies of it. Only the one team repository exists, and everyone works within it.
+
+Note that because the team's repository is itself a fork of the instructor's repository, GitHub will set the `base repository` of any new pull request to the instructor's repository rather than to your team's. Change it back to your own team's repository when you open a pull request, and check that the branch beside it is your team's `main`/`master` branch. Otherwise you are asking the instructor to merge your work, and your teammates will not be able to review or merge it.
 
 ## Prepare to git to work
 
