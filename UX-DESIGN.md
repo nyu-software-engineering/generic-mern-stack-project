@@ -21,7 +21,7 @@ Editable SVG files and PNG exports for the added screens are in [ux-design](ux-d
 ## Work Split
 
 - **Sufyan Waryah** ([sufyanw](https://github.com/sufyanw)): Created wireframes for Landing Page, Create Account with email, age, and password-mismatch errors, Create Group with missing-name,  Invite Friends with the copied-link notification, My Bets with prediction statuses, input the outcome (Yes/No), which includes abort + confirmation. 
-- **Alisha Zaman** ([az2924](https://github.com/az2924)): Created wireframes for My Groups, Group: Resolved Predictions, Prediction Detail (Bettor View, Not Enough Coins, Already Bet, Creator View), Create Prediction (and Errors), and Profile; Created the app map for those screens; Created a template in `UX-DESIGN.md` for everyone to utilize
+- **Alisha Zaman** ([az2924](https://github.com/az2924)): Created wireframes for My Groups, Group: Resolved Predictions, Prediction Detail (Bettor View, Not Enough Coins, Already Bet, Creator View), Create Prediction (and Errors), and Profile; Created the app map for those screens; Created the initial template in `UX-DESIGN.md` for everyone to utilize
 - **Vihaan Agarwal** ([VihaanAgarwal](https://github.com/VihaanAgarwal)): Created wireframes for Login, Join Group, Open and All Predictions, Group Members, Leave Group confirmation, My Groups after leaving, Edit Prediction, and Final Outcome. Connected prototype flows for stories #15–26 using the existing team screens.
 - **Nihal Sundari** ([NISUN05](https://github.com/NISUN05)): Created wireframes for Leaderboard; Activity (Bets View, Predictions View); and Prediction Post-Bet Interactions (Confirm Bet Modal, Delete Confirmation Modal, Comment Draft & Posted Thread, Bettor Breakdown for Yes/No Bettors); Created the app map for those screens.
 
@@ -93,7 +93,7 @@ Shows the link copied to clipboard notification after the copy button is pressed
 
 Lists the user's groups after they log in.
 
-<a href="ux-design/my-groups-returning-user.png"><img src="ux-design/my-groups-returning-user.png" width="375"></a>
+<a href="ux-design/Open-On-Groups-For-Returning-User.png"><img src="ux-design/Open-On-Groups-For-Returning-User.png" width="375"></a>
 
 #### Join Group
 
@@ -117,7 +117,7 @@ Lists predictions that are still open for bets. Tapping a prediction opens its d
 
 Shows a group's finished predictions and their results. The badge shows whether the user won coins, lost coins, or didn't bet.
 
-<a href="ux-design/resolved-groups.png"><img src="ux-design/resolved-groups.png" width="375"></a>
+<a href="ux-design/Resolved-Groups.png"><img src="ux-design/Resolved-Groups.png" width="375"></a>
 
 #### Group Members
 
@@ -150,37 +150,37 @@ Lists predictions the user has joined or created, shows if the prediction is eit
 
 Lets a group member pick an outcome and place a bet. Each outcome shows how many coins have been bet on it.
 
-<a href="ux-design/prediction-detail-bettor.png"><img src="ux-design/prediction-detail-bettor.png" width="375"></a>
+<a href="ux-design/Placed-Prediction.png"><img src="ux-design/Placed-Prediction.png" width="375"></a>
 
 #### Prediction Detail: Not Enough Coins
 
 Shown when the user enters more coins than they have. Place Bet stays disabled until the amount is valid.
 
-<a href="ux-design/prediction-detail-insufficient-coins.png"><img src="ux-design/prediction-detail-insufficient-coins.png" width="375"></a>
+<a href="ux-design/Cannot-Bet-More-Than-Your-Available-Coins.png"><img src="ux-design/Cannot-Bet-More-Than-Your-Available-Coins.png" width="375"></a>
 
 #### Prediction Detail: Already Bet
 
 Shown after the user has bet. Users can only bet once per prediction, so the bet form is replaced with their bet.
 
-<a href="ux-design/prediction-details.png"><img src="ux-design/prediction-details.png" width="375"></a>
+<a href="ux-design/Already-Bet-On-Prediction.png"><img src="ux-design/Already-Bet-On-Prediction.png" width="375"></a>
 
 #### Prediction Detail: Creator View
 
 Creators can't bet on their own predictions. Edit and Delete Prediction only appear until someone places a bet.
 
-<a href="ux-design/prediction-detail-creator.png"><img src="ux-design/prediction-detail-creator.png" width="375"></a>
+<a href="ux-design/Cannot-Bet-On-Your-Prediction.png"><img src="ux-design/Cannot-Bet-On-Your-Prediction.png" width="375"></a>
 
 #### Create Prediction
 
 Form for posting a new prediction with a question, at least two outcomes, and a betting deadline. Bets close at the deadline.
 
-<a href="ux-design/create-prediction.png"><img src="ux-design/create-prediction.png" width="375"></a>
+<a href="ux-design/Create-Prediction.png"><img src="ux-design/Create-Prediction.png" width="375"></a>
 
 #### Create Prediction: Errors
 
 Shown when Post Prediction is tapped without a question or at least two outcomes.
 
-<a href="ux-design/create-prediction-requirements.png"><img src="ux-design/create-prediction-requirements.png" width="375"></a>
+<a href="ux-design/Cannot-Bet-After-Prediction-Deadline.png"><img src="ux-design/Cannot-Bet-After-Prediction-Deadline.png" width="375"></a>
 
 #### Edit Prediction
 
@@ -286,7 +286,7 @@ Lets a returning user log in and open My Groups.
 
 Lets the user change the display name friends see in groups and on the leaderboard, or log out.
 
-<a href="ux-design/change-set-display-name.png"><img src="ux-design/change-set-display-name.png" width="375"></a>
+<a href="ux-design/Change-Profile-Display-Name.png"><img src="ux-design/Change-Profile-Display-Name.png" width="375"></a>
 
 ---
 
