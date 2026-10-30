@@ -1,0 +1,32 @@
+
+.app {
+  min-height: 100vh;
+}
+
+header {
+  background-color: #2563eb;
+  color: white;
+  padding: 20px 40px;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 24px;
+}
+
+main {
+  max-width: 1000px;
+  margin: 60px auto;
+  padding: 20px;
+  text-align: center;
+}
+
+main h2 {
+  font-size: 32px;
+  margin-bottom: 15px;
+}
+
+main p {
+  color: #666;
+  font-size: 18px;
+}
