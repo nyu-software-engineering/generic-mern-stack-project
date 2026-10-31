@@ -1,1 +1,64 @@
 @import "tailwindcss";
+
+* {
+  /* remove default styling from each element for a consistent starting point */
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  /* Typography */
+  --font-petrona: "Petrona", serif;
+
+  /* Petrona Heading */
+  --petrona-heading-weight: 700;
+  --petrona-heading-size: clamp(1.75rem, 4vw, 2.5rem);
+  --petrona-heading-height: 133%;
+  --petrona-heading-spacing: -0.04rem;
+
+  /* Petrona Subheading */
+  --petrona-subheading-weight: 500;
+  --petrona-subheading-size: clamp(1.5rem, 3vw, 2rem);
+  --petrona-subheading-height: 133%;
+
+  /* Petrona Feature Copy */
+  --petrona-feature-weight: 400;
+  --petrona-feature-size: clamp(1.25rem, 2vw, 1.5rem);
+  --petrona-feature-height: 120%;
+
+  /* Petrona Body Copy */
+  --petrona-body-weight: 400;
+  --petrona-body-size: clamp(1rem, 1.5vw, 1.25rem);
+  --petrona-body-height: 120%;
+
+  /* Colors */
+  --nyu-indigo: #30284A;
+  --parchment: #EEEBDA;
+  --soft-black: #272727;
+  --paper: #F6F6F6;
+}
+
+.heading {
+  font: var(--petrona-heading-weight) var(--petrona-heading-size) / 
+        var(--petrona-heading-height) var(--font-petrona);
+  letter-spacing: var(--petrona-heading-spacing);
+}
+
+.subheading {
+  font: var(--petrona-subheading-weight) var(--petrona-subheading-size) / 
+        var(--petrona-subheading-height) var(--font-petrona);
+  letter-spacing: var(--petrona-subheading-spacing);
+}
+
+.feature-copy {
+  font: var(--petrona-feature-weight) var(--petrona-feature-size) / 
+        var(--petrona-feature-height) var(--font-petrona);
+  letter-spacing: var(--petrona-feature-spacing);
+}
+
+.body-copy {
+  font: var(--petrona-body-weight) var(--petrona-body-size) / 
+        var(--petrona-body-height) var(--font-petrona);
+  letter-spacing: var(--petrona-body-spacing);
+}
