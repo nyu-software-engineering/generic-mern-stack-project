@@ -55,7 +55,7 @@ export default function AddApplication() {
     }
   }
 
-    // Returns a function that updates one field of one recruiter, e.g. updateRecruiter(0, 'name')
+  // Returns a function that updates one field of one recruiter, e.g. updateRecruiter(0, 'name')
   function updateRecruiter(index, field) {
     return (value) => {
       const recruiters = form.recruiters.map((recruiter, i) =>
@@ -68,6 +68,11 @@ export default function AddApplication() {
   // function for adding a recruiter contact info
   function addRecruiter() {
     setForm({ ...form, recruiters: [...form.recruiters, { name: '', email: '', phone: '' }] })
+  }
+
+  // function that removes a recruiter contact
+  function removeRecruiter(index) {
+    setForm({ ...form, recruiters: form.recruiters.filter((recruiter, i) => i !== index) })
   }
 
   async function handleSave() {
@@ -154,6 +159,14 @@ export default function AddApplication() {
         <FormSection title="Recruiter contact">
           {form.recruiters.map((recruiter, index) => (
             <div className="add-application__contact" key={index}>
+              {index > 0 && (
+                <div className="add-application__contact-header">
+                  <span className="add-application__contact-title">Contact {index + 1}</span>
+                  <Button variant="danger" size="sm" icon="trash" onClick={() => removeRecruiter(index)}>
+                    Remove
+                  </Button>
+                </div>
+              )}
               <TextField
                 label="Name"
                 placeholder="Recruiter name"

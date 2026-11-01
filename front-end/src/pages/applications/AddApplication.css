@@ -22,3 +22,17 @@
 .add-application__add-contact {
   align-self: flex-start;
 }
+
+
+/* "Contact 2" label with the Remove button next to it */
+.add-application__contact-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.add-application__contact-title {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-muted);
+}
