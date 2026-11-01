@@ -65,6 +65,11 @@ export default function AddApplication() {
     }
   }
 
+  // function for adding a recruiter contact info
+  function addRecruiter() {
+    setForm({ ...form, recruiters: [...form.recruiters, { name: '', email: '', phone: '' }] })
+  }
+
   async function handleSave() {
     setSubmitted(true)
     if (!hasNoErrors(errors)) return
@@ -171,6 +176,16 @@ export default function AddApplication() {
               />
             </div>
           ))}
+
+          <Button
+            variant="ghost"
+            size="sm"
+            icon="plus"
+            className="add-application__add-contact"
+            onClick={addRecruiter}
+          >
+            Add another contact
+          </Button>
         </FormSection>
 
         <FormSection title="Notes">
