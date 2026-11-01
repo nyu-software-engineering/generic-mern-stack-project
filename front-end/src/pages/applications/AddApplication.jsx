@@ -13,7 +13,7 @@ import {
 } from '../../components'
 import { APPLICATION_STATUSES, JOB_TYPES } from '../../constants'
 import { todayString } from '../../utils/format'
-import { hasNoErrors, validateRequired } from '../../utils/validation'
+import { hasNoErrors, validateEmail, validateRequired } from '../../utils/validation'
 import './AddApplication.css'
 
 /**
@@ -45,6 +45,12 @@ export default function AddApplication() {
     company: validateRequired(form.company, 'Company'),
     position: validateRequired(form.position, 'Position'),
   }
+
+  // A recruiter's email is optional, but if one is typed it must be actual email
+  const recruiterEmailErrors = form.recruiters.map((recruiter) =>
+    recruiter.email ? validateEmail(recruiter.email) : '',
+  )
+
   // Only show errors after the user has tried to save once
   const shownErrors = submitted ? errors : {}
 
@@ -77,12 +83,17 @@ export default function AddApplication() {
 
   async function handleSave() {
     setSubmitted(true)
-    if (!hasNoErrors(errors)) return
+    if (!hasNoErrors(errors) || !hasNoErrors(recruiterEmailErrors)) return
+
+    // Don't save recruiter contacts that were left completely empty
+    const recruiters = form.recruiters.filter(
+      (recruiter) => recruiter.name.trim() || recruiter.email.trim() || recruiter.phone.trim(),
+    )
 
     setSaving(true)
     setSaveError('')
     try {
-      await api.createApplication(form)
+      await api.createApplication({ ...form, recruiters })
       setSaved(true)
     } catch (err) {
       setSaveError(err.message)
@@ -179,6 +190,7 @@ export default function AddApplication() {
                 placeholder="name@company.com"
                 value={recruiter.email}
                 onChange={updateRecruiter(index, 'email')}
+                error={submitted ? recruiterEmailErrors[index] : ''}
               />
               <TextField
                 label="Phone"
