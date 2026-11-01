@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { FormSection, Page, SegmentedControl, SelectField, TextField } from '../../components'
+import { FormSection, Page, SegmentedControl, SelectField, TextArea, TextField } from '../../components'
 import { APPLICATION_STATUSES, JOB_TYPES } from '../../constants'
 import { todayString } from '../../utils/format'
 import './AddApplication.css'
@@ -18,6 +18,7 @@ export default function AddApplication() {
     jobType: 'internship',
     location: '',
     jobPostingUrl: '',
+    notes: '',
   })
 
   // Returns a function that updates one field of the form, e.g. update('company')
@@ -79,6 +80,15 @@ export default function AddApplication() {
             placeholder="https://"
             value={form.jobPostingUrl}
             onChange={update('jobPostingUrl')}
+          />
+        </FormSection>
+        
+        <FormSection title="Notes">
+          <TextArea
+            label="Notes"
+            placeholder="Any other notes"
+            value={form.notes}
+            onChange={update('notes')}
           />
         </FormSection>
       </div>
