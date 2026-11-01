@@ -1,25 +1,16 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { Link } from "react-router-dom";
-import Header from "./components/Header";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
+import { useState } from 'react'
+import heroImg from './assets/hero.png'
+import reactLogo from './assets/react.svg'
+import viteLogo from './assets/vite.svg'
+import CreateHousehold from './pages/create_household/CreateHousehold'
+import './App.css'
 
 function App() {
+  const [count, setCount] = useState(0)
+
   return (
-    <Router>
-      <Header />
-
-      <nav>
-        <Link to="/">Login</Link>
-        <Link to="/register">Register</Link>
-      </nav>
-
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-      </Routes>
-    </Router>
+    <CreateHousehold/>
   );
 }
 
-export default App;
+export default App
