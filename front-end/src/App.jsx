@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import ResultsPage from "./pages/ResultsPage";
 import HomePage from "./pages/HomePage";
 import Saved from "./pages/Saved";
+import EditSaved from "./pages/EditSaved";
 
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/results" element={<ResultsPage />} />
         <Route path="/saved" element={<Saved />} />
+        <Route path="/editsaved" element={<EditSaved />} />
       </Routes>
       </div>
 
