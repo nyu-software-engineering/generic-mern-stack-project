@@ -2,6 +2,7 @@
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import ResultsPage from "./pages/ResultsPage";
 import HomePage from "./pages/HomePage";
+import Saved from "./pages/Saved";
 
 
 function App() {
@@ -12,18 +13,19 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/results" element={<ResultsPage />} />
+        <Route path="/saved" element={<Saved />} />
       </Routes>
-    </div>
+      </div>
 
 
 
 
       {/* Parts below is for bottom navigation, also links are to be filled*/}
-      <section className="bottom-nav">
+      <nav className="bottom-nav">
         <Link to="/">home</Link>
         <Link to="/">search</Link>
-        <Link to="/">saved</Link>
-      </section>
+        <Link to="/saved">saved</Link>
+      </nav>
       </div>
     </BrowserRouter>
   );
