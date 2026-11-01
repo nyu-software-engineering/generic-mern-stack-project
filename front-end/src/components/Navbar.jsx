@@ -1,5 +1,9 @@
 function Navbar() {
-  return <div>Navbar</div>
+  return (
+  <div>
+    <h3>Dormshare</h3>
+  </div>
+  )
 }
 
 export default Navbar

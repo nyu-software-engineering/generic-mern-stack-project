@@ -1,7 +1,8 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 import Navbar from './components/Navbar'
 
+import Welcome from './pages/auth/Welcome'
 import Login from './pages/auth/Login'
 import Signup from './pages/auth/Signup'
 import Profile from './pages/auth/Profile'
@@ -15,6 +16,8 @@ import ItemDetails from './pages/browse/ItemDetails'
 import RenterDashboard from './pages/renterDashboard/RenterDashboard'
 
 import Booking from './pages/booking/Booking'
+import BookingDetails from './pages/booking/BookingDetails'
+import BookingRequests from './pages/booking/BookingRequests'
 import Extensions from './pages/booking/Extensions'
 import Cancellation from './pages/booking/Cancellation'
 
@@ -26,25 +29,17 @@ import QuickBorrow from './pages/quickBorrow/QuickBorrow'
 import Report from './pages/reporting/Report'
 
 
-function HealthCheck() {
-    return (
-        <>
-        <h3>Health Check: ok</h3>
-        </>
-    )
-}
-
 function App() {
   return (
     <BrowserRouter>
       <Navbar />
       <Routes>
-        <Route path="/" element={<HealthCheck />} />
+        <Route path="/" element={<Welcome />} />
 
         {/* Auth*/}
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route path="/setup-profile" element={<Profile />} />
 
         {/* Listings & owner dashboard*/}
         <Route path="/listings" element={<MyListings />} />
@@ -57,9 +52,11 @@ function App() {
         <Route path="/renter-dashboard" element={<RenterDashboard />} />
 
         {/* Booking*/}
-        <Route path="/booking/:listingId" element={<Booking />} />
-        <Route path="/booking/:rentalId/extension" element={<Extensions />} />
-        <Route path="/booking/:rentalId/cancel" element={<Cancellation />} />
+        <Route path="/listings/:listingId/request" element={<Booking />} />
+        <Route path="/booking-requests" element={<BookingRequests />} />
+        <Route path="/bookings/:bookingId" element={<BookingDetails />} />
+        <Route path="/bookings/:bookingId/extension" element={<Extensions />} />
+        <Route path="/bookings/:bookingId/cancel" element={<Cancellation />} />
 
         {/* Chat & requests*/}
         <Route path="/inbox" element={<Inbox />} />
@@ -69,8 +66,6 @@ function App() {
         <Route path="/handoff/:rentalId" element={<PickupReturn />} />
         <Route path="/quick-borrow" element={<QuickBorrow />} />
         <Route path="/report" element={<Report />} />
-
-        <Route path="*" element={<Navigate to="/browse" replace />} />
       </Routes>
     </BrowserRouter>
   )
