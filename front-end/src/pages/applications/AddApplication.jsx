@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { api } from '../../api'
 import {
   Button,
+  FileUpload,
   FormSection,
   Page,
   SegmentedControl,
@@ -34,6 +35,7 @@ export default function AddApplication() {
     jobPostingUrl: '',
     notes: '',
     recruiters: [{ name: '', email: '', phone: '' }],
+    resume: null,
   })
   const [submitted, setSubmitted] = useState(false) // true after the first tap on Save
   const [saving, setSaving] = useState(false) // true while the application is being saved
@@ -79,6 +81,11 @@ export default function AddApplication() {
   // function that removes a recruiter contact
   function removeRecruiter(index) {
     setForm({ ...form, recruiters: form.recruiters.filter((recruiter, i) => i !== index) })
+  }
+
+  // Called with the file the user picked
+  function handleResumeChosen(file) {
+    setForm({ ...form, resume: { fileName: file.name, uploadedAt: todayString() } })
   }
 
   async function handleSave() {
@@ -212,7 +219,14 @@ export default function AddApplication() {
             Add another contact
           </Button>
         </FormSection>
-
+        
+        <FormSection title="Resume used">
+          <FileUpload
+            label="Upload resume (PDF)"
+            fileName={form.resume?.fileName}
+            onChange={handleResumeChosen}
+          />
+        </FormSection>
         <FormSection title="Notes">
           <TextArea
             label="Notes"
