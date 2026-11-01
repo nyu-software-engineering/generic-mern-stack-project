@@ -1,5 +1,16 @@
 import { useState } from 'react'
-import { Button, FormSection, Page, SegmentedControl, SelectField, TextArea, TextField } from '../../components'
+import { useNavigate } from 'react-router-dom'
+import { api } from '../../api'
+import {
+  Button,
+  FormSection,
+  Page,
+  SegmentedControl,
+  SelectField,
+  SuccessDialog,
+  TextArea,
+  TextField,
+} from '../../components'
 import { APPLICATION_STATUSES, JOB_TYPES } from '../../constants'
 import { todayString } from '../../utils/format'
 import { hasNoErrors, validateRequired } from '../../utils/validation'
@@ -10,6 +21,8 @@ import './AddApplication.css'
  * Written By: Bertin · Issues: #1, #17, #49, #54
  */
 export default function AddApplication() {
+  const navigate = useNavigate()
+
   // Everything the user types into the form, kept in one object
   const [form, setForm] = useState({
     company: '',
@@ -21,8 +34,10 @@ export default function AddApplication() {
     jobPostingUrl: '',
     notes: '',
   })
-
   const [submitted, setSubmitted] = useState(false) // true after the first tap on Save
+  const [saving, setSaving] = useState(false) // true while the application is being saved
+  const [saved, setSaved] = useState(false) // true when the "Application saved" pop-up should show
+  const [saveError, setSaveError] = useState('') // message shown if saving fails
 
   // Company and position are required; every other field is optional
   const errors = {
@@ -39,9 +54,20 @@ export default function AddApplication() {
     }
   }
 
-  function handleSave() {
+  async function handleSave() {
     setSubmitted(true)
     if (!hasNoErrors(errors)) return
+
+    setSaving(true)
+    setSaveError('')
+    try {
+      await api.createApplication(form)
+      setSaved(true)
+    } catch (err) {
+      setSaveError(err.message)
+    } finally {
+      setSaving(false)
+    }
   }
 
   return (
@@ -49,7 +75,7 @@ export default function AddApplication() {
       title="Add Application"
       back
       footer={
-        <Button fullWidth onClick={handleSave}>
+        <Button fullWidth loading={saving} onClick={handleSave}>
           Save application
         </Button>
       }
@@ -117,7 +143,20 @@ export default function AddApplication() {
             onChange={update('notes')}
           />
         </FormSection>
+
+        {saveError && (
+          <p className="field__error" role="alert">
+            {saveError}
+          </p>
+        )}
       </div>
+
+      <SuccessDialog
+        open={saved}
+        title="Application saved"
+        message="You can find it on your dashboard."
+        onDone={() => navigate('/applications')}
+      />
     </Page>
   )
 }
