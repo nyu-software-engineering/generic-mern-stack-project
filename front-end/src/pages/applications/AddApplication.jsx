@@ -1,7 +1,8 @@
 import { useState } from 'react'
-import { FormSection, Page, SegmentedControl, SelectField, TextArea, TextField } from '../../components'
+import { Button, FormSection, Page, SegmentedControl, SelectField, TextArea, TextField } from '../../components'
 import { APPLICATION_STATUSES, JOB_TYPES } from '../../constants'
 import { todayString } from '../../utils/format'
+import { hasNoErrors, validateRequired } from '../../utils/validation'
 import './AddApplication.css'
 
 /**
@@ -21,6 +22,16 @@ export default function AddApplication() {
     notes: '',
   })
 
+  const [submitted, setSubmitted] = useState(false) // true after the first tap on Save
+
+  // Company and position are required; every other field is optional
+  const errors = {
+    company: validateRequired(form.company, 'Company'),
+    position: validateRequired(form.position, 'Position'),
+  }
+  // Only show errors after the user has tried to save once
+  const shownErrors = submitted ? errors : {}
+
   // Returns a function that updates one field of the form, e.g. update('company')
   function update(field) {
     return (value) => {
@@ -28,8 +39,21 @@ export default function AddApplication() {
     }
   }
 
+  function handleSave() {
+    setSubmitted(true)
+    if (!hasNoErrors(errors)) return
+  }
+
   return (
-    <Page title="Add Application" back>
+    <Page
+      title="Add Application"
+      back
+      footer={
+        <Button fullWidth onClick={handleSave}>
+          Save application
+        </Button>
+      }
+    >
       <div className="stack">
         <p className="add-application__hint">* Required fields</p>
 
@@ -40,6 +64,7 @@ export default function AddApplication() {
             placeholder="e.g. ApplyTrack"
             value={form.company}
             onChange={update('company')}
+            error={shownErrors.company}
           />
           <TextField
             label="Position"
@@ -47,6 +72,7 @@ export default function AddApplication() {
             placeholder="e.g. Software Engineering Intern"
             value={form.position}
             onChange={update('position')}
+            error={shownErrors.position}
           />
           <div className="field-row">
             <TextField
@@ -82,7 +108,7 @@ export default function AddApplication() {
             onChange={update('jobPostingUrl')}
           />
         </FormSection>
-        
+
         <FormSection title="Notes">
           <TextArea
             label="Notes"
