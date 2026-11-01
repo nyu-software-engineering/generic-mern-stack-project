@@ -1,0 +1,57 @@
+.city-page {
+  color: #111827;
+}
+
+.city-page-message {
+  padding: 32px 20px;
+  color: #4b5563;
+  line-height: 1.6;
+}
+
+.city-page-message-title {
+  margin-bottom: 12px;
+  color: #111827;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.city-page-home {
+  display: block;
+  margin-top: 20px;
+  text-decoration: underline;
+}
+
+.city-page-retry {
+  margin-top: 20px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  background: #111827;
+  color: #fff;
+  cursor: pointer;
+}
+
+.city-page-retry:focus-visible,
+.city-page-home:focus-visible {
+  outline: 3px solid #2563eb;
+  outline-offset: 3px;
+}
+
+.city-page-view {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 320px;
+  margin: 24px 20px;
+  border: 1px dashed #d1d5db;
+  border-radius: 16px;
+}
+
+.city-page-view--map {
+  background: #f3f4f6;
+}
+
+.city-page-view-title {
+  color: #6b7280;
+  font-size: 16px;
+  font-weight: 400;
+}

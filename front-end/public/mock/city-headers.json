@@ -1,0 +1,23 @@
+[
+  {
+    "id": "c_nyc",
+    "name": "New York",
+    "placeCount": 5,
+    "members": [
+      { "id": "u_3", "name": "John Logan", "photoUrl": "https://picsum.photos/seed/johnl/200" },
+      { "id": "u_2", "name": "Samantha Chen", "photoUrl": "https://picsum.photos/seed/samantha/200" },
+      { "id": "u_4", "name": "Tiffany Miller", "photoUrl": "https://picsum.photos/seed/tiff/200" },
+      { "id": "u_5", "name": "Arjun Shah", "photoUrl": "https://picsum.photos/seed/arjunsh/200" }
+    ]
+  },
+  {
+    "id": "c_paris",
+    "name": "Paris",
+    "placeCount": 3,
+    "members": [
+      { "id": "u_1", "name": "Siyona Goel", "photoUrl": "https://picsum.photos/seed/siyona/200" },
+      { "id": "u_2", "name": "Samantha Chen", "photoUrl": "https://picsum.photos/seed/samantha/200" },
+      { "id": "u_4", "name": "Tiffany Miller", "photoUrl": "https://picsum.photos/seed/tiff/200" }
+    ]
+  }
+]
