@@ -4,3 +4,11 @@
   color: var(--color-text-muted);
   font-size: var(--font-size-xs);
 }
+
+
+/* One recruiter contact (name, email, phone) */
+.add-application__contact {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}

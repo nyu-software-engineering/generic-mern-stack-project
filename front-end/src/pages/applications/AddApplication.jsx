@@ -33,6 +33,7 @@ export default function AddApplication() {
     location: '',
     jobPostingUrl: '',
     notes: '',
+    recruiters: [{ name: '', email: '', phone: '' }],
   })
   const [submitted, setSubmitted] = useState(false) // true after the first tap on Save
   const [saving, setSaving] = useState(false) // true while the application is being saved
@@ -51,6 +52,16 @@ export default function AddApplication() {
   function update(field) {
     return (value) => {
       setForm({ ...form, [field]: value })
+    }
+  }
+
+    // Returns a function that updates one field of one recruiter, e.g. updateRecruiter(0, 'name')
+  function updateRecruiter(index, field) {
+    return (value) => {
+      const recruiters = form.recruiters.map((recruiter, i) =>
+        i === index ? { ...recruiter, [field]: value } : recruiter,
+      )
+      setForm({ ...form, recruiters })
     }
   }
 
@@ -133,6 +144,33 @@ export default function AddApplication() {
             value={form.jobPostingUrl}
             onChange={update('jobPostingUrl')}
           />
+        </FormSection>
+
+        <FormSection title="Recruiter contact">
+          {form.recruiters.map((recruiter, index) => (
+            <div className="add-application__contact" key={index}>
+              <TextField
+                label="Name"
+                placeholder="Recruiter name"
+                value={recruiter.name}
+                onChange={updateRecruiter(index, 'name')}
+              />
+              <TextField
+                label="Email"
+                type="email"
+                placeholder="name@company.com"
+                value={recruiter.email}
+                onChange={updateRecruiter(index, 'email')}
+              />
+              <TextField
+                label="Phone"
+                type="tel"
+                placeholder="Phone number"
+                value={recruiter.phone}
+                onChange={updateRecruiter(index, 'phone')}
+              />
+            </div>
+          ))}
         </FormSection>
 
         <FormSection title="Notes">
