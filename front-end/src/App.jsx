@@ -1,4 +1,6 @@
+import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Layout from './components/Layout';
 import Landing from './pages/Landing';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -13,20 +15,20 @@ export default function App() {
   return (
     <>
       <BrowserRouter>
-        <div className="pages">
           <Routes>
-            <Route path="/" element={<Landing/>}/>
-            <Route path="/login" element={<Login/>}/>
-            <Route path="/register" element={<Register/>}/>
-            <Route path="/home" element={<Home/>}/>
-            <Route path="/organizations" element={<OrganizationView/>}/>
-            <Route path="/calendar" element={<CalendarView/>}/>
-            <Route path="/add-flyer" element={<AddFlyer/>}/>
-            <Route path="/map" element={<MapView/>}/>
-            <Route path="/profile" element={<Profile/>}/>
+            <Route element={<Layout/>}>
+              <Route path="/" element={<Landing/>}/>
+              <Route path="/login" element={<Login/>}/>
+              <Route path="/register" element={<Register/>}/>
+              <Route path="/home" element={<Home/>}/>
+              <Route path="/organizations" element={<OrganizationView/>}/>
+              <Route path="/calendar" element={<CalendarView/>}/>
+              <Route path="/add-flyer" element={<AddFlyer/>}/>
+              <Route path="/map" element={<MapView/>}/>
+              <Route path="/profile" element={<Profile/>}/>
+            </Route>
           </Routes>
-        </div>
       </BrowserRouter>
     </>
-  )
+  );
 }
