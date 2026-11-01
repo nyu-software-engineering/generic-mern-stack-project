@@ -3,7 +3,7 @@ import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-libra
 import { createMemoryRouter, RouterProvider } from 'react-router'
 import CityPage from './CityPage'
 import CityHeader from '../components/CityHeader'
-import cities from '../../public/mock/city-headers.json'
+import * as mockDataLayer from '../data/mockDataLayer'
 
 function renderCity(path = '/city/c_nyc') {
   const router = createMemoryRouter([
@@ -16,12 +16,12 @@ function renderCity(path = '/city/c_nyc') {
 }
 
 beforeEach(() => {
-  vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, json: async () => cities }))
+  vi.spyOn(mockDataLayer, 'loadCityHeaders')
 })
 
 afterEach(() => {
   cleanup()
-  vi.unstubAllGlobals()
+  vi.restoreAllMocks()
 })
 
 describe('City page header', () => {
@@ -68,7 +68,7 @@ describe('City page header', () => {
   })
 
   it('allows retrying a failed load', async () => {
-    fetch.mockRejectedValueOnce(new Error('offline'))
+    mockDataLayer.loadCityHeaders.mockRejectedValueOnce(new Error('offline'))
     renderCity()
     await screen.findByRole('heading', { name: 'We couldn’t load this city' })
     fireEvent.click(screen.getByRole('button', { name: 'Try again' }))
@@ -77,13 +77,25 @@ describe('City page header', () => {
 
   it('ignores late results from a city the user has already left', async () => {
     let resolveFirst
-    fetch.mockImplementationOnce(() => new Promise((resolve) => { resolveFirst = resolve }))
+    mockDataLayer.loadCityHeaders.mockImplementationOnce(({ signal } = {}) => new Promise((resolve, reject) => {
+      if (signal?.aborted) {
+        reject(new DOMException('The operation was aborted.', 'AbortError'))
+        return
+      }
+      const onAbort = () => reject(new DOMException('The operation was aborted.', 'AbortError'))
+      signal?.addEventListener('abort', onAbort, { once: true })
+      resolveFirst = () => {
+        signal?.removeEventListener('abort', onAbort)
+        if (signal?.aborted) return
+        resolve(mockDataLayer.getCityHeaders())
+      }
+    }))
     const router = renderCity()
-    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(1))
+    await waitFor(() => expect(mockDataLayer.loadCityHeaders).toHaveBeenCalledTimes(1))
     await act(() => router.navigate('/city/c_paris'))
     await screen.findByRole('heading', { name: 'Paris' })
     await act(async () => {
-      resolveFirst({ ok: true, json: async () => cities })
+      resolveFirst()
     })
     expect(screen.queryByRole('heading', { name: 'New York' })).toBeNull()
     expect(screen.getByRole('heading', { name: 'Paris' })).toBeTruthy()

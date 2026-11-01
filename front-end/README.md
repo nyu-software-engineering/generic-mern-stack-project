@@ -20,17 +20,16 @@ npm run build
 
 ## City header (#87)
 
-- The city name, place count, and member avatars are loaded from the temporary
-  mock endpoint `public/mock/city-headers.json`. Its IDs and members match the
-  `spike/mock-data-layer` fixtures; no account data or backend is required.
+- The city name, place count, and member avatars are loaded from
+  `src/data/mockDataLayer.js`, which derives header data from `demoData.js`. No
+  backend is required.
 - Clicking the avatars opens `/city/:cityId/members`, the existing route for the
   members screen. That screen is still a placeholder on `master`.
 - List/Map buttons update the `view` query parameter, keeping the city and other
   parameters intact. Reloads and browser Back/Forward preserve the selection.
 - The map/list content containers are placeholders for #88 (map pins) and #90
   (ranked places). This change implements the header and switching only.
-- Once the shared data layer is merged, replace the mock request in `CityPage`
-  with its city/list lookup. `CityHeader` takes a `city` object with `id`, `name`,
+- `CityHeader` takes a `city` object with `id`, `name`,
   `placeCount`, and `members` (`id`, `name`, optional `photoUrl`), plus controlled
   `view` and `onViewChange` props. The UI does not own the mock records.
 - Unknown city IDs show a not-found message; failed requests provide a retry.
