@@ -198,8 +198,8 @@ Install:
 Clone the shared repository. Do not fork it.
 
 ```bash
-git clone https://github.com/agile-students-fall2026/CareerHive.git
-cd CareerHive
+git clone https://github.com/agile-students-fall2026/generic-mern-stack-project-careerhive.git
+cd generic-mern-stack-project-careerhive
 git config user.name "your-github-username"
 git config --global pull.rebase false
 ```
@@ -210,7 +210,7 @@ After your first commit, run `git log` and confirm the name on the commit is you
 
 ```
 CareerHive/
-├── front-end/     # React app. Placeholder until Sprint 1.
+├── front-end/     # React app (Vite)
 ├── back-end/      # Express server. Placeholder until Sprint 2.
 ├── ux-design/     # App map, wireframes, and prototype notes
 ├── README.md
@@ -218,18 +218,28 @@ CareerHive/
 └── UX-DESIGN.md
 ```
 
-`front-end/` and `back-end/` only hold a short note right now. There is nothing to `npm install` yet. When those apps exist, install dependencies inside each folder, and do not commit `node_modules` or `.env`.
+`back-end/` only holds a short note until Sprint 2. Install dependencies inside each app's folder, and do not commit `node_modules`, `dist`, or `.env`.
 
 ## Building and testing
 
-There is no build and no test suite yet. The front end and back end have not been created.
+### Front end
 
-This section will be updated with real commands once they exist:
+Run these inside `front-end/`:
 
-- **Sprint 1, front end.** A Vite React app in `front-end/`. We will add the install command and the command that starts the dev server, here and in the README.
-- **Sprint 2, back end.** An Express server in `back-end/`, called by the front end. Unit tests will use mocha and chai, and c8 will check coverage. Each developer covers at least 10% of the back-end code. We will add the command to start the server and the command to run the tests.
+```bash
+npm install      # install dependencies
+npm run dev      # start the app at http://localhost:5173
+npm run build    # production build into dist/
+npm run lint     # ESLint check
+```
 
-Until then, the useful thing to do locally is read the README, [UX-DESIGN.md](./UX-DESIGN.md), and the files in `ux-design/`.
+Run `npm run lint` and `npm run build` before you open a pull request; both must pass. Install the **ESLint** and **Prettier** extensions in VS Code, as the course conventions require.
+
+There is no test suite yet.
+
+### Back end (Sprint 2)
+
+An Express server in `back-end/`. Unit tests will use mocha and chai, and c8 will check coverage. Each developer covers at least 10% of the back-end code. We will add the start and test commands here.
 
 ## Questions
 

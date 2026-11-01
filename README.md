@@ -66,15 +66,31 @@ Read the [contribution guide](./CONTRIBUTING.md) for team norms, the Git workflo
 
 ## Project Status and Documentation
 
-CareerHive is currently in the design stage. The front-end and back-end directories contain placeholders, so there are no application build or test commands yet. We will add those commands when implementation begins.
+CareerHive is in Sprint 1. The React front end is set up in `front-end/`; the back end in `back-end/` is still a placeholder until Sprint 2.
 
 See [UX-DESIGN.md](./UX-DESIGN.md) for the app map, wireframes, and outstanding design and prototype checks. The clickable prototype is on [Figma](https://www.figma.com/proto/R4lliiZKlfzQkVtCScmLcN/CareerHive-Prototype?node-id=75-3&starting-point-node-id=75-3).
+
+## Running the front end
+
+You need [Node.js](https://nodejs.org/) 20 or newer, which includes npm.
+
+```bash
+cd front-end
+npm install      # first time, and whenever package.json changes
+npm run dev      # starts the app at http://localhost:5173
+```
+
+Other commands, run inside `front-end/`:
+
+- `npm run build` builds the production version into `front-end/dist/`
+- `npm run lint` checks the code with ESLint
+- `npm run preview` serves the production build locally
 
 ## Repository Structure
 
 ```
 CareerHive/
-├── front-end/       # Planned React front end; placeholder
+├── front-end/       # React front end (Vite)
 ├── back-end/        # Planned Express back end; placeholder
 ├── ux-design/       # App map, wireframes, and UX design files
 ├── README.md
