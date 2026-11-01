@@ -26,7 +26,7 @@ function Login() {
   }
 
   return (
-    <main>
+    <main className="auth-page">
       <h2>Sign in</h2>
       <h1>Welcome back</h1>
 

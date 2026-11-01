@@ -25,7 +25,7 @@ function VerifyEmail() {
   }
 
   return (
-    <main>
+    <main className="auth-page">
       <Link to="/signup">Back</Link>
 
       <h2>Verify NYU email</h2>

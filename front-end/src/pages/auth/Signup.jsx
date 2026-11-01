@@ -26,7 +26,7 @@ function Signup() {
   }
 
   return (
-    <main>
+    <main className="auth-page">
       <Link to="/">Back</Link>
 
       <h2>Create account</h2>

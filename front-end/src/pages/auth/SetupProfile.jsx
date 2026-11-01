@@ -24,7 +24,7 @@ function SetupProfile() {
   }
 
   return (
-    <main>
+    <main className="auth-page">
       <Link to="/verify-email">Back</Link>
 
       <h2>Basic profile setup</h2>
