@@ -1,0 +1,31 @@
+.createHouseholdContainer{
+    background-color: #C9CAD9;
+    width: 50%;
+    aspect-ratio: 1/1;
+    /* align-items: center; */
+    margin: auto;
+    border-color: #576490;
+    border-radius: 15px;
+    border: 10px solid #576490;
+}
+.textInput{
+    width: 90%;
+    aspect-ratio: 15/1;
+    border-radius: 5px;
+}
+.inputFieldContainer{
+    justify-items: center;
+    align-items: center;
+
+}
+.createButton{
+    /* background-color: #7796CB; */
+    width: 50%;
+}
+.createButton:hover{
+    background-color: #7796CB;
+}
+.fieldText{
+    justify-self: start;
+    padding: 10px;
+}
