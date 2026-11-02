@@ -6,16 +6,21 @@ function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null)
   const [profiles, setProfiles] = useState({})
 
-  function signIn(email) {
+  function signIn(email, displayName = '') {
     const savedProfile = profiles[email]
 
-    setCurrentUser(
-      savedProfile || {
-        email,
-        displayName: '',
-        campusArea: ''
-      }
-    )
+    const user = savedProfile || {
+      email,
+      displayName,
+      campusArea: ''
+    }
+
+    setCurrentUser(user)
+
+    setProfiles((previous) => ({
+      ...previous,
+      [email]: user
+    }))
   }
 
   function updateProfile(displayName, campusArea) {

@@ -8,11 +8,6 @@ function Welcome() {
       <h1>DormShare</h1>
       <p>Borrow, lend and rent within NYU.</p>
 
-      <img
-        src="https://picsum.photos/seed/dormshare/600/300"
-        alt="Campus community"
-        width="360"
-      />
 
       <nav aria-label="Account">
         <Link to="/signup">Create an account</Link>

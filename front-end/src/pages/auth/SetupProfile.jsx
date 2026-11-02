@@ -19,6 +19,11 @@ function SetupProfile() {
     const displayName = event.currentTarget.elements.displayName.value.trim()
     const campusArea = event.currentTarget.elements.campusArea.value.trim()
 
+    if (!displayName || !campusArea) {
+      setMessage('Please enter a display name and campus area.')
+      return
+    }
+
     updateProfile(displayName, campusArea)
     navigate('/browse')
   }
@@ -29,18 +34,14 @@ function SetupProfile() {
 
       <h2>Basic profile setup</h2>
 
-      <img
-        src="https://picsum.photos/seed/dormshare-profile/360/120"
-        alt="Sample profile"
-        width="360"
-      />
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} onChange={() => setMessage('')}>
         <label htmlFor="displayName">Display name</label>
         <input
           id="displayName"
           name="displayName"
           type="text"
+          defaultValue={currentUser?.displayName || ''}
           placeholder="Enter your display name"
           required
         />
@@ -59,7 +60,7 @@ function SetupProfile() {
         <button type="submit">Save profile</button>
       </form>
 
-      {message && <p>{message}</p>}
+      {message && <p role="alert">{message}</p>}
     </main>
   )
 }

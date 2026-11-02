@@ -11,17 +11,22 @@ function Signup() {
   function handleSubmit(event) {
     event.preventDefault()
 
+    const fullName = event.currentTarget.elements.fullName.value.trim()
     const email = event.currentTarget.elements.email.value
       .trim()
       .toLowerCase()
+
+    if (!fullName) {
+      setMessage('Please enter your full name.')
+      return
+    }
 
     if (!email.endsWith('@nyu.edu')) {
       setMessage('Please use an NYU email address.')
       return
     }
 
-    // Create a simulated user for the signup flow
-    signIn(email)
+    signIn(email, fullName)
     navigate('/verify-email')
   }
 
@@ -32,7 +37,7 @@ function Signup() {
       <h2>Create account</h2>
       <h1>Join the NYU community</h1>
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} onChange={() => setMessage('')}>
         <label htmlFor="fullName">Full name</label>
         <input
           id="fullName"
@@ -64,7 +69,7 @@ function Signup() {
         <button type="submit">Create account</button>
       </form>
 
-      {message && <p>{message}</p>}
+      {message && <p role="alert">{message}</p>}
 
       <Link to="/login">Sign in instead</Link>
     </main>
