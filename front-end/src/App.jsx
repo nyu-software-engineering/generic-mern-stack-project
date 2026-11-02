@@ -6,7 +6,6 @@ import ReviewForm from "./components/ReviewForm";
 import "./App.css";
 
 function App() {
-  // Page state options: "login", "signup", or "home"
   const [page, setPage] = useState("login");
 
   if (page === "login") {
@@ -29,7 +28,6 @@ function App() {
     );
   }
 
-  // Show Main App page (when page === "home")
   return (
     <div className="app">
       <header>
