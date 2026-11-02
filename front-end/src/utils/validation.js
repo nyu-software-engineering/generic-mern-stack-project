@@ -7,13 +7,18 @@ export const MIN_PASSWORD_LENGTH = 8
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
+// True for null, undefined, '' and whitespace-only values.
+function isBlank(value) {
+  return String(value ?? '').trim() === ''
+}
+
 export function validateRequired(value, label = 'This field') {
-  return value && String(value).trim() ? '' : `${label} is required`
+  return isBlank(value) ? `${label} is required` : ''
 }
 
 export function validateEmail(value) {
-  if (!value || !value.trim()) return 'Email is required'
-  return EMAIL_PATTERN.test(value.trim()) ? '' : 'Enter a valid email address'
+  if (isBlank(value)) return 'Email is required'
+  return EMAIL_PATTERN.test(String(value).trim()) ? '' : 'Enter a valid email address'
 }
 
 export function validatePassword(value) {
