@@ -1,0 +1,30 @@
+form {
+    border: none;
+    margin-bottom: 20px;
+}
+  
+form > div {
+    margin-top: 16px;
+    margin-bottom: 16px;
+}
+
+form input,
+form textarea {
+    width: 100%;
+    max-width: 500px;
+    padding: 8px;
+    font-size: 1em;
+    box-sizing: border-box;
+}
+
+form input{
+    margin-top: 16px;
+    padding: 8px 16px;
+    cursor: pointer;
+}
+
+PostSublet-Feedback {
+    color: red;
+    background-color: white;
+    padding: 16px;
+}
