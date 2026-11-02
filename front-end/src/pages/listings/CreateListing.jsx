@@ -1,5 +1,7 @@
+import MyListings from './MyListings'
+
 function CreateListing() {
-  return <div>CreateListing</div>
+  return <MyListings initialFormOpen />
 }
 
 export default CreateListing
