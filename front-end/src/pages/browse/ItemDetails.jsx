@@ -1,6 +1,11 @@
 import { useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { getListing, getUser } from '../../services/bookings'
+import {
+  CURRENT_USER_ID,
+  getListing,
+  getUser,
+  listingImage,
+} from '../../services/bookings'
 
 function ItemDetails() {
   const { id } = useParams()
@@ -23,6 +28,7 @@ function ItemDetails() {
   }
 
   const owner = getUser(listing.ownerId)
+  const isOwnListing = listing.ownerId === CURRENT_USER_ID
 
   const today = new Date()
   const todayString =
@@ -37,6 +43,10 @@ function ItemDetails() {
 
   function handleRequest(event) {
     event.preventDefault()
+
+    if (isOwnListing) {
+      return
+    }
 
     if (!startDate || !endDate) {
       setError('Select both pickup and return dates.')
@@ -69,6 +79,12 @@ function ItemDetails() {
 
       <p>{listing.category}</p>
       <h1>{listing.title}</h1>
+      <img
+        src={listingImage(listing.id, 480)}
+        alt={listing.title}
+        width={300}
+        height={300}
+      />
       <p>{listing.description}</p>
       <p>Owner: {owner?.name ?? 'Student owner'}</p>
       <p>${listing.price.toFixed(2)} / day</p>
@@ -78,48 +94,52 @@ function ItemDetails() {
         <p>{listing.rentalTerms}</p>
       </section>
 
-      <form onSubmit={handleRequest}>
-        <h2>Select rental dates</h2>
+      {isOwnListing ? (
+        <p>This is your listing. Other students can request to rent it.</p>
+      ) : (
+        <form onSubmit={handleRequest}>
+          <h2>Select rental dates</h2>
 
-        <label>
-          Pickup date
-          <input
-            type="date"
-            required
-            min={todayString}
-            value={startDate}
-            onChange={(event) => {
-              setStartDate(event.target.value)
-              setError('')
-            }}
-          />
-        </label>
+          <label>
+            Pickup date
+            <input
+              type="date"
+              required
+              min={todayString}
+              value={startDate}
+              onChange={(event) => {
+                setStartDate(event.target.value)
+                setError('')
+              }}
+            />
+          </label>
 
-        <label>
-          Return date
-          <input
-            type="date"
-            required
-            min={startDate || todayString}
-            value={endDate}
-            onChange={(event) => {
-              setEndDate(event.target.value)
-              setError('')
-            }}
-          />
-        </label>
+          <label>
+            Return date
+            <input
+              type="date"
+              required
+              min={startDate || todayString}
+              value={endDate}
+              onChange={(event) => {
+                setEndDate(event.target.value)
+                setError('')
+              }}
+            />
+          </label>
 
-        {days > 0 && (
-          <p aria-live="polite">
-            {days} {days === 1 ? 'day' : 'days'} · Estimated total: $
-            {(days * listing.price).toFixed(2)}
-          </p>
-        )}
+          {days > 0 && (
+            <p aria-live="polite">
+              {days} {days === 1 ? 'day' : 'days'} · Estimated total: $
+              {(days * listing.price).toFixed(2)}
+            </p>
+          )}
 
-        {error && <p role="alert">{error}</p>}
+          {error && <p role="alert">{error}</p>}
 
-        <button type="submit">Request rental</button>
-      </form>
+          <button type="submit">Request rental</button>
+        </form>
+      )}
     </main>
   )
 }
