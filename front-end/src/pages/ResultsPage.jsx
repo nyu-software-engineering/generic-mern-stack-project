@@ -1,9 +1,10 @@
 import HotelDetails from "../components/HotelDetails";
 import { Link } from "react-router-dom";
+import "./ResultsPage.css";
 
 function ResultsPage() {
   return (
-    <main className="homepage">
+    <main className="homepage results-page">
         <header className="home-header">
             <img src="https://picsum.photos/340/180" alt="Sample" className="logo" />
 

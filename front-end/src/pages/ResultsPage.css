@@ -45,3 +45,34 @@
 }
 
 /* These are from the home page elements, copied from the home page for reuse*/
+
+
+
+.results-page .home-search-label {
+  text-align: center;
+}
+
+.results-page .home-search-button {
+  align-self: center;
+}
+
+.results-page .hotel-details {
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+.results-page .hotel-details-image {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.results-page .results-title {
+  padding: 0 16px;
+}
+
+.results-page .home-search-input {
+  width: 75%;
+  align-self: center;
+  box-sizing: border-box;
+}
