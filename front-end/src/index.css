@@ -31,9 +31,9 @@ textarea {
 }
 
 .page-header h1,
-h2,
-h3,
-p {
+.page h2,
+.page h3,
+.page p {
   margin-top: 0;
 }
 
@@ -164,9 +164,16 @@ p {
   background: white;
 }
 
-.listing-card > div:first-child,
+.listing-card > div:first-of-type,
 .rental-card > div:first-child {
   flex: 1;
+}
+
+.listing-image {
+  width: 96px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 6px;
 }
 
 .listing-card h3,
