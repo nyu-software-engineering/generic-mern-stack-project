@@ -6,6 +6,7 @@
     padding: 5%;
     height: 80%;
     border: solid;
+    border-color: aquamarine;
 }
 
 .edit-card {
@@ -14,9 +15,10 @@
     margin-top: 10%;
     display: flex;
     flex-direction: column;
-    min-height: 30%;
-    height: 30%;
+    min-height: 60%;
+    height: 60%;
     width: 100%;
+    margin-top: auto;
 }
 
 .edit-image_and_edit{
@@ -41,3 +43,27 @@
     border: solid;
     text-align: center;
 }
+
+#edit-card-container{
+    display: flex;
+    flex: 5;
+    border: solid;
+    min-height: 30%;
+    height: 30%;
+    width: 100%;
+}
+
+#edit-card-actions-container{
+    flex: 3;
+    width: 100%;
+    border: solid;
+    display: flex;
+    justify-content: space-around;
+}
+
+.EditSaved-Btn{
+    height: 20%;
+    width: 30%;
+    margin-top: 8%;
+}
+
