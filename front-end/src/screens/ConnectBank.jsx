@@ -67,6 +67,15 @@ export default function ConnectBank() {
         </Card>
       </div>
 
+      <details className="mb-4 border border-line bg-surface p-4">
+        <summary className="cursor-pointer text-sm font-semibold">
+          Why connect my bank?
+        </summary>
+        <p className = "mt-2 test-sm test-muted">
+          We use rent payment history and income patterns to prepapre your Reliability Report.
+        </p>
+      </details>
+        
       <Button onClick={handleConnect} disabled={isConnecting}>
         {isConnecting ? 'Connecting…' : 'Connect bank account'}
       </Button>
