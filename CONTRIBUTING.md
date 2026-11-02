@@ -32,8 +32,14 @@ We follow the course [Team Norms guidance](https://github.com/nyu-software-engin
 - **Code linter:** ESLint
 - **Version control:** Git and GitHub
 
-The frontend uses React function components, JavaScript with JSX, plain CSS,
+The frontend uses React function components, JavaScript with JSX, Tailwind CSS,
 and Vite. ESLint is configured in `front-end/eslint.config.js`.
+
+Style components with Tailwind utilities in JSX. Shared colors and font settings
+live in `front-end/src/styles/global.css` using Tailwind's `@theme` directive.
+That file also contains the global accessibility and base styles. Use shared
+React components for repeated layouts instead of duplicating utility classes
+across screens. Tailwind is connected through its official Vite plugin.
 
 ## Issues and Task Board
 
@@ -90,6 +96,15 @@ npm run dev
 
 Open the local URL printed by Vite. Run frontend npm commands inside
 `front-end/`.
+
+The app uses React Router in declarative mode with Vite. `/` opens Welcome;
+`/portfolio`, `/market`, `/learn`, `/leaderboard`, and `/account` share the
+main header and bottom navigation. These section screens are placeholders
+until their features are implemented. Authentication is not implemented yet.
+Unmatched URLs show Page Unavailable with a link back to Portfolio.
+
+When deploying, configure the host to serve `index.html` for frontend routes
+so that direct links and page refreshes work. Vite handles this locally.
 
 Do not commit passwords, API keys, or other sensitive information. Follow the repository's `.gitignore`.
 
