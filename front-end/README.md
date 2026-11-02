@@ -3,7 +3,6 @@
 React + Vite app for ApplyTrack.
 
 - How to install and run it: see [Building and Testing](../README.md#building-and-testing) in the main README.
-- How the code is organized and how to build screens: see the [Front-End Guide](../FRONTEND-GUIDE.md).
 
 ```
 src/
