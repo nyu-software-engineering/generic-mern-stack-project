@@ -121,6 +121,7 @@ For the front end, run these commands from `front-end/`:
 ```bash
 npm run build
 npm run lint
+npm test
 ```
 
 For backend tests and coverage, see [Test the back end](#test-the-back-end). The backend currently provides a health check only. Add and document tests as features are implemented.

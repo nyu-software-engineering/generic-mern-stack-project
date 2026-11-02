@@ -1,0 +1,171 @@
+.browse-page,
+.item-details-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 32px 24px;
+}
+
+.browse-page h1,
+.item-details-page h1 {
+  margin-bottom: 12px;
+}
+
+.browse-page p,
+.item-details-page p {
+  line-height: 1.5;
+}
+
+.browse-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 16px;
+  margin: 24px 0;
+}
+
+.browse-filters label,
+.item-details-page form label {
+  display: grid;
+  gap: 8px;
+}
+
+.browse-filters label:first-child {
+  flex: 1;
+  min-width: 200px;
+}
+
+.browse-page input,
+.browse-page select,
+.item-details-page input {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid #cbd0d8;
+  border-radius: 6px;
+  background: white;
+  color: inherit;
+}
+
+.browse-page button,
+.item-details-page button {
+  min-height: 44px;
+  padding: 10px 16px;
+  border: 1px solid #cbd0d8;
+  border-radius: 6px;
+  background: white;
+  color: inherit;
+  cursor: pointer;
+}
+
+.browse-page a,
+.item-details-page a {
+  color: #315fce;
+}
+
+.browse-page :focus-visible,
+.item-details-page :focus-visible {
+  outline: 3px solid #315fce;
+  outline-offset: 3px;
+}
+
+.browse-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  gap: 20px;
+}
+
+.browse-page .listing-card {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: 12px;
+  min-width: 0;
+  padding: 20px;
+  overflow-wrap: anywhere;
+}
+
+.browse-page .listing-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.browse-page .listing-card h2 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.browse-page .listing-card p {
+  margin: 0;
+}
+
+.browse-page .listing-card > p:last-child {
+  margin-top: auto;
+  font-weight: 600;
+}
+
+.item-details-page {
+  max-width: 800px;
+}
+
+.item-details-page > img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 20px 0;
+  border-radius: 10px;
+}
+
+.item-details-page > section,
+.item-details-page form {
+  margin-top: 24px;
+  padding: 24px;
+  border: 1px solid #e0e3e8;
+  border-radius: 10px;
+  background: white;
+}
+
+.item-details-page form {
+  display: grid;
+  gap: 16px;
+}
+
+.item-details-page form h2,
+.item-details-page > section h2 {
+  margin-top: 0;
+}
+
+.item-details-page button[type="submit"] {
+  border-color: #315fce;
+  background: #315fce;
+  color: white;
+}
+
+.item-details-page [role="alert"] {
+  margin: 0;
+  color: #b42318;
+}
+
+@media (max-width: 600px) {
+  .browse-page,
+  .item-details-page {
+    padding: 24px 16px;
+  }
+
+  .browse-filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .browse-filters label:first-child {
+    flex: auto;
+    min-width: 0;
+  }
+
+  .item-details-page > section,
+  .item-details-page form {
+    padding: 16px;
+  }
+}
