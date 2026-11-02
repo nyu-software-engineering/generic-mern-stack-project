@@ -1,7 +1,14 @@
 import assert from 'node:assert/strict'
-import { test } from 'node:test'
+import { after, before, mock, test } from 'node:test'
 import * as mockDataService from '../src/services/mockDataService.js'
-import { createBooking, getListing } from '../src/services/bookings.js'
+import { createBooking, getListing, getUser, updateBookingStatus } from '../src/services/bookings.js'
+import { mockResponse } from './fixtures.js'
+
+before(async () => {
+  mock.method(globalThis, 'fetch', async () => Response.json(mockResponse()))
+  await mockDataService.loadMockData()
+})
+after(() => mock.restoreAll())
 
 test('new listings are visible to the booking service', () => {
   const listing = mockDataService.createListing({
@@ -13,6 +20,12 @@ test('new listings are visible to the booking service', () => {
   })
 
   assert.equal(getListing(listing.id)?.title, listing.title)
+})
+
+test('booking users and status changes use the fetched shared store', () => {
+  assert.equal(getUser('student-2').name, 'Online borrower')
+  updateBookingStatus('103', 'confirmed')
+  assert.equal(mockDataService.getRental(103).status, 'confirmed')
 })
 
 test('new bookings are visible to the owner dashboard service', () => {

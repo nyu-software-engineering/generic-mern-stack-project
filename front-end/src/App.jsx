@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 import Navbar from './components/Navbar'
+import MockData from './components/MockData'
 
 import Welcome from './pages/auth/Welcome'
 import Login from './pages/auth/Login'
@@ -41,22 +42,24 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/setup-profile" element={<Profile />} />
 
-        {/* Listings & owner dashboard*/}
-        <Route path="/listings" element={<MyListings />} />
-        <Route path="/listings/new" element={<CreateListing />} />
-        <Route path="/owner-dashboard" element={<OwnerDashboard />} />
+        <Route element={<MockData />}>
+          {/* Listings & owner dashboard*/}
+          <Route path="/listings" element={<MyListings />} />
+          <Route path="/listings/new" element={<CreateListing />} />
+          <Route path="/owner-dashboard" element={<OwnerDashboard />} />
+
+          {/* Booking*/}
+          <Route path="/listings/:listingId/request" element={<Booking />} />
+          <Route path="/booking-requests" element={<BookingRequests />} />
+          <Route path="/bookings/:bookingId" element={<BookingDetails />} />
+          <Route path="/bookings/:bookingId/extension" element={<Extensions />} />
+          <Route path="/bookings/:bookingId/cancel" element={<Cancellation />} />
+        </Route>
 
         {/* Browse & renter dashboard*/}
         <Route path="/browse" element={<Browse />} />
         <Route path="/browse/:id" element={<ItemDetails />} />
         <Route path="/renter-dashboard" element={<RenterDashboard />} />
-
-        {/* Booking*/}
-        <Route path="/listings/:listingId/request" element={<Booking />} />
-        <Route path="/booking-requests" element={<BookingRequests />} />
-        <Route path="/bookings/:bookingId" element={<BookingDetails />} />
-        <Route path="/bookings/:bookingId/extension" element={<Extensions />} />
-        <Route path="/bookings/:bookingId/cancel" element={<Cancellation />} />
 
         {/* Chat & requests*/}
         <Route path="/inbox" element={<Inbox />} />

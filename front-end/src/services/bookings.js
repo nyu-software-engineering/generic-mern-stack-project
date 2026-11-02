@@ -1,22 +1,21 @@
 // Mock booking service. Pages call these functions instead of importing
 // fixtures directly, so they can later be swapped for backend requests.
-import users from '../data/users.js'
 import {
   CURRENT_USER_ID,
   createRental,
   getListings,
   getRental,
   getRentals,
+  getUser,
   updateRentalStatus,
 } from './mockDataService.js'
 
 // TODO: replace with the signed-in user from Context once #49 lands.
-export { CURRENT_USER_ID }
+export { CURRENT_USER_ID, getUser }
 
 // Route params are strings and mock IDs are numbers, so compare as strings.
 const sameId = (a, b) => String(a) === String(b)
 
-export const getUser = (id) => users.find((u) => sameId(u.id, id))
 export const getListing = (id) =>
   getListings().find((listing) => sameId(listing.id, id))
 export const getBooking = (id) => getRental(id)
