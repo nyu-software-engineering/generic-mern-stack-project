@@ -18,6 +18,7 @@ function Login() {
             <input
               type="email"
               id="email"
+              required
               placeholder="Enter your email"
               className="w-full border border-gray-300 rounded-lg p-3"
             />
@@ -30,6 +31,7 @@ function Login() {
             <input
               type="password"
               id="password"
+              required
               placeholder="Enter your password"
               className="w-full border border-gray-300 rounded-lg p-3"
             />
