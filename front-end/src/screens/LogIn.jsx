@@ -3,9 +3,11 @@ import { Link, useNavigate } from "react-router";
 import Button from "../components/ui/Button.jsx";
 import ScreenTitle from "../components/ui/ScreenTitle.jsx";
 import TextField from "../components/ui/TextField.jsx";
+import RoleChoice from "../components/RoleChoice.jsx";
 
 export default function LogIn() {
   const navigate = useNavigate();
+  const [role, setRole] = useState("renter");
   const [form, setForm] = useState({ email: "", password: "" });
 
   const updateField = (event) =>
@@ -13,7 +15,7 @@ export default function LogIn() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    navigate("/");
+    navigate(role === "landlord" ? "/landlord" : "/");
   };
 
   return (
@@ -23,6 +25,7 @@ export default function LogIn() {
         title="Welcome back"
         subtitle="Log in to see your checks, report and followed areas."
       />
+      <RoleChoice role={role} onChange={setRole} />
       <form onSubmit={handleSubmit} className="space-y-4">
         <TextField
           label="Email"
