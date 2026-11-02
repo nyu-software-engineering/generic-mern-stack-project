@@ -99,3 +99,24 @@
   font-size: var(--font-size-sm);
   color: var(--color-text-muted);
 }
+
+/* Interview round name */
+.application-details__round-title {
+  margin: 0 0 var(--space-1);
+  font-weight: var(--font-weight-semibold);
+}
+
+/* Interview round notes in italics */
+.application-details__round-notes {
+  margin: var(--space-2) 0 0;
+  font-size: var(--font-size-sm);
+  font-style: italic;
+  color: var(--color-text-muted);
+}
+
+/* "Nothing here yet" message inside a card */
+.application-details__empty {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}

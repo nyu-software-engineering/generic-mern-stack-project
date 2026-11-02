@@ -1,17 +1,34 @@
 import { useParams } from 'react-router-dom'
 import { api } from '../../api'
-import { Avatar, Button, Card, ErrorState, ListRow, LoadingState, Page, SectionHeader, StatusBadge } from '../../components'
+import {
+  Avatar,
+  Button,
+  Card,
+  ErrorState,
+  EventCard,
+  ListRow,
+  LoadingState,
+  Page,
+  SectionHeader,
+  StatusBadge,
+} from '../../components'
 import { getLabel, getStatus, JOB_TYPES } from '../../constants'
 import { useApi } from '../../hooks/useApi'
-import { formatDate } from '../../utils/format'
+import { formatDate, todayString } from '../../utils/format'
 import './ApplicationDetails.css'
+
+// Load the application and its events at the same time
+async function loadDetails(id) {
+  const [application, events] = await Promise.all([api.getApplication(id), api.getEvents({ applicationId: id })])
+  return { application, events }
+}
 
 // Application Details screen: shows everything saved about one application
 export default function ApplicationDetails() {
   // Read the application id from the URL
   const { id } = useParams()
-  // Load the application and track loading/error state
-  const { data: application, loading, error, reload } = useApi(() => api.getApplication(id), [id])
+  // Load the data and track loading/error state
+  const { data, loading, error, reload } = useApi(() => loadDetails(id), [id])
 
   // "Edit" link in the top right of the header
   const editButton = (
@@ -21,7 +38,7 @@ export default function ApplicationDetails() {
   )
 
   // Show a spinner while the data is loading
-  if (loading && !application) {
+  if (loading && !data) {
     return (
       <Page title="Application" back action={editButton}>
         <LoadingState />
@@ -38,10 +55,14 @@ export default function ApplicationDetails() {
     )
   }
 
+  // Split the loaded data into the application and its events
+  const { application, events } = data
   // Location and job type on one line, skipping empty parts
   const details = [application.location, getLabel(JOB_TYPES, application.jobType)].filter(Boolean).join(' · ')
   // Status history with the newest status first
   const statusHistory = [...application.statusHistory].reverse()
+  // Only events from today onward
+  const upcomingEvents = events.filter((event) => event.date >= todayString())
 
   return (
     <Page title="Application" back action={editButton}>
@@ -90,6 +111,43 @@ export default function ApplicationDetails() {
             ))}
           </ol>
         </Card>
+      </section>
+
+      {/* Upcoming events for this application, with a link to add one */}
+      <section className="application-details__section">
+        <SectionHeader title="Upcoming events" actionLabel="+ Add event" actionTo={`/events/new?applicationId=${id}`} />
+        {upcomingEvents.length > 0 ? (
+          <Card padding="none">
+            {upcomingEvents.map((event) => (
+              <EventCard key={event.id} event={event} application={application} />
+            ))}
+          </Card>
+        ) : (
+          <Card>
+            <p className="application-details__empty">No upcoming events.</p>
+          </Card>
+        )}
+      </section>
+
+      {/* Interview rounds, each one opens its own page */}
+      <section className="application-details__section">
+        <SectionHeader title="Interview rounds" actionLabel="+ Add round" actionTo={`/applications/${id}/rounds/new`} />
+        {application.interviewRounds.length > 0 ? (
+          application.interviewRounds.map((round) => (
+            <Card key={round.id} to={`/applications/${id}/rounds/${round.id}`}>
+              <p className="application-details__round-title">{round.name}</p>
+              <p className="application-details__meta">
+                {formatDate(round.date)}
+                {round.interviewer && ` · with ${round.interviewer}`}
+              </p>
+              {round.notes && <p className="application-details__round-notes">{round.notes}</p>}
+            </Card>
+          ))
+        ) : (
+          <Card>
+            <p className="application-details__empty">No interview rounds yet.</p>
+          </Card>
+        )}
       </section>
     </Page>
   )
