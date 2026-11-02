@@ -1,17 +1,7 @@
 import { useParams } from 'react-router-dom'
 import { api } from '../../api'
 import {
-  Avatar,
-  Button,
-  Card,
-  ErrorState,
-  EventCard,
-  ListRow,
-  LoadingState,
-  Page,
-  SectionHeader,
-  StatusBadge,
-} from '../../components'
+  Avatar, Button, Card, ErrorState, EventCard, ListRow, LoadingState, Page, SectionHeader, StatusBadge,} from '../../components'
 import { getLabel, getStatus, JOB_TYPES } from '../../constants'
 import { useApi } from '../../hooks/useApi'
 import { formatDate, todayString } from '../../utils/format'
@@ -149,6 +139,52 @@ export default function ApplicationDetails() {
           </Card>
         )}
       </section>
+
+      {/* Recruiter contact, email and phone open the mail and phone apps */}
+      <section className="application-details__section">
+        <SectionHeader title="Recruiter" />
+        {application.recruiters.length > 0 ? (
+          application.recruiters.map((recruiter) => (
+            <Card key={recruiter.email || recruiter.name} padding="none">
+              <ListRow icon="user" title={recruiter.name} />
+              {recruiter.email && <ListRow icon="mail" title={recruiter.email} href={`mailto:${recruiter.email}`} />}
+              {recruiter.phone && <ListRow icon="phone" title={recruiter.phone} href={`tel:${recruiter.phone}`} />}
+            </Card>
+          ))
+        ) : (
+          <Card>
+            <p className="application-details__empty">No recruiter added.</p>
+          </Card>
+        )}
+      </section>
+
+      {/* Resume used for this application */}
+      <section className="application-details__section">
+        <SectionHeader title="Resume used" />
+        {application.resume ? (
+          <Card padding="none">
+            <ListRow
+              icon="file"
+              title={application.resume.fileName}
+              subtitle={application.resume.uploadedAt && `Uploaded ${formatDate(application.resume.uploadedAt)}`}
+            />
+          </Card>
+        ) : (
+          <Card>
+            <p className="application-details__empty">No resume recorded.</p>
+          </Card>
+        )}
+      </section>
+
+      {/* Notes, only shown if there are any */}
+      {application.notes && (
+        <section className="application-details__section">
+          <SectionHeader title="Notes" />
+          <Card>
+            <p className="application-details__notes">{application.notes}</p>
+          </Card>
+        </section>
+      )}
     </Page>
   )
 }
