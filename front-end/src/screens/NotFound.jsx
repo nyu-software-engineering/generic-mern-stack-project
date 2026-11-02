@@ -1,3 +1,13 @@
+import { Link } from 'react-router'
+import ScreenTitle from '../components/ui/ScreenTitle.jsx'
+
 export default function NotFound() {
-  return <h1 className="text-2xl font-semibold">Page not found</h1>
+  return (
+    <div>
+      <ScreenTitle title="Page not found" subtitle="The page you are looking for does not exist." />
+      <Link to="/" className="font-semibold text-accent hover:underline">
+        Go to Home
+      </Link>
+    </div>
+  )
 }
