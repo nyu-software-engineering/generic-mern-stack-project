@@ -216,5 +216,66 @@
     "statusHistory": [{ "status": "applied", "date": "2025-10-02" }],
     "interviewRounds": [],
     "offer": null
+  },
+    {
+    "id": "app-11",
+    "company": "Notion",
+    "position": "Software Engineer Intern, Platform",
+    "location": "San Francisco, CA",
+    "jobType": "internship",
+    "status": "interview",
+    "dateApplied": "2026-09-25",
+    "jobPostingUrl": "https://www.notion.so/careers",
+    "logoUrl": "https://picsum.photos/seed/notion/96/96",
+    "recruiters": [{ "name": "Priya Shah", "email": "priya.shah@notion.example", "phone": "+1 415 555 0187" }],
+    "resume": { "fileName": "resume-platform-fall26.pdf", "uploadedAt": "2026-09-25" },
+    "notes": "Met the team at the career fair. Ask about the editor performance project.",
+    "archived": false,
+    "statusHistory": [
+      { "status": "applied", "date": "2026-09-25" },
+      { "status": "recruiter-screen", "date": "2026-10-05" },
+      { "status": "interview", "date": "2026-10-14" }
+    ],
+    "interviewRounds": [
+      { "id": "round-1", "name": "Recruiter call", "type": "phone", "date": "2026-10-05", "interviewer": "Priya Shah", "notes": "Talked about timeline and team matching." },
+      { "id": "round-2", "name": "Technical interview", "type": "technical", "date": "2026-10-20", "interviewer": "Leo Park", "notes": "Graph problem, then a short system design discussion." }
+    ],
+    "offer": null
+  },
+  {
+    "id": "app-12",
+    "company": "Shopify",
+    "position": "Backend Developer Intern",
+    "location": "Toronto, ON",
+    "jobType": "internship",
+    "status": "offer",
+    "dateApplied": "2026-09-10",
+    "jobPostingUrl": "https://www.shopify.com/careers",
+    "logoUrl": "https://picsum.photos/seed/shopify/96/96",
+    "recruiters": [{ "name": "Marcus Lee", "email": "marcus.lee@shopify.example", "phone": "+1 416 555 0123" }],
+    "resume": { "fileName": "resume-backend-fall26.pdf", "uploadedAt": "2026-09-10" },
+    "notes": "Team works on checkout APIs. Remote-friendly.",
+    "archived": false,
+    "statusHistory": [
+      { "status": "applied", "date": "2026-09-10" },
+      { "status": "online-assessment", "date": "2026-09-18" },
+      { "status": "interview", "date": "2026-10-01" },
+      { "status": "offer", "date": "2026-10-24" }
+    ],
+    "interviewRounds": [
+      { "id": "round-1", "name": "Pair programming", "type": "technical", "date": "2026-10-03", "interviewer": "Hannah Kim", "notes": "Built a small REST endpoint together." },
+      { "id": "round-2", "name": "Life story", "type": "behavioral", "date": "2026-10-09", "interviewer": "Omar Haddad", "notes": "Talked about past projects and motivation." }
+    ],
+    "offer": {
+      "baseSalary": "$9,000/month",
+      "signingBonus": "$3,000",
+      "startDate": "2027-05-17",
+      "location": "Toronto, ON",
+      "respondBy": "2026-11-20",
+      "remindBefore": "2-days",
+      "decision": "pending",
+      "notes": "Ask whether the start date is flexible."
+    }
   }
+  
 ]
