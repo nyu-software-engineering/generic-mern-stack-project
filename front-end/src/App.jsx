@@ -1,59 +1,73 @@
 
-import { useContext } from 'react'
-import {
-  BrowserRouter,
-  Link,
-  Routes,
-  Route,
-  Navigate
-} from 'react-router-dom'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
-import { AuthContext } from './context/AuthContext'
+import Navbar from './components/Navbar'
+
 import Welcome from './pages/auth/Welcome'
+import Login from './pages/auth/Login'
 import Signup from './pages/auth/Signup'
 import VerifyEmail from './pages/auth/VerifyEmail'
-import Login from './pages/auth/Login'
 import SetupProfile from './pages/auth/SetupProfile'
 
-function BrowsePreview() {
-  const { currentUser, signOut } = useContext(AuthContext)
+import CreateListing from './pages/listings/CreateListing'
+import MyListings from './pages/listings/MyListings'
+import OwnerDashboard from './pages/ownerDashboard/OwnerDashboard'
 
-  return (
-    <main className="auth-page">
-      <h1>Browse</h1>
-      <p>Temporary screen for testing authentication.</p>
+import Browse from './pages/browse/Browse'
+import ItemDetails from './pages/browse/ItemDetails'
+import RenterDashboard from './pages/renterDashboard/RenterDashboard'
 
-      {currentUser ? (
-        <>
-          <p>Signed in as: {currentUser.email}</p>
-          <p>Display name: {currentUser.displayName}</p>
-          <p>Campus area: {currentUser.campusArea}</p>
-          <button type="button" onClick={signOut}>
-            Sign out
-          </button>
-        </>
-      ) : (
-        <p>No user is signed in.</p>
-      )}
+import Booking from './pages/booking/Booking'
+import BookingDetails from './pages/booking/BookingDetails'
+import BookingRequests from './pages/booking/BookingRequests'
+import Extensions from './pages/booking/Extensions'
+import Cancellation from './pages/booking/Cancellation'
 
-      <nav>
-        <Link to="/">Back to Welcome</Link>
-      </nav>
-    </main>
-  )
-}
+import Inbox from './pages/chat/Inbox'
+import ItemRequests from './pages/requests/ItemRequests'
+
+import PickupReturn from './pages/handoff/PickupReturn'
+import QuickBorrow from './pages/quickBorrow/QuickBorrow'
+import Report from './pages/reporting/Report'
 
 function App() {
   return (
     <BrowserRouter>
+      <Navbar />
+
       <Routes>
+        {/* Authentication */}
         <Route path="/" element={<Welcome />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
-        <Route path="/login" element={<Login />} />
         <Route path="/setup-profile" element={<SetupProfile />} />
-        <Route path="/browse" element={<BrowsePreview />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
+
+        {/* Listings and owner dashboard */}
+        <Route path="/listings" element={<MyListings />} />
+        <Route path="/listings/new" element={<CreateListing />} />
+        <Route path="/owner-dashboard" element={<OwnerDashboard />} />
+
+        {/* Browse and renter dashboard */}
+        <Route path="/browse" element={<Browse />} />
+        <Route path="/browse/:id" element={<ItemDetails />} />
+        <Route path="/renter-dashboard" element={<RenterDashboard />} />
+
+        {/* Booking */}
+        <Route path="/listings/:listingId/request" element={<Booking />} />
+        <Route path="/booking-requests" element={<BookingRequests />} />
+        <Route path="/bookings/:bookingId" element={<BookingDetails />} />
+        <Route path="/bookings/:bookingId/extension" element={<Extensions />} />
+        <Route path="/bookings/:bookingId/cancel" element={<Cancellation />} />
+
+        {/* Chat and requests */}
+        <Route path="/inbox" element={<Inbox />} />
+        <Route path="/requests" element={<ItemRequests />} />
+
+        {/* Handoff, quick borrow, reporting */}
+        <Route path="/handoff/:rentalId" element={<PickupReturn />} />
+        <Route path="/quick-borrow" element={<QuickBorrow />} />
+        <Route path="/report" element={<Report />} />
       </Routes>
     </BrowserRouter>
   )
