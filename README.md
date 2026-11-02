@@ -72,7 +72,7 @@ See [UX-DESIGN.md](./UX-DESIGN.md) for the app map, wireframes, and outstanding 
 
 ## Running the front end
 
-You need [Node.js](https://nodejs.org/) 20 or newer, which includes npm.
+Use [Node.js](https://nodejs.org/) 24 with npm (the tested default). The current tooling supports Node `^20.19.0 || ^22.13.0 || >=24`; Node 21 and 23 are not supported by ESLint.
 
 ```bash
 cd front-end

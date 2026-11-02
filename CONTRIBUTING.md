@@ -1,246 +1,107 @@
 # Contributing to CareerHive
 
-This file is the agreement for how work gets into CareerHive. Read it before you open a branch or a pull request.
+Use this guide with the [README](./README.md) and [UX design](./UX-DESIGN.md). Work in the [shared team repository](https://github.com/agile-students-fall2026/generic-mern-stack-project-careerhive); do not create another fork.
 
-CareerHive is a mobile web app that helps college students and recent graduates find internships and entry-level jobs and keep track of applications. The product vision and a longer description are in the [README](./README.md).
+## Team and norms
 
-## Team
+- Everyone is a developer, including the Product Owner and Scrum Master. These two roles rotate each sprint so everyone holds each at least once; announce them in the team channel and standups.
+- The Product Owner orders the backlog and resolves product disagreements. Discuss technical disagreements together, then vote if needed; the Scrum Master makes sure a decision is reached.
+- The Scrum Master runs standups, follows the task board, and helps resolve blockers. Discuss missed work directly; report repeated problems to the instructor.
+- Use the shared Discord channel with course staff for team communication and decisions. A private conversation alone is not a team decision.
+- Ask for help after an hour blocked and explain what you tried. Reply to direct messages within a day; report the same day if you cannot finish work you took.
+- Sprints last two weeks. Agree on selected stories, task ownership, and the standup schedule at sprint start. Each task should fit between two standups.
+- Standups last 15–30 minutes. Each person reports what they finished, what is next, and blockers. Do not report for absent members. After two standups without progress, the Scrum Master reports it to the instructor.
 
-[Myra Rafiq](https://github.com/myrarafiq), [Tony Zhou](https://github.com/TonyyZhou), [Abubakar Diallo](https://github.com/Dialloni), and [David Wang](https://github.com/chocolatechipscookiecrumbles) are the core team.
+## Issues and sprint work
 
-Everyone is a developer. Design and code work are shared every sprint. Two extra roles rotate so that each person holds each one at least once:
+Start from a GitHub issue; discuss large changes with the team before implementing them.
 
-- **Scrum Master** runs standups, watches the task board, and follows up on blockers.
-- **Product Owner** orders the backlog and decides what the product should do when the team is split.
+| Label | Purpose |
+| --- | --- |
+| `user story` | A user-facing requirement |
+| `task` | One part of a user story; name its parent, such as `Related to user story #11` |
+| `spike` | Research or setup not tied to one user story |
 
-We name both people in the team channel and standups at the start of each sprint.
+Also use the applicable `Sprint 0`–`Sprint 4` labels. Preserve previous sprint labels when work carries over; use labels rather than milestones. Start with the [issue templates](./.github/ISSUE_TEMPLATE/).
 
-## Team norms
+Keep the sprint board accurate: **To Do → In Progress → Awaiting Review → Done**. Move work to In Progress when starting, Awaiting Review when requesting review, and Done after merge.
 
-We wrote these down so nobody has to guess what is expected. Day-to-day talk happens in the team's shared channel on Discord. Course staff are in that channel. A decision made only in a private chat is not a team decision.
+## Branches and Git workflow
 
-### Asking for help
+`master` must stay working; fix a build you break. Create short-lived branches in the shared repository from current `master`; aim to finish within two or three days.
 
-If you are stuck for more than an hour, ask, and say what you already tried. Do not wait for the next standup to mention a blocker.
+Name new branches **`<type>/<issue-number>/<short-description>`**, using lowercase words and hyphens:
 
-Reply to a message aimed at you within a day. If you cannot finish something you took, say so the same day so someone else can take it.
+| Type | Work |
+| --- | --- |
+| `feat` | Feature implementation |
+| `fix` | Bug fixes |
+| `docs` | Documentation |
+| `spike` | Research or setup |
 
-### Disagreements
+Examples: `feat/67/tracker-grouped-preview`, `feat/60/browse-jobs`, and `spike/45/scaffold-vite-react-frontend`. Use the task or spike's own issue number; keep a task's parent story in the issue and PR. Branch prefixes do not replace issue labels. Existing published branches keep their names.
 
-We talk it through in the channel or on a short call and try to land on something everyone can live with.
-
-- If we still disagree about what the user should be able to do, the Product Owner decides.
-- If we still disagree about how to build it, we vote. The Scrum Master makes sure the conversation ends in a decision.
-- If someone is not doing the work they took, we tell them directly. If it keeps happening, the Scrum Master tells the instructor. We do not quietly cover for missing work.
-
-### Sprints
-
-A sprint is two weeks. At the start we pick user stories from the product backlog, break them into tasks, and put that work on that sprint's GitHub task board. A task should be small enough for one person to finish between two standups.
-
-### Standups
-
-Standups are about 15-30 minutes. They happen at whatever time we set at the start of the sprint that works for the entire team. Show up. Please.
-
-Each person answers three things:
-
-1. What did you finish since the last standup?
-2. What are you doing next?
-3. What is blocking you?
-
-We do not report for someone who is absent. If a person has made no progress for two standups in a row, the Scrum Master reports that to the instructor.
-
-### Coding standards
-
-- Visual Studio Code is the editor we standardize on. Another editor is fine if the code still matches the team's formatting once a linter is in place.
-- Write the smallest amount of code that makes the feature work. Improve it after it works.
-- `master` stays in a working state. If you break the build, you fix it.
-- Make small commits, one change at a time, with a single-line message that says what changed.
-- Name variables and functions for what they do.
-- Delete commented-out code instead of leaving it in.
-- Once we have tests, changes that affect behavior need tests, and those tests have to pass before the change is merged.
-
-## Git workflow
-
-We follow the [feature branch workflow](https://knowledge.kitchen/content/courses/agile-development-and-devops/slides/feature-branch-workflow/). Changes are made on a branch, a teammate reviews them in a pull request, and only then do they land on `master`. This repository's trunk is `master`.
-
-There is one shared repository: [agile-students-fall2026/CareerHive](https://github.com/agile-students-fall2026/CareerHive). Make your branches here. Do not fork the repo again, and do not fork a teammate's copy.
-
-### Start from the latest master
+Start a feature branch, for example:
 
 ```bash
 git checkout master
 git pull origin master
+git checkout -b feat/60/browse-jobs
 ```
 
-### Branch from an issue
+Make small commits with one short, concrete message line describing the change, such as `add grouped tracker previews`. Push at least once between standups, even before review readiness.
 
-Name the branch after the issue you are working on.
-
-A task:
-
-```bash
-git checkout -b user-story/13/task/9/implement-user-login
-```
-
-A spike:
-
-```bash
-git checkout -b spike/6/set-up-local-environment
-```
-
-Move that card to **In Progress** on the sprint board when you start.
-
-Finish the branch within two or three days. A branch that sits longer than that will conflict with other people's work, and the whole team should help get it merged or closed.
-
-### Commit
-
-```bash
-git add .
-git commit -m "Add login form for user story #13"
-```
-
-Commit messages are one line. Push at least once between standups, even if the branch is not ready to merge yet.
-
-### Update your branch, then push
+Before requesting review, merge current master into your branch and resolve conflicts there:
 
 ```bash
 git fetch origin
 git merge origin/master
-git push -u origin user-story/13/task/9/implement-user-login
+git push -u origin feat/60/browse-jobs
 ```
 
-Resolve conflicts on your own branch before you open the pull request.
+Open the PR against **this team's repository and `master`**, not the instructor's repository. Use the [PR template](./.github/pull_request_template.md), link the issue, describe validation and remaining work, and request a teammate reviewer. Use `Closes #...` only when the issue is fully addressed; otherwise use `Related to #...`.
 
-### Open a pull request
+The reviewer reads the diff, checks out the branch, runs applicable checks, and requests fixes or approves. Never approve your own PR. Merge only after approval, using **Create a merge commit**, not Rebase and merge. Whoever merges moves the card to Done.
 
-Open the pull request on GitHub and assign a teammate as the reviewer. Move the card to **Awaiting Review**.
+## Code and data rules
 
-This repository is a fork of the instructor's repository, so GitHub will try to open the pull request against the instructor's repo. Change the base repository to **CareerHive** and the base branch to `master`. If you leave the instructor's repo selected, your teammates cannot review or merge the work.
-
-Do not approve your own pull request.
-
-### Review
-
-The reviewer checks out the branch, runs whatever can be run, and reads the diff.
-
-```bash
-git fetch origin
-git checkout user-story/13/task/9/implement-user-login
-git pull
-```
-
-If something is wrong, leave comments and request changes. The author fixes them and says so. If the change works and fits the issue, the reviewer approves it.
-
-### Merge
-
-Merge with a merge commit. On GitHub, choose **Create a merge commit**. Do not choose **Rebase and merge**. The merge commit is part of the history we keep.
-
-From the command line, either the author or the reviewer can merge after approval:
-
-```bash
-git checkout master
-git pull origin master
-git merge user-story/13/task/9/implement-user-login
-git push origin master
-```
-
-Whoever merges moves the card to **Done**.
-
-### Leave these out of git
-
-- `.env` files, passwords, API keys, and database URIs
-- `node_modules/` and build output
-- anyone's personal data
-- editor and OS junk (`.DS_Store` and similar are already in `.gitignore`)
-
-If a secret gets committed, tell the team immediately. Deleting it in a later commit does not remove it from history.
-
-## What to contribute
-
-Start from a GitHub issue. If there is no issue for the work, open one and check with the team before writing a large change.
-
-### Issues and labels
-
-Every issue gets one of these labels:
-
-| Label | Use it for |
-| --- | --- |
-| `user story` | A user-facing requirement in the product backlog |
-| `task` | One piece of a user story, small enough to finish between standups |
-| `spike` | Research or setup that is not tied to a single user story |
-
-Also add the sprint label: `Sprint 0`, `Sprint 1`, `Sprint 2`, `Sprint 3`, or `Sprint 4`. An issue can carry more than one sprint label if the work continues into the next sprint. We use labels for this, not GitHub Milestones, because a milestone can only point at one sprint.
-
-A task description should name the user story it comes from, for example `Related to user story #22`. The issue templates under `.github/ISSUE_TEMPLATE/` are the starting point.
-
-### A change we will merge
-
-- It does one thing. A login screen and a tracker redesign are two pull requests.
-- It matches an open task, spike, or a bug you have written up.
-- The pull request says which issue it closes and how you checked the change.
-- Screens stay consistent with [UX-DESIGN.md](./UX-DESIGN.md) unless the team has agreed to change the design. If the design changes, update the design notes in the same pull request.
-- It does not drag unrelated cleanup along with it. Clean up the code you touched and leave the rest for its own change.
-
-### Stack we are aiming at
-
-The front end will be React, built with Vite, using function components and JSX. The back end will be Express. We are not using Redux, Next.js, Bootstrap, or Material UI. Data that will later come from the server should not be hard-coded into components. Secrets go in `.env`, which is gitignored, and get shared in the course channel when someone needs them to run the app.
-
+- Write the smallest implementation that works. Use clear names and delete commented-out code.
+- Use React function components and JSX, built with Vite. The backend will use Express. Do not add Redux, MobX, Next.js, another build/SSR tool, Bootstrap, or Material UI.
+- Load future server data through the agreed mock-data access; do not hard-code it into UI components. Use the assignment-compatible image source.
+- Keep screens consistent with UX-DESIGN.md. Agree on design changes with the team and update the design notes in the same PR.
+- Keep each PR focused; leave unrelated cleanup for separate work. Once tests exist, behavior changes need tests that pass before merge.
+- Use VS Code or an editor producing the same formatting. Install the ESLint and Prettier extensions in VS Code, as the course conventions require.
+- Keep `node_modules/`, build output, `.env`, credentials, private data, and editor/OS junk out of Git. If a secret is committed, tell the team immediately; deleting it later does not remove it from history.
 
 ## Local setup
 
-Install:
-
-- Git
-- Node.js 20 or newer, with npm
-- Access to the shared GitHub repository
-- Visual Studio Code, or another editor you will keep consistent with the team's formatting
-
-Clone the shared repository. Do not fork it.
+Install Git, Node.js with npm, and an editor. **Node 24 is the tested default**; the current tooling supports `^20.19.0 || ^22.13.0 || >=24`. Node 21 and 23 are outside ESLint's supported range.
 
 ```bash
 git clone https://github.com/agile-students-fall2026/generic-mern-stack-project-careerhive.git
 cd generic-mern-stack-project-careerhive
 git config user.name "your-github-username"
 git config --global pull.rebase false
+cd front-end
+npm install
+npm run dev
 ```
 
-After your first commit, run `git log` and confirm the name on the commit is your GitHub username.
+Confirm your Git name matches your own GitHub username with `git log` after committing. The dev server normally runs at http://localhost:5173; use the URL Vite prints if that port is occupied.
 
-### Where things live
+Install app dependencies inside their app folder. The frontend is in `front-end/`; `back-end/` remains a placeholder until Sprint 2. Share needed secrets privately through the course channel.
 
-```
-CareerHive/
-├── front-end/     # React app (Vite)
-├── back-end/      # Express server. Placeholder until Sprint 2.
-├── ux-design/     # App map, wireframes, and prototype notes
-├── README.md
-├── CONTRIBUTING.md
-└── UX-DESIGN.md
-```
+## Checks and PR review
 
-`back-end/` only holds a short note until Sprint 2. Install dependencies inside each app's folder, and do not commit `node_modules`, `dist`, or `.env`.
-
-## Building and testing
-
-### Front end
-
-Run these inside `front-end/`:
+Run these inside `front-end/` before requesting review:
 
 ```bash
-npm install      # install dependencies
-npm run dev      # start the app at http://localhost:5173
-npm run build    # production build into dist/
-npm run lint     # ESLint check
+npm run lint
+npm run build
 ```
 
-Run `npm run lint` and `npm run build` before you open a pull request; both must pass. Install the **ESLint** and **Prettier** extensions in VS Code, as the course conventions require.
+Both must pass. `npm run preview` serves the production build locally. Record actual commands and results in the PR; for UI changes include the viewport, interactions checked, and screenshots. State anything unverified or unfinished.
 
-There is no test suite yet.
+There is no application test suite yet. Sprint 2 backend tests will use mocha/chai with c8 coverage, with each developer covering at least 10% of the backend code; start/test commands will be added when implemented.
 
-### Back end (Sprint 2)
-
-An Express server in `back-end/`. Unit tests will use mocha and chai, and c8 will check coverage. Each developer covers at least 10% of the back-end code. We will add the start and test commands here.
-
-## Questions
-
-Ask in the team channel, or open a GitHub issue if the whole team should see it. If a rule in this file is wrong or out of date, change it with a pull request like any other work.
+Ask questions or propose changes to this agreement in the team channel or an issue, then use the same teammate-review workflow.
