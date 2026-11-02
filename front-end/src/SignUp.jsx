@@ -1,0 +1,47 @@
+import { useState } from "react";
+import "./SignUp.css";
+
+function SignUp() {
+    const [email, SetEmail] = useState("");
+    const [password, SetPassword] = useState("");
+    const [error, SetError] = useState("");
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (!email || !password) {
+            SetError("Please enter an email and password.");
+            return;
+        }
+        SetError("");
+    };
+
+    return (
+        <div className="sign-up">
+            <h2>Sign Up</h2>
+            <form onSubmit={handleSubmit}>
+                <div className="form-email">
+                    <label htmlFor="email">Email:</label>
+                    <input
+                        type="email"
+                        id="email"
+                        value={email}
+                        onChange={(e) => SetEmail(e.target.value)}
+                    />
+                </div>
+                <div className="form-password">
+                    <label htmlFor="password">Password:</label>
+                    <input
+                        type="password"
+                        id="password"
+                        value={password}
+                        onChange={(e) => SetPassword(e.target.value)}
+                    />
+                </div>
+                {error && <p className="error">{error}</p>}
+                <button type="submit">Sign Up</button>
+            </form>
+        </div>
+    );
+}
+
+export default SignUp;
