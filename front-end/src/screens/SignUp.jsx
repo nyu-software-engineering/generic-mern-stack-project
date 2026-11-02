@@ -3,9 +3,11 @@ import { Link, useNavigate } from "react-router";
 import Button from "../components/ui/Button.jsx";
 import ScreenTitle from "../components/ui/ScreenTitle.jsx";
 import TextField from "../components/ui/TextField.jsx";
+import RoleChoice from "../components/RoleChoice.jsx";
 
 export default function SignUp() {
   const navigate = useNavigate();
+  const [role, setRole] = useState("renter");
   const [form, setForm] = useState({ name: "", email: "", password: "" });
 
   const updateField = (event) =>
@@ -13,7 +15,7 @@ export default function SignUp() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    navigate("/");
+    navigate(role === "landlord" ? "/landlord" : "/");
   };
 
   return (
@@ -23,6 +25,7 @@ export default function SignUp() {
         title="Create your account"
         subtitle="Check rents, build your Reliability Report and negotiate with evidence."
       />
+      <RoleChoice role={role} onChange={setRole} />
       <form onSubmit={handleSubmit} className="space-y-4">
         <TextField
           label="Name"
