@@ -4,51 +4,74 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #f1f5f9;
+  background: linear-gradient(135deg, #e0ecff, #f8fafc);
+  padding: 20px;
 }
 
 .form-box {
   background-color: white;
   padding: 40px;
-  border-radius: 10px;
-  width: 350px;
-  max-width: 90%;
+  border-radius: 15px;
+  width: 380px;
+  max-width: 100%;
   text-align: center;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
 }
 
 .form-box h1 {
   color: #2563eb;
-  margin-bottom: 20px;
+  font-size: 32px;
+  margin-bottom: 5px;
+}
+
+.tagline {
+  color: #777;
+  font-size: 13px;
+  margin-bottom: 30px;
 }
 
 .form-box h2 {
-  margin-bottom: 25px;
   color: #333;
+  margin-bottom: 8px;
+}
+
+.description {
+  color: #777;
+  font-size: 14px;
+  margin-bottom: 25px;
 }
 
 .form-box label {
   display: block;
   text-align: left;
-  margin-bottom: 5px;
-  color: #333;
+  margin-bottom: 6px;
+  color: #444;
+  font-size: 14px;
+  font-weight: bold;
 }
 
 .form-box input {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   margin-bottom: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.form-box input:focus {
+  outline: none;
+  border-color: #2563eb;
 }
 
 .form-box form button {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   background-color: #2563eb;
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
+  font-size: 15px;
   cursor: pointer;
 }
 
@@ -57,8 +80,7 @@
 }
 
 .form-box p {
-  margin-top: 20px;
-  color: #555;
+  color: #666;
 }
 
 .switch-button {
@@ -66,5 +88,9 @@
   border: none;
   color: #2563eb;
   cursor: pointer;
-  margin-top: 5px;
+  font-size: 14px;
+}
+
+.switch-button:hover {
+  text-decoration: underline;
 }

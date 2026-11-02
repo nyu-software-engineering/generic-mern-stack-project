@@ -15,7 +15,17 @@ function App() {
       <div className="form-box">
         <h1>MapMaker</h1>
 
-        <h2>{isRegister ? "Create an Account" : "Sign In"}</h2>
+        <p className="tagline">
+          Create, customize, and share your maps.
+        </p>
+
+        <h2>{isRegister ? "Create an Account" : "Welcome Back!"}</h2>
+
+        <p className="description">
+          {isRegister
+            ? "Get started by creating your account."
+            : "Sign in to continue creating maps."}
+        </p>
 
         <form onSubmit={handleSubmit}>
           {isRegister && (
