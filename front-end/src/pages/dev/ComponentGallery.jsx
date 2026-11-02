@@ -74,8 +74,8 @@ export default function ComponentGallery() {
   return (
     <Page title="Component gallery" back="/home" action={<ThemeToggle />}>
       <p className="text-muted text-small">
-        Every shared component, live. Toggle the theme with the moon/sun button. Usage examples for each one are in
-        FRONTEND-GUIDE.md and at the top of each component file.
+        Every shared component, live. Toggle the theme with the moon/sun button. Usage examples for each one are at the
+        top of each component file.
       </p>
 
       <GallerySection name="Logo">
