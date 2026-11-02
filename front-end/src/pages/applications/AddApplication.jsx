@@ -100,6 +100,16 @@ export default function AddApplication() {
     setForm({ ...form, resume: null })
   }
 
+  // Sends the application to the api and shows the "Application saved" pop-up
+  async function saveApplication() {
+    // Don't save recruiter contacts that were left completely empty
+    const recruiters = form.recruiters.filter(
+      (recruiter) => recruiter.name.trim() || recruiter.email.trim() || recruiter.phone.trim(),
+    )
+    await api.createApplication({ ...form, recruiters })
+    setSaved(true)
+  }
+
   async function handleSave() {
     setSubmitted(true)
     if (!hasNoErrors(errors) || !hasNoErrors(recruiterEmailErrors)) return
