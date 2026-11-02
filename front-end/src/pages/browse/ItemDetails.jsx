@@ -6,6 +6,12 @@ import {
   getUser,
   listingImage,
 } from '../../services/bookings'
+import {
+  getSavedListings,
+  isListingSaved,
+  saveListing,
+  unsaveListing,
+} from '../../services/savedItems.js'
 import './browse.css'
 
 function ItemDetails() {
@@ -15,7 +21,9 @@ function ItemDetails() {
   const [startDate, setStartDate] = useState('')
   const [endDate, setEndDate] = useState('')
   const [error, setError] = useState('')
-
+  const [savedListings, setSavedListings] = useState(() =>
+    getSavedListings(CURRENT_USER_ID),
+  )
   const listing = getListing(id)
 
   if (!listing || listing.status !== 'published') {
@@ -30,6 +38,18 @@ function ItemDetails() {
 
   const owner = getUser(listing.ownerId)
   const isOwnListing = listing.ownerId === CURRENT_USER_ID
+
+  const saved = savedListings.some((item) => item.id === listing.id)
+
+  function handleToggleSave() {
+    if (isListingSaved(CURRENT_USER_ID, listing.id)) {
+      unsaveListing(CURRENT_USER_ID, listing.id)
+    } else {
+      saveListing(CURRENT_USER_ID, listing.id)
+    }
+
+    setSavedListings(getSavedListings(CURRENT_USER_ID))
+  }
 
   const today = new Date()
   const todayString =
@@ -89,6 +109,14 @@ function ItemDetails() {
       <p>{listing.description}</p>
       <p>Owner: {owner?.name ?? 'Student owner'}</p>
       <p>${listing.price.toFixed(2)} / day</p>
+
+      <button
+        type="button"
+        aria-pressed={saved}
+        onClick={handleToggleSave}
+      >
+        {saved ? 'Unsave item' : 'Save item'}
+      </button>
 
       <section>
         <h2>Rental terms</h2>
