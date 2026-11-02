@@ -117,7 +117,36 @@ Please read [CONTRIBUTING.md](./CONTRIBUTING.md) for our team norms, git workflo
 
 ## Building and testing
 
-The project is currently in the design stage (Sprint 0). Instructions for building and testing the project will be added here once development begins.
+### Requirements
+
+- [Node.js](https://nodejs.org/) 22.22 or newer (check with `node -v`)
+- [git](https://git-scm.com/)
+
+### Run the front-end locally
+
+```bash
+git clone https://github.com/agile-students-fall2026/generic-mern-stack-project-leverage.git
+cd generic-mern-stack-project-leverage/front-end
+npm install
+npm run dev
+```
+
+Then open http://localhost:5173 in your browser. Leverage is a mobile web app, so it is best viewed at phone size (in Chrome: DevTools → Toggle device toolbar).
+
+Useful pages to start from:
+
+- Renter flow: http://localhost:5173/signup or http://localhost:5173/
+- Landlord flow: http://localhost:5173/landlord
+- A shared report opened from a link, without an account: http://localhost:5173/r/rpt-104
+
+### Other commands (run inside `front-end/`)
+
+- `npm run lint` checks the code for problems
+- `npm run build` makes a production build in `front-end/dist/`
+
+### Data
+
+During Sprint 1 the app uses mock data from `front-end/public/mock/`, loaded through `front-end/src/data/api.js`. No `.env` file or account is needed to run it. The back-end in `back-end/` will replace the mock data in Sprint 2.
 
 ## Additional documents
 

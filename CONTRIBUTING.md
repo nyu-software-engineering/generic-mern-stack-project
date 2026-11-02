@@ -46,7 +46,7 @@ We use the **feature branch workflow**.
 ```bash
    git push -u origin yourname-feature-name
 ```
-4. Open a pull request on GitHub. Make sure the **base repository is `agile-students-fall2026/Leverage`** (not the instructor's repository) and the base branch is `master`.
+4. Open a pull request on GitHub. Make sure the **base repository is `agile-students-fall2026/generic-mern-stack-project-leverage`** (not the instructor's repository) and the base branch is `master`.
 5. Link the issue in the pull request description, for example `Closes #12`.
 6. At least one other team member reviews and approves the pull request before it is merged.
 7. Never commit directly to `master`.
@@ -67,7 +67,7 @@ We use the **feature branch workflow**.
 2. Clone the repository:
 ```bash
    git clone https://github.com/agile-students-fall2026/generic-mern-stack-project-leverage.git
-   cd Leverage
+   cd generic-mern-stack-project-leverage
 ```
 3. Set your git username to **exactly** your GitHub username, so your contributions are tracked correctly:
 ```bash
@@ -81,7 +81,7 @@ We use the **feature branch workflow**.
 
 ## Building and Testing
 
-The project is in the design stage (Sprint 0). Build and test instructions will be added here once front-end development begins in Sprint 1.
+See the [Building and testing](README.md#building-and-testing) section of the README for how to install and run the app. Before opening a pull request, run `npm run lint` and `npm run build` inside `front-end/` and make sure both pass.
 
 ## Effort Estimation
 
