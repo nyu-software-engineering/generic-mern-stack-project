@@ -1,0 +1,149 @@
+.invite-page {
+  padding: 1rem;
+  padding-bottom: 5rem;
+}
+
+.invite-header {
+  margin-bottom: 1.5rem;
+}
+
+.invite-back {
+  display: inline-block;
+  margin-bottom: 0.75rem;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid #000;
+  padding: 0.25rem 0.5rem;
+}
+
+.invite-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem;
+}
+
+.invite-subtitle {
+  margin: 0;
+  color: #444;
+}
+
+.invite-section-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  margin: 0 0 0.75rem;
+}
+
+.invite-empty {
+  margin: 0 0 1.5rem;
+  color: #666;
+}
+
+.invite-friend-list {
+  list-style: none;
+  margin: 0 0 1.5rem;
+  padding: 0;
+  border-top: 1px solid #ccc;
+}
+
+.invite-friend-list li {
+  border-bottom: 1px solid #ccc;
+}
+
+.invite-friend-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 0;
+  cursor: pointer;
+}
+
+.invite-friend-row--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.invite-photo {
+  position: relative;
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  background: #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  overflow: hidden;
+}
+
+.invite-photo img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.invite-friend-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.invite-friend-name {
+  font-weight: 700;
+}
+
+.invite-friend-handle {
+  color: #666;
+  font-size: 0.875rem;
+}
+
+.invite-friend-note {
+  font-size: 0.75rem;
+  color: #666;
+}
+
+.invite-already-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+.invite-member-names {
+  font-size: 0.875rem;
+}
+
+.invite-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.invite-copy {
+  width: 100%;
+  padding: 0.75rem;
+  background: #fff;
+  border: 1px solid #000;
+  cursor: pointer;
+}
+
+.invite-primary {
+  width: 100%;
+  padding: 0.75rem;
+  background: #000;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+.invite-primary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.invite-feedback {
+  margin: 0;
+  font-size: 0.875rem;
+}
