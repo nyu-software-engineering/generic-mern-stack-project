@@ -2,32 +2,48 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router'
 import TextField from '../components/TextField'
 
+// Checks an email and returns an error message, or '' if the email is fine.
 function validateEmail(email) {
+  // trim() removes spaces, so "   " counts as empty
   if (!email.trim()) return 'Enter your email.'
+  // The pattern is some text, then @, then some text, then a dot, then some text.
+  // No spaces are allowed anywhere. This catches invalid emails like "abc" and "abc@"
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return 'Enter a valid email address.'
   return ''
 }
 
+// Checks a password the same way: returns the first problem found, or '' if it's fine
 function validatePassword(password) {
   if (!password) return 'Enter a password.'
   if (password.length < 8) return 'Use at least 8 characters.'
+  // /[0-9]/ looks for at least one digit anywhere in the password
   if (!/[0-9]/.test(password)) return 'Include at least one number.'
   return ''
 }
 
 export default function Signup() {
   const navigate = useNavigate()
+
+  // What the user has typed so far. Each useState gives a value and a function to change it.
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  // Tracks whether the user has finished with each field (clicked away or tried to submit)
   const [touched, setTouched] = useState({ email: false, password: false })
 
+  // Only show an error once the field has been touched; otherwise the message is empty.
   const emailError = touched.email ? validateEmail(email) : ''
   const passwordError = touched.password ? validatePassword(password) : ''
 
+
+  // Runs when the form is submitted (button click or Enter key)
   function handleSubmit(event) {
+    // Stops the browser's default behavior of reloading the page on submit
     event.preventDefault()
+    // Mark both fields as touched so any errors show, even for fields the user skipped
     setTouched({ email: true, password: true })
+    // If either field has an error, stop here and let the user fix it
     if (validateEmail(email) || validatePassword(password)) return
+    //will go to the choose-username screen once it is done
     navigate('/choose-username')
   }
 
@@ -37,7 +53,7 @@ export default function Signup() {
         Join Later
       </h1>
       <p className="mt-2.5 text-sm leading-normal text-gray-500">
-        Save the places your friends keep sending you.
+        Stop losing places in the groupchat
       </p>
 
       <form onSubmit={handleSubmit} noValidate className="mt-8 flex flex-col gap-4">
