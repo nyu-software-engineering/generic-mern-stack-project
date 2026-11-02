@@ -128,7 +128,7 @@ npm install
 cp .env.example .env.local
 ```
 
-Set `MOCKAROO_API_KEY` in `front-end/.env.local` using the team's key shared privately. The account must have the saved `DormShare` schema and `GET /dormshare.json` mock API. See [Mockaroo setup](./mockaroo/README.md) for the saved configuration and the pending chat integration. Never commit the key. Then start the front end:
+Set `MOCKAROO_API_KEY` in `front-end/.env.local` using the team's key shared privately. The account must have the saved `DormShare` schema and `GET /dormshare.json` mock API. See [Mockaroo setup](./mockaroo/README.md) for the saved configuration and response fields. Never commit the key. Then start the front end:
 
 ```bash
 npm run dev
