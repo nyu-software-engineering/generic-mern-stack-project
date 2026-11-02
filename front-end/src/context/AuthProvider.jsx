@@ -12,14 +12,31 @@ function AuthProvider({ children }) {
     const user = savedProfile || {
       email,
       displayName,
-      campusArea: ''
+      campusArea: '',
+      emailVerified: false,
     }
 
     setCurrentUser(user)
 
     setProfiles((previous) => ({
       ...previous,
-      [email]: user
+      [email]: user,
+    }))
+  }
+
+  function verifyEmail() {
+    if (!currentUser) return
+
+    const updatedUser = {
+      ...currentUser,
+      emailVerified: true,
+    }
+
+    setCurrentUser(updatedUser)
+
+    setProfiles((previous) => ({
+      ...previous,
+      [currentUser.email]: updatedUser,
     }))
   }
 
@@ -29,14 +46,14 @@ function AuthProvider({ children }) {
     const updatedUser = {
       ...currentUser,
       displayName,
-      campusArea
+      campusArea,
     }
 
     setCurrentUser(updatedUser)
 
     setProfiles((previous) => ({
       ...previous,
-      [currentUser.email]: updatedUser
+      [currentUser.email]: updatedUser,
     }))
   }
 
@@ -46,7 +63,13 @@ function AuthProvider({ children }) {
 
   return (
     <AuthContext.Provider
-      value={{ currentUser, signIn, updateProfile, signOut }}
+      value={{
+        currentUser,
+        signIn,
+        verifyEmail,
+        updateProfile,
+        signOut,
+      }}
     >
       {children}
     </AuthContext.Provider>

@@ -1,7 +1,7 @@
 
 import { useContext, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
 import { AuthContext } from '../../context/AuthContext'
+import { Link, Navigate, useNavigate } from 'react-router-dom'
 
 function SetupProfile() {
   const { currentUser, updateProfile } = useContext(AuthContext)
@@ -12,8 +12,11 @@ function SetupProfile() {
     event.preventDefault()
 
     if (!currentUser) {
-      setMessage('Please sign up or sign in first.')
-      return
+      return <Navigate to="/signup" replace />
+    }
+
+    if (!currentUser.emailVerified) {
+      return <Navigate to="/verify-email" replace />
     }
 
     const displayName = event.currentTarget.elements.displayName.value.trim()

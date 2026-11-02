@@ -1,8 +1,10 @@
 
-import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useContext, useState } from 'react'
+import { Link, Navigate, useNavigate } from 'react-router-dom'
+import { AuthContext } from '../../context/AuthContext'
 
 function VerifyEmail() {
+  const { currentUser, verifyEmail } = useContext(AuthContext)
   const [code, setCode] = useState('')
   const [message, setMessage] = useState('')
   const navigate = useNavigate()
@@ -15,13 +17,17 @@ function VerifyEmail() {
       return
     }
 
-    // Simulated verification for Sprint 1
+    verifyEmail()
     navigate('/setup-profile')
   }
 
   function handleResend() {
     setCode('')
     setMessage('Demo mode: no verification email is sent.')
+  }
+
+  if (!currentUser) {
+    return <Navigate to="/signup" replace />
   }
 
   return (
@@ -42,7 +48,10 @@ function VerifyEmail() {
           inputMode="numeric"
           placeholder="Enter 6-digit code"
           value={code}
-          onChange={(event) => setCode(event.target.value)}
+          onChange={(event) => {
+            setCode(event.target.value)
+            setMessage('')
+          }}
           maxLength={6}
           required
         />
@@ -54,7 +63,7 @@ function VerifyEmail() {
         Resend code
       </button>
 
-      {message && <p>{message}</p>}
+      {message && <p role="alert">{message}</p>}
     </main>
   )
 }
