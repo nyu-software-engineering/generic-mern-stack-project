@@ -1,0 +1,13 @@
+#navlink {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    padding: 1em;
+    border-radius: 1em;
+}
+
+#navlink:hover {
+  background-color: var(--soft-black);
+}
