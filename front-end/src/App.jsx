@@ -1,5 +1,6 @@
 import "./App.css";
 import Explore from "./pages/Explore";
+import ReviewForm from "./components/ReviewForm";
 
 function App() {
   return (
@@ -10,6 +11,7 @@ function App() {
 
       <main>
         <Explore />
+        <ReviewForm userName="Alex" />
       </main>
     </div>
   );
