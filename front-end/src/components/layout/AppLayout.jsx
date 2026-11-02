@@ -13,7 +13,10 @@ const menuItems = {
     { label: "Active share links", to: "/share-links" },
     { label: "Explore areas", to: "/explore" },
   ],
-  landlord: [],
+  landlord: [
+    { label: "Home", to: "/landlord" },
+    { label: "Received reports", to: "/landlord/reports" },
+  ],
 };
 
 const homePaths = { renter: "/", landlord: "/landlord" };
