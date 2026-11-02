@@ -5,6 +5,8 @@ import viteLogo from './assets/vite.svg'
 import './App.css'
 import MyMaps from "./MyMaps";
 import MapEditor from "./Map-Editor";
+import Home from "./Home";
+
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 
 function App() {
@@ -18,6 +20,7 @@ function App() {
         <Router>
           <main className="App-main">
             <Routes>
+              <Route path="/" element={<Home/>}/>
               <Route path="/MyMaps" element={<MyMaps/>}/>
               <Route path="/Map-Editor" element={<MapEditor/>}/>
             </Routes>
