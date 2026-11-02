@@ -1,3 +1,5 @@
+import ScreenTitle from '../components/ui/ScreenTitle.jsx'
+
 export default function Home() {
-  return <h1 className="text-2xl font-semibold">Home</h1>
+  return <ScreenTitle title="Home" subtitle="Check an apartment, build your report and keep an eye on your areas." />
 }
