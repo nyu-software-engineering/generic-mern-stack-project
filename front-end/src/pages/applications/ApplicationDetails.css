@@ -1,0 +1,135 @@
+/* Application Details page. Only theme variables, so dark mode works. */
+
+/* Logo on the left, text on the right */
+.application-details__header {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+}
+
+/* Company, position, location and date stacked */
+.application-details__titles {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+/* Company name */
+.application-details__company {
+  margin: 0;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+}
+
+/* Position title */
+.application-details__position {
+  margin: 0;
+}
+
+/* Small gray text lines */
+.application-details__meta {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+/* Status badge row under a divider line */
+.application-details__status-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+  padding-top: var(--space-4);
+  border-top: var(--border-width) solid var(--color-border);
+}
+
+/* Section label with its card underneath */
+.application-details__section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+/* Status history list without default numbering */
+.application-details__history {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* One status row: dot, label, date */
+.application-details__history-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+/* Empty circle for past statuses */
+.application-details__history-dot {
+  flex-shrink: 0;
+  width: var(--space-3);
+  height: var(--space-3);
+  border: 2px solid var(--color-text);
+  border-radius: var(--radius-full);
+}
+
+/* Filled circle for the current status */
+.application-details__history-item--current .application-details__history-dot {
+  background: var(--color-text);
+}
+
+/* Status name, takes the remaining space */
+.application-details__history-label {
+  flex: 1;
+}
+
+/* Bold name for the current status */
+.application-details__history-item--current .application-details__history-label {
+  font-weight: var(--font-weight-semibold);
+}
+
+/* Date on the right */
+.application-details__history-date {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+/* Interview round name */
+.application-details__round-title {
+  margin: 0 0 var(--space-1);
+  font-weight: var(--font-weight-semibold);
+}
+
+/* Interview round notes in italics */
+.application-details__round-notes {
+  margin: var(--space-2) 0 0;
+  font-size: var(--font-size-sm);
+  font-style: italic;
+  color: var(--color-text-muted);
+}
+
+/* "Nothing here yet" message inside a card */
+.application-details__empty {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+/* Notes text */
+.application-details__notes {
+  margin: 0;
+  font-size: var(--font-size-sm);
+}
+
+/* Error message if saving a new status fails */
+.application-details__error {
+  margin: var(--space-3) 0 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-danger);
+}
