@@ -1,0 +1,6 @@
+[
+  { "id": "ntf-1", "title": "Rents in Bushwick are up", "message": "Average rent in Bushwick rose 2.1% this month.", "createdAt": "2026-10-31T14:20:00Z", "read": false, "link": "/areas/bushwick" },
+  { "id": "ntf-2", "title": "Your report was viewed", "message": "Astoria Realty opened your Reliability Report.", "createdAt": "2026-10-30T18:05:00Z", "read": false, "link": "/share-links" },
+  { "id": "ntf-3", "title": "Lease renewal in 60 days", "message": "Your renewal is coming up. Check local rents before you negotiate.", "createdAt": "2026-10-25T09:00:00Z", "read": true, "link": "/negotiate" },
+  { "id": "ntf-4", "title": "Rents in Harlem are steady", "message": "Average rent in Harlem changed less than 1% this month.", "createdAt": "2026-10-18T12:30:00Z", "read": true, "link": "/areas/harlem" }
+]
