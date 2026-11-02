@@ -1,1 +1,26 @@
 @import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --color-ink: #141414;
+  --color-muted: #6b6b6b;
+  --color-line: #e3e3e0;
+  --color-canvas: #f3f3f1;
+  --color-surface: #ffffff;
+  --color-accent: #1f4d3a;
+  --color-accent-soft: #e5eee9;
+  --color-positive: #1e7a46;
+  --color-negative: #b3261e;
+}
+
+/* Sprint 0 demo feedback: square corners on every element, no exceptions. */
+*,
+*::before,
+*::after {
+  border-radius: 0 !important;
+}
+
+body {
+  @apply bg-canvas font-sans text-ink antialiased;
+}
