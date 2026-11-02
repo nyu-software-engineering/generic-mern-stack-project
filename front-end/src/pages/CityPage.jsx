@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router'
 import CityHeader from '../components/CityHeader'
+import { loadCityHeaders } from '../data/mockDataLayer'
 import './CityPage.css'
 
 export default function CityPage() {
@@ -18,12 +19,7 @@ export default function CityPage() {
 
     async function loadHeader() {
       try {
-        // Temporary mock endpoint until the shared data layer is merged.
-        const response = await fetch(`${import.meta.env.BASE_URL}mock/city-headers.json`, {
-          signal: controller.signal,
-        })
-        if (!response.ok) throw new Error('Could not load city data')
-        const cities = await response.json()
+        const cities = await loadCityHeaders({ signal: controller.signal })
         const city = cities.find((item) => item.id === cityId)
         if (!controller.signal.aborted) {
           setResult({ cityId, attempt, status: city ? 'ready' : 'missing', city })
