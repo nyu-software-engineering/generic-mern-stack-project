@@ -1,20 +1,13 @@
 import React, { useState } from "react";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
-import ListingCard from "./components/ListingCard";
+import Explore from "./pages/Explore";
+import ReviewForm from "./components/ReviewForm";
 import "./App.css";
 
 function App() {
   // Page state options: "login", "signup", or "home"
   const [page, setPage] = useState("login");
-
-  const testListing = {
-    title: "Brooklyn Apartment",
-    location: "Williamsburg, Brooklyn",
-    price: "$1,650",
-    roommates: 2,
-    image: "/images/sublet-sample-apartment.webp"
-  };
 
   if (page === "login") {
     return (
@@ -25,7 +18,7 @@ function App() {
       />
     );
   }
-  
+
   if (page === "signup") {
     return (
       <SignUp 
@@ -47,8 +40,8 @@ function App() {
       </header>
 
       <main>
-        <h2>Explore Sublets</h2>
-        <ListingCard listing={testListing} />
+        <Explore />
+        <ReviewForm userName="Alex" />
       </main>
     </div>
   );
