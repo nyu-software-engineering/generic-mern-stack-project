@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { api } from '../../api'
 import {
   Button,
+  FileUpload,
   FormSection,
   Page,
   SegmentedControl,
@@ -34,11 +35,13 @@ export default function AddApplication() {
     jobPostingUrl: '',
     notes: '',
     recruiters: [{ name: '', email: '', phone: '' }],
+    resume: null,
   })
   const [submitted, setSubmitted] = useState(false) // true after the first tap on Save
   const [saving, setSaving] = useState(false) // true while the application is being saved
   const [saved, setSaved] = useState(false) // true when the "Application saved" pop-up should show
   const [saveError, setSaveError] = useState('') // message shown if saving fails
+  const [resumeError, setResumeError] = useState('') // message shown if the chosen file isn't a PDF
 
   // Company and position are required; every other field is optional
   const errors = {
@@ -79,6 +82,22 @@ export default function AddApplication() {
   // function that removes a recruiter contact
   function removeRecruiter(index) {
     setForm({ ...form, recruiters: form.recruiters.filter((recruiter, i) => i !== index) })
+  }
+
+  // Called with the file the user picked
+    // Called with the file the user picked. Only the file name is saved for now (Sprint 1 mock data).
+  function handleResumeChosen(file) {
+    if (!file.name.toLowerCase().endsWith('.pdf')) {
+      setResumeError('Choose a PDF file')
+      return
+    }
+    setResumeError('')
+    setForm({ ...form, resume: { fileName: file.name, uploadedAt: todayString() } })
+  }
+
+  function removeResume() {
+    setResumeError('')
+    setForm({ ...form, resume: null })
   }
 
   async function handleSave() {
@@ -212,7 +231,31 @@ export default function AddApplication() {
             Add another contact
           </Button>
         </FormSection>
+        
+        <FormSection title="Resume used">
+          <FileUpload
+            label="Upload resume (PDF)"
+            fileName={form.resume?.fileName}
+            onChange={handleResumeChosen}
+          />
+          {resumeError && (
+            <p className="field__error" role="alert">
+              {resumeError}
+            </p>
+          )}
 
+          {form.resume && (
+            <Button
+              variant="danger"
+              size="sm"
+              icon="trash"
+              className="add-application__remove-resume"
+              onClick={removeResume}
+            >
+              Remove resume
+            </Button>
+          )}
+        </FormSection>
         <FormSection title="Notes">
           <TextArea
             label="Notes"
