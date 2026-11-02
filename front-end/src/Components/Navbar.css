@@ -1,0 +1,24 @@
+
+.app-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.page-content {
+  flex: 1;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-around;
+  padding: 15px;
+  border-top: 1px solid lightgray;
+  background-color: white;
+}
+
+.navbar a {
+  color: black;
+  text-decoration: none;
+  font-size: 14px;
+}
