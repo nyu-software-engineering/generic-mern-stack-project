@@ -28,10 +28,18 @@ See the [original StockSim proposal](https://github.com/Zho29/project-proposal/b
 
 Sprint 0 roles:
 
-- Hanzalah Siraj - Product Owner. GitHub: [hanza-siraj](https://github.com/hanza-siraj).
-- Abhishek Subedi - Scrum Master GitHub: [zho29](https://github.com/zho29).
+- Hanzalah Siraj - Product Owner, GitHub: [hanza-siraj](https://github.com/hanza-siraj)
+- Abhishek Subedi - Scrum Master, GitHub: [zho29](https://github.com/zho29)
 - Brittany (Yutong) Liu - GitHub: [brittany660016](https://github.com/brittany660016)
 - Sam Fiallos - GitHub: [samthropic](https://github.com/samthropic)
+
+Sprint 1 roles:
+
+- Sam Fiallos - Product Owner, GitHub: [samthropic](https://github.com/samthropic)
+- Brittany (Yutong) Liu - Scrum Master, GitHub: [brittany660016](https://github.com/brittany660016)
+- Hanzalah Siraj - GitHub: [hanza-siraj](https://github.com/hanza-siraj)
+- Abhishek Subedi - GitHub: [zho29](https://github.com/zho29)
+
 
 ## Contributing
 
