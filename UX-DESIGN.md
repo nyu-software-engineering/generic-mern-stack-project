@@ -73,4 +73,4 @@ This page is reached by pressing the Propose New Proposal button on the househol
 # 0b - Prototyping
 
 **Link**:
-https://www.figma.com/design/VO1pP1VP3VoojZfSfaGHOi/SplitLease-Wireframe?node-id=0-1&t=Sj07zKpfjAVpqvRv-1
+https://www.figma.com/proto/VO1pP1VP3VoojZfSfaGHOi/SplitLease-Wireframe?node-id=109-658&p=f&t=X1O0nTVFCshH2ljw-0&scaling=scale-down&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=4%3A5
