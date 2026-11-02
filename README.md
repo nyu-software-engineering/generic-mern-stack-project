@@ -1,19 +1,53 @@
-# Project Repository
+# Worn
 
-This repository will be used for team projects.
+## Product Vision Statement
 
-Several sets of instructions are included in this repository. They should each be treated as separate assignments with their own due dates and sets of requirements.
+**For** fashion and cost conscious people, **who** want to ensure that they're making the most of their closet, **Worn is a** digital wardrobe tracker **that** shows the cost-per-wear of every item you own.
 
-1. See the [App Map & Wireframes](instructions-0a-app-map-wireframes.md) and [Prototyping](./instructions-0b-prototyping.md) instructions for the requirements of the initial user experience design of the app.
+## Description
 
-1. Delete the contents of this file and replace with the contents of a proper README.md, as described in the [project setup instructions](./instructions-0c-project-setup.md)
+Worn is a digital wardrobe tracker that logs what you own and how often you wear it, then calculates cost-per-wear so you can see which purchases pay off. It is based online with distinct accounts per user so they can return to their digital wardrobe easily.
 
-1. See the [Sprint Planning instructions](instructions-0d-sprint-planning.md) for the requirements of Sprint Planning for each Sprint.
+## Team
 
-1. See the [Front-End Development instructions](./instructions-1-front-end.md) for the requirements of the initial Front-End Development.
+| Name                | GitHub                                             |
+| ------------------- | -------------------------------------------------- |
+| [Manasa Thumu]      | [@mt5135](https://github.com/mt5135)               |
+| [Jamie Stuart]      | [@jamiestuartv](https://github.com/jamiestuartv)   |
+| [Aashin Singhal]    | [@aashinsinghal](https://github.com/aashinsinghal) |
+| [Chloe Chevin Jeon] | [@chevinjeon](https://github.com/chevinjeon)       |
+| [Christopher Park]  | [@joomen10](https://github.com/joomen10)           |
 
-1. See the [Back-End Development instructions](./instructions-2-back-end.md) for the requirements of the initial Back-End Development.
+## History
 
-1. See the [Database Integration instructions](./instructions-3-database.md) for the requirements of integrating a database into the back-end.
+Worn started as a semester project for Agile Development at NYU. It came from a real life problem of not having any way of tracking our closets and making sure we were actually wearing the clothes we'd bought.
 
-1. See the [Deployment instructions](./instructions-4-deployment.md) for the requirements of deploying an app.
+## Contributing
+
+We welcome contributions. Please read [CONTRIBUTING.md](./CONTRIBUTING.md) for our workflow, coding standards, and how to submit changes.
+
+## Building and Testing
+
+### Front-end
+
+React app built with Vite, Tailwind CSS, and React Router.
+
+**Requirements:** Node.js 20 or newer.
+
+```bash
+cd front-end
+npm install
+npm run dev
+```
+
+The app will be available at the local URL Vite prints in the terminal (typically `http://localhost:5173`).
+
+**Testing:** [Add test instructions, e.g. `npm test`, once tests exist.]
+
+### Back-end
+
+**Status:** Not yet implemented. This section will be updated when the back-end is built.
+
+## Additional Documentation
+
+- [CONTRIBUTING.md](./CONTRIBUTING.md)
