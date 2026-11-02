@@ -1,0 +1,109 @@
+
+.explore {
+  width: 100%;
+  max-width: 390px;
+  min-height: 100vh;
+  margin: auto;
+  padding: 25px;
+  box-sizing: border-box;
+  background-color: white;
+  color: #303640;
+  font-family: Arial, sans-serif;
+}
+
+.explore h1 {
+  font-size: 28px;
+  margin-top: 30px;
+}
+
+.explore hr {
+  border: none;
+  border-top: 1px solid lightgray;
+  margin-bottom: 25px;
+}
+
+.explore label {
+  display: block;
+  font-weight: bold;
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+
+.explore input {
+  width: 100%;
+  padding: 12px;
+  box-sizing: border-box;
+  border: 1px solid lightgray;
+  border-radius: 8px;
+}
+
+.event-filters {
+  background-color: #f0f1f3;
+  padding: 12px;
+  margin-top: 20px;
+  margin-bottom: 22px;
+  border: 1px solid lightgray;
+  border-radius: 8px;
+}
+
+.event-card {
+  display: flex;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid lightgray;
+  border-radius: 10px;
+  margin-bottom: 18px;
+  background-color: white;
+}
+
+.event-card img {
+  width: 80px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.event-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.event-info h3 {
+  font-size: 15px;
+  margin: 3px 0 8px;
+}
+
+.event-info p {
+  font-size: 12px;
+  margin-bottom: 16px;
+}
+
+.event-info button {
+  width: 100%;
+  background-color: #6941c6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 9px;
+  cursor: pointer;
+}
+
+.explore .create-event {
+  display: block;
+  width: 105px;
+  margin: 20px 0 0 auto;
+  background-color: #6941c6;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 12px;
+  cursor: pointer;
+}
+
+.event-navigation {
+  text-align: center;
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid lightgray;
+  font-size: 13px;
+}
