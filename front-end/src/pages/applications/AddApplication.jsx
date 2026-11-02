@@ -13,7 +13,7 @@ import {
 } from '../../components'
 import { APPLICATION_STATUSES, JOB_TYPES } from '../../constants'
 import { todayString } from '../../utils/format'
-import { hasNoErrors, validateRequired } from '../../utils/validation'
+import { hasNoErrors, validateEmail, validateRequired } from '../../utils/validation'
 import './AddApplication.css'
 
 /**
@@ -33,6 +33,7 @@ export default function AddApplication() {
     location: '',
     jobPostingUrl: '',
     notes: '',
+    recruiters: [{ name: '', email: '', phone: '' }],
   })
   const [submitted, setSubmitted] = useState(false) // true after the first tap on Save
   const [saving, setSaving] = useState(false) // true while the application is being saved
@@ -44,6 +45,12 @@ export default function AddApplication() {
     company: validateRequired(form.company, 'Company'),
     position: validateRequired(form.position, 'Position'),
   }
+
+  // A recruiter's email is optional, but if one is typed it must be actual email
+  const recruiterEmailErrors = form.recruiters.map((recruiter) =>
+    recruiter.email ? validateEmail(recruiter.email) : '',
+  )
+
   // Only show errors after the user has tried to save once
   const shownErrors = submitted ? errors : {}
 
@@ -54,14 +61,39 @@ export default function AddApplication() {
     }
   }
 
+  // Returns a function that updates one field of one recruiter, e.g. updateRecruiter(0, 'name')
+  function updateRecruiter(index, field) {
+    return (value) => {
+      const recruiters = form.recruiters.map((recruiter, i) =>
+        i === index ? { ...recruiter, [field]: value } : recruiter,
+      )
+      setForm({ ...form, recruiters })
+    }
+  }
+
+  // function for adding a recruiter contact info
+  function addRecruiter() {
+    setForm({ ...form, recruiters: [...form.recruiters, { name: '', email: '', phone: '' }] })
+  }
+
+  // function that removes a recruiter contact
+  function removeRecruiter(index) {
+    setForm({ ...form, recruiters: form.recruiters.filter((recruiter, i) => i !== index) })
+  }
+
   async function handleSave() {
     setSubmitted(true)
-    if (!hasNoErrors(errors)) return
+    if (!hasNoErrors(errors) || !hasNoErrors(recruiterEmailErrors)) return
+
+    // Don't save recruiter contacts that were left completely empty
+    const recruiters = form.recruiters.filter(
+      (recruiter) => recruiter.name.trim() || recruiter.email.trim() || recruiter.phone.trim(),
+    )
 
     setSaving(true)
     setSaveError('')
     try {
-      await api.createApplication(form)
+      await api.createApplication({ ...form, recruiters })
       setSaved(true)
     } catch (err) {
       setSaveError(err.message)
@@ -133,6 +165,52 @@ export default function AddApplication() {
             value={form.jobPostingUrl}
             onChange={update('jobPostingUrl')}
           />
+        </FormSection>
+
+        <FormSection title="Recruiter contact">
+          {form.recruiters.map((recruiter, index) => (
+            <div className="add-application__contact" key={index}>
+              {index > 0 && (
+                <div className="add-application__contact-header">
+                  <span className="add-application__contact-title">Contact {index + 1}</span>
+                  <Button variant="danger" size="sm" icon="trash" onClick={() => removeRecruiter(index)}>
+                    Remove
+                  </Button>
+                </div>
+              )}
+              <TextField
+                label="Name"
+                placeholder="Recruiter name"
+                value={recruiter.name}
+                onChange={updateRecruiter(index, 'name')}
+              />
+              <TextField
+                label="Email"
+                type="email"
+                placeholder="name@company.com"
+                value={recruiter.email}
+                onChange={updateRecruiter(index, 'email')}
+                error={submitted ? recruiterEmailErrors[index] : ''}
+              />
+              <TextField
+                label="Phone"
+                type="tel"
+                placeholder="Phone number"
+                value={recruiter.phone}
+                onChange={updateRecruiter(index, 'phone')}
+              />
+            </div>
+          ))}
+
+          <Button
+            variant="ghost"
+            size="sm"
+            icon="plus"
+            className="add-application__add-contact"
+            onClick={addRecruiter}
+          >
+            Add another contact
+          </Button>
         </FormSection>
 
         <FormSection title="Notes">
