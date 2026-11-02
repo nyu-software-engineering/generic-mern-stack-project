@@ -1,8 +1,9 @@
+import { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { api } from '../../api'
-import {
-  Avatar, Button, Card, ErrorState, EventCard, ListRow, LoadingState, Page, SectionHeader, StatusBadge,} from '../../components'
-import { getLabel, getStatus, JOB_TYPES } from '../../constants'
+import {Avatar, Button, Card, ErrorState, EventCard, ListRow, LoadingState, OptionSheet, Page, SectionHeader, StatusBadge,
+} from '../../components'
+import { APPLICATION_STATUSES, getLabel, getStatus, JOB_TYPES } from '../../constants'
 import { useApi } from '../../hooks/useApi'
 import { formatDate, todayString } from '../../utils/format'
 import './ApplicationDetails.css'
@@ -18,7 +19,11 @@ export default function ApplicationDetails() {
   // Read the application id from the URL
   const { id } = useParams()
   // Load the data and track loading/error state
-  const { data, loading, error, reload } = useApi(() => loadDetails(id), [id])
+  const { data, setData, loading, error, reload } = useApi(() => loadDetails(id), [id])
+  // Whether the Update status pop-up is open
+  const [statusOpen, setStatusOpen] = useState(false)
+  // Error message if saving a new status fails
+  const [statusError, setStatusError] = useState('')
 
   // "Edit" link in the top right of the header
   const editButton = (
@@ -54,6 +59,19 @@ export default function ApplicationDetails() {
   // Only events from today onward
   const upcomingEvents = events.filter((event) => event.date >= todayString())
 
+  // Save the picked status and show the updated application
+  async function changeStatus(status) {
+    setStatusOpen(false)
+    if (status === application.status) return
+    setStatusError('')
+    try {
+      const updated = await api.updateApplication(id, { status })
+      setData((current) => ({ ...current, application: updated }))
+    } catch (err) {
+      setStatusError(err.message)
+    }
+  }
+
   return (
     <Page title="Application" back action={editButton}>
       {/* Summary card: logo, company, position, status */}
@@ -69,7 +87,15 @@ export default function ApplicationDetails() {
         </div>
         <div className="application-details__status-row">
           <StatusBadge status={application.status} />
+          <Button variant="secondary" size="sm" onClick={() => setStatusOpen(true)}>
+            Update status
+          </Button>
         </div>
+        {statusError && (
+          <p className="application-details__error" role="alert">
+            {statusError}
+          </p>
+        )}
       </Card>
 
       {/* Job posting link, only shown if one was saved */}
@@ -91,7 +117,7 @@ export default function ApplicationDetails() {
           <ol className="application-details__history">
             {statusHistory.map((entry, index) => (
               <li
-                key={`${entry.status}-${entry.date}`}
+                key={`${entry.status}-${entry.date}-${index}`}
                 className={`application-details__history-item ${index === 0 ? 'application-details__history-item--current' : ''}`}
               >
                 <span className="application-details__history-dot" />
@@ -185,6 +211,16 @@ export default function ApplicationDetails() {
           </Card>
         </section>
       )}
+
+      {/* Update status pop-up with every status to pick from */}
+      <OptionSheet
+        open={statusOpen}
+        title="Update status"
+        options={APPLICATION_STATUSES}
+        value={application.status}
+        onSelect={changeStatus}
+        onCancel={() => setStatusOpen(false)}
+      />
     </Page>
   )
 }
