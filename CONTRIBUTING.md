@@ -96,12 +96,15 @@ Install app dependencies inside their app folder. The frontend is in `front-end/
 Run these inside `front-end/` before requesting review:
 
 ```bash
+npm test
 npm run lint
 npm run build
 ```
 
-Both must pass. `npm run preview` serves the production build locally. Record actual commands and results in the PR; for UI changes include the viewport, interactions checked, and screenshots. State anything unverified or unfinished.
+All three must pass. `npm run preview` serves the production build locally. Record actual commands and results in the PR; for UI changes include the viewport, interactions checked, and screenshots. State anything unverified or unfinished.
 
-There is no application test suite yet. Sprint 2 backend tests will use mocha/chai with c8 coverage, with each developer covering at least 10% of the backend code; start/test commands will be added when implemented.
+Frontend tests use Node's runner, React/Vite, and jsdom. The local mock-API tests open an ephemeral localhost port. These tests do not replace real-browser layout, scrolling, image, or focus checks; see the [frontend README](./front-end/README.md).
+
+Sprint 2 backend tests will use mocha/chai with c8 coverage, with each developer covering at least 10% of the backend code; start/test commands will be added when implemented.
 
 Ask questions or propose changes to this agreement in the team channel or an issue, then use the same teammate-review workflow.

@@ -84,7 +84,10 @@ Other commands, run inside `front-end/`:
 
 - `npm run build` builds the production version into `front-end/dist/`
 - `npm run lint` checks the code with ESLint
+- `npm test` runs component, DOM-interaction, and local mock-API tests; it does not verify real-browser layout or scrolling
 - `npm run preview` serves the production build locally
+
+See the [frontend README](./front-end/README.md) for the demo routes, mock API, and remaining integration/browser checks.
 
 ## Repository Structure
 
