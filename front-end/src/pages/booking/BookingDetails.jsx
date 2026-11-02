@@ -7,9 +7,17 @@ import {
 } from '../../services/bookings'
 import './booking.css'
 
+// Statuses where the owner has accepted, so the price is agreed rather than proposed.
+const AGREED_STATUSES = ['confirmed', 'active', 'extension_requested', 'completed']
+
 // Booking summary shared by owner and borrower (prototype m23).
+// Keyed by bookingId so its state resets when the route moves to another booking.
 function BookingDetails() {
   const { bookingId } = useParams()
+  return <BookingSummary key={bookingId} bookingId={bookingId} />
+}
+
+function BookingSummary({ bookingId }) {
   const [booking, setBooking] = useState(() => getBooking(bookingId))
   const [agreed, setAgreed] = useState(false)
 
@@ -31,7 +39,7 @@ function BookingDetails() {
       <div className="booking-card">
         <div><StatusBadge status={booking.status} /></div>
         <p>{formatDate(booking.startDate)} – {formatDate(booking.endDate)}</p>
-        <p>{booking.status === 'requested' ? 'Proposed' : 'Agreed'} total: ${booking.totalPrice}</p>
+        <p>{AGREED_STATUSES.includes(booking.status) ? 'Agreed' : 'Proposed'} total: ${booking.totalPrice}</p>
         <p>{isOwner ? 'Borrower' : 'Owner'}: {other?.name}</p>
         {booking.terms?.message && <p>Message: “{booking.terms.message}”</p>}
       </div>

@@ -3,22 +3,38 @@ import { countDays } from '../../services/bookings'
 
 const todayISO = () => new Date().toLocaleDateString('en-CA') // YYYY-MM-DD
 
+// True only for a real calendar date in YYYY-MM-DD form (rejects "zzz", "2026-02-30").
+function isValidDate(value) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false
+  const date = new Date(`${value}T00:00:00Z`)
+  return !Number.isNaN(date.getTime()) && date.toISOString().slice(0, 10) === value
+}
+
 function validate({ startDate, endDate, totalPrice }) {
   const errors = {}
   if (!startDate) errors.startDate = 'Pick a start date.'
+  else if (!isValidDate(startDate)) errors.startDate = 'Enter a valid start date.'
   else if (startDate < todayISO()) errors.startDate = 'Start date cannot be in the past.'
   if (!endDate) errors.endDate = 'Pick a return date.'
-  else if (startDate && endDate <= startDate) errors.endDate = 'Return date must be after the start date.'
+  else if (!isValidDate(endDate)) errors.endDate = 'Enter a valid return date.'
+  else if (!errors.startDate && endDate <= startDate) errors.endDate = 'Return date must be after the start date.'
   if (!errors.startDate && !errors.endDate && (totalPrice === '' || Number(totalPrice) <= 0)) errors.totalPrice = 'Enter a total above $0.'
   return errors
 }
 
 function BookingForm({ listing, initialStart = '', initialEnd = '', onSubmit }) {
-  const [form, setForm] = useState({ startDate: initialStart, endDate: initialEnd, message: '' })
+  const [form, setForm] = useState({
+    // Ignore prefilled dates from the URL unless they are real dates.
+    startDate: isValidDate(initialStart) ? initialStart : '',
+    endDate: isValidDate(initialEnd) ? initialEnd : '',
+    message: '',
+  })
   const [customTotal, setCustomTotal] = useState(null) // null = use the suggested total
   const [errors, setErrors] = useState({})
 
-  const days = form.startDate && form.endDate ? countDays(form.startDate, form.endDate) : 0
+  const days = isValidDate(form.startDate) && isValidDate(form.endDate)
+    ? countDays(form.startDate, form.endDate)
+    : 0
   const suggestedTotal = days > 0 ? days * listing.price : ''
   const totalPrice = customTotal ?? suggestedTotal
 
