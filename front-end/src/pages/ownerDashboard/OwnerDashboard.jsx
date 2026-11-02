@@ -5,6 +5,7 @@ import {
   CURRENT_USER_ID,
   getListings,
   getRentalsForOwner,
+  getUser,
 } from '../../services/mockDataService.js'
 
 function formatStatus(status) {
@@ -22,7 +23,7 @@ function OwnerDashboard() {
     const matchesStatus =
       rentalStatus === 'all' || rental.status === rentalStatus
     const searchText =
-      `${listing?.title ?? ''} ${rental.borrowerId}`.toLowerCase()
+      `${listing?.title ?? ''} ${getUser(rental.borrowerId)?.name ?? ''} ${rental.borrowerId}`.toLowerCase()
     const matchesSearch = searchText.includes(rentalSearch.trim().toLowerCase())
 
     return matchesStatus && matchesSearch
@@ -98,7 +99,7 @@ function OwnerDashboard() {
                 <article className="rental-card" key={rental.id}>
                   <div>
                     <h3>{listing?.title ?? 'Listing unavailable'}</h3>
-                    <p>Borrower: {rental.borrowerId}</p>
+                    <p>Borrower: {getUser(rental.borrowerId)?.name ?? rental.borrowerId}</p>
                     <p>
                       {rental.startDate} to {rental.endDate}
                     </p>
