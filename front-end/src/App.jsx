@@ -59,6 +59,9 @@ function App() {
           <Route path="/bookings/:bookingId" element={<BookingDetails />} />
           <Route path="/bookings/:bookingId/extension" element={<Extensions />} />
           <Route path="/bookings/:bookingId/cancel" element={<Cancellation />} />
+
+          {/* Renter dashboard*/}
+          <Route path="/renter-dashboard" element={<RenterDashboard />} />
         </Route>
 
         {/* Renter dashboard*/}
