@@ -3,7 +3,7 @@ import heroImg from "./assets/hero.png";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "./assets/vite.svg";
 import CreateHousehold from "./pages/create_household/CreateHousehold";
-import Templogin from "./pages/temp_home";
+import Temphome from "./pages/temp_home";
 import React from "react";
 import Register from "./pages/register/register";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
@@ -17,7 +17,7 @@ function App() {
     <Router>
       <Routes>
         {/* <Route basename={import.meta.env.BASE_URL} /> */}
-        <Route path="/" element={<Templogin />} />
+        <Route path="/" element={<Temphome />} />
         <Route path="/create" element={<CreateHousehold />} />
         <Route path="/register" element={<Register />} />
       </Routes>
