@@ -36,3 +36,8 @@
   font-weight: var(--font-weight-semibold);
   color: var(--color-text-muted);
 }
+
+
+.add-application__remove-resume {
+  align-self: flex-start;
+}

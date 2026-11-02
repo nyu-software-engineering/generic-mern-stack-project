@@ -95,6 +95,11 @@ export default function AddApplication() {
     setForm({ ...form, resume: { fileName: file.name, uploadedAt: todayString() } })
   }
 
+  function removeResume() {
+    setResumeError('')
+    setForm({ ...form, resume: null })
+  }
+
   async function handleSave() {
     setSubmitted(true)
     if (!hasNoErrors(errors) || !hasNoErrors(recruiterEmailErrors)) return
@@ -237,6 +242,18 @@ export default function AddApplication() {
             <p className="field__error" role="alert">
               {resumeError}
             </p>
+          )}
+
+          {form.resume && (
+            <Button
+              variant="danger"
+              size="sm"
+              icon="trash"
+              className="add-application__remove-resume"
+              onClick={removeResume}
+            >
+              Remove resume
+            </Button>
           )}
         </FormSection>
         <FormSection title="Notes">
