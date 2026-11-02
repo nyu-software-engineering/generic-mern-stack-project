@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import ListingCard from '../../components/ListingCard'
 import { getPublishedListings } from '../../services/listings'
+import './browse.css'
 
 function Browse() {
   const [search, setSearch] = useState('')

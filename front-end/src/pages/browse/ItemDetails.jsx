@@ -6,6 +6,7 @@ import {
   getUser,
   listingImage,
 } from '../../services/bookings'
+import './browse.css'
 
 function ItemDetails() {
   const { id } = useParams()
