@@ -1,16 +1,15 @@
-export default function TextField({ label, type = "text", placeholder, value, onChange, autoComplete }) {
-    const id = label.toLowerCase().replace(/\s+/g, "-");
-    return (
-      <div className="field">
-        <label htmlFor={id}>{label}</label>
-        <input
-          id={id}
-          type={type}
-          placeholder={placeholder}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          autoComplete={autoComplete}
-        />
-      </div>
-    );
-  }
+import React from "react";
+
+export default function TextField(props) {
+  return (
+    <div className="input-group">
+      {props.label && <label>{props.label}</label>}
+      <input
+        type={props.type || "text"}
+        placeholder={props.placeholder || ""}
+        value={props.value || ""}
+        onChange={props.onChange}
+      />
+    </div>
+  );
+}
