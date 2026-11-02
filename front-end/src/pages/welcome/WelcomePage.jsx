@@ -10,12 +10,20 @@ function WelcomePage() {
       <p className="mt-6 max-w-[36ch] text-lg leading-[1.6] text-muted">
         Practice investing with virtual money and learn as you go.
       </p>
-      <Link
-        className="mt-10 inline-flex min-h-12 items-center justify-between gap-8 rounded-[2rem] bg-accent px-6 py-3.5 font-[650] text-ink no-underline hover:bg-accent-hover"
-        to="/portfolio"
-      >
-        Explore StockSim <span aria-hidden="true">↗</span>
-      </Link>
+      <nav className="mt-10 flex max-w-sm flex-col gap-3" aria-label="Get started">
+        <Link
+          className="inline-flex min-h-12 items-center justify-center rounded-[2rem] bg-accent px-6 py-3.5 font-[650] text-ink no-underline hover:bg-accent-hover"
+          to="/create-account"
+        >
+          Create account
+        </Link>
+        <Link
+          className="inline-flex min-h-12 items-center justify-center rounded-[2rem] border border-border px-6 py-3.5 font-[650] text-ink no-underline hover:bg-hover"
+          to="/login"
+        >
+          Log in
+        </Link>
+      </nav>
     </main>
   )
 }

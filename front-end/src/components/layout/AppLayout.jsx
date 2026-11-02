@@ -13,10 +13,6 @@ function AppLayout() {
       <header className="border-b border-border">
         <div className="mx-auto flex min-h-20 max-w-5xl items-center justify-between gap-4 py-4 pr-[max(1.25rem,env(safe-area-inset-right))] pl-[max(1.25rem,env(safe-area-inset-left))]">
           <Link className="text-2xl leading-[normal] font-[750] tracking-[-0.04em] no-underline" to="/portfolio">StockSim</Link>
-          <span className="inline-flex items-center gap-2 text-xs leading-[normal] text-muted">
-            <span className="size-2 rounded-full bg-accent" aria-hidden="true" />
-            Virtual investing
-          </span>
         </div>
       </header>
       <main

@@ -97,10 +97,14 @@ npm run dev
 Open the local URL printed by Vite. Run frontend npm commands inside
 `front-end/`.
 
-The app uses React Router in declarative mode with Vite. `/` opens Welcome;
+The app uses React Router in declarative mode with Vite. `/` opens Welcome
+with Create account and Log in options. `/create-account` and `/login` show
+their respective forms without the main navigation;
 `/portfolio`, `/market`, `/learn`, `/leaderboard`, and `/account` share the
 main header and bottom navigation. These section screens are placeholders
-until their features are implemented. Authentication is not implemented yet.
+until their features are implemented. Authentication is not implemented yet;
+the access forms skip validation and navigate straight to `/portfolio` on
+submission for the frontend demo. They do not save credentials or create a session.
 Unmatched URLs show Page Unavailable with a link back to Portfolio.
 
 When deploying, configure the host to serve `index.html` for frontend routes

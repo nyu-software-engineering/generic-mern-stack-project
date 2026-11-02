@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { Route, Routes, useLocation } from 'react-router'
 import AppLayout from './components/layout/AppLayout.jsx'
 import AccountPage from './pages/account/AccountPage.jsx'
+import AuthPage from './pages/auth/AuthPage.jsx'
 import LeaderboardPage from './pages/leaderboard/LeaderboardPage.jsx'
 import LearnPage from './pages/learn/LearnPage.jsx'
 import MarketPage from './pages/market/MarketPage.jsx'
@@ -22,6 +23,8 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<WelcomePage />} />
+      <Route path="/create-account" element={<AuthPage key="create-account" creatingAccount />} />
+      <Route path="/login" element={<AuthPage key="login" />} />
       <Route element={<AppLayout />}>
         <Route path="portfolio" element={<PortfolioPage />} />
         <Route path="market" element={<MarketPage />} />
