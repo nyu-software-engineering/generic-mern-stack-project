@@ -1,22 +1,26 @@
 // Mock chat service. Pages call these functions instead of importing
 // fixtures directly, so they can later be swapped for backend requests.
-import conversationData from '../data/conversations'
-import { createBooking, getListing, getUser, updateBookingStatus } from './bookings'
-
-// In-memory copy so changes persist while navigating (reset on reload).
-let conversations = conversationData.map((c) => ({ ...c, messages: [...c.messages] }))
-let nextMessageId = Math.max(...conversationData.flatMap((c) => c.messages.map((m) => m.id))) + 1
+// Conversations come from the shared Mockaroo data in mockDataService.js.
+import {
+  getConversations as getAllConversations,
+  updateConversation as saveConversation,
+} from './mockDataService.js'
+import { createBooking, getListing, getUser, updateBookingStatus } from './bookings.js'
 
 // Route params are strings and mock IDs are numbers, so compare as strings.
 const sameId = (a, b) => String(a) === String(b)
 
-export const getConversation = (id) => conversations.find((c) => sameId(c.id, id))
+// Message IDs are unique across all conversations.
+const nextMessageId = () =>
+  Math.max(0, ...getAllConversations().flatMap((c) => c.messages.map((m) => m.id))) + 1
+
+export const getConversation = (id) => getAllConversations().find((c) => sameId(c.id, id))
 
 export const getLastMessage = (conversation) => conversation.messages.at(-1)
 
 // Newest conversation first.
 export const getConversations = (userId) =>
-  conversations
+  getAllConversations()
     .filter((c) => c.participantIds.includes(userId))
     .sort((a, b) => new Date(getLastMessage(b).sentAt) - new Date(getLastMessage(a).sentAt))
 
@@ -30,8 +34,9 @@ export const getLatestOffer = (conversation) =>
   conversation.messages.findLast((m) => m.type === 'offer')
 
 function updateConversation(id, update) {
-  conversations = conversations.map((c) => (sameId(c.id, id) ? update(c) : c))
-  return getConversation(id)
+  const conversation = getConversation(id)
+  if (!conversation) return undefined
+  return saveConversation(id, update(conversation))
 }
 
 function setOfferStatus(conversationId, messageId, changes) {
@@ -42,7 +47,7 @@ function setOfferStatus(conversationId, messageId, changes) {
 }
 
 function addMessage(conversationId, message) {
-  const newMessage = { id: nextMessageId++, sentAt: new Date().toISOString(), ...message }
+  const newMessage = { id: nextMessageId(), sentAt: new Date().toISOString(), ...message }
   return updateConversation(conversationId, (c) => ({ ...c, messages: [...c.messages, newMessage] }))
 }
 
