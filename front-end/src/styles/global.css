@@ -1,0 +1,44 @@
+
+/* Shared Global Styles for Doin */
+
+/* Consistent element sizing */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Overall application styling */
+body {
+  margin: 0;
+  min-width: 320px;
+  font-family: var(--font-family);
+  font-size: var(--font-md);
+  line-height: 1.5;
+  color: var(--color-text);
+  background-color: var(--color-background);
+}
+
+/* Consistent typography */
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1.2;
+}
+
+/* Form elements */
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+/* Images */
+img {
+  max-width: 100%;
+}
+
+/* Accessibility */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
