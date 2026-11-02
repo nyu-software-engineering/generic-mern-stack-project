@@ -6,7 +6,7 @@
  * in one place until a real back-end replaces these functions.
  */
 
-import { cities, lists, savedPlaces, users } from './demoData.js'
+import { cities, lists, savedPlaces, users, currentUserId } from './demoData.js'
 
 function createAbortError() {
   return new DOMException('The operation was aborted.', 'AbortError')
@@ -41,11 +41,11 @@ export function getCityHeaders() {
 }
 
 /**
- * Async loader for city headers. Data is in memory, but the Promise + AbortSignal
- * match how CityPage loads data today (loading state, retry, cancel on route change)
- * and mirror a future fetch() to the API.
+ * Shared async wrapper: resolves getData() on a microtask, rejects with
+ * AbortError if the signal fires first. Used by all load* functions so the
+ * cancel/abort logic lives in one place.
  */
-export function loadCityHeaders({ signal } = {}) {
+function loadAsync(getData, { signal } = {}) {
   return new Promise((resolve, reject) => {
     if (signal?.aborted) {
       reject(createAbortError())
@@ -60,7 +60,28 @@ export function loadCityHeaders({ signal } = {}) {
     queueMicrotask(() => {
       signal?.removeEventListener('abort', onAbort)
       if (signal?.aborted) return
-      resolve(getCityHeaders())
+      resolve(getData())
     })
   })
+}
+
+/** Headers for every city in demoData. Behavior unchanged; now uses loadAsync. */
+export function loadCityHeaders(options) {
+  return loadAsync(getCityHeaders, options)
+}
+
+/**
+ * City headers only for lists the user is a member of.
+ * Pending invites (listInvites) are intentionally excluded.
+ */
+export function getUserCityHeaders(userId) {
+  return lists
+    .filter((list) => list.memberIds.includes(userId))
+    .map((list) => getCityHeader(list.cityId))
+    .filter(Boolean)
+}
+
+/** Home screen loader. Uses the mock currentUserId until real auth exists. */
+export function loadMyCityHeaders(options) {
+  return loadAsync(() => getUserCityHeaders(currentUserId), options)
 }
