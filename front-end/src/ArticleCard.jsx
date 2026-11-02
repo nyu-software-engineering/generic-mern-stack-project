@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom'
-import './ArticleCard.css'
+{/* import './ArticleCard.css'*/}
 
 const ArticleCard = props => {
 
-  const imgSrc = props.details.thumbnailUrl ||`https://picsum.photos/seed/${props.details.id}/200/200`
+  const imgSrc = props.details.thumbnailUrl
 
   return (
     <article className="ArticleCard">
