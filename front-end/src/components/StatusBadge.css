@@ -1,0 +1,29 @@
+.status-badge {
+  display: inline-block;
+  padding: 5px 9px;
+  border-radius: 20px;
+  font-size: 14px;
+  text-transform: capitalize;
+  background: #e9edf2;
+  color: #47515c;
+}
+
+.status-badge--requested,
+.status-badge--extension_requested {
+  background: #fff1d8;
+  color: #805714;
+}
+
+.status-badge--confirmed,
+.status-badge--active,
+.status-badge--completed {
+  background: #e3f4e9;
+  color: #206339;
+}
+
+.status-badge--declined,
+.status-badge--cancelled,
+.status-badge--overdue {
+  background: #fde8e8;
+  color: #9b1c1c;
+}

@@ -1,0 +1,143 @@
+/* Booking screens (#52). Colours and spacing follow the owner dashboard styles. */
+.booking-page {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 32px 16px;
+  color: #20242b;
+}
+
+.booking-page h1 {
+  margin: 0 0 20px;
+  font-size: 24px;
+}
+
+.booking-card {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 12px;
+  padding: 16px;
+  border: 1px solid #e0e3e8;
+  border-radius: 10px;
+  background: white;
+}
+
+.booking-card h2 {
+  margin: 0;
+  font-size: 17px;
+}
+
+.booking-card p {
+  margin: 0;
+  color: #626b76;
+}
+
+.booking-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.booking-item img {
+  width: 64px;
+  height: 64px;
+  border-radius: 8px;
+  object-fit: cover;
+  background: #e9edf2;
+}
+
+.booking-form {
+  display: grid;
+  gap: 14px;
+}
+
+.booking-form label {
+  display: grid;
+  gap: 6px;
+  font-weight: 500;
+}
+
+.booking-form input,
+.booking-form textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 9px;
+  border: 1px solid #cbd0d8;
+  border-radius: 6px;
+  font: inherit;
+}
+
+.booking-form .has-error {
+  border-color: #c81e1e;
+}
+
+.booking-dates {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.field-error {
+  margin: 0;
+  color: #c81e1e;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.booking-note {
+  margin: 0;
+  color: #626b76;
+  font-size: 14px;
+}
+
+.booking-actions {
+  display: grid;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.booking-btn {
+  display: block;
+  padding: 11px 14px;
+  border: 1px solid #cbd0d8;
+  border-radius: 7px;
+  background: white;
+  color: #20242b;
+  font: inherit;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.booking-btn--primary {
+  border-color: #315fce;
+  background: #315fce;
+  color: white;
+}
+
+.booking-btn--primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.booking-btn--link {
+  border: 0;
+  padding: 4px 0;
+  color: #c81e1e;
+  text-align: left;
+}
+
+.booking-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.booking-empty {
+  color: #626b76;
+}
+
+@media (max-width: 480px) {
+  .booking-dates {
+    grid-template-columns: 1fr;
+  }
+}
