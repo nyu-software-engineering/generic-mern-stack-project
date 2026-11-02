@@ -1,0 +1,14 @@
+[
+  { "id": "astoria", "name": "Astoria", "borough": "Queens", "zipCodes": ["11102", "11103", "11105"], "averageRent": 2450, "changePastYear": 4.8, "popular": true },
+  { "id": "long-island-city", "name": "Long Island City", "borough": "Queens", "zipCodes": ["11101", "11109"], "averageRent": 3650, "changePastYear": 6.1, "popular": true },
+  { "id": "jackson-heights", "name": "Jackson Heights", "borough": "Queens", "zipCodes": ["11372"], "averageRent": 2150, "changePastYear": 3.2, "popular": false },
+  { "id": "williamsburg", "name": "Williamsburg", "borough": "Brooklyn", "zipCodes": ["11211", "11249"], "averageRent": 3900, "changePastYear": 5.4, "popular": true },
+  { "id": "bushwick", "name": "Bushwick", "borough": "Brooklyn", "zipCodes": ["11206", "11221", "11237"], "averageRent": 2800, "changePastYear": 7.2, "popular": true },
+  { "id": "crown-heights", "name": "Crown Heights", "borough": "Brooklyn", "zipCodes": ["11213", "11225", "11238"], "averageRent": 2650, "changePastYear": 5.9, "popular": false },
+  { "id": "park-slope", "name": "Park Slope", "borough": "Brooklyn", "zipCodes": ["11215", "11217"], "averageRent": 3500, "changePastYear": 2.7, "popular": false },
+  { "id": "east-village", "name": "East Village", "borough": "Manhattan", "zipCodes": ["10003", "10009"], "averageRent": 4100, "changePastYear": 3.9, "popular": true },
+  { "id": "upper-west-side", "name": "Upper West Side", "borough": "Manhattan", "zipCodes": ["10023", "10024", "10025"], "averageRent": 3950, "changePastYear": 1.8, "popular": false },
+  { "id": "harlem", "name": "Harlem", "borough": "Manhattan", "zipCodes": ["10026", "10027", "10030"], "averageRent": 2700, "changePastYear": 4.1, "popular": true },
+  { "id": "washington-heights", "name": "Washington Heights", "borough": "Manhattan", "zipCodes": ["10032", "10033", "10040"], "averageRent": 2350, "changePastYear": -0.6, "popular": false },
+  { "id": "mott-haven", "name": "Mott Haven", "borough": "Bronx", "zipCodes": ["10451", "10454"], "averageRent": 2400, "changePastYear": 8.3, "popular": false }
+]

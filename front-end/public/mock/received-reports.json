@@ -1,0 +1,6 @@
+[
+  { "id": "rpt-104", "renterName": "Maya R.", "sharedOn": "2026-10-29", "isNew": true },
+  { "id": "rpt-103", "renterName": "Daniel K.", "sharedOn": "2026-10-28", "isNew": true },
+  { "id": "rpt-102", "renterName": "Priya S.", "sharedOn": "2026-10-17", "isNew": false },
+  { "id": "rpt-101", "renterName": "Tomás G.", "sharedOn": "2026-10-13", "isNew": false }
+]

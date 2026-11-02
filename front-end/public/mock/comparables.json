@@ -1,0 +1,10 @@
+[
+  { "id": "cmp-1", "checkId": "chk-3", "address": "28-40 33rd St", "areaId": "astoria", "rent": 2425, "bedrooms": 2, "bathrooms": 1, "distanceMiles": 0.3, "imageUrl": "https://picsum.photos/seed/leverage-cmp-1/400/300" },
+  { "id": "cmp-2", "checkId": "chk-3", "address": "32-15 Broadway", "areaId": "astoria", "rent": 2495, "bedrooms": 2, "bathrooms": 1, "distanceMiles": 0.4, "imageUrl": "https://picsum.photos/seed/leverage-cmp-2/400/300" },
+  { "id": "cmp-3", "checkId": "chk-3", "address": "25-11 Crescent St", "areaId": "astoria", "rent": 2400, "bedrooms": 2, "bathrooms": 1, "distanceMiles": 0.6, "imageUrl": "https://picsum.photos/seed/leverage-cmp-3/400/300" },
+  { "id": "cmp-4", "checkId": "chk-3", "address": "36-02 Ditmars Blvd", "areaId": "astoria", "rent": 2475, "bedrooms": 2, "bathrooms": 1, "distanceMiles": 0.8, "imageUrl": "https://picsum.photos/seed/leverage-cmp-4/400/300" },
+  { "id": "cmp-5", "checkId": "chk-2", "address": "321 W 78th St", "areaId": "upper-west-side", "rent": 3900, "bedrooms": 1, "bathrooms": 1, "distanceMiles": 0.5, "imageUrl": "https://picsum.photos/seed/leverage-cmp-5/400/300" },
+  { "id": "cmp-6", "checkId": "chk-2", "address": "210 W 89th St", "areaId": "upper-west-side", "rent": 4050, "bedrooms": 1, "bathrooms": 1, "distanceMiles": 0.7, "imageUrl": "https://picsum.photos/seed/leverage-cmp-6/400/300" },
+  { "id": "cmp-7", "checkId": "chk-1", "address": "88 Wilson Ave", "areaId": "bushwick", "rent": 2750, "bedrooms": 2, "bathrooms": 1, "distanceMiles": 0.4, "imageUrl": "https://picsum.photos/seed/leverage-cmp-7/400/300" },
+  { "id": "cmp-8", "checkId": "chk-1", "address": "1301 Gates Ave", "areaId": "bushwick", "rent": 2850, "bedrooms": 2, "bathrooms": 1, "distanceMiles": 0.9, "imageUrl": "https://picsum.photos/seed/leverage-cmp-8/400/300" }
+]

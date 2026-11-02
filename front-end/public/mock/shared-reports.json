@@ -1,0 +1,6 @@
+[
+  { "id": "rpt-104", "renterFirstName": "Maya", "linkActive": true, "verifiedOn": "2026-10-28", "sharedSections": { "monthsVerified": 26, "onTimePayments": 25, "totalPayments": 26, "incomeStability": "Stable", "rentToIncomePercent": 31 } },
+  { "id": "rpt-103", "renterFirstName": "Daniel", "linkActive": true, "verifiedOn": "2026-10-27", "sharedSections": { "monthsVerified": 14, "onTimePayments": 14, "totalPayments": 14 } },
+  { "id": "rpt-102", "renterFirstName": "Priya", "linkActive": true, "verifiedOn": "2026-10-16", "sharedSections": { "monthsVerified": 38, "onTimePayments": 37, "totalPayments": 38, "rentToIncomePercent": 28 } },
+  { "id": "rpt-101", "renterFirstName": "Tomás", "linkActive": false, "verifiedOn": "2026-10-12", "sharedSections": {} }
+]
