@@ -1,35 +1,21 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { rentalStatuses } from '../../data/options.js'
-import { getListings, getRentals, loadMockData } from '../../services/mockDataService.js'
+import {
+  CURRENT_USER_ID,
+  getListings,
+  getRentalsForOwner,
+} from '../../services/mockDataService.js'
 
 function formatStatus(status) {
   return status.replace(/_/g, ' ')
 }
 
 function OwnerDashboard() {
-  const [rentals, setRentals] = useState(null)
-  const [loadError, setLoadError] = useState(false)
-  const listings = getListings()
   const [rentalSearch, setRentalSearch] = useState('')
   const [rentalStatus, setRentalStatus] = useState('all')
-
-  useEffect(() => {
-    let current = true
-    loadMockData().then(
-      () => { if (current) setRentals(getRentals()) },
-      () => { if (current) setLoadError(true) },
-    )
-    return () => { current = false }
-  }, [])
-
-  if (loadError) {
-    return <main className="page">
-      <p role="alert">Could not load your rentals.</p>
-      <button type="button" className="primary-button" onClick={() => window.location.reload()}>Try again</button>
-    </main>
-  }
-  if (!rentals) return <main className="page"><p role="status">Loading rentals...</p></main>
+  const rentals = getRentalsForOwner(CURRENT_USER_ID)
+  const listings = getListings()
 
   const visibleRentals = rentals.filter((rental) => {
     const listing = listings.find((item) => item.id === rental.listingId)

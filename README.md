@@ -125,7 +125,6 @@ In one terminal:
 ```bash
 cd front-end
 npm install
-cp .env.example .env.local
 npm run dev
 ```
 
@@ -137,9 +136,7 @@ npm install
 npm run dev
 ```
 
-Before starting the front end, set `MOCKAROO_API_KEY` in `front-end/.env.local` using the team's key shared privately. The Mockaroo account must have the saved `DormShare` schema and `GET /dormshare.json` mock API. Never commit the key. Vite forwards requests to Mockaroo and keeps the key out of browser code.
-
-Open `/listings` to create, edit, preview, publish, or pause items. Open `/owner-dashboard` for rental counts, recorded income, and filters. These pages fetch generated users, listings, and rentals from Mockaroo once per page session. Listing edits stay in memory and reset on reload. If loading fails, check the key and Mockaroo quota, then select **Try again**. Both `npm run dev` and `npm run preview` use the local proxy; static hosting will need its own proxy.
+Open `/listings` to create, edit, preview, publish, or pause items. Open `/owner-dashboard` for rental counts, recorded income, and filters. These pages use the shared mock records in `src/data/`. Changes stay in memory and reset on reload.
 
 From `front-end`, run `npm test`, `npm run lint`, and `npm run build` to check changes.
 

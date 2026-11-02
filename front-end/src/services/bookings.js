@@ -1,25 +1,30 @@
 // Mock booking service. Pages call these functions instead of importing
 // fixtures directly, so they can later be swapped for backend requests.
-import users from '../data/users'
-import listings from '../data/listings'
-import rentals from '../data/rentals'
+import users from '../data/users.js'
+import {
+  CURRENT_USER_ID,
+  createRental,
+  getListings,
+  getRental,
+  getRentals,
+  updateRentalStatus,
+} from './mockDataService.js'
 
 // TODO: replace with the signed-in user from Context once #49 lands.
-export const CURRENT_USER_ID = 'owner-1'
-
-// In-memory copy so changes persist while navigating (reset on reload).
-let bookings = rentals.map((b) => ({ ...b }))
-let nextId = Math.max(...rentals.map((b) => b.id)) + 1
+export { CURRENT_USER_ID }
 
 // Route params are strings and mock IDs are numbers, so compare as strings.
 const sameId = (a, b) => String(a) === String(b)
 
 export const getUser = (id) => users.find((u) => sameId(u.id, id))
-export const getListing = (id) => listings.find((l) => sameId(l.id, id))
-export const getBooking = (id) => bookings.find((b) => sameId(b.id, id))
+export const getListing = (id) =>
+  getListings().find((listing) => sameId(listing.id, id))
+export const getBooking = (id) => getRental(id)
 
 export const getIncomingRequests = (ownerId) =>
-  bookings.filter((b) => sameId(b.ownerId, ownerId) && b.status === 'requested')
+  getRentals().filter(
+    (rental) => sameId(rental.ownerId, ownerId) && rental.status === 'requested',
+  )
 
 export const listingImage = (listingId, size = 160) =>
   `https://picsum.photos/seed/dormshare-${listingId}/${size}/${size}`
@@ -30,8 +35,9 @@ export function countDays(startDate, endDate) {
 
 export function createBooking({ listingId, borrowerId, startDate, endDate, totalPrice, message }) {
   const listing = getListing(listingId)
-  const booking = {
-    id: nextId++,
+  if (!listing) return null
+
+  return createRental({
     listingId: listing.id,
     borrowerId,
     ownerId: listing.ownerId,
@@ -42,14 +48,11 @@ export function createBooking({ listingId, borrowerId, startDate, endDate, total
     totalPrice,
     createdAt: new Date().toISOString().slice(0, 10),
     extensionRequest: null,
-  }
-  bookings = [...bookings, booking]
-  return booking
+  })
 }
 
 export function updateBookingStatus(id, status) {
-  bookings = bookings.map((b) => (sameId(b.id, id) ? { ...b, status } : b))
-  return getBooking(id)
+  return updateRentalStatus(id, status)
 }
 
 export function formatDate(isoDate) {

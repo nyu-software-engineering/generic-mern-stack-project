@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import { listingCategories, listingStatuses } from '../../data/options.js'
 import {
+  CURRENT_USER_ID,
   createListing,
-  getListings,
-  loadMockData,
+  getListingsForOwner,
   updateListing,
   updateListingStatus,
 } from '../../services/mockDataService.js'
@@ -21,32 +21,17 @@ function formatStatus(status) {
   return status.charAt(0).toUpperCase() + status.slice(1)
 }
 
-function MyListings() {
-  const [listings, setListings] = useState(null)
-  const [loadError, setLoadError] = useState(false)
-  const [formOpen, setFormOpen] = useState(false)
+function MyListings({ initialFormOpen = false }) {
+  const navigate = useNavigate()
+  const [listings, setListings] = useState(() =>
+    getListingsForOwner(CURRENT_USER_ID),
+  )
+  const [formOpen, setFormOpen] = useState(initialFormOpen)
   const [editingId, setEditingId] = useState(null)
   const [form, setForm] = useState(emptyForm)
   const [previewId, setPreviewId] = useState(null)
   const [listingSearch, setListingSearch] = useState('')
   const [listingStatus, setListingStatus] = useState('all')
-
-  useEffect(() => {
-    let current = true
-    loadMockData().then(
-      () => { if (current) setListings(getListings()) },
-      () => { if (current) setLoadError(true) },
-    )
-    return () => { current = false }
-  }, [])
-
-  if (loadError) {
-    return <main className="page">
-      <p role="alert">Could not load your listings.</p>
-      <button type="button" className="primary-button" onClick={() => window.location.reload()}>Try again</button>
-    </main>
-  }
-  if (!listings) return <main className="page"><p role="status">Loading listings...</p></main>
 
   const visibleListings = listings.filter((listing) => {
     const matchesStatus =
@@ -113,7 +98,7 @@ function MyListings() {
 
     if (!savedListing) return
 
-    setListings(getListings())
+    setListings(getListingsForOwner(CURRENT_USER_ID))
     setFormOpen(false)
     setEditingId(null)
     setForm(emptyForm)
@@ -122,20 +107,21 @@ function MyListings() {
 
   function publishListing(id) {
     updateListingStatus(id, 'published')
-    setListings(getListings())
+    setListings(getListingsForOwner(CURRENT_USER_ID))
     setPreviewId(null)
   }
 
   function toggleListingStatus(listing) {
     const nextStatus = listing.status === 'published' ? 'paused' : 'published'
     updateListingStatus(listing.id, nextStatus)
-    setListings(getListings())
+    setListings(getListingsForOwner(CURRENT_USER_ID))
   }
 
   function closeForm() {
     setFormOpen(false)
     setEditingId(null)
     setForm(emptyForm)
+    navigate('/listings')
   }
 
   return (
