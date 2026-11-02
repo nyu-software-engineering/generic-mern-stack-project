@@ -27,6 +27,11 @@ export default function Notifications() {
     navigate(notification.link);
   };
 
+  const markAllRead = () => {
+
+    setNotifications(notifications.map((item) => ({ ...item, read: true })))
+  }
+
   const unreadCount = notifications.filter(
     (notification) => !notification.read,
   ).length;
@@ -39,6 +44,11 @@ export default function Notifications() {
           unreadCount > 0 ? `${unreadCount} unread` : "You are all caught up."
         }
       />
+      {unreadCount > 0 && (
+        <button type="button" onClick={markAllRead} className="mb-4 text-sm font-semibold text-accent hover:underline">
+          Mark all as read
+        </button>
+      )}
       <ul className="divide-y divide-line border-y border-line">
         {notifications.map((notification) => (
           <li key={notification.id}>
