@@ -1,4 +1,4 @@
-import { IconButton, Page, PagePlaceholder } from '../../components'
+import { IconButton, Page, PagePlaceholder, Calendar } from '../../components'
 
 /**
  * Upcoming screen.
@@ -11,6 +11,7 @@ export default function Upcoming() {
   return (
     <Page title="Upcoming" action={<IconButton icon="plus" label="Add event" variant="primary" to="/events/new" />}>
       <PagePlaceholder owner="Ryan" issues={[76]} wireframe="upcoming.png" />
+      <Calendar /> 
     </Page>
   )
 }
