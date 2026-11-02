@@ -1,5 +1,5 @@
-import listings from '../data/listings'
+import { getListings } from './mockDataService.js'
 
 export function getPublishedListings() {
-  return listings.filter((listing) => listing.status === 'published')
+  return getListings().filter((listing) => listing.status === 'published')
 }
