@@ -1,17 +1,18 @@
-import { listingCategories, listingStatuses, rentalStatuses } from '../data/options.js'
+import { listingCategories, listingStatuses, offerStatuses, rentalStatuses } from '../data/options.js'
 
 export const CURRENT_USER_ID = 'owner-1'
 
 let users = []
 let listings = []
 let rentals = []
+let conversations = []
 let loading
 
 const sameId = (first, second) => String(first) === String(second)
 
 function validateData(data) {
-  const { users, listings, rentals } = data ?? {}
-  if (![users, listings, rentals].every(Array.isArray)) {
+  const { users, listings, rentals, conversations } = data ?? {}
+  if (![users, listings, rentals, conversations].every(Array.isArray)) {
     throw new Error('Mockaroo returned invalid data.')
   }
 
@@ -38,8 +39,24 @@ function validateData(data) {
     [rental.terms?.message, rental.terms?.rentalTerms].every((value) => value == null || typeof value === 'string') &&
     typeof rental.startDate === 'string' && typeof rental.endDate === 'string',
   )
+  const validConversations = conversations.every((conversation) =>
+    Number.isSafeInteger(conversation?.id) && listingIds.has(conversation.listingId) &&
+    Array.isArray(conversation.participantIds) && conversation.participantIds.length === 2 &&
+    conversation.participantIds.every((id) => userIds.has(id)) &&
+    Array.isArray(conversation.messages) &&
+    conversation.messages.every((message) =>
+      Number.isSafeInteger(message?.id) &&
+      conversation.participantIds.includes(message.senderId) &&
+      typeof message.sentAt === 'string' &&
+      (message.type === 'text'
+        ? typeof message.text === 'string'
+        : message.type === 'offer' && Number.isFinite(message.totalPrice) &&
+          typeof message.startDate === 'string' && typeof message.endDate === 'string' &&
+          offerStatuses.includes(message.status)),
+    ),
+  )
 
-  if (!validUsers || !validListings || !validRentals ||
+  if (!validUsers || !validListings || !validRentals || !validConversations ||
     userIds.size !== users.length || listingIds.size !== listings.length ||
     new Set(rentals.map((rental) => rental?.id)).size !== rentals.length) {
     throw new Error('Mockaroo returned invalid data.')
@@ -56,6 +73,7 @@ export function loadMockData() {
         users = data.users
         listings = data.listings
         rentals = data.rentals
+        conversations = data.conversations
       })
       .catch((error) => {
         loading = undefined
@@ -142,4 +160,20 @@ export function updateRental(id, details) {
 
 export function updateRentalStatus(id, status) {
   return updateRental(id, { status })
+}
+
+export function getConversations() {
+  return structuredClone(conversations)
+}
+
+export function updateConversation(id, details) {
+  const existingConversation = conversations.find((item) => sameId(item.id, id))
+  if (!existingConversation) return null
+
+  const updatedConversation = { ...existingConversation, ...details }
+  conversations = conversations.map((item) =>
+    sameId(item.id, id) ? updatedConversation : item,
+  )
+
+  return structuredClone(updatedConversation)
 }

@@ -15,24 +15,28 @@ function Navbar() {
   }
 
   return (
-    <header className="ds-header">
-      <nav className="ds-header-inner" aria-label="Main navigation">
-        <Link to="/" className="ds-header-brand">
+    <header className="ds-navbar">
+      <nav className="ds-navbar-inner" aria-label="Main navigation">
+        <Link to="/" className="ds-navbar-brand">
           DormShare
         </Link>
 
         {currentUser && (
-          <div className="ds-header-actions">
+          <div className="ds-navbar-actions">
+            <Link to="/browse" className="ds-navbar-link">
+              Browse
+            </Link>
+
             <Link
               to={`/users/${CURRENT_USER_ID}/reputation`}
-              className="ds-header-link"
+              className="ds-navbar-link"
             >
               Demo reputation
             </Link>
 
             <button
               type="button"
-              className="ds-header-signout"
+              className="ds-navbar-signout"
               onClick={handleSignOut}
             >
               Sign out

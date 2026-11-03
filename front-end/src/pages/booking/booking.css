@@ -121,6 +121,7 @@
 
 .booking-btn--link {
   border: 0;
+  background: transparent;
   padding: 4px 0;
   color: #c81e1e;
   text-align: left;
