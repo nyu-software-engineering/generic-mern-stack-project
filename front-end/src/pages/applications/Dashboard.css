@@ -1,0 +1,13 @@
+/* Count on the left, Clear filter on the right */
+.dashboard__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: var(--space-8);
+}
+
+/* "8 applications" */
+.dashboard__count {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}

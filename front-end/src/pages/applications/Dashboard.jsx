@@ -1,8 +1,9 @@
 import { api } from '../../api'
-import { ApplicationCard, EmptyState, ErrorState, IconButton, LoadingState, Page, FilterChips } from '../../components'
+import { ApplicationCard, Button, EmptyState, ErrorState, FilterChips, IconButton, LoadingState, Page } from '../../components'
 import { APPLICATION_STATUSES } from '../../constants'
 import { useApi } from '../../hooks/useApi'
 import { useState } from 'react'
+import './Dashboard.css'
 
 // "All" plus one chip per status, using the short labels (e.g. "OA")
 const STATUS_FILTERS = [{ value: 'all', label: 'All' }, ...APPLICATION_STATUSES.map((status) => ({ value: status.value, label: status.shortLabel }))]
@@ -44,6 +45,18 @@ export default function Dashboard() {
     <Page title="Applications" action={addButton}>
             {/* Status filter chips */}
       <FilterChips options={STATUS_FILTERS} value={statusFilter} onChange={setStatusFilter} label="Filter by status" />
+
+      {/* How many applications are shown, plus a way to clear the filter */}
+      <div className="dashboard__meta">
+        <span className="dashboard__count">
+          {visibleApplications.length} {visibleApplications.length === 1 ? 'application' : 'applications'}
+        </span>
+        {statusFilter !== 'all' && (
+          <Button variant="ghost" size="sm" onClick={() => setStatusFilter('all')}>
+            Clear filter
+          </Button>
+        )}
+      </div>
 
       {/* One card per matching application, or a message if there are none */}
       {visibleApplications.length > 0 ? (
