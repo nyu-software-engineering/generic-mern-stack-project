@@ -1,0 +1,11 @@
+.edit-profile label,
+.edit-profile button {
+  display: block;
+  margin-top: 12px;
+}
+
+.edit-profile input[type="text"] {
+  display: block;
+  width: 100%;
+  margin-top: 4px;
+}
