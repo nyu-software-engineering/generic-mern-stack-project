@@ -31,6 +31,8 @@ import ItemRequests from './pages/requests/ItemRequests'
 import PickupReturn from './pages/handoff/PickupReturn'
 import QuickBorrow from './pages/quickBorrow/QuickBorrow'
 import Report from './pages/reporting/Report'
+import ReportSubmitted from './pages/reporting/ReportSubmitted'
+import CommunityRules from './pages/reporting/CommunityRules'
 
 function App() {
   return (
@@ -67,6 +69,10 @@ function App() {
 
           {/* Renter dashboard*/}
           <Route path="/renter-dashboard" element={<RenterDashboard />} />
+
+          {/* Reporting */}
+          <Route path="/report" element={<Report />} />
+          <Route path="/report/submitted/:reportId" element={<ReportSubmitted />} />
         </Route>
 
         {/* Requests */}
@@ -75,7 +81,7 @@ function App() {
         {/* Handoff, quick borrow, reporting */}
         <Route path="/handoff/:rentalId" element={<PickupReturn />} />
         <Route path="/quick-borrow" element={<QuickBorrow />} />
-        <Route path="/report" element={<Report />} />
+        <Route path="/community-rules" element={<CommunityRules />} />
       </Routes>
     </BrowserRouter>
   )
