@@ -1,0 +1,21 @@
+.login-card {
+    max-width: 420px;
+    margin: 40px auto;
+    padding: 20px;
+    border: 1px solid;
+    border-radius: 8px;
+}
+
+.login-form label {
+    display: block;
+    margin-bottom: 12px;
+}
+
+.login-form input {
+    display: block;
+}
+
+.login-form input,
+.login-form button {
+    border-radius: 8px;
+}
