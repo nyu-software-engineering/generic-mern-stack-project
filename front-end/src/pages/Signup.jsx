@@ -78,13 +78,12 @@ export default function Signup() {
         />
         <button
           type="submit"
-          className="mt-2 min-h-11 cursor-pointer rounded-xl bg-brand text-base font-semibold text-white transition-colors hover:bg-brand-dark focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-brand"
-        >
+          className="mt-2 min-h-11 btn-primary hover:btn-primary-hover focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-brand"        >
           Create account
         </button>
       </form>
 
-      <p className="mt-6 text-center text-sm text-gray-600">
+      <p className="mt-6 text-center text-sm text-muted">
         Already have an account?{' '}
         <Link to="/login" className="font-semibold text-brand hover:text-brand-dark">
           Log in
