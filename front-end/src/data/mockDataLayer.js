@@ -6,7 +6,7 @@
  * in one place until a real back-end replaces these functions.
  */
 
-import { cities, lists, savedPlaces, users, currentUserId } from './demoData.js'
+import { cities, lists, savedPlaces, users, currentUserId, linkLookups } from './demoData.js'
 
 function createAbortError() {
   return new DOMException('The operation was aborted.', 'AbortError')
@@ -84,4 +84,20 @@ export function getUserCityHeaders(userId) {
 /** Home screen loader. Uses the mock currentUserId until real auth exists. */
 export function loadMyCityHeaders(options) {
   return loadAsync(() => getUserCityHeaders(currentUserId), options)
+}
+
+/**
+ * Mock "drop the link" API for the Add Place screen.
+ * Compares the pasted URL to linkLookups in demoData.
+ */
+export function lookupLinkByUrl(rawUrl) {
+  const url = rawUrl.trim()
+  if (!url) {
+    return { status: 'empty' }
+  }
+  const lookup = linkLookups.find((item) => item.url === url)
+  if (!lookup) {
+    return { status: 'not_found' }
+  }
+  return { status: 'ok', lookup }
 }
