@@ -6,7 +6,7 @@ import {
   getListings,
   getRentals,
 } from '../../services/mockDataService.js'
-import { formatDate } from '../../services/bookings'
+import { displayStatus as getDisplayStatus, formatDate } from '../../services/bookings'
 import {
   getSavedListings,
   unsaveListing,
@@ -15,18 +15,6 @@ import {
 function formatStatus(status) {
   const label = status.replaceAll('_', ' ')
   return label.charAt(0).toUpperCase() + label.slice(1)
-}
-
-function getDisplayStatus(rental, today) {
-  const isOngoing =
-    rental.status === 'active' ||
-    rental.status === 'extension_requested'
-
-  if (isOngoing && rental.endDate < today) {
-    return 'overdue'
-  }
-
-  return rental.status
 }
 
 function RenterDashboard() {
