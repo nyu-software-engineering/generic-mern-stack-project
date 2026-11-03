@@ -7,6 +7,25 @@ import {
 } from '../../services/bookings'
 import './booking.css'
 
+// Why a booking can't be cancelled, worded for its current status.
+function cannotCancelReason(booking, isOwner) {
+  switch (booking.status) {
+    case 'requested':
+      return isOwner
+        ? 'To turn down a request, decline it from Incoming rental requests.'
+        : 'Only the borrower can withdraw this request.'
+    case 'declined':
+      return 'This request was declined, so there is nothing to cancel.'
+    case 'completed':
+      return 'This rental is completed. The item was already returned.'
+    case 'active':
+    case 'extension_requested':
+      return 'This item has already been picked up, so the booking can no longer be cancelled. Use the return flow or message the other student.'
+    default:
+      return 'This booking can no longer be cancelled.'
+  }
+}
+
 // Cancellation confirmation (#56). Keyed so state resets on a new booking id.
 function Cancellation() {
   const { bookingId } = useParams()
@@ -57,13 +76,7 @@ function CancelPage({ bookingId }) {
       </>
     )
   } else {
-    body = (
-      <p className="booking-note">
-        {isRequest && isOwner
-          ? 'To turn down a request, decline it from Incoming rental requests.'
-          : 'This booking can no longer be cancelled. Once an item is picked up, use the return flow or message the other student.'}
-      </p>
-    )
+    body = <p className="booking-note">{cannotCancelReason(booking, isOwner)}</p>
   }
 
   return (
