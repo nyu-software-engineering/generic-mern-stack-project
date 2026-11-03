@@ -26,7 +26,7 @@ For our MVP, we plan to focus on the following features:
 * Rui Dong - [RuiDong1](https://github.com/RuiDong1)
 * Colin Sung - [js10839](https://github.com/js10839)
 * James Huang - [JamesHuang2004](https://github.com/JamesHuang2004)
-* Jack - [jack-k-jiang](https://github.com/jack-k-jiang)
+* Jack Jiang - [jack-k-jiang](https://github.com/jack-k-jiang)
 
 ## How We Come Up With The Team
 None of our team members originally proposed this project. However, after several team meetings and discussions, we decided to work on CampusMart together.
