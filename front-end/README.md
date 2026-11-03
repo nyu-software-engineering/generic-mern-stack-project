@@ -13,7 +13,7 @@ Open the local URL printed by Vite. The scaffold currently contains placeholder
 pages; the city header can be tried directly at `/city/c_nyc` or `/city/c_paris`.
 
 ```sh
-npm test       # City header interaction and routing tests
+npm test       # City header interactions/routing and mock-data ranking tests
 npm run lint
 npm run build
 ```
@@ -33,6 +33,18 @@ npm run build
   `placeCount`, and `members` (`id`, `name`, optional `photoUrl`), plus controlled
   `view` and `onViewChange` props. The UI does not own the mock records.
 - Unknown city IDs show a not-found message; failed requests provide a retry.
+
+## Ranked city data (#90, first slice)
+
+`getRankedCityPlaces(cityId)` in `src/data/mockDataLayer.js` joins the shared
+saved places, places, and votes. It returns each saved place with `savedPlaceId`
+and a `tally` object containing `must-go`, `down`, and `pass` counts from list
+members. Results sort by descending must-go count, then alphabetically by name.
+Places without votes remain in the list; missing/empty lists return `[]`.
+Like city headers, this selector assumes one demo list per city.
+
+This is the data foundation only. The ranked cards and CityPage integration are
+still pending, so #90 remains open.
 
 ## Vite template notes
 

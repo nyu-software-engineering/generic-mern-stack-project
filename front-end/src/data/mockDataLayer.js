@@ -6,7 +6,7 @@
  * in one place until a real back-end replaces these functions.
  */
 
-import { cities, lists, savedPlaces, users, friendships, listInvites, currentUserId, linkLookups } from './demoData.js'
+import { cities, lists, places, savedPlaces, users, votes, friendships, listInvites, currentUserId, linkLookups } from './demoData.js'
 
 function createAbortError() {
   return new DOMException('The operation was aborted.', 'AbortError')
@@ -38,6 +38,33 @@ export function getCityHeader(cityId) {
 /** Headers for every city in demoData, in the same order as cities. */
 export function getCityHeaders() {
   return cities.map((city) => getCityHeader(city.id))
+}
+
+/**
+ * Saved places for a city's demo list, ordered by must-go votes (then name).
+ * Each place includes savedPlaceId and tally: { 'must-go', down, pass }.
+ * Only list members' votes count. Assumes at most one list per city, like headers.
+ */
+export function getRankedCityPlaces(cityId) {
+  const list = lists.find((item) => item.cityId === cityId)
+  if (!list) return []
+
+  return savedPlaces
+    .filter((saved) => saved.listId === list.id)
+    .flatMap((saved) => {
+      const place = places.find((item) => item.id === saved.placeId)
+      if (!place || place.cityId !== cityId) return []
+
+      const tally = { 'must-go': 0, down: 0, pass: 0 }
+      votes
+        .filter((vote) => vote.savedPlaceId === saved.id && list.memberIds.includes(vote.userId))
+        .forEach((vote) => {
+          if (Object.hasOwn(tally, vote.value)) tally[vote.value] += 1
+        })
+
+      return [{ ...place, savedPlaceId: saved.id, tally }]
+    })
+    .sort((a, b) => b.tally['must-go'] - a.tally['must-go'] || a.name.localeCompare(b.name))
 }
 
 /**
