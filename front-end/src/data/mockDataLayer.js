@@ -6,7 +6,7 @@
  * in one place until a real back-end replaces these functions.
  */
 
-import { cities, lists, places, savedPlaces, users, votes, friendships, listInvites, currentUserId, linkLookups } from './demoData.js'
+import { categories, cities, lists, places, savedPlaces, users, votes, friendships, listInvites, currentUserId, linkLookups } from './demoData.js'
 
 function createAbortError() {
   return new DOMException('The operation was aborted.', 'AbortError')
@@ -62,7 +62,8 @@ export function getRankedCityPlaces(cityId) {
           if (Object.hasOwn(tally, vote.value)) tally[vote.value] += 1
         })
 
-      return [{ ...place, savedPlaceId: saved.id, tally }]
+      const categoryLabel = categories.find((category) => category.id === place.categoryId)?.label ?? 'Other'
+      return [{ ...place, categoryLabel, savedPlaceId: saved.id, tally }]
     })
     .sort((a, b) => b.tally['must-go'] - a.tally['must-go'] || a.name.localeCompare(b.name))
 }
