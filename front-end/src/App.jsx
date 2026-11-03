@@ -9,6 +9,7 @@ import Login from './pages/auth/Login'
 import Signup from './pages/auth/Signup'
 import VerifyEmail from './pages/auth/VerifyEmail'
 import SetupProfile from './pages/auth/SetupProfile'
+import Profile from './pages/auth/Profile'
 
 import CreateListing from './pages/listings/CreateListing'
 import MyListings from './pages/listings/MyListings'
@@ -34,8 +35,6 @@ import Report from './pages/reporting/Report'
 import Reputation from './pages/reviews/Reputation'
 import ReviewParticipant from './pages/reviews/ReviewParticipant'
 
-
-
 function App() {
   return (
     <BrowserRouter>
@@ -48,6 +47,7 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="/setup-profile" element={<SetupProfile />} />
+        <Route path="/profile" element={<Profile />} />
 
         {/* Shared mock data pages */}
         <Route element={<MockData />}>
@@ -68,8 +68,12 @@ function App() {
           <Route path="/bookings/:bookingId/extension" element={<Extensions />} />
           <Route path="/bookings/:bookingId/cancel" element={<Cancellation />} />
 
-          {/* Renter dashboard*/}
+          {/* Renter dashboard */}
           <Route path="/renter-dashboard" element={<RenterDashboard />} />
+
+          {/* Reviews */}
+          <Route path="/users/:userId/reputation" element={<Reputation />} />
+          <Route path="/bookings/:bookingId/review" element={<ReviewParticipant />} />
         </Route>
 
         {/* Requests */}
@@ -79,10 +83,6 @@ function App() {
         <Route path="/handoff/:rentalId" element={<PickupReturn />} />
         <Route path="/quick-borrow" element={<QuickBorrow />} />
         <Route path="/report" element={<Report />} />
-
-        {/* Reviews */}
-        <Route path="/users/:userId/reputation" element={<Reputation />} />
-        <Route path="/bookings/:bookingId/review" element={<ReviewParticipant />} />
       </Routes>
     </BrowserRouter>
   )
