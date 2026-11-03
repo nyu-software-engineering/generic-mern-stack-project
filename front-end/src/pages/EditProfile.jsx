@@ -22,10 +22,12 @@ function EditProfile() {
     setDraft({ ...draft, [event.target.name]: event.target.value })
   }
 
-  function toggleInternships() {
-    const lookingFor = draft.lookingFor.includes('Internships') ? [] : ['Internships']
+  function toggleRole(role) {
+    const lookingFor = draft.lookingFor.includes(role)
+        ? draft.lookingFor.filter((item) => item !== role)
+        : draft.lookingFor.concat(role)
     setDraft({ ...draft, lookingFor: lookingFor })
-  }
+    }
 
   function stagePhoto() {
     setDraft({ ...draft, photo: 'https://picsum.photos/seed/careerhive-profile-draft/80/80' })
