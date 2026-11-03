@@ -7,15 +7,15 @@
 }
 
 .register-form label {
-  display: block;
-  margin-bottom: 12px;
+    display: block;
+    margin-bottom: 12px;
 }
 
 .register-form input {
-  display: block;
+    display: block;
 }
 
 .register-form input,
 .register-form button {
-  border-radius: 8px;
+    border-radius: 8px;
 }

@@ -16,7 +16,7 @@ function App() {
     return (
       <main className="page">
         <Routes>
-          <Route path="/login" element={<Login setUser={setUser} />} />
+          <Route path="/login" element={<Login onLogin={setUser} />} />
 
           <Route path="/register" element={<Register />} />
 
@@ -29,6 +29,14 @@ function App() {
   else{
     return (
       <div className="app">
+
+        <header className="top-bar">
+          <strong>CampusMart</strong>
+          <button type="button" onClick={() => setUser(null)}>
+            Log Out
+          </button>
+        </header>
+
 
         <main className="page">
           <Routes>
