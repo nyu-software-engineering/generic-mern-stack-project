@@ -41,11 +41,11 @@ export function getCityHeaders() {
 }
 
 /**
- * Async loader for city headers. Data is in memory, but the Promise + AbortSignal
- * match how CityPage loads data today (loading state, retry, cancel on route change)
- * and mirror a future fetch() to the API.
+ * Shared async wrapper: resolves getData() on a microtask, rejects with
+ * AbortError if the signal fires first. Used by all load* functions so the
+ * cancel/abort logic lives in one place.
  */
-export function loadCityHeaders({ signal } = {}) {
+function loadAsync(getData, { signal } = {}) {
   return new Promise((resolve, reject) => {
     if (signal?.aborted) {
       reject(createAbortError())
@@ -60,7 +60,7 @@ export function loadCityHeaders({ signal } = {}) {
     queueMicrotask(() => {
       signal?.removeEventListener('abort', onAbort)
       if (signal?.aborted) return
-      resolve(getCityHeaders())
+      resolve(getData())
     })
   })
 }
