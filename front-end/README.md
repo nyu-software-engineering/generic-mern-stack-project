@@ -50,6 +50,8 @@ The centered, square-corner native analysis dialog shows the selected title/comp
 
 Milestone B remains pending owner agreement on #44/#46/#49/#59: shared saved-profile/mock access, request cancellation/stale profile revisions, actual profile navigation, and Save/Cancel propagation. Supplied test resources are illustrative fixtures, not live AI output or proof that the current saved profile drives a match. Finishing milestone A does not complete #78.
 
+Sprint 1 product direction (November 3): use one shared, editable demo profile across Profile, recommendations and all job match views. Save updates that same saved frontend state; Cancel leaves it unchanged. Different jobs may have different mock results against this one profile. Profile A/B test scenarios describe revisions of the same user. Shared access/response details still need owner alignment; this publication adds no matching algorithm or profile store.
+
 Job records use required string `id`, `title`, `company`, and `location`; optional string `term`, `logoUrl`, ISO `deadline`/`postedAt`, `pay`, `workAuthorization`, `matchSummary`, and `applicationUrl`; a 0–100 or null `matchScore`; true/false/null `sponsorsVisa`; and string arrays `description` and `requirements`. Optional `jobType` is a nonempty string when supplied; current choices are `internship` and `entry-level`. Unknown string types stay readable without an active type restriction. Missing values stay unknown. Map these fields in the API adapter if the agreed shared response differs.
 
 See [INTEGRATION.md](./INTEGRATION.md) for the proposed route/entity/callback/state conventions, current versus planned connections, and owner checklist. HTML control IDs are accessibility links, not job/application identifiers.

@@ -4,6 +4,12 @@ November 2, 2026: implementation inventory and proposed alignment checklist. Onl
 
 November 3, #78 milestone A: `JobMatch` is a controlled summary/native-popup component, optionally composed by `JobDetails` through `matchResource`, `onMatchRetry`, and `onCompleteProfile`. The current App has no match provider and keeps its disabled analysis action. Shared integration and #78's saved-profile acceptance remain unfinished.
 
+## Single demo profile — product direction, November 3
+
+David confirmed one shared current demo profile for Sprint 1. Profile display/edit, Home recommendations and every job's match analysis must refer to the same saved frontend profile. Initialize it from the agreed mock-data source and share its state through #46; do not create separate per-page or per-job profiles or a demo account switcher.
+
+Save in #59 updates that same profile and its consumers; Cancel discards the draft. Test labels profile A/B mean before/after saved snapshots of this one user, not different users. Job-specific mock responses can differ because job requirements differ, but they must all correspond to the current saved snapshot. No real backend, database or live model is required. This product direction does not specify a scoring algorithm or approve a new profile schema; the saved-profile export, response mapping, completeness and refresh/reset behavior still need alignment with #44/#46/#59.
+
 ## Controlled match boundary (#78 milestone A)
 
 The ready UI resource is `{ status: 'ready', data: { jobId, score, summary, fitExplanation, missingSkills, keyQualifications } }`. The selected job supplies `id`, `title`, and `company`. The presentation refuses `data.jobId !== job.id`; `score` is a finite 0–100 number or null, and collections contain plain strings. Loading/error/incomplete-profile resources hide all previous match content, including in an already open dialog. Non-ready resources may carry a plain-text `message`. Missing callbacks do not create recovery/navigation controls.

@@ -8,6 +8,8 @@
 
 **Tech Stack:** Existing React function components/JSX, Vite, plain CSS, Node tests, jsdom and real-browser verification. Node 24 is the tested default. No new dependency, Express, database, live AI, scoring algorithm or global state library.
 
+**Product direction confirmed by David — November 3:** Use one shared current demo profile across the system. Every manufactured job's analysis uses that same saved profile; results can vary by job. Save updates the one profile, Cancel preserves it, and profile A/B tests mean saved revisions of the same user. This clarification does not authorize milestone B or a scoring algorithm; align the shared state/access details with Myra first.
+
 ## Review summary
 
 | Milestone | David can do independently | What completion means |
@@ -68,7 +70,7 @@ const incompleteResource = { status: 'incomplete-profile', message: 'Complete yo
 - A non-ready resource has no renderable previous match data. API validation happens at the adapter; presentation also refuses a mismatched job ID instead of rendering another record's result.
 - At the shared access boundary, propose `getMatch(jobId, savedProfile, { signal })`, returning `{ status: 'ready', data }` or `{ status: 'incomplete-profile', message }` and rejecting transport/invalid-response failures. The controller adds loading/error states. The adapter maps the actual shared shape; no new endpoint, profile schema or profile-completeness algorithm is chosen before owner agreement.
 - The controller associates a result with the exact job/saved-profile request context. A change in the committed snapshot invalidates the prior result and cancels/ignores its request. Do not key matching only by job ID. No speculative cache is needed.
-- Fixture test scenarios represent saved profile A and B explicitly. They are not a new profile editor, persistent store, similarity calculation or claim that every profile edit changes every job's score.
+- Fixture test scenarios represent saved revisions A and B of the same demo user explicitly. They are not different accounts, a new profile editor, persistent store, similarity calculation or a claim that every profile edit changes every job's score.
 
 ## Files and responsibilities
 
