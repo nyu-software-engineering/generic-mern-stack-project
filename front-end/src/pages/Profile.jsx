@@ -1,10 +1,10 @@
-export default function Profile() {
+export default function Profile(props) {
   
   return (
     <>
-      <h1>Joe Bart</h1>
-      <img></img>
-      <h2>NYU - College of Arts and Science</h2>
+      <h1>{props["full_name"]}</h1>
+      <img src="https://picsum.photos/200/200"></img>
+      <h2>{props["university"]}</h2>
       
     </>
   )
