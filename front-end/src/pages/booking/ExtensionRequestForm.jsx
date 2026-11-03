@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { extensionCost, formatDate } from '../../services/bookings'
+import { extensionCost, formatDate, formatMoney } from '../../services/bookings'
 
 const isValidDate = (value) => {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false
@@ -42,7 +42,7 @@ function ExtensionRequestForm({ booking, onSubmit }) {
       </label>
       {extraCost !== null && (
         <p className="booking-note">
-          Extra cost: ${extraCost} · New total: ${booking.totalPrice + extraCost}
+          Extra cost: {formatMoney(extraCost)} · New total: {formatMoney(booking.totalPrice + extraCost)}
         </p>
       )}
       <button type="submit" className="booking-btn booking-btn--primary">Send extension request</button>

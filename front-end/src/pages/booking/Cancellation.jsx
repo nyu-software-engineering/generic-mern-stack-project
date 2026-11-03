@@ -3,7 +3,7 @@ import { Link, useParams } from 'react-router-dom'
 import StatusBadge from '../../components/StatusBadge'
 import ListingSummary from './ListingSummary'
 import {
-  CURRENT_USER_ID, cancelBooking, canCancel, formatDate, getBooking, getListing, getUser,
+  CURRENT_USER_ID, cancelBooking, canCancel, formatDate, formatMoney, getBooking, getListing, getUser,
 } from '../../services/bookings'
 import './booking.css'
 
@@ -73,7 +73,7 @@ function CancelPage({ bookingId }) {
       <div className="booking-card">
         <div><StatusBadge status={booking.status} /></div>
         <p>{formatDate(booking.startDate)} – {formatDate(booking.endDate)}</p>
-        <p>Total: ${booking.totalPrice}</p>
+        <p>Total: {formatMoney(booking.totalPrice)}</p>
       </div>
       {body}
       <p style={{ marginTop: 16 }}>

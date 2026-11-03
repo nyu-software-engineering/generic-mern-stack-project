@@ -60,9 +60,15 @@ export function dailyRate(booking) {
   return booking.terms?.pricePerDay ?? getListing(booking.listingId)?.price ?? 0
 }
 
+// Round to whole cents so decimal prices don't leave floating-point tails.
+export const roundCents = (amount) => Math.round(amount * 100) / 100
+
+// Dollar amount for display, always with two decimals: 38.4 -> "$38.40".
+export const formatMoney = (amount) => `$${roundCents(amount).toFixed(2)}`
+
 // Extra cost of moving a booking's return date to newEndDate.
 export function extensionCost(booking, newEndDate) {
-  return Math.max(0, countDays(booking.endDate, newEndDate)) * dailyRate(booking)
+  return roundCents(Math.max(0, countDays(booking.endDate, newEndDate)) * dailyRate(booking))
 }
 
 // Borrower asks to return later (#55). Only active rentals can be extended.
@@ -90,7 +96,7 @@ export function respondToExtension(id, approve) {
   return updateRental(id, {
     status: 'active',
     endDate: newEndDate,
-    totalPrice: booking.totalPrice + extensionCost(booking, newEndDate),
+    totalPrice: roundCents(booking.totalPrice + extensionCost(booking, newEndDate)),
     extensionRequest: { newEndDate, status: 'approved' },
   })
 }
