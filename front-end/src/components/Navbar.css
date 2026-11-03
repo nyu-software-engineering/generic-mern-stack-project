@@ -1,0 +1,93 @@
+
+.ds-header {
+  width: 100%;
+  min-height: 88px;
+  background: #ffffff;
+  border-bottom: 1px solid #d6d6d6;
+  color: #292929;
+}
+
+.ds-header-inner {
+  width: 100%;
+  max-width: 960px;
+  min-height: 88px;
+  margin: 0 auto;
+  padding: 0 24px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.ds-header-brand {
+  color: #292929;
+  font-size: 16px;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.ds-header-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+}
+
+.ds-header-link {
+  color: #292929;
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.ds-header-link:hover {
+  text-decoration: underline;
+}
+
+.ds-header-signout {
+  min-height: 40px;
+  padding: 8px 14px;
+
+  background: #ffffff;
+  color: #292929;
+  border: 1px solid #b2b2b2;
+  border-radius: 4px;
+
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.ds-header-signout:hover {
+  background: #f2f2f2;
+}
+
+.ds-header a:focus-visible,
+.ds-header button:focus-visible {
+  outline: 2px solid #315fce;
+  outline-offset: 3px;
+}
+
+@media (max-width: 480px) {
+  .ds-header-inner {
+    padding: 0 16px;
+    gap: 8px;
+  }
+
+  .ds-header-actions {
+    gap: 8px;
+  }
+
+  .ds-header-link,
+  .ds-header-signout {
+    font-size: 12px;
+  }
+
+  .ds-header-signout {
+    padding: 8px;
+  }
+}

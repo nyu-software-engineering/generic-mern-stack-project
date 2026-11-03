@@ -31,6 +31,11 @@ import PickupReturn from './pages/handoff/PickupReturn'
 import QuickBorrow from './pages/quickBorrow/QuickBorrow'
 import Report from './pages/reporting/Report'
 
+import Reputation from './pages/reviews/Reputation'
+import ReviewParticipant from './pages/reviews/ReviewParticipant'
+
+
+
 function App() {
   return (
     <BrowserRouter>
@@ -74,6 +79,10 @@ function App() {
         <Route path="/handoff/:rentalId" element={<PickupReturn />} />
         <Route path="/quick-borrow" element={<QuickBorrow />} />
         <Route path="/report" element={<Report />} />
+
+        {/* Reviews */}
+        <Route path="/users/:userId/reputation" element={<Reputation />} />
+        <Route path="/bookings/:bookingId/review" element={<ReviewParticipant />} />
       </Routes>
     </BrowserRouter>
   )
