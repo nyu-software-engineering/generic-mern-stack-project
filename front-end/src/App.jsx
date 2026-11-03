@@ -1,3 +1,4 @@
+
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 import Navbar from './components/Navbar'
@@ -6,7 +7,8 @@ import MockData from './components/MockData'
 import Welcome from './pages/auth/Welcome'
 import Login from './pages/auth/Login'
 import Signup from './pages/auth/Signup'
-import Profile from './pages/auth/Profile'
+import VerifyEmail from './pages/auth/VerifyEmail'
+import SetupProfile from './pages/auth/SetupProfile'
 
 import CreateListing from './pages/listings/CreateListing'
 import MyListings from './pages/listings/MyListings'
@@ -29,31 +31,32 @@ import PickupReturn from './pages/handoff/PickupReturn'
 import QuickBorrow from './pages/quickBorrow/QuickBorrow'
 import Report from './pages/reporting/Report'
 
-
 function App() {
   return (
     <BrowserRouter>
       <Navbar />
-      <Routes>
-        <Route path="/" element={<Welcome />} />
 
-        {/* Auth*/}
+      <Routes>
+        {/* Authentication */}
+        <Route path="/" element={<Welcome />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/setup-profile" element={<Profile />} />
+        <Route path="/verify-email" element={<VerifyEmail />} />
+        <Route path="/setup-profile" element={<SetupProfile />} />
 
+        {/* Shared mock data pages */}
         <Route element={<MockData />}>
-          {/* Listings & owner dashboard*/}
+          {/* Listings and owner dashboard */}
           <Route path="/listings" element={<MyListings />} />
           <Route path="/listings/new" element={<CreateListing />} />
           <Route path="/owner-dashboard" element={<OwnerDashboard />} />
 
-          {/* Browse & chat*/}
+          {/* Browse and chat */}
           <Route path="/browse" element={<Browse />} />
           <Route path="/browse/:id" element={<ItemDetails />} />
           <Route path="/inbox" element={<Inbox />} />
 
-          {/* Booking*/}
+          {/* Booking */}
           <Route path="/listings/:listingId/request" element={<Booking />} />
           <Route path="/booking-requests" element={<BookingRequests />} />
           <Route path="/bookings/:bookingId" element={<BookingDetails />} />
@@ -64,10 +67,10 @@ function App() {
           <Route path="/renter-dashboard" element={<RenterDashboard />} />
         </Route>
 
-        {/* Requests*/}
+        {/* Requests */}
         <Route path="/requests" element={<ItemRequests />} />
 
-        {/* Handoff, quick borrow, reporting*/}
+        {/* Handoff, quick borrow, reporting */}
         <Route path="/handoff/:rentalId" element={<PickupReturn />} />
         <Route path="/quick-borrow" element={<QuickBorrow />} />
         <Route path="/report" element={<Report />} />
