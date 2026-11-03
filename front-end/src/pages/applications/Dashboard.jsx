@@ -1,11 +1,19 @@
 import { api } from '../../api'
-import { ApplicationCard, EmptyState, ErrorState, IconButton, LoadingState, Page } from '../../components'
+import { ApplicationCard, EmptyState, ErrorState, IconButton, LoadingState, Page, FilterChips } from '../../components'
+import { APPLICATION_STATUSES } from '../../constants'
 import { useApi } from '../../hooks/useApi'
+import { useState } from 'react'
+
+// "All" plus one chip per status, using the short labels (e.g. "OA")
+const STATUS_FILTERS = [{ value: 'all', label: 'All' }, ...APPLICATION_STATUSES.map((status) => ({ value: status.value, label: status.shortLabel }))]
 
 // Dashboard screen: lists all current (not archived) applications
 export default function Dashboard() {
   // Load the applications and track loading/error state
   const { data: applications, loading, error, reload } = useApi(() => api.getApplications(), [])
+
+  // Which status chip is selected
+  const [statusFilter, setStatusFilter] = useState('all')
 
   // "+" button in the header that opens Add Application
   const addButton = <IconButton icon="plus" label="Add application" variant="primary" to="/applications/new" />
@@ -28,13 +36,20 @@ export default function Dashboard() {
     )
   }
 
+  // Only the applications that match the selected status
+  const visibleApplications =
+    statusFilter === 'all' ? applications : applications.filter((application) => application.status === statusFilter)
+  
   return (
     <Page title="Applications" action={addButton}>
-      {/* One card per application, or a message if there are none */}
-      {applications.length > 0 ? (
-        applications.map((application) => <ApplicationCard key={application.id} application={application} />)
+            {/* Status filter chips */}
+      <FilterChips options={STATUS_FILTERS} value={statusFilter} onChange={setStatusFilter} label="Filter by status" />
+
+      {/* One card per matching application, or a message if there are none */}
+      {visibleApplications.length > 0 ? (
+        visibleApplications.map((application) => <ApplicationCard key={application.id} application={application} />)
       ) : (
-        <EmptyState title="No applications yet" message="Add your first application to start tracking it." />
+        <EmptyState title="No applications match" message="Try a different status." />
       )}
     </Page>
   )
