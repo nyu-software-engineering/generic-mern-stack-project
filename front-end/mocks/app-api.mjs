@@ -25,6 +25,7 @@ function appMiddleware(request, response, next) {
     const application = applications.find((item) => item.id === id)
     return send(response, application ? 200 : 404, application ?? { error: 'Application not found' })
   }
+  if (path === '/api/discussions') return send(response, 200, discussions)
   if (path.startsWith('/api/discussions/')) {
     const jobId = decodeURIComponent(path.slice('/api/discussions/'.length))
     return send(response, 200, discussions.filter((item) => item.jobId === jobId))
