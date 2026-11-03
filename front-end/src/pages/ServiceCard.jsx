@@ -8,7 +8,7 @@ const ServiceCard = props => {
   // inject a random placeholder image from the Lorem Picsum API
   // the mockaroo API we're using doesn't include this
   // ultimately, this data would come from the API
-  const imgSrc = `https://picsum.photos/seed/${props.details.id}/400/240` // tack on this animal's id to the query
+  const imgSrc = `https://picsum.photos/seed/${props.details.id}/400/240` // tack on this service's id to the query
 
   return (
     <article className="ServiceCard">
