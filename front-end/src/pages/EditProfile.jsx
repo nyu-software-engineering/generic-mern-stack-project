@@ -46,7 +46,7 @@ function EditProfile() {
     window.location.hash = '#/profile'
   }
 
-  return (
+    return (
     <section className="edit-profile">
       <h1>Edit Profile</h1>
       <img src={draft.photo} alt="" width="72" height="72" />
@@ -65,9 +65,13 @@ function EditProfile() {
         <input name="locationsText" value={draft.locationsText} onChange={changeField} />
       </label>
       <label>
-        <input type="checkbox" checked={draft.lookingFor.includes('Internships')} onChange={toggleInternships} />
+        <input type="checkbox" checked={draft.lookingFor.includes('Internships')} onChange={() => toggleRole('Internships')} />
         Internships
-      </label>
+    </label>
+    <label>
+        <input type="checkbox" checked={draft.lookingFor.includes('Full-time entry-level roles')} onChange={() => toggleRole('Full-time entry-level roles')} />
+        Full-time entry-level roles
+    </label>
 
       <button type="button" className="ui-button ui-button-secondary" onClick={cancelEdit}>Cancel</button>
       <button type="button" className="ui-button" onClick={saveEdit}>Save Changes</button>
