@@ -110,6 +110,14 @@ export default function Dashboard() {
         <EmptyState title="No applications match" message="Try a different search or status." />
       )}
 
+
+      {/* Link to the archived applications */}
+      <div className="dashboard__archived">
+        <Button variant="ghost" size="sm" icon="archive" to="/archive">
+          View archived
+        </Button>
+      </div>
+
       {/* Sort pop-up */}
       <OptionSheet
         open={sortOpen}
