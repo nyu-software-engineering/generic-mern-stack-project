@@ -85,11 +85,18 @@ function AppState(props) {
 
   function matchFor(jobId) {
     return getMatch(jobId).then((match) => {
-      if (match === null) return { status: 'error', message: 'Match not found' }
-      if (match.profileRevision !== profile.revision) {
-        return { status: 'incomplete-profile', message: 'Reset to see the original match.' }
-      }
-      return { status: 'ready', data: match }
+        if (match === null) return { status: 'error', message: 'Match not found' }
+        return {
+        status: 'ready',
+        data: {
+            jobId: jobId,
+            score: match.score,
+            summary: 'Using saved skills: ' + profile.skills.join(', '),
+            fitExplanation: profile.skills,
+            missingSkills: match.missingSkills,
+            keyQualifications: [profile.workAuthorization],
+        },
+        }
     })
   }
 
