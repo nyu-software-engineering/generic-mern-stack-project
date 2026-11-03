@@ -75,6 +75,14 @@ function BookingSummary({ bookingId }) {
         {!isOwner && booking.status === 'requested' && (
           <p className="booking-note">Waiting for {other?.name} to respond.</p>
         )}
+        {!isOwner && booking.status === 'active' && (
+          <Link to={`/bookings/${booking.id}/extension`} className="booking-btn">Request extension</Link>
+        )}
+        {booking.status === 'extension_requested' && (
+          <Link to={`/bookings/${booking.id}/extension`} className="booking-btn">
+            {isOwner ? 'Review extension request' : 'View extension request'}
+          </Link>
+        )}
         <Link to="/inbox" className="booking-btn">Message {isOwner ? 'borrower' : 'owner'}</Link>
         {canRespond && (
           <button type="button" className="booking-btn booking-btn--link" onClick={() => respond('declined')}>
