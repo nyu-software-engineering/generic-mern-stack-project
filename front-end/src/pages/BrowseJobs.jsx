@@ -38,7 +38,7 @@ function JobCard({ job, getJobHref }) {
 }
 
 export default function BrowseJobs({
-  jobs = [], status = 'ready', onRetry, getJobHref, filters = DEFAULT_FILTERS, onFiltersChange,
+  jobs = [], status = 'ready', onRetry, getJobHref, filters = DEFAULT_FILTERS, onFiltersChange, profile,
 }) {
   const [filtersOpen, setFiltersOpen] = useState(false)
   const visibleJobs = filterJobs(jobs, filters)
@@ -105,9 +105,12 @@ export default function BrowseJobs({
           <p>Remove a filter or clear all filters to see more jobs.</p>
         </div>
       ) : (
-        <ul className="job-list">
-          {visibleJobs.map((job) => <JobCard key={job.id} job={job} getJobHref={getJobHref} />)}
-        </ul>
+        <>
+          {profile && <p>Recommended from your saved skills: {profile.skills.join(', ')}</p>}
+          <ul className="job-list">
+            {visibleJobs.map((job) => <JobCard key={job.id} job={job} getJobHref={getJobHref} />)}
+          </ul>
+        </>
       )}
     </section>
   )

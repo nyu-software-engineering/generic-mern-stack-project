@@ -4,12 +4,18 @@ import { getJobHref, parseJobRoute } from './jobs/routes.js'
 import { DEFAULT_FILTERS } from './jobs/browse.js'
 import BrowseJobs from './pages/BrowseJobs.jsx'
 import JobDetails from './pages/JobDetails.jsx'
+import { useAppState } from './data/AppState.jsx'
+import EditProfile from './pages/EditProfile.jsx'
+import MyProfile from './pages/MyProfile.jsx'
 
 function App() {
   const [hash, setHash] = useState(() => window.location.hash)
   const [attempt, setAttempt] = useState(0)
   const [resources, setResources] = useState({ browse: null, details: null })
   const [browseFilters, setBrowseFilters] = useState(DEFAULT_FILTERS)
+  const appState = useAppState()
+  const [matchResource, setMatchResource] = useState({ status: 'loading' })
+  const path = hash.replace(/^#/, '') || '/'
   const route = parseJobRoute(hash)
   const requestKey = `${route.kind}:${route.id ?? ''}`
   const resource = resources[route.kind]
@@ -48,6 +54,15 @@ function App() {
     return () => { active = false; controller.abort() }
   }, [requestKey, route.kind, route.id, attempt, browseLoaded])
 
+  useEffect(() => {
+    if (route.kind !== 'details' || !appState.profile) return
+    let active = true
+    appState.matchFor(route.id).then((resource) => {
+      if (active) setMatchResource(resource)
+    })
+    return () => { active = false }
+  }, [route.kind, route.id, appState.profile])
+
   function retry() {
     setResources((previous) => ({ ...previous, [route.kind]: null }))
     setAttempt((value) => value + 1)
@@ -60,11 +75,18 @@ function App() {
         <span>Demo</span>
       </header>
       <p className="demo-notice">Fictional listings. Application links open example pages.</p>
-      {route.kind === 'browse' ? (
+      {path === '/profile' ? (
+        <MyProfile />
+      ) : path === '/profile/edit' ? (
+        <EditProfile />
+      ) : route.kind === 'browse' ? (
         <BrowseJobs jobs={current.data ?? []} status={current.status} onRetry={retry} getJobHref={getJobHref}
-          filters={browseFilters} onFiltersChange={setBrowseFilters} />
+          filters={browseFilters} onFiltersChange={setBrowseFilters} profile={appState.profile} />
       ) : route.kind === 'details' ? (
-        <JobDetails job={current.data} status={current.status} onRetry={retry} />
+        <JobDetails job={current.data} status={current.status} onRetry={retry}
+          matchResource={matchResource}
+          onMatchRetry={() => appState.matchFor(route.id).then(setMatchResource)}
+          onCompleteProfile={() => { window.location.hash = '#/profile/edit' }} />
       ) : (
         <section className="browse-state"><h1>Page not found</h1><a href="#/jobs">Back to jobs</a></section>
       )}
