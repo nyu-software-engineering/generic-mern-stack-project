@@ -92,6 +92,27 @@ function loadAsync(getData, { signal } = {}) {
   })
 }
 
+/** Headers for every city in demoData. Behavior unchanged; now uses loadAsync. */
+export function loadCityHeaders(options) {
+  return loadAsync(getCityHeaders, options)
+}
+
+/**
+ * City headers only for lists the user is a member of.
+ * Pending invites (listInvites) are intentionally excluded.
+ */
+export function getUserCityHeaders(userId) {
+  return lists
+    .filter((list) => list.memberIds.includes(userId))
+    .map((list) => getCityHeader(list.cityId))
+    .filter(Boolean)
+}
+
+/** Home screen loader. Uses the mock currentUserId until real auth exists. */
+export function loadMyCityHeaders(options) {
+  return loadAsync(() => getUserCityHeaders(currentUserId), options)
+}
+
 /** User shape for lists on screen (avatar + label). */
 function toPublicUser(user) {
   if (!user) return null
