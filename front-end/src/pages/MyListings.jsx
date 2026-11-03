@@ -1,9 +1,9 @@
 import { useState } from 'react'
-import ListingCard from './ListingCard'
-import './MyListingsPage.css'
+import ListingCard from '../components/ListingCard'
+import './MyListings.css'
 
-const MyListingsPage = () => {
-  const [listings, setListings] = useState(sampleListings)
+const MyListings = () => {
+  const [listings, setListings] = useState([])
 
   const handleRemove = id => {
     if (window.confirm('Remove this listing?')) {
@@ -36,4 +36,4 @@ const MyListingsPage = () => {
   )
 }
 
-export default MyListingsPage
+export default MyListings

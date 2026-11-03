@@ -1,12 +1,14 @@
 import { useState } from "react";
 import Header from "../components/Header";
 import TextField from "../components/TextField";
+import {useNavigate} from "react-router-dom";
 
 export default function SignUp(props) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const navigate = useNavigate();
 
   function handleSignUp(e) {
     e.preventDefault();
@@ -56,13 +58,13 @@ export default function SignUp(props) {
           
           <p className="switch-text">
             Already have an account?{" "}
-            <button className="link" onClick={props.goLogin}>
+            <button className="link" onClick={() => navigate("/")}>
               Login
             </button>
           </p>
 
           <div style={{ marginTop: "15px", textAlign: "center" }}>
-            <button className="btn secondary" onClick={props.onGuest}>
+            <button className="btn secondary" onClick={() => navigate("/app/explore")}>
               Continue as a Guest
             </button>
           </div>
