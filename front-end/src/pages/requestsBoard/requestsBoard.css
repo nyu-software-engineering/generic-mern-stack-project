@@ -1,0 +1,35 @@
+/* Requests board extras. Cards and page layout come from the shared styles in index.css. */
+.request-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.request-tab {
+  padding: 6px 14px;
+  border: 1px solid #e0e3e8;
+  border-radius: 999px;
+  background: white;
+  color: #20242b;
+  cursor: pointer;
+}
+
+.request-tab--active {
+  border-color: #222;
+  background: #222;
+  color: white;
+}
+
+.request-action {
+  display: inline-block;
+  padding: 6px 14px;
+  border: 1px solid #222;
+  border-radius: 6px;
+  color: #222;
+  text-decoration: none;
+}
+
+.request-action--primary {
+  background: #222;
+  color: white;
+}
