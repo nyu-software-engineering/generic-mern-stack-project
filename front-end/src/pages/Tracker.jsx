@@ -11,7 +11,12 @@ const stages = [
   "Offer",
 ]
 
-function StageSection({ stage, applications, sortBy, onViewDetails }) {
+function StageSection({
+  stage,
+  applications,
+  sortBy,
+  onViewDetails,
+}) {
   const [expanded, setExpanded] = useState(false)
 
   const stageApplications = applications
@@ -49,15 +54,21 @@ function StageSection({ stage, applications, sortBy, onViewDetails }) {
           <h4>{application.title}</h4>
           <p>{application.company}</p>
 
-          <button onClick={() => onViewDetails(application)}>
+          <button
+            onClick={() => onViewDetails(application)}
+          >
             View Details
           </button>
         </div>
       ))}
 
       {stageApplications.length > 2 && (
-        <button onClick={() => setExpanded(!expanded)}>
-          {expanded ? "Show less" : `Show ${hiddenCount} more`}
+        <button
+          onClick={() => setExpanded(!expanded)}
+        >
+          {expanded
+            ? "Show less"
+            : `Show ${hiddenCount} more`}
         </button>
       )}
     </section>
@@ -65,15 +76,69 @@ function StageSection({ stage, applications, sortBy, onViewDetails }) {
 }
 
 function Tracker() {
-  const [selectedStage, setSelectedStage] = useState("All")
-  const [sortBy, setSortBy] = useState("default")
-  const [selectedApplication, setSelectedApplication] = useState(null)
+  const [selectedStage, setSelectedStage] =
+    useState("All")
+
+  const [sortBy, setSortBy] =
+    useState("default")
+
+  const [
+    selectedApplicationId,
+    setSelectedApplicationId,
+  ] = useState(null)
+
+  const [applications, setApplications] =
+    useState(mockApplications)
+
+  const selectedApplication = applications.find(
+    (application) =>
+      application.id === selectedApplicationId
+  )
+
+  function updateApplicationStage(
+    applicationId,
+    newStage
+  ) {
+    setApplications((currentApplications) =>
+      currentApplications.map((application) => {
+        if (application.id !== applicationId) {
+          return application
+        }
+
+        if (application.stage === newStage) {
+          return application
+        }
+
+        const today =
+          new Date().toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+            year: "numeric",
+          })
+
+        return {
+          ...application,
+          stage: newStage,
+          history: [
+            ...application.history,
+            {
+              stage: newStage,
+              date: today,
+            },
+          ],
+        }
+      })
+    )
+  }
 
   if (selectedApplication) {
     return (
       <ApplicationDetails
         application={selectedApplication}
-        onBack={() => setSelectedApplication(null)}
+        onBack={() =>
+          setSelectedApplicationId(null)
+        }
+        onStageChange={updateApplicationStage}
       />
     )
   }
@@ -81,6 +146,7 @@ function Tracker() {
   return (
     <main className="app">
       <h1>CareerHive</h1>
+
       <h2>My Tracker</h2>
 
       <div>
@@ -88,12 +154,19 @@ function Tracker() {
           Stage:
           <select
             value={selectedStage}
-            onChange={(event) => setSelectedStage(event.target.value)}
+            onChange={(event) =>
+              setSelectedStage(event.target.value)
+            }
           >
-            <option value="All">All stages</option>
+            <option value="All">
+              All stages
+            </option>
 
             {stages.map((stage) => (
-              <option key={stage} value={stage}>
+              <option
+                key={stage}
+                value={stage}
+              >
                 {stage}
               </option>
             ))}
@@ -104,26 +177,42 @@ function Tracker() {
           Sort:
           <select
             value={sortBy}
-            onChange={(event) => setSortBy(event.target.value)}
+            onChange={(event) =>
+              setSortBy(event.target.value)
+            }
           >
-            <option value="default">Default</option>
-            <option value="company">Company A-Z</option>
-            <option value="title">Job title A-Z</option>
+            <option value="default">
+              Default
+            </option>
+
+            <option value="company">
+              Company A-Z
+            </option>
+
+            <option value="title">
+              Job title A-Z
+            </option>
           </select>
         </label>
       </div>
 
       {stages
         .filter(
-          (stage) => selectedStage === "All" || stage === selectedStage
+          (stage) =>
+            selectedStage === "All" ||
+            stage === selectedStage
         )
         .map((stage) => (
           <StageSection
             key={stage}
             stage={stage}
-            applications={mockApplications}
+            applications={applications}
             sortBy={sortBy}
-            onViewDetails={setSelectedApplication}
+            onViewDetails={(application) =>
+              setSelectedApplicationId(
+                application.id
+              )
+            }
           />
         ))}
     </main>
