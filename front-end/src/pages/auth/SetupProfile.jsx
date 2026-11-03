@@ -1,7 +1,7 @@
 
 import { useContext, useState } from 'react'
-import { AuthContext } from '../../context/AuthContext'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
+import { AuthContext } from '../../context/AuthContext'
 
 function SetupProfile() {
   const { currentUser, updateProfile } = useContext(AuthContext)
@@ -10,14 +10,6 @@ function SetupProfile() {
 
   function handleSubmit(event) {
     event.preventDefault()
-
-    if (!currentUser) {
-      return <Navigate to="/signup" replace />
-    }
-
-    if (!currentUser.emailVerified) {
-      return <Navigate to="/verify-email" replace />
-    }
 
     const displayName = event.currentTarget.elements.displayName.value.trim()
     const campusArea = event.currentTarget.elements.campusArea.value.trim()
@@ -31,12 +23,20 @@ function SetupProfile() {
     navigate('/browse')
   }
 
+  // Route guards must run during rendering, not inside handleSubmit.
+  if (!currentUser) {
+    return <Navigate to="/signup" replace />
+  }
+
+  if (!currentUser.emailVerified) {
+    return <Navigate to="/verify-email" replace />
+  }
+
   return (
     <main className="auth-page">
       <Link to="/verify-email">Back</Link>
 
       <h2>Basic profile setup</h2>
-
 
       <form onSubmit={handleSubmit} onChange={() => setMessage('')}>
         <label htmlFor="displayName">Display name</label>
@@ -44,7 +44,7 @@ function SetupProfile() {
           id="displayName"
           name="displayName"
           type="text"
-          defaultValue={currentUser?.displayName || ''}
+          defaultValue={currentUser.displayName || ''}
           placeholder="Enter your display name"
           required
         />
@@ -54,6 +54,7 @@ function SetupProfile() {
           id="campusArea"
           name="campusArea"
           type="text"
+          defaultValue={currentUser.campusArea || ''}
           placeholder="e.g. Near campus"
           required
         />

@@ -10,10 +10,6 @@ function Welcome() {
       <h1>DormShare</h1>
       <p>Borrow, lend and rent within NYU.</p>
 
-      <div className="welcome-image-placeholder" aria-hidden="true">
-        Campus sharing image
-      </div>
-
       <nav className="welcome-actions" aria-label="Account">
         <Link className="welcome-button welcome-primary" to="/signup">
           Create an account

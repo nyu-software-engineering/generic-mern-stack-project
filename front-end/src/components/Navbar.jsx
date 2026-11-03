@@ -2,6 +2,7 @@
 import { useContext } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { AuthContext } from '../context/AuthContext'
+import './Navbar.css'
 
 function Navbar() {
   const { currentUser, signOut } = useContext(AuthContext)
@@ -13,14 +14,26 @@ function Navbar() {
   }
 
   return (
-    <header>
-      <nav aria-label="Main navigation">
-        <Link to="/">DormShare</Link>
+    <header className="ds-navbar">
+      <nav className="ds-navbar-inner" aria-label="Main navigation">
+        <Link to="/" className="ds-navbar-brand">
+          DormShare
+        </Link>
 
         {currentUser && (
-          <button type="button" onClick={handleSignOut}>
-            Sign out
-          </button>
+          <div className="ds-navbar-actions">
+            <Link to="/browse" className="ds-navbar-link">
+              Browse
+            </Link>
+
+            <button
+              type="button"
+              className="ds-navbar-signout"
+              onClick={handleSignOut}
+            >
+              Sign out
+            </button>
+          </div>
         )}
       </nav>
     </header>
