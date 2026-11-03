@@ -109,6 +109,10 @@ function BookingSummary({ bookingId }) {
           Message {isOwner ? 'borrower' : 'owner'}
         </Link>
 
+        <Link to={`/report?rentalId=${booking.id}`} className="booking-btn booking-btn--link">
+          Report a problem
+        </Link>
+
         {canRespond && (
           <button
             type="button"
