@@ -1,0 +1,12 @@
+[
+  {
+    "jobId": "brightspace-software-intern",
+    "profileId": "profile-myra",
+    "profileRevision": 1,
+    "score": 92,
+    "summary": "Your demo profile shares React and Python experience with this role.",
+    "fitExplanation": ["The profile lists React and Python."],
+    "missingSkills": ["Git"],
+    "keyQualifications": ["Pursuing a Computer Science degree."]
+  }
+]
