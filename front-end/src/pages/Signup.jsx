@@ -2,40 +2,72 @@ import { useState } from "react";
 import Header from "../components/Header";
 import TextField from "../components/TextField";
 
-export default function SignUp({ onSignUp, goLogin }) {
+export default function SignUp(props) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirm, setConfirm] = useState("");
-  const [error, setError] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
-  const handleSubmit = () => {
-    if (password !== confirm) {
-      setError("Passwords don't match. Re-enter them and try again.");
+  function handleSignUp(e) {
+    e.preventDefault();
+
+    if (password !== confirmPassword) {
+      alert("Passwords do not match!");
       return;
     }
-    setError("");
-    onSignUp({ name, email });
-  };
+
+    props.onSignUp();
+  }
 
   return (
-    <>
+    <div>
       <Header />
       <div className="page">
         <div className="card">
           <h2>Sign Up</h2>
-          <TextField label="Name" placeholder="Enter your name" value={name} onChange={setName} autoComplete="name" />
-          <TextField label="Email" type="email" placeholder="Enter your email" value={email} onChange={setEmail} autoComplete="email" />
-          <TextField label="Password" type="password" placeholder="Create a password" value={password} onChange={setPassword} autoComplete="new-password" />
-          <TextField label="Confirm password" type="password" placeholder="Re-enter your password" value={confirm} onChange={setConfirm} autoComplete="new-password" />
-          {error && <p className="error" role="alert">{error}</p>}
-          <button className="btn primary" onClick={handleSubmit}>Sign Up</button>
+          <form onSubmit={handleSignUp}>
+            <TextField 
+              label="Name" 
+              value={name} 
+              onChange={(e) => setName(e.target.value)} 
+            />
+            <TextField 
+              label="Email" 
+              type="email" 
+              value={email} 
+              onChange={(e) => setEmail(e.target.value)} 
+            />
+            <TextField 
+              label="Password" 
+              type="password" 
+              value={password} 
+              onChange={(e) => setPassword(e.target.value)} 
+            />
+            <TextField 
+              label="Confirm Password" 
+              type="password" 
+              value={confirmPassword} 
+              onChange={(e) => setConfirmPassword(e.target.value)} 
+            />
+            <button type="submit" className="btn primary">
+              Sign Up
+            </button>
+          </form>
+          
           <p className="switch-text">
             Already have an account?{" "}
-            <button className="link" onClick={goLogin}>Login</button>
+            <button className="link" onClick={props.goLogin}>
+              Login
+            </button>
           </p>
+
+          <div style={{ marginTop: "15px", textAlign: "center" }}>
+            <button className="btn secondary" onClick={props.onGuest}>
+              Continue as a Guest
+            </button>
+          </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
