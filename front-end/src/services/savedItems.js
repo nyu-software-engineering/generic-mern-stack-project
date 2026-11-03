@@ -11,8 +11,9 @@ export function isListingSaved(userId, listingId) {
 export function saveListing(userId, listingId) {
   const listing = getListings().find((item) => item.id === listingId)
 
-  if (!listing || listing.status !== 'published') {
-    return
+    if (!listing || listing.status !== 'published' || listing.ownerId === userId
+  ) {
+    return 
   }
 
   if (!isListingSaved(userId, listingId)) {

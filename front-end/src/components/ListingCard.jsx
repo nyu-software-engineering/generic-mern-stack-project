@@ -39,13 +39,15 @@ function ListingCard({ listing }) {
       </h2>
       <p>{listing.description}</p>
       <p>${listing.price.toFixed(2)} / day</p>
-            <button
-        type="button"
-        aria-pressed={saved}
-        onClick={handleToggleSave}
-      >
-        {saved ? 'Unsave item' : 'Save item'}
-      </button>
+      {listing.ownerId !== CURRENT_USER_ID && (
+        <button
+          type="button"
+          aria-pressed={saved}
+          onClick={handleToggleSave}
+        >
+          {saved ? 'Unsave item' : 'Save item'}
+        </button>
+      )}
     </article>
   )
 }

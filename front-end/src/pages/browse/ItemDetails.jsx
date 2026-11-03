@@ -110,13 +110,15 @@ function ItemDetails() {
       <p>Owner: {owner?.name ?? 'Student owner'}</p>
       <p>${listing.price.toFixed(2)} / day</p>
 
-      <button
-        type="button"
-        aria-pressed={saved}
-        onClick={handleToggleSave}
-      >
-        {saved ? 'Unsave item' : 'Save item'}
-      </button>
+      {!isOwnListing && (
+        <button
+          type="button"
+          aria-pressed={saved}
+          onClick={handleToggleSave}
+        >
+          {saved ? 'Unsave item' : 'Save item'}
+        </button>
+      )}
 
       <section>
         <h2>Rental terms</h2>
