@@ -11,10 +11,6 @@ function HomePage() {
             <button type="button" className="home-header-button">
             profile
           </button>
-
-          <button type="button" className="home-header-button">
-            saved
-          </button>
         </div>
       </header>
 

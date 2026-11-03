@@ -17,8 +17,8 @@ function EditSaved(props){
                 </article>
             </div>
             <div id='edit-card-actions-container'>
-                <button className='EditSaved-Btn'></button>
-                <button className='EditSaved-Btn'></button>
+                <button className='EditSaved-Btn'>Delete</button>
+                <button className='EditSaved-Btn'>Save Changes</button>
             </div>
         </div>
     )
