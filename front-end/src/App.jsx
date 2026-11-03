@@ -5,9 +5,11 @@ import{
   Route,
   Routes,
 } from "react-router-dom"
-import Profile from "./components/profile/Profile"
-import ProfileSettings from "./components/profile/ProfileSettings"
+//import Profile from "./components/profile/Profile"
+//import ProfileSettings from "./components/profile/ProfileSettings"
 import "./App.css"
+import Feed from "./Feed"
+import Following from "./Following"
 
 const App = () => {
   const [user, setUser] = useState(null)
@@ -61,6 +63,10 @@ const App = () => {
             path="/profile/settings"
             element={<ProfileSettings />}
           />
+
+          <Route path="/feed" element={<Feed />} />
+          <Route path="/following" element={<Following />} />
+
         </Routes>
       </Router>
   )
