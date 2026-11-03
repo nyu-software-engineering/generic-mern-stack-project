@@ -1,0 +1,27 @@
+.ServiceCard {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 8px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid black;
+}
+
+.ServiceCard img{
+    display: block;
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+}
+
+.ServiceCard h2{
+    margin: 0;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.ServiceCard p{
+    margin: 0;
+    font-size: 12px;
+}
