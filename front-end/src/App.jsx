@@ -30,20 +30,12 @@ function App() {
     return (
       <div className="app">
 
-        <header className="top-bar">
-          <strong>CampusMart</strong>
-          <button type="button" onClick={() => setUser(null)}>
-            Log Out
-          </button>
-        </header>
-
-
         <main className="page">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/search" element={<Search />} />
             <Route path="/bookings" element={<Bookings />} />
-            <Route path="/profile" element={<Profile />} />
+            <Route path="/profile" element={<Profile setUser={setUser} />} />
 
             <Route path="/login" element={<Navigate to="/" replace />}/>
             <Route path="/register" element={<Navigate to="/" replace />}/>

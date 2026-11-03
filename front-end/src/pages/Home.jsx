@@ -3,6 +3,7 @@ import { useState } from 'react'
 import categories from '../categories.json'
 import services from '../services.json'
 import ServiceCard from './ServiceCard'
+import Header from './Header'
 import './Home.css'
 
 export default function Home() {
@@ -10,18 +11,7 @@ export default function Home() {
   const [selectedCategories, setSelectedCategories] = useState('All services')
   return (
     <div className='home'>
-      <header className='home-header'>
-        <strong>
-          CampusMart
-        </strong>
-        <span>
-          NYU
-        </span>
-        <Link to='/profile'>
-          Account
-        </Link>
-      </header>
-
+      <Header />
       <section>
         <h1>
           Services from your campus
