@@ -1,25 +1,53 @@
 import { useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
-import { getBooking, getListing, getUser } from '../../services/bookings'
-import { REPORT_REASONS, createReport } from '../../services/reports'
+import { getUser } from '../../services/bookings'
+import { getOtherParticipant } from '../../services/chat'
+import { CURRENT_USER_ID } from '../../services/mockDataService'
+import { REPORT_REASONS, createReport, resolveReportSubject } from '../../services/reports'
 import './reporting.css'
 
-// Report a problem (M34). Pass ?rentalId=<id> to attach the report to a rental.
+// Report a problem (M34). The subject comes from the link that opened the form:
+// ?rentalId=<id>, ?conversationId=<id> or ?listingId=<id>. With none it is a general report.
 function Report() {
   const [searchParams] = useSearchParams()
-  const rentalId = searchParams.get('rentalId') ?? ''
+  const ids = {
+    rentalId: searchParams.get('rentalId') ?? '',
+    conversationId: searchParams.get('conversationId') ?? '',
+    listingId: searchParams.get('listingId') ?? '',
+  }
   const [error, setError] = useState('')
   const navigate = useNavigate()
 
-  const booking = rentalId ? getBooking(rentalId) : undefined
-  const listing = booking && getListing(booking.listingId)
+  const { booking, conversation, listing } = resolveReportSubject(ids)
+
+  let people = ''
+  if (booking) {
+    people = `${getUser(booking.ownerId)?.name} and ${getUser(booking.borrowerId)?.name}`
+  } else if (conversation) {
+    people = `Conversation with ${getOtherParticipant(conversation, CURRENT_USER_ID)?.name}`
+  } else if (listing) {
+    people = `Listed by ${getUser(listing.ownerId)?.name}`
+  }
+
+  let backTo = '/community-rules'
+  let backLabel = 'Back'
+  if (booking) {
+    backTo = `/bookings/${booking.id}`
+    backLabel = 'Back to rental'
+  } else if (conversation) {
+    backTo = `/inbox?conversation=${conversation.id}`
+    backLabel = 'Back to conversation'
+  } else if (listing) {
+    backTo = `/browse/${listing.id}`
+    backLabel = 'Back to listing'
+  }
 
   function handleSubmit(event) {
     event.preventDefault()
     const { reason, description, image } = event.currentTarget.elements
 
     const report = createReport({
-      rentalId,
+      ...ids,
       reason: reason.value,
       description: description.value,
       imageName: image.files[0]?.name ?? '',
@@ -41,7 +69,7 @@ function Report() {
         <article className="rental-card">
           <div>
             <h3>{listing.title}</h3>
-            <p>{getUser(booking.ownerId)?.name} and {getUser(booking.borrowerId)?.name}</p>
+            <p>{people}</p>
           </div>
         </article>
       )}
@@ -70,7 +98,7 @@ function Report() {
 
       {error && <p role="alert" className="report-error">{error}</p>}
 
-      <Link className="report-link" to={booking ? `/bookings/${booking.id}` : '/community-rules'}>Back to rental</Link>
+      <Link className="report-link" to={backTo}>{backLabel}</Link>
     </main>
   )
 }

@@ -34,6 +34,9 @@ import Report from './pages/reporting/Report'
 import ReportSubmitted from './pages/reporting/ReportSubmitted'
 import CommunityRules from './pages/reporting/CommunityRules'
 
+import Reputation from './pages/reviews/Reputation'
+import ReviewParticipant from './pages/reviews/ReviewParticipant'
+
 function App() {
   return (
     <BrowserRouter>
@@ -67,12 +70,16 @@ function App() {
           <Route path="/bookings/:bookingId/extension" element={<Extensions />} />
           <Route path="/bookings/:bookingId/cancel" element={<Cancellation />} />
 
-          {/* Renter dashboard*/}
+          {/* Renter dashboard */}
           <Route path="/renter-dashboard" element={<RenterDashboard />} />
 
           {/* Reporting */}
           <Route path="/report" element={<Report />} />
           <Route path="/report/submitted/:reportId" element={<ReportSubmitted />} />
+
+          {/* Reviews */}
+          <Route path="/users/:userId/reputation" element={<Reputation />} />
+          <Route path="/bookings/:bookingId/review" element={<ReviewParticipant />} />
         </Route>
 
         {/* Requests */}
