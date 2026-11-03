@@ -1,10 +1,13 @@
 import { useState } from "react";
 import Header from "../components/Header";
 import TextField from "../components/TextField";
+import {useNavigate} from "react-router-dom";
 
 export default function Login(props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+
 
   function handleLogin(e) {
     e.preventDefault();
@@ -37,13 +40,13 @@ export default function Login(props) {
 
           <p className="switch-text">
             Don't have an account?{" "}
-            <button className="link" onClick={props.goSignUp}>
+            <button className="link" onClick={() => navigate("/signUp")}>
               Sign Up
             </button>
           </p>
 
           <div style={{ marginTop: "15px", textAlign: "center" }}>
-            <button className="btn secondary" onClick={props.onGuest}>
+            <button className="btn secondary" onClick={() => navigate("/app/explore")}>
               Continue as a Guest
             </button>
           </div>

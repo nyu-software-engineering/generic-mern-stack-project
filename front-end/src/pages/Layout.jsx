@@ -1,4 +1,4 @@
-import {useNavigate} from "react-router-dom";
+import {Outlet, useNavigate} from "react-router-dom";
 
 export default function Layout (){
     const navigate = useNavigate();
@@ -8,22 +8,22 @@ export default function Layout (){
             <p>
                 Sublet Search
             </p>
-            <button onClick = {() => navigate("/explore")}>
+            <button onClick = {() => navigate("/app/explore")}>
                 Explore
             </button>
-            <button onClick = {() => navigate("/saved")}>
+            <button onClick = {() => navigate("/app/saved")}>
                 Saved
             </button>
-            <button onClick = {() => navigate("/profile")}>
+            <button onClick = {() => navigate("/app/profile")}>
                 Profile
             </button>
-            <button onClick = {() => navigate("/messages")}>
+            <button onClick = {() => navigate("/app/messages")}>
                 Messages
             </button>
-            <button onClick = {() => navigate("/post")}>
+            <button onClick = {() => navigate("/app/post")}>
                 Post
             </button>
-                
+            <Outlet />
         </div>
     )
         

@@ -6,6 +6,8 @@ import Explore from "./pages/Explore";
 import ReviewForm from "./components/ReviewForm";
 import Messages from "./pages/Messages";
 import Post from "./pages/Post";
+import Profile from "./pages/Profile"
+import MyListings from "./pages/MyListings"
 
 import {BrowserRouter, Routes, Route} from "react-router-dom";
 import "./App.css";
@@ -14,13 +16,19 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path = "/" element ={<Layout/>} />
+        <Route path = "/app" element ={<Layout/>}>
           <Route index element = {<Login />} />
           <Route path = "explore" element = {<Explore />} />
           <Route path = "reviewForm" element = {<ReviewForm />} />
           <Route path = "signUp" element = {<Signup />} />
           <Route path = "messages" element = {<Messages />} />
           <Route path = "post" element = {<Post />} />
+          <Route path = "profile" element = {<Profile />} />
+          <Route path = "saved" element = {<MyListings />} />
+        </Route>
+
+        <Route path = "/" element = {<Login />} />
+        <Route path = "/signUp" element = {<Signup />} />
       </Routes>
     </BrowserRouter>
   );
