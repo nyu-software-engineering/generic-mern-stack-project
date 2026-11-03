@@ -1,6 +1,8 @@
 // Every screen loads its data through these functions. Nothing is hard-coded in components.
 // In Sprint 2 we point MOCK_BASE at the Express back-end and the screens do not change.
 const MOCK_BASE = '/mock'
+// Keep the demo links saved in this browser.
+const shareLinksStorageKey = 'leverage-share-links'
 
 async function load(fileName) {
   const response = await fetch(`${MOCK_BASE}/${fileName}`)
@@ -53,8 +55,32 @@ export function getReport() {
   return load('report.json')
 }
 
-export function getShareLinks() {
-  return load('share-links.json')
+export async function getShareLinks() {
+  const savedLinks = window.localStorage.getItem(shareLinksStorageKey)
+
+  if (savedLinks) {
+    return JSON.parse(savedLinks)
+  }
+
+  const mockLinks = await load('share-links.json')
+  window.localStorage.setItem(shareLinksStorageKey, JSON.stringify(mockLinks))
+  return mockLinks
+}
+
+export function saveShareLinks(links) {
+  window.localStorage.setItem(shareLinksStorageKey, JSON.stringify(links))
+}
+
+export async function addShareLink(newLink) {
+  const links = await getShareLinks()
+
+  if (links.some((link) => link.id === newLink.id)) {
+    return links
+  }
+
+  const updatedLinks = [newLink, ...links]
+  saveShareLinks(updatedLinks)
+  return updatedLinks
 }
 
 export async function getNotifications() {
