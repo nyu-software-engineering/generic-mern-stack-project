@@ -9,6 +9,7 @@ import Login from './pages/auth/Login'
 import Signup from './pages/auth/Signup'
 import VerifyEmail from './pages/auth/VerifyEmail'
 import SetupProfile from './pages/auth/SetupProfile'
+import Profile from './pages/auth/Profile'
 
 import CreateListing from './pages/listings/CreateListing'
 import MyListings from './pages/listings/MyListings'
@@ -43,6 +44,7 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="/setup-profile" element={<SetupProfile />} />
+        <Route path="/profile" element={<Profile />} />
 
         {/* Shared mock data pages */}
         <Route element={<MockData />}>
