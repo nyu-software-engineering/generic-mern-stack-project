@@ -2,6 +2,7 @@ import { useState } from "react";
 import Header from "../components/Header";
 import TextField from "../components/TextField";
 import {useNavigate} from "react-router-dom";
+import "./Login.css"
 
 export default function Login(props) {
   const [email, setEmail] = useState("");

@@ -1,9 +1,12 @@
 import "./Explore.css";
 import ListingCard from "../components/ListingCard";
 import mockListings from "../mockListings";
+import Header from "../components/Header";
 
 function Explore() {
     return (
+        <div>
+            <Header onMenu={() => {}} />
         <div className="explore-page">
             <h2>Find Your Next Sublet</h2>
 
@@ -15,7 +18,7 @@ function Explore() {
             ))}
             </div>
         </div>
-
+    </div>
     );
 }
 
