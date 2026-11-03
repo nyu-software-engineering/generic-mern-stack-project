@@ -7,6 +7,7 @@ import {
   getRental,
   getRentals,
   getUser,
+  updateRental,
   updateRentalStatus,
 } from './mockDataService.js'
 
@@ -53,6 +54,60 @@ export function createBooking({ listingId, borrowerId, startDate, endDate, total
 export function updateBookingStatus(id, status) {
   return updateRentalStatus(id, status)
 }
+
+// Price per day agreed for this booking, falling back to the listing price.
+export function dailyRate(booking) {
+  return booking.terms?.pricePerDay ?? getListing(booking.listingId)?.price ?? 0
+}
+
+// Round to whole cents so decimal prices don't leave floating-point tails.
+export const roundCents = (amount) => Math.round(amount * 100) / 100
+
+// Dollar amount for display, always with two decimals: 38.4 -> "$38.40".
+export const formatMoney = (amount) => `$${roundCents(amount).toFixed(2)}`
+
+// Extra cost of moving a booking's return date to newEndDate.
+export function extensionCost(booking, newEndDate) {
+  return roundCents(Math.max(0, countDays(booking.endDate, newEndDate)) * dailyRate(booking))
+}
+
+// Borrower asks to return later (#55). Only active rentals can be extended.
+export function requestExtension(id, newEndDate) {
+  const booking = getBooking(id)
+  if (!booking || booking.status !== 'active' || newEndDate <= booking.endDate) return null
+  return updateRental(id, {
+    status: 'extension_requested',
+    extensionRequest: { newEndDate, status: 'pending' },
+  })
+}
+
+// Owner answers an extension request (#55). Either way the rental goes back to active;
+// if approved, the return date and total move to the new end date.
+export function respondToExtension(id, approve) {
+  const booking = getBooking(id)
+  if (!booking || booking.status !== 'extension_requested' || !booking.extensionRequest) return null
+  const { newEndDate } = booking.extensionRequest
+  if (!approve) {
+    return updateRental(id, {
+      status: 'active',
+      extensionRequest: { newEndDate, status: 'declined' },
+    })
+  }
+  return updateRental(id, {
+    status: 'active',
+    endDate: newEndDate,
+    totalPrice: roundCents(booking.totalPrice + extensionCost(booking, newEndDate)),
+    extensionRequest: { newEndDate, status: 'approved' },
+  })
+}
+
+export const getExtensionRequests = (ownerId) =>
+  getRentals().filter(
+    (rental) =>
+      sameId(rental.ownerId, ownerId) &&
+      rental.status === 'extension_requested' &&
+      Boolean(rental.extensionRequest?.newEndDate),
+  )
 
 export function formatDate(isoDate) {
   return new Date(isoDate).toLocaleDateString('en-US', {
