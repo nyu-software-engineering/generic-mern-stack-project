@@ -1,8 +1,10 @@
 import { formatJobDate, formatSponsorship, getApplicationHref } from '../jobs/formatters.js'
+import JobMatch from './JobMatch.jsx'
 import './JobDetails.css'
 
 export default function JobDetails({
   job, status = 'ready', onRetry, onSaveToTracker, onOpenAnalysis, onOpenDiscussion,
+  matchResource, onMatchRetry, onCompleteProfile,
 }) {
   const backLink = <a className="job-back" href="#/jobs">Back to jobs</a>
   if (status === 'loading') {
@@ -25,7 +27,7 @@ export default function JobDetails({
   }
 
   const applicationHref = getApplicationHref(job.applicationUrl)
-  const actionsUnavailable = !onSaveToTracker || !onOpenAnalysis || !onOpenDiscussion
+  const actionsUnavailable = !onSaveToTracker || (!matchResource && !onOpenAnalysis) || !onOpenDiscussion
 
   return (
     <section className="job-details" aria-labelledby="job-title">
@@ -55,14 +57,16 @@ export default function JobDetails({
       </div>
       {actionsUnavailable && <p className="job-action-note" id="job-action-availability">Some actions aren’t available yet. Unavailable actions are disabled.</p>}
 
-      <section className="job-match-section" aria-labelledby="job-match-title">
+      {matchResource ? (
+        <JobMatch job={job} resource={matchResource} onRetry={onMatchRetry} onCompleteProfile={onCompleteProfile} />
+      ) : <section className="job-match-section" aria-labelledby="job-match-title">
         <div className="job-section-heading">
           <h2 id="job-match-title">AI Match</h2>
           <span className="job-match">{job.matchScore == null ? 'Match not available' : `${job.matchScore}% match`}</span>
         </div>
         <p>{job.matchSummary || 'A match summary is not available for this listing.'}</p>
         <button type="button" className="job-text-action" onClick={onOpenAnalysis} disabled={!onOpenAnalysis}>See full analysis</button>
-      </section>
+      </section>}
 
       <section className="job-content" aria-labelledby="job-description-title">
         <h2 id="job-description-title">About the Role</h2>

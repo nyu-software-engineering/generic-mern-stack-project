@@ -72,3 +72,17 @@ test('details loading, error, and missing-record states do not show a previous j
   assert.match(missing, /Job not found/)
   assert.match(missing, /Back to jobs/)
 })
+
+test('a supplied match resource replaces legacy match data without enabling unrelated actions', async () => {
+  const html = await render({ job, matchResource: { status: 'loading' } })
+  assert.match(html, /Loading match analysis/)
+  assert.doesNotMatch(html, /92% match|Your demo profile matches/)
+  assert.match(html, /disabled=""[^>]*>Save to Tracker/)
+  assert.match(html, /disabled=""[^>]*>View discussion/)
+})
+
+test('working match, save and discussion handlers do not produce an unavailable-action note', async () => {
+  const html = await render({ job, matchResource: { status: 'loading' },
+    onSaveToTracker: () => {}, onOpenDiscussion: () => {} })
+  assert.doesNotMatch(html, /Some actions aren’t available/)
+})

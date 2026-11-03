@@ -221,6 +221,12 @@ A pop-up that opens from "See full analysis". It compares the user's profile wit
 
 There's a note at the bottom reminding users this is AI-generated and they should still read the full listing.
 
+**November 3 frontend implementation (#78, milestone A only):** The controlled analysis component preserves this centered, square-corner popup hierarchy, adding the selected job title/company for clarity. Summary and popup read the same supplied result. A zero score displays 0%; an unknown score stays “Match not available.” Empty detail lists say no information is listed, rather than claiming every requirement is met. The notice reads “AI-generated summary. Check the full listing before applying.” Sprint 1 review inputs are illustrative fixtures, with no live model call.
+
+Close, Got It and Escape return to the underlying job; backdrop clicks leave analysis open (unlike Filters). The header and footer surround an independently scrollable body for small screens and longer explanations. Focus/overflow cleanup preserves the prior page context when the original trigger still exists. Same-job loading/error/incomplete-profile updates replace old analysis inside an open popup; changing the selected job closes it. Retry and Complete profile are shown only with working supplied callbacks. No profile navigation path is guessed.
+
+The ordinary app still has no match provider and retains its disabled analysis action. This component and its optional JobDetails composition are milestone A; shared profile/mock integration, Save/Cancel propagation, request lifecycle and the complete selected-job flow remain milestone B. Controlled DOM tests do not verify native browser layout, focus, inertness or scrolling; those require separate browser review. No drawing/export or live Figma change is included, and the prototype's pending-refresh status above still applies.
+
 <img src="./ux-design/wireframes-13-job-details-ai-match.drawio.png" alt="AI Match Analysis wireframe" width="300">
 
 #### 14. Job Discussion

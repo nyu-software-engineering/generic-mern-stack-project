@@ -2,6 +2,16 @@
 
 November 2, 2026: implementation inventory and proposed alignment checklist. Only Browse/Job Details and the read-only jobs API are implemented on David's branch. The other routes, callbacks, and entity shapes below are proposals for #44/#46/#49 and the relevant feature owners, not a claim of team agreement or completed integration.
 
+November 3, #78 milestone A: `JobMatch` is a controlled summary/native-popup component, optionally composed by `JobDetails` through `matchResource`, `onMatchRetry`, and `onCompleteProfile`. The current App has no match provider and keeps its disabled analysis action. Shared integration and #78's saved-profile acceptance remain unfinished.
+
+## Controlled match boundary (#78 milestone A)
+
+The ready UI resource is `{ status: 'ready', data: { jobId, score, summary, fitExplanation, missingSkills, keyQualifications } }`. The selected job supplies `id`, `title`, and `company`. The presentation refuses `data.jobId !== job.id`; `score` is a finite 0–100 number or null, and collections contain plain strings. Loading/error/incomplete-profile resources hide all previous match content, including in an already open dialog. Non-ready resources may carry a plain-text `message`. Missing callbacks do not create recovery/navigation controls.
+
+`JobMatch` accepts `onRetry` and `onCompleteProfile`; `JobDetails` maps `onMatchRetry` to the former and passes the latter through. The caller binds job identity and navigation. Same-job resource changes keep an open dialog visible with current content; changed job identity or unmount closes it and restores the previous overflow/focus when possible. This local state is independent of routes, fetching, and profile ownership. No-resource JobDetails callers retain the legacy `onOpenAnalysis` behavior.
+
+This is an internal presentation boundary for adapting the agreed shared response once, not a new server endpoint or replacement profile schema. Before milestone B, confirm #46/#59's saved snapshot/Save/Cancel behavior, #44's response shape and fixture ownership, and #49's completion navigation/return context. The eventual controller must associate responses with both job and saved-profile request context, cancel or ignore stale requests, and supply real Retry and Complete profile actions. Component prop replacement cannot verify that integration.
+
 ## Identity: data IDs are different from HTML IDs
 
 | Item | Rule and connection |
