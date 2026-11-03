@@ -1,0 +1,82 @@
+.home h1{
+    margin: 0 0 6px;
+    font-size: 22px;
+}
+
+.home > section > p{
+    margin: 0 0 16px;
+    font-size: 12px;
+}
+
+.home-search{
+    display: flex;
+    flex-direction: column;
+    padding: 6px;
+    border-bottom: 1px solid black;
+    color: inherit;
+    font-size: 12px;
+    text-decoration: none;
+}
+
+.home-category-jump{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 36px;
+    margin: 8px 0;
+    border: 1px solid black;
+    color: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    background: white;
+}
+
+.home h2{
+    margin: 10px 0 8px;
+    font-size: 16px;
+}
+
+.home-categories{
+    margin: 0 0 8px;
+    padding: 0;
+    list-style: none;
+}
+
+.home-categories li{
+    display: flex;
+    align-items: center;
+    min-height: 22px;
+    border-bottom: 1px solid black;
+    font-size: 13px;
+}
+
+.category-backdrop{
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 22px;
+    background: rgba(34, 34, 34, 0.33);
+}
+
+.category-modal{
+    width: 100%;
+    max-width: 360px;
+    padding: 16px;
+    background: white;
+    border: 1px solid black;
+}
+
+.category-modal button{
+    display: block;
+    width: 100%;
+    min-height: 36px;
+    margin-top: 6px;
+    background: white;
+    border: 1px solid black;
+    cursor: pointer;
+}
+

@@ -37,14 +37,6 @@ function App() {
     return (
       <div className="app">
 
-        <header className="top-bar">
-          <strong>CampusMart</strong>
-          <button type="button" onClick={() => setUser(null)}>
-            Log Out
-          </button>
-        </header>
-
-
         <main className="page">
           <Routes>
             {/* Home page */}
@@ -52,7 +44,7 @@ function App() {
 
             {/* Search page */}
             <Route path="/search" element={<Search />} />
-
+            
             {/* Booking page */}
             <Route path="/services/:serviceId" element={<ServiceDetails />} />
             <Route path="/services/:serviceId/request" element={<BookingRequest addBooking={addBooking} />} />
@@ -61,7 +53,7 @@ function App() {
             <Route path="/bookings/:bookingId/reschedule" element={<BookingRequest bookings={bookings} updateBooking={updateBooking} />} />
 
             {/* Profile page */}
-            <Route path="/profile" element={<Profile />} />
+            <Route path="/profile" element={<Profile setUser={setUser} />} />
 
             {/* Other */}
             <Route path="/login" element={<Navigate to="/" replace />}/>

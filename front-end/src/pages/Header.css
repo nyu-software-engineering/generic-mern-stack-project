@@ -1,0 +1,23 @@
+.site-header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 55px;
+    margin: -32px -20px 16px;
+    padding:0 20px;
+    border-bottom: 1px solid black;
+    background: white;
+}
+
+.site-header strong{
+    font-size: 16px;
+}
+
+.site-header span,
+.site-header a{
+    font-size: 11px;
+}
+
+.site-header a{
+    color: inherit;
+}
