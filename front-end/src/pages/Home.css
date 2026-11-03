@@ -54,6 +54,7 @@
     font-size: 12px;
     font-weight: 600;
     text-decoration: none;
+    background: white;
 }
 
 .home h2{
@@ -73,5 +74,33 @@
     min-height: 22px;
     border-bottom: 1px solid black;
     font-size: 13px;
+}
+
+.category-backdrop{
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 22px;
+    background: rgba(34, 34, 34, 0.33);
+}
+
+.category-modal{
+    width: 100%;
+    max-width: 360px;
+    padding: 16px;
+    background: white;
+    border: 1px solid black;
+}
+
+.category-modal button{
+    display: block;
+    width: 100%;
+    min-height: 36px;
+    margin-top: 6px;
+    background: white;
+    border: 1px solid black;
+    cursor: pointer;
 }
 
