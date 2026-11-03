@@ -21,6 +21,7 @@ import EditPlace from './pages/EditPlace'
 import EditProfile from './pages/EditProfile'
 import ChangePassword from './pages/ChangePassword'
 import Invites from './pages/Invites'
+import InviteToList from './pages/InviteToList'
 
 export default function App() {
   return (
@@ -47,6 +48,7 @@ export default function App() {
         <Route path="/profile/password" element={<ChangePassword />} />
         <Route path="/city/:cityId" element={<CityPage />} />
         <Route path="/city/:cityId/members" element={<Members />} />
+        <Route path="/city/:cityId/invite" element={<InviteToList />} />
         <Route path="/place/:placeId" element={<PlaceDetail />} />
         <Route path="/place/:placeId/edit" element={<EditPlace />} />
       </Route>
