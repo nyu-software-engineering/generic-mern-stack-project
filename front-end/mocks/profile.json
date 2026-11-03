@@ -1,0 +1,15 @@
+{
+  "id": "profile-myra",
+  "revision": 1,
+  "name": "Myra Rafiq",
+  "email": "myra.rafiq@nyu.edu",
+  "photo": "https://avatars.githubusercontent.com/u/110634979?v=4",
+  "degree": "B.S.",
+  "major": "Computer Science",
+  "school": "New York University",
+  "graduationDate": "2028-05-01",
+  "skills": ["Python", "JavaScript", "SQL", "React"],
+  "lookingFor": ["Internships"],
+  "locations": ["New York, NY", "Remote"],
+  "workAuthorization": "F-1 student (will need sponsorship)"
+}
