@@ -1,4 +1,6 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
+import axios from 'axios'
+import PostSubletPhoto from './PostSubletPhoto'
 import './PostSubletForm.css'
 
 const PostSublet = () => {
@@ -10,6 +12,23 @@ const PostSublet = () => {
     const [photos, setPhotos] = useState([])
     const [error, setError] = useState('')
 
+    const handlePhotoSelect = e => {
+        const chosen = Array.from(e.target.files).map(file => ({file: file, url: URL.createObjectURL(file),}))
+        setPhotos([...photos, ...chosen])
+        e.target.value = '' 
+    }
+
+    const movePhoto = (index, offset) => {
+        const newPhotos = [...photos]
+        const other = index + offset;
+        [newPhotos[index], newPhotos[other]] = [newPhotos[other], newPhotos[index]]
+        setPhotos(newPhotos)
+    }
+
+    const removePhoto = index => {
+        setPhotos(photos.filter((photo, i) => i !== index))
+    }
+
     const handleSubmit = e => {
         e.preventDefault()
 
@@ -17,10 +36,11 @@ const PostSublet = () => {
         formData.append('location', location)
         formData.append('price', price)
         formData.append('fromDate', fromDate)
+        formData.append('toDate', toDate)
         formData.append('description', description)
 
         for (let i = 0; i < photos.length; i++) {
-            formData.append('photos', photos[i])
+            formData.append('photos', photos[i].file)
         }
 
         const config = {
@@ -30,16 +50,16 @@ const PostSublet = () => {
         }
         const apiUrl = 'https://someserversomehwere.com/puppy/save' //CHANGE
         axios
-        .post(apiUrl, formData, config)
-        .then(response => {
-            console.log(`Received server response: ${response.data}`)
-        })
-        .catch(err => {
-            console.log(`Received server error: ${err}`)
-            setError(
-            "This form doesn't actually work, sorry.  There is no back-end for this example app in which to save the data. Pop open your web browser's Javascript Console to see the error trying to connect to a non-existent back-end.",
-            )
-        })
+            .post(apiUrl, formData, config)
+            .then(response => {
+                console.log(`Received server response: ${response.data}`)
+            })
+            .catch(err => {
+                console.log(`Received server error: ${err}`)
+                setError(
+                    "This form doesn't actually work, sorry.  There is no back-end for this example app in which to save the data. Pop open your web browser's Javascript Console to see the error trying to connect to a non-existent back-end.",
+                )
+            })
     }
 
     return (
@@ -52,7 +72,7 @@ const PostSublet = () => {
                     id="location"
                     placeholder="Street address, city, state"
                     value={location}
-                    onChange={e => setLocation(e.target.files)}
+                    onChange={e => setLocation(e.target.value)}
                     required
                 />
                 <br />
@@ -73,7 +93,7 @@ const PostSublet = () => {
                 />
                 <br />
             </div>
-        
+
             <div className="fromDate">
                 <label htmlFor="fromDate">Available From</label>
                 <br />
@@ -86,7 +106,7 @@ const PostSublet = () => {
                 />
                 <br />
             </div>
-        
+
             <div className="toDate">
                 <label htmlFor="toDate">Available Until</label>
                 <br />
@@ -99,7 +119,7 @@ const PostSublet = () => {
                 />
                 <br />
             </div>
-        
+
             <div className="description">
                 <label htmlFor="description">Description</label>
                 <br />
@@ -110,10 +130,11 @@ const PostSublet = () => {
                     placeholder="Describe the apartment, amenities, and roommate situation..."
                     value={description}
                     onChange={e => setDescription(e.target.value)}
+                    required
                 />
                 <br />
             </div>
-        
+
             <div className="photos">
                 <label htmlFor="photos">Photos</label>
                 <br />
@@ -121,19 +142,34 @@ const PostSublet = () => {
                     type="file"
                     accept="image/*"
                     id="photos"
-                    onChange={e => setPhotos(Array.from(e.target.value))}
+                    onChange={handlePhotoSelect}
                     multiple
+                    required
                 />
                 <br />
+
+                <ul className="PostSubletPhoto-list">
+                    {photos.map((photo, index) => (
+                        <PostSubletPhoto
+                            key={photo.url}
+                            url={photo.url}
+                            position={index + 1}
+                            isFirst={index === 0}
+                            isLast={index === photos.length - 1}
+                            handleMoveEarlier={() => movePhoto(index, -1)}
+                            handleMoveLater={() => movePhoto(index, 1)}
+                            handleRemove={() => removePhoto(index)}
+                        />
+                    ))}
+                </ul>
             </div>
             {error && (
                 <div>
                     <p className="PostSublet-Feedback">{error}</p>
                 </div>
             )}
-        <input type="submit" value="Post Listing"/>
+            <input type="submit" value="Post Listing" />
         </form>
-            
     )
 }
 

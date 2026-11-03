@@ -2,7 +2,7 @@ form {
     border: none;
     margin-bottom: 20px;
 }
-  
+
 form > div {
     margin-top: 16px;
     margin-bottom: 16px;
@@ -17,13 +17,13 @@ form textarea {
     box-sizing: border-box;
 }
 
-form input{
+form input {
     margin-top: 16px;
     padding: 8px 16px;
     cursor: pointer;
 }
 
-PostSublet-Feedback {
+.PostSublet-Feedback {
     color: red;
     background-color: white;
     padding: 16px;

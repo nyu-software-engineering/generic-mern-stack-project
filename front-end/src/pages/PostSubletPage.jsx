@@ -1,4 +1,4 @@
-import PostSubletForm from './PostSubletForm'
+import PostSubletForm from '../components/PostSubletForm'
 import './PostSubletPage.css'
 
 const PostSubletPage = () => {
