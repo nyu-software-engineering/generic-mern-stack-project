@@ -1,9 +1,9 @@
-
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { mockResponse } from './fixtures.js'
 import {
   getRental,
+  getReviews,
   loadMockData,
 } from '../src/services/mockDataService.js'
 import {
@@ -14,7 +14,7 @@ import {
   submitReview,
 } from '../src/services/reviews.js'
 
-test('completed rentals support three ratings and optional feedback', async (t) => {
+test('reviews load from shared Mockaroo data and completed rentals support feedback', async (t) => {
   t.mock.method(
     globalThis,
     'fetch',
@@ -23,13 +23,24 @@ test('completed rentals support three ratings and optional feedback', async (t) 
 
   await loadMockData()
 
-  const rental = getRental(106)
+  // Reviews are seeded by the same shared payload as users and rentals.
+  assert.equal(getReviews().length, 2)
+  assert.equal(getReputation('owner-1').averageRating, 4.5)
+  assert.equal(getReviewForBooking(106, 'student-2').overallRating, 5)
+  assert.equal(getReviewForBooking(113, 'student-2').overallRating, 4)
 
-  assert.equal(getReviewTarget(rental, 'owner-1'), 'student-2')
-  assert.equal(getReviewTarget(rental, 'student-2'), 'owner-1')
+  // Both booking orientations must work: owner-1 lends on #106, borrows on #113.
+  assert.equal(getReviewTarget(getRental(106), 'owner-1'), 'student-2')
+  assert.equal(getReviewTarget(getRental(113), 'owner-1'), 'student-2')
 
   assert.ok(
     getReviewableRentals('owner-1').some((item) => item.id === 106)
+  )
+  assert.ok(
+    getReviewableRentals('owner-1').some((item) => item.id === 113)
+  )
+  assert.ok(
+    !getReviewableRentals('student-2').some((item) => item.id === 106)
   )
 
   const validRatings = {
@@ -58,7 +69,7 @@ test('completed rentals support three ratings and optional feedback', async (t) 
   )
 
   const review = submitReview({
-    bookingId: 106,
+    bookingId: 113,
     reviewerId: 'owner-1',
     ...validRatings,
     comment: '',
@@ -70,12 +81,14 @@ test('completed rentals support three ratings and optional feedback', async (t) 
   assert.equal(review.itemCareRating, 4)
   assert.equal(review.overallRating, 4)
 
-  assert.equal(getReviewForBooking(106, 'owner-1').overallRating, 4)
+  // Newly submitted reviews use the same shared in-memory store.
+  assert.equal(getReviews().length, 3)
+  assert.equal(getReviewForBooking(113, 'owner-1').overallRating, 4)
   assert.equal(getReputation('student-2').averageRating, 4)
 
   assert.throws(
     () => submitReview({
-      bookingId: 106,
+      bookingId: 113,
       reviewerId: 'owner-1',
       ...validRatings,
     }),

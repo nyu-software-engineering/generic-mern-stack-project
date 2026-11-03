@@ -1,13 +1,11 @@
-
-import initialReviews from '../data/reviews.js'
 import {
   CURRENT_USER_ID,
+  createReview,
   getRental,
   getRentals,
+  getReviews,
   getUser,
 } from './mockDataService.js'
-
-let reviews = initialReviews.map((review) => ({ ...review }))
 
 const sameId = (a, b) => String(a) === String(b)
 
@@ -21,20 +19,17 @@ export function getReviewTarget(rental, reviewerId) {
 }
 
 export function getReviewsForUser(userId) {
-  return reviews
+  return getReviews()
     .filter((review) => sameId(review.reviewedUserId, userId))
     .sort((a, b) => b.id - a.id)
-    .map((review) => ({ ...review }))
 }
 
 export function getReviewForBooking(bookingId, reviewerId) {
-  const review = reviews.find(
+  return getReviews().find(
     (item) =>
       sameId(item.bookingId, bookingId) &&
       sameId(item.reviewerId, reviewerId)
-  )
-
-  return review ? { ...review } : null
+  ) ?? null
 }
 
 export function getReputation(userId) {
@@ -101,8 +96,7 @@ export function submitReview({
     throw new Error('Written feedback must be 500 characters or less.')
   }
 
-  const review = {
-    id: Math.max(0, ...reviews.map((item) => item.id)) + 1,
+  return createReview({
     bookingId: rental.id,
     reviewerId,
     reviewedUserId,
@@ -111,8 +105,5 @@ export function submitReview({
     overallRating,
     comment: comment.trim(),
     createdAt: new Date().toISOString().slice(0, 10),
-  }
-
-  reviews = [review, ...reviews]
-  return { ...review }
+  })
 }

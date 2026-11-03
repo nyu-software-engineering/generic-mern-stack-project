@@ -1,4 +1,3 @@
-
 import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import {
@@ -30,6 +29,8 @@ function Reputation() {
 
   const { user, reviews, averageRating } = reputation
   const isOwnProfile = userId === CURRENT_USER_ID
+  const initials = user.name.trim().split(/\s+/).slice(0, 2)
+    .map((part) => part[0]).join('').toUpperCase()
 
   const reviewable = isOwnProfile
     ? getReviewableRentals(CURRENT_USER_ID)
@@ -50,8 +51,8 @@ function Reputation() {
       </header>
 
       <div className="review-content">
-        <div className="review-placeholder" aria-hidden="true">
-          Profile photo
+        <div className="review-avatar" aria-hidden="true">
+          {initials}
         </div>
 
         <h1>{user.name}</h1>

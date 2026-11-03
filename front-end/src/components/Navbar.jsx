@@ -1,4 +1,3 @@
-
 import { useContext } from 'react'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { AuthContext } from '../context/AuthContext'
@@ -37,15 +36,13 @@ function Navbar() {
         </Link>
 
         {currentUser && (
-          <div className="hidden items-center gap-8 md:flex">
+          <div className="ds-navbar-actions">
             {links.map((link) => (
               <NavLink
                 key={link.name}
                 to={link.path}
                 className={({ isActive }) =>
-                  isActive
-                    ? 'font-semibold text-black'
-                    : 'text-gray-500 hover:text-black'
+                  isActive ? 'ds-navbar-link ds-navbar-link--active' : 'ds-navbar-link'
                 }
               >
                 {link.name}
