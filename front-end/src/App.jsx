@@ -30,6 +30,14 @@ function App() {
     return (
       <div className="app">
 
+        <header className="top-bar">
+          <strong>CampusMart</strong>
+          <button type="button" onClick={() => setUser(null)}>
+            Log Out
+          </button>
+        </header>
+
+
         <main className="page">
           <Routes>
             <Route path="/" element={<Home />} />
