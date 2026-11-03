@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import ListingSummary from './ListingSummary'
-import { formatDate, getListing, getUser } from '../../services/bookings'
+import { formatDate, formatMoney, getListing, getUser } from '../../services/bookings'
 
 // One incoming rental request (prototype m22).
 function RequestCard({ booking, onDecline }) {
@@ -15,7 +15,7 @@ function RequestCard({ booking, onDecline }) {
         <p>Verified NYU · {borrower?.completedRentals ?? 0} completed rentals</p>
         {booking.terms?.message && <p>“{booking.terms.message}”</p>}
       </div>
-      <ListingSummary listing={listing} detail={`$${booking.totalPrice} offer · ${dates}`} />
+      <ListingSummary listing={listing} detail={`${formatMoney(booking.totalPrice)} offer · ${dates}`} />
       <div className="booking-actions">
         <Link to={`/bookings/${booking.id}`} className="booking-btn booking-btn--primary">
           Accept and review booking

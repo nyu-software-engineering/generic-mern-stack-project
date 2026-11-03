@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { countDays } from '../../services/bookings'
+import { countDays, formatMoney, roundCents } from '../../services/bookings'
 
 const todayISO = () => new Date().toLocaleDateString('en-CA') // YYYY-MM-DD
 
@@ -35,7 +35,7 @@ function BookingForm({ listing, initialStart = '', initialEnd = '', onSubmit }) 
   const days = isValidDate(form.startDate) && isValidDate(form.endDate)
     ? countDays(form.startDate, form.endDate)
     : 0
-  const suggestedTotal = days > 0 ? days * listing.price : ''
+  const suggestedTotal = days > 0 ? roundCents(days * listing.price) : ''
   const totalPrice = customTotal ?? suggestedTotal
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value })
@@ -45,7 +45,7 @@ function BookingForm({ listing, initialStart = '', initialEnd = '', onSubmit }) 
     const found = validate({ ...form, totalPrice })
     setErrors(found)
     if (Object.keys(found).length === 0) {
-      onSubmit({ ...form, totalPrice: Number(totalPrice), message: form.message.trim() })
+      onSubmit({ ...form, totalPrice: roundCents(Number(totalPrice)), message: form.message.trim() })
     }
   }
 
@@ -73,7 +73,7 @@ function BookingForm({ listing, initialStart = '', initialEnd = '', onSubmit }) 
           className={errors.totalPrice ? 'has-error' : ''} />
         {days > 0 && (
           <span className="booking-note">
-            Suggested: ${suggestedTotal} ({days} day{days > 1 ? 's' : ''} × ${listing.price})
+            Suggested: {formatMoney(suggestedTotal)} ({days} day{days > 1 ? 's' : ''} × {formatMoney(listing.price)})
           </span>
         )}
         {errors.totalPrice && <p className="field-error">{errors.totalPrice}</p>}
