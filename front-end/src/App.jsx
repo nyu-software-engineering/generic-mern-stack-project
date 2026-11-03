@@ -59,10 +59,10 @@ function App() {
           <Route path="/bookings/:bookingId" element={<BookingDetails />} />
           <Route path="/bookings/:bookingId/extension" element={<Extensions />} />
           <Route path="/bookings/:bookingId/cancel" element={<Cancellation />} />
-        </Route>
 
-        {/* Renter dashboard*/}
-        <Route path="/renter-dashboard" element={<RenterDashboard />} />
+          {/* Renter dashboard*/}
+          <Route path="/renter-dashboard" element={<RenterDashboard />} />
+        </Route>
 
         {/* Requests*/}
         <Route path="/requests" element={<ItemRequests />} />
