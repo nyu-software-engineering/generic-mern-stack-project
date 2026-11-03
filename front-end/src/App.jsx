@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { getJob, getJobs } from './jobs/api.js'
 import { getJobHref, parseJobRoute } from './jobs/routes.js'
+import { DEFAULT_FILTERS } from './jobs/browse.js'
 import BrowseJobs from './pages/BrowseJobs.jsx'
 import JobDetails from './pages/JobDetails.jsx'
 
@@ -8,6 +9,7 @@ function App() {
   const [hash, setHash] = useState(() => window.location.hash)
   const [attempt, setAttempt] = useState(0)
   const [resources, setResources] = useState({ browse: null, details: null })
+  const [browseFilters, setBrowseFilters] = useState(DEFAULT_FILTERS)
   const route = parseJobRoute(hash)
   const requestKey = `${route.kind}:${route.id ?? ''}`
   const resource = resources[route.kind]
@@ -59,7 +61,8 @@ function App() {
       </header>
       <p className="demo-notice">Fictional listings. Application links open example pages.</p>
       {route.kind === 'browse' ? (
-        <BrowseJobs jobs={current.data ?? []} status={current.status} onRetry={retry} getJobHref={getJobHref} />
+        <BrowseJobs jobs={current.data ?? []} status={current.status} onRetry={retry} getJobHref={getJobHref}
+          filters={browseFilters} onFiltersChange={setBrowseFilters} />
       ) : route.kind === 'details' ? (
         <JobDetails job={current.data} status={current.status} onRetry={retry} />
       ) : (

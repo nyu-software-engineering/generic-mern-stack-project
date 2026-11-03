@@ -39,24 +39,29 @@ before(async () => {
   ;({ default: App } = await server.ssrLoadModule('/src/App.jsx'))
 })
 
-beforeEach(async () => {
+beforeEach(async (context) => {
+  context.mock.timers.enable({ apis: ['Date'], now: Date.parse('2026-11-02T12:00:00Z') })
   dom = new JSDOM('<div id="root"></div>', { url: 'http://localhost/#/jobs' })
   globalThis.window = dom.window
   globalThis.document = dom.window.document
   globalThis.IS_REACT_ACT_ENVIRONMENT = true
   dom.window.scrollTo = () => {}
+  // jsdom does not implement native modal behavior; real focus/inertness is checked in Chromium.
+  dom.window.HTMLDialogElement.prototype.showModal = function () { this.setAttribute('open', '') }
+  dom.window.HTMLDialogElement.prototype.close = function () { this.removeAttribute('open') }
   globalThis.fetch = serveJobs
   const { createRoot } = await import('react-dom/client')
   root = createRoot(document.getElementById('root'))
 })
 
-afterEach(async () => {
+afterEach(async (context) => {
   await act(async () => root.unmount())
   dom.window.close()
   globalThis.fetch = originalFetch
   delete globalThis.window
   delete globalThis.document
   delete globalThis.IS_REACT_ACT_ENVIRONMENT
+  context.mock.timers.reset()
 })
 after(async () => { await server?.close() })
 
@@ -195,4 +200,104 @@ test('retrying details does not invalidate the previously loaded Browse list', a
   globalThis.fetch = () => new Promise(() => {})
   await click(document.querySelector('a[href="#/jobs"]'))
   await waitFor(() => document.querySelectorAll('.job-card').length === 6)
+})
+
+const filterJobs = jobs.map((job, index) => ({
+  ...job, jobType: index === 5 ? 'entry-level' : 'internship',
+  sponsorsVisa: index % 2 === 0, deadline: index === 0 ? '2026-11-09' : '2026-11-13',
+}))
+
+function serveFilterJobs(url) {
+  const path = String(url)
+  const job = filterJobs.find((item) => path === `/api/jobs/${item.id}`)
+  return Promise.resolve(response(path === '/api/jobs' ? filterJobs : job))
+}
+
+function buttonNamed(name) {
+  const button = [...document.querySelectorAll('button')].find((item) => item.textContent === name)
+  assert.ok(button, `Expected button: ${name}`)
+  return button
+}
+
+function checkboxNamed(name) {
+  const label = [...document.querySelectorAll('label')].find((item) => item.textContent === name)
+  assert.ok(label?.querySelector('input[type="checkbox"]'), `Expected checkbox: ${name}`)
+  return label.querySelector('input')
+}
+
+test('filters combine, show live counts and removable chips, and clear without refetching', async () => {
+  globalThis.fetch = serveFilterJobs
+  await mount()
+  await waitFor(() => document.querySelectorAll('.job-card').length === 6)
+  await click(buttonNamed('Filters'))
+  assert.ok(document.querySelector('dialog[open]'))
+  assert.equal(document.body.style.overflow, 'hidden')
+  await click(checkboxNamed('Internship'))
+  await click(checkboxNamed('Only show roles that sponsor visas'))
+  assert.equal(document.querySelectorAll('.job-card').length, 3)
+  const deadline = document.querySelector('select')
+  await act(async () => {
+    deadline.value = '7'
+    deadline.dispatchEvent(new window.Event('change', { bubbles: true }))
+  })
+  assert.equal(document.querySelectorAll('.job-card').length, 1)
+  await click(buttonNamed('Show 1 Result'))
+  assert.equal(document.querySelector('dialog'), null)
+  assert.equal(document.body.style.overflow, '')
+  globalThis.fetch = () => { throw new Error('Filtering must not refetch') }
+  await click(document.querySelector('button[aria-label="Remove Within 7 days filter"]'))
+  assert.equal(document.querySelectorAll('.job-card').length, 3)
+  await click(buttonNamed('Clear all'))
+  assert.equal(document.querySelectorAll('.job-card').length, 6)
+})
+
+for (const navigation of ['link', 'history']) {
+  test(`filter selections and the full source feed survive Details and ${navigation} Back`, async () => {
+    globalThis.fetch = serveFilterJobs
+    await mount()
+    await waitFor(() => document.querySelectorAll('.job-card').length === 6)
+    await click(buttonNamed('Filters'))
+    await click(checkboxNamed('Full-time entry-level'))
+    await click(buttonNamed('Show 1 Result'))
+    await click(document.querySelector('.job-card'))
+    await waitFor(() => document.querySelector('h1')?.textContent === jobs[5].title)
+    if (navigation === 'link') await click(document.querySelector('a.job-back'))
+    else await act(async () => { window.history.back(); await tick() })
+    await waitFor(() => document.querySelectorAll('.job-card').length === 1)
+    assert.equal(document.querySelector('.job-card h2').textContent, jobs[5].title)
+    await click(buttonNamed('Clear all'))
+    assert.equal(document.querySelectorAll('.job-card').length, 6)
+  })
+}
+
+test('no filtered matches is distinct from an empty feed and the sheet closes with zero results', async () => {
+  globalThis.fetch = serveFilterJobs
+  await mount()
+  await waitFor(() => document.querySelectorAll('.job-card').length === 6)
+  await click(buttonNamed('Filters'))
+  await click(checkboxNamed('Full-time entry-level'))
+  await click(checkboxNamed('Only show roles that sponsor visas'))
+  assert.match(document.body.textContent, /No matching opportunities/)
+  assert.match(document.body.textContent, /0 opportunities/)
+  assert.doesNotMatch(document.body.textContent, /No opportunities yet/)
+  await click(buttonNamed('Show 0 Results'))
+  assert.equal(document.querySelector('dialog'), null)
+  await click(buttonNamed('Clear all'))
+  assert.equal(document.querySelectorAll('.job-card').length, 6)
+})
+
+test('cancel closes the sheet, restores page scroll, and preserves live selections', async () => {
+  globalThis.fetch = serveFilterJobs
+  await mount()
+  await waitFor(() => document.querySelectorAll('.job-card').length === 6)
+  await click(buttonNamed('Filters'))
+  await click(checkboxNamed('Full-time entry-level'))
+  await act(async () => document.querySelector('dialog').dispatchEvent(new window.Event('cancel', { cancelable: true })))
+  assert.equal(document.querySelector('dialog'), null)
+  assert.equal(document.body.style.overflow, '')
+  assert.equal(document.querySelectorAll('.job-card').length, 1)
+  await click(buttonNamed('Filters'))
+  assert.equal(checkboxNamed('Full-time entry-level').checked, true)
+  await click(document.querySelector('button[aria-label="Close filters"]'))
+  assert.equal(document.querySelector('dialog'), null)
 })

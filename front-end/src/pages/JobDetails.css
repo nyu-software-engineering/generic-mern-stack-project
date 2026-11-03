@@ -24,7 +24,7 @@
 
 .job-details h1 {
   margin: 0 0 10px;
-  font-size: 1.45rem;
+  font-size: var(--page-title-size);
   letter-spacing: -0.025em;
   line-height: 1.25;
 }

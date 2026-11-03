@@ -16,6 +16,9 @@ function validateJob(job) {
     throw new Error('Invalid job response')
   }
   if (job.sponsorsVisa != null && typeof job.sponsorsVisa !== 'boolean') throw new Error('Invalid job response')
+  if (job.jobType != null && (typeof job.jobType !== 'string' || !job.jobType.trim())) {
+    throw new Error('Invalid job response')
+  }
   for (const key of ['description', 'requirements']) {
     if (job[key] != null && (!Array.isArray(job[key]) || job[key].some((item) => typeof item !== 'string'))) {
       throw new Error('Invalid job response')

@@ -66,3 +66,21 @@ test('malformed or duplicate records fail before they reach the UI', async () =>
     globalThis.fetch = transport
   }
 })
+
+test('job type accepts unknown strings and legacy values, but rejects malformed supplied values', async () => {
+  const { getJobs } = await server.ssrLoadModule('/src/jobs/api.js')
+  const transport = globalThis.fetch
+  const job = { id: 'one', title: 'Intern', company: 'Example', location: 'New York' }
+  try {
+    for (const record of [job, { ...job, jobType: null }, { ...job, jobType: 'contract' }]) {
+      globalThis.fetch = async () => new Response(JSON.stringify([record]), { status: 200 })
+      assert.deepEqual(await getJobs(), [record])
+    }
+    for (const jobType of [{}, '', '   ', 7]) {
+      globalThis.fetch = async () => new Response(JSON.stringify([{ ...job, jobType }]), { status: 200 })
+      await assert.rejects(getJobs, /Invalid job/)
+    }
+  } finally {
+    globalThis.fetch = transport
+  }
+})
