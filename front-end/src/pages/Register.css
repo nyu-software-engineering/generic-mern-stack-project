@@ -1,0 +1,21 @@
+.register-card {
+    max-width: 420px;
+    margin: 40px auto;
+    padding: 20px;
+    border: 1px solid;
+    border-radius: 8px;
+}
+
+.register-form label {
+    display: block;
+    margin-bottom: 12px;
+}
+
+.register-form input {
+    display: block;
+}
+
+.register-form input,
+.register-form button {
+    border-radius: 8px;
+}
