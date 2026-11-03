@@ -1,4 +1,4 @@
-import { getUser, listingImage } from '../../services/bookings'
+import { formatMoney, getUser, listingImage } from '../../services/bookings'
 
 // Small item header reused by the booking screens.
 function ListingSummary({ listing, detail }) {
@@ -8,7 +8,7 @@ function ListingSummary({ listing, detail }) {
       <img src={listingImage(listing.id)} alt={listing.title} />
       <div>
         <h2>{listing.title}</h2>
-        <p>{detail ?? `${owner?.name} · $${listing.price}/day`}</p>
+        <p>{detail ?? `${owner?.name} · ${formatMoney(listing.price)}/day`}</p>
       </div>
     </div>
   )

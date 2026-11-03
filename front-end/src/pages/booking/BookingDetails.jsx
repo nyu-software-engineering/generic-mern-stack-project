@@ -6,6 +6,7 @@ import {
   CURRENT_USER_ID, canCancel, displayStatus, formatDate, getBooking, getListing, getUser, updateBookingStatus,
 } from '../../services/bookings'
 import './booking.css'
+import { formatMoney } from '../../services/bookings'
 
 // Statuses where the owner has accepted, so the price is agreed rather than proposed.
 const AGREED_STATUSES = ['confirmed', 'active', 'extension_requested', 'completed']
@@ -49,7 +50,7 @@ function BookingSummary({ bookingId }) {
       <div className="booking-card">
         <div><StatusBadge status={displayStatus(booking)} /></div>
         <p>{formatDate(booking.startDate)} – {formatDate(booking.endDate)}</p>
-        <p>{AGREED_STATUSES.includes(booking.status) ? 'Agreed' : 'Proposed'} total: ${booking.totalPrice}</p>
+        <p>{AGREED_STATUSES.includes(booking.status) ? 'Agreed' : 'Proposed'} total: {formatMoney(booking.totalPrice)}</p>
         <p>{isOwner ? 'Borrower' : 'Owner'}: {other?.name}</p>
         {booking.terms?.message && <p>Message: “{booking.terms.message}”</p>}
       </div>
