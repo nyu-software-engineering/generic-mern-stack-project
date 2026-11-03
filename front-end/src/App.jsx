@@ -16,20 +16,11 @@ function App() {
     return (
       <main className="page">
         <Routes>
-          <Route
-            path="/login"
-            element={<Login setUser={setUser} />}
-          />
+          <Route path="/login" element={<Login setUser={setUser} />} />
 
-          <Route
-            path="/register"
-            element={<Register />}
-          />
+          <Route path="/register" element={<Register />} />
 
-          <Route
-            path="*"
-            element={<Navigate to="/login" replace />}
-          />
+          <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </main>
     )
