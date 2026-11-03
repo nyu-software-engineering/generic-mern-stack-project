@@ -6,6 +6,7 @@ import SectionTitle from '../components/ui/SectionTitle.jsx'
 import Toggle from '../components/ui/Toggle.jsx'
 import { getReport } from '../data/api.js'
 import { formatDate } from '../data/format.js'
+import SharePopup from '../components/SharePopup.jsx'
 
 // Build the shareable sections from the report data.
 function buildSections(report) {
@@ -20,6 +21,7 @@ function buildSections(report) {
 export default function ReliabilityReport() {
   const [report, setReport] = useState(null)
   const [hiddenSections, setHiddenSections] = useState([])
+  const [sharing, setSharing] = useState(false)
 
   // Load the report when the screen opens.
   useEffect(() => {
@@ -99,11 +101,14 @@ export default function ReliabilityReport() {
 
       {/* Keep sharing disabled when every section is hidden. */}
       <div className="mt-6 space-y-3">
-        <Button disabled={shownSections.length === 0}>Share report</Button>
+        <Button onClick={() => setSharing(true)} disabled={shownSections.length === 0}>
+          Share report
+        </Button>
         <Button to="/share-links" variant="ghost">
           See active share links
         </Button>
       </div>
+      {sharing && <SharePopup onClose={() => setSharing(false)} />}
     </div>
   )
 }

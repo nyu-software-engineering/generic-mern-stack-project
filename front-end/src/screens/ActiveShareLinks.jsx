@@ -1,25 +1,31 @@
 import { useEffect, useState } from 'react'
-import { useLocation } from 'react-router'
 import ScreenTitle from '../components/ui/ScreenTitle.jsx'
 import Toggle from '../components/ui/Toggle.jsx'
-import { getShareLinks } from '../data/api.js'
 import { formatDate } from '../data/format.js'
+import { getShareLinks, saveShareLinks } from '../data/api.js'
 
 export default function ActiveShareLinks() {
-  const { state } = useLocation()
-  const newLink = state?.newLink
   const [links, setLinks] = useState([])
 
-  // Load saved links and place a new one at the top.
+  // Load the saved links when the screen opens.
   useEffect(() => {
-    getShareLinks().then((savedLinks) => {
-      setLinks(newLink ? [newLink, ...savedLinks] : savedLinks)
-    })
-  }, [newLink])
+    getShareLinks().then(setLinks)
+  }, [])
+
+  // Save changes to the links in this browser.
+  const updateLinks = (updatedLinks) => {
+    setLinks(updatedLinks)
+    saveShareLinks(updatedLinks)
+  }
 
   // Update a link when its switch changes.
   const setLinkActive = (linkId, active) => {
-    setLinks(links.map((link) => (link.id === linkId ? { ...link, active } : link)))
+    updateLinks(links.map((link) => (link.id === linkId ? { ...link, active } : link)))
+  }
+
+  // Save the name as it is edited.
+  const setLinkName = (linkId, sharedWith) => {
+    updateLinks(links.map((link) => (link.id === linkId ? { ...link, sharedWith } : link)))
   }
 
   // Count the links that are currently on.
@@ -32,6 +38,7 @@ export default function ActiveShareLinks() {
         title="Active share links"
         subtitle={`${activeCount} of ${links.length} links on. Turn a link off and the landlord can no longer see your report.`}
       />
+      <p className="mb-4 text-sm text-muted">Click a link name below to rename it.</p>
 
       {/* List each link with its details and switch. */}
       <ul className="space-y-3">
@@ -42,9 +49,16 @@ export default function ActiveShareLinks() {
           >
             <div className="flex items-start justify-between gap-4">
               <div className="min-w-0">
-                <p className={`font-semibold ${link.active ? 'text-ink' : 'text-muted'}`}>
-                  {link.sharedWith ?? 'New link'}
-                </p>
+                <input
+                  type="text"
+                  value={link.sharedWith ?? ''}
+                  onChange={(event) => setLinkName(link.id, event.target.value)}
+                  placeholder="Name this link"
+                  aria-label={`Name for share link ${link.url}`}
+                  className={`mb-1 w-full border-b border-line bg-transparent pb-1 font-semibold outline-none focus:border-accent ${
+                    link.active ? 'text-ink' : 'text-muted'
+                  }`}
+                />
                 <p className="truncate font-mono text-xs text-muted">{link.url}</p>
                 <p className="mt-1 text-xs text-muted">
                   Created {formatDate(link.createdOn)}
