@@ -5,60 +5,43 @@
 
 /* Buttons */
 .doin-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   padding: 12px 20px;
-  border-radius: var(--radius-md);
-  font-size: var(--font-md);
-  font-weight: 600;
-  cursor: pointer;
-  border: 1px solid transparent;
+  border: 1px solid lightgray;
+  border-radius: 8px;
+  font-size: 16px;
   text-decoration: none;
-  transition: background-color 0.2s;
+  cursor: pointer;
+
 }
 
 /* Primary Button */
 .doin-button--primary {
-  background-color: var(--color-primary);
+  background-color: #635bff;
   color: white;
 }
 
-.doin-button--primary:hover {
-  background-color: var(--color-primary-hover);
-}
 
 /* Secondary Button */
 .doin-button--secondary {
-  background-color: var(--color-surface);
-  color: var(--color-text);
-  border-color: var(--color-border);
+  background-color: white;
+  color: #202638;
+ 
 }
 
-.doin-button--secondary:hover {
-  background-color: var(--color-background);
-}
+
 
 /* Cards */
 .doin-card {
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  padding: var(--space-6);
+  background-color: white;
+  border: 1px solid lightgray;
+  border-radius: 8px;
+  padding: 15px;
 }
 
 /* Input Fields */
 .doin-input {
-  width: 100%;
-  padding: 12px 16px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  font-size: var(--font-md);
-  background-color: var(--color-surface);
-  color: var(--color-text);
-}
-
-.doin-input:focus {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 2px;
+  padding: 10px;
+  border: 1px solid lightgray;
+  border-radius: 5px;
+  font-size: 16px;
 }
