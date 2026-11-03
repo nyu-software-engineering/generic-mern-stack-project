@@ -39,11 +39,89 @@
 }
 
 .tab-bar a.active {
-  color: #6d28d9;
+  color: #0c0c0c;
   background-color: #ede9fe;
 }
 
 .tab-bar a:focus-visible {
-  outline: 2px solid #6d28d9;
+  outline: 2px solid #020202;
   outline-offset: 2px;
+}
+
+/* Booking pages */
+.booking-content {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 24px 16px 48px;
+}
+
+.booking-content h1 { margin: 0 0 20px; font-size: 28px; }
+.booking-content h2 { margin: 24px 0 12px; font-size: 20px; }
+.booking-content p { line-height: 1.5; }
+
+.booking-hero {
+  display: block;
+  width: 100%;
+  max-height: 320px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin: 16px 0;
+}
+
+.booking-card, .booking-summary {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 18px;
+  margin: 16px 0;
+}
+
+.booking-form-field { display: block; margin: 18px 0; }
+.booking-form-field span { display: block; font-weight: 600; margin-bottom: 8px; }
+.booking-input {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 11px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font: inherit;
+}
+
+.booking-button {
+  display: inline-block;
+  background: white;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 10px 16px;
+  margin: 4px 8px 4px 0;
+  font: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+.booking-button:hover { background: #f1f5f9; }
+.booking-button.primary { background: #010101; color: white; border-color: #0d0d0e; }
+.booking-button.primary:hover { background: #0d0d0d; }
+.booking-button.selected { background: #ede9fe; border-color: #010102; }
+.booking-button.danger { color: #b91c1c; border-color: #fecaca; }
+.booking-note { color: #64748b; font-size: 14px; }
+.booking-switch { display: flex; gap: 8px; }
+
+.booking-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0006;
+  padding: 20px;
+  z-index: 10;
+}
+.booking-modal {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 360px;
+  padding: 24px;
+  background: white;
+  border-radius: 12px;
 }
