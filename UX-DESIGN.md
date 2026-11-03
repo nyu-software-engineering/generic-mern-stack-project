@@ -186,6 +186,10 @@ Lists the internships and entry-level jobs on CareerHive. Users can search by ti
 
 Tapping "Filters" opens this panel from the bottom of the screen. Users can filter by job type, location, visa sponsorship, and deadline. The button shows how many results match and closes the panel when tapped. "Clear all" resets every filter.
 
+**November 2 frontend implementation (#61):** David's branch implements the bottom sheet with job-type checkboxes, a sponsorship-only checkbox, and Any time / Within 7 days / Within 30 days deadline choices. Selections and the matching-result count update live; Show N Results, Close, Escape, and the backdrop close the sheet without undoing selections. Removable chips and Clear all work, and selections persist when returning from Job Details. Multiple job types use OR; different categories use AND. The initial state has no active filters, rather than copying the prototype's sample selected tags. Deadline windows include today through today plus N days using UTC calendar dates; unknown/expired/invalid dates fail active windows.
+
+Location controls remain assigned to #64 and are temporarily absent from this implementation; their absence does not remove them from the intended design. The proposed later control is checkbox choices in the same sheet. Search/sort and entry-level fixtures remain #63/#62. These explicit implementation choices and the shared type/style roles still need team review with the #44/#46/#49 owners and must be explained as prototype differences during the demo. The saved wireframes/Figma prototype were not edited or reverified by this code change.
+
 <img src="./ux-design/wireframes-10-browse-jobs-filters.drawio.png" alt="Browse Jobs with filters wireframe" width="300">
 
 #### 11. Job Details
