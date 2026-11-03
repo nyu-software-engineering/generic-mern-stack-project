@@ -117,16 +117,13 @@ textarea {
   cursor: pointer;
 }
 
-.primary-button {
+.primary-button,
+.form-actions .primary-button {
   border: 0;
   padding: 10px 14px;
   border-radius: 7px;
   background: #315fce;
   color: white;
-}
-
-.form-actions .primary-button {
-  border: 0;
 }
 
 .listings-section,
