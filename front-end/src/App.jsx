@@ -24,6 +24,7 @@ export default function App() {
       <Route path="/bookings/:bookingId" element={<BookingDetails bookings={bookings} updateBooking={updateBooking} />} />
       <Route path="/bookings/:bookingId/reschedule" element={<BookingRequest bookings={bookings} updateBooking={updateBooking} />} />
       <Route path="/profile" element={<Profile />} />
+      <Route path="*" element={<p>Page not found.</p>} />
     </Routes></main>
     <nav className="tab-bar" aria-label="Main navigation">
       <NavLink to="/" end>Home</NavLink><NavLink to="/search">Search</NavLink>

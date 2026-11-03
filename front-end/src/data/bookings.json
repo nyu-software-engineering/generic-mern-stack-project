@@ -3,7 +3,7 @@
     "id": "1001",
     "serviceId": "1",
     "status": "confirmed",
-    "date": "2026-11-4",
+    "date": "2026-11-04",
     "time": "15:00",
     "notes": "Please bring the materials."
   },
@@ -11,7 +11,7 @@
     "id": "1002",
     "serviceId": "2",
     "status": "completed",
-    "date": "2026-11-2",
+    "date": "2026-11-02",
     "time": "14:00",
     "notes": ""
   }

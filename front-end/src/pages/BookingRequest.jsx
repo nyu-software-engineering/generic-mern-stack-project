@@ -11,6 +11,7 @@ export default function BookingRequest({ bookings = [], addBooking, updateBookin
   const [time, setTime] = useState(previous?.time || '15:00')
   const [notes, setNotes] = useState(previous?.notes || '')
   const [showTimes, setShowTimes] = useState(false)
+  if (bookingId && (!previous || !['requested', 'confirmed'].includes(previous.status))) return <p>This booking cannot be rescheduled.</p>
   if (!service) return <p>Service not found.</p>
   function submit(e) {
     e.preventDefault()
