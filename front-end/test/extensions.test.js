@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 import { after, before, mock, test } from 'node:test'
 import * as mockDataService from '../src/services/mockDataService.js'
 import {
-  extensionCost, getBooking, getExtensionRequests, requestExtension, respondToExtension,
+  extensionCost, formatMoney, getBooking, getExtensionRequests, requestExtension, respondToExtension,
 } from '../src/services/bookings.js'
 import { mockResponse } from './fixtures.js'
 
@@ -48,4 +48,11 @@ test('declining returns the rental to active without changing dates or total', (
   assert.equal(updated.endDate, '2026-11-10')
   assert.equal(updated.totalPrice, 25)
   assert.equal(updated.extensionRequest.status, 'declined')
+})
+
+test('extension prices are rounded to cents and shown with two decimals', () => {
+  const booking = { endDate: '2026-11-07', totalPrice: 38.42, terms: { pricePerDay: 1.1 } }
+  assert.equal(extensionCost(booking, '2026-11-10'), 3.3) // raw 3 x 1.1 = 3.3000000000000003
+  assert.equal(formatMoney(38.42 + 3.3), '$41.72')
+  assert.equal(formatMoney(38.4), '$38.40')
 })

@@ -4,7 +4,7 @@ import StatusBadge from '../../components/StatusBadge'
 import ExtensionRequestForm from './ExtensionRequestForm'
 import ListingSummary from './ListingSummary'
 import {
-  CURRENT_USER_ID, extensionCost, formatDate, getBooking, getListing, getUser,
+  CURRENT_USER_ID, extensionCost, formatDate, formatMoney, getBooking, getListing, getUser,
   requestExtension, respondToExtension,
 } from '../../services/bookings'
 import './booking.css'
@@ -38,7 +38,7 @@ function ExtensionPage({ bookingId }) {
           <h2>{getUser(booking.borrowerId)?.name} wants to return later</h2>
           <p>Current return: {formatDate(booking.endDate)}</p>
           <p>Requested return: {formatDate(request.newEndDate)}</p>
-          <p>Extra cost: ${extra} · New total: ${booking.totalPrice + extra}</p>
+          <p>Extra cost: {formatMoney(extra)} · New total: {formatMoney(booking.totalPrice + extra)}</p>
         </div>
         <div className="booking-actions">
           <button type="button" className="booking-btn booking-btn--primary" onClick={() => respond(true)}>
@@ -92,7 +92,7 @@ function ExtensionPage({ bookingId }) {
       <div className="booking-card">
         <div><StatusBadge status={booking.status} /></div>
         <p>{formatDate(booking.startDate)} – {formatDate(booking.endDate)}</p>
-        <p>Total: ${booking.totalPrice}</p>
+        <p>Total: {formatMoney(booking.totalPrice)}</p>
       </div>
       {body}
       <p style={{ marginTop: 16 }}>
