@@ -2,6 +2,7 @@ import assert from 'node:assert/strict'
 import { after, before, mock, test } from 'node:test'
 import * as mockDataService from '../src/services/mockDataService.js'
 import { createBooking, getListing, getUser, updateBookingStatus } from '../src/services/bookings.js'
+import { acceptOffer, getConversations, sendMessage } from '../src/services/chat.js'
 import { mockResponse } from './fixtures.js'
 
 before(async () => {
@@ -69,4 +70,15 @@ test('owner data excludes records belonging to other owners', () => {
   assert.ok(
     mockDataService.getRentalsForOwner('owner-1').every((rental) => rental.ownerId === 'owner-1'),
   )
+})
+
+test('chat reads fetched conversations and saves changes to the shared store', () => {
+  assert.equal(getConversations('owner-1').length, 1)
+
+  sendMessage(1, 'owner-1', 'Hello')
+  assert.equal(mockDataService.getConversations()[0].messages.at(-1).text, 'Hello')
+
+  const booking = acceptOffer(1, 2)
+  assert.equal(mockDataService.getRental(booking.id).status, 'confirmed')
+  assert.equal(mockDataService.getConversations()[0].messages[1].status, 'accepted')
 })
