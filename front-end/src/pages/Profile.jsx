@@ -15,7 +15,7 @@ const REVIEWS = [
     id: 1,
     author: "Morgan",
     date: "October 2026",
-    text: "Nana was easy to communicate. The apartment was clean and move-in was smooth.",
+    text: "Nana was easy to communicate. The apartment was clean.",
   },
 ];
 
