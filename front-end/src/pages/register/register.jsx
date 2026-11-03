@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import "./Register.css";
+import { Link } from "react-router-dom";
+import SplitLeaseLogo from "../../assets/splitlease-blank-background-logo.png";
 
 const Register = (props) => {
   const [name, setName] = useState("");
@@ -9,6 +11,19 @@ const Register = (props) => {
 
   return (
     <div className="registerContainer">
+      <h1>
+        <img
+          src={SplitLeaseLogo}
+          alt="SplitLeaseLogo"
+          style={{
+            width: "300px",
+            height: "auto",
+            display: "block",
+            margin: "0 auto",
+          }}
+        />
+      </h1>
+
       <h1>Register</h1>
 
       <div className="inputFieldContainer">
