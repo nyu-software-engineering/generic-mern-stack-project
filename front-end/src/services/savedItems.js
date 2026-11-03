@@ -13,7 +13,7 @@ export function saveListing(userId, listingId) {
 
     if (!listing || listing.status !== 'published' || listing.ownerId === userId
   ) {
-    return 
+    return
   }
 
   if (!isListingSaved(userId, listingId)) {

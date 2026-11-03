@@ -1,3 +1,10 @@
+
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+
+/* Shared application styles */
+
 * {
   box-sizing: border-box;
 }
@@ -110,16 +117,13 @@ textarea {
   cursor: pointer;
 }
 
-.primary-button {
+.primary-button,
+.form-actions .primary-button {
   border: 0;
   padding: 10px 14px;
   border-radius: 7px;
   background: #315fce;
   color: white;
-}
-
-.form-actions .primary-button {
-  border: 0;
 }
 
 .listings-section,
@@ -233,4 +237,54 @@ textarea {
   .rental-card {
     display: grid;
   }
+}
+
+/* Authentication screens */
+
+.auth-page {
+  @apply mx-auto min-h-screen w-full max-w-md bg-white px-5 py-8;
+}
+
+.auth-page h1 {
+  @apply mb-4 text-2xl font-bold text-gray-900;
+}
+
+.auth-page h2 {
+  @apply mb-2 text-sm font-semibold text-gray-600;
+}
+
+.auth-page p {
+  @apply mb-4 text-sm text-gray-600;
+}
+
+.auth-page form {
+  @apply my-5 flex flex-col gap-2;
+}
+
+.auth-page label {
+  @apply text-sm font-medium text-gray-800;
+}
+
+.auth-page input {
+  @apply mb-3 w-full rounded-md border border-gray-300 px-3 py-2;
+}
+
+.auth-page button {
+  @apply mt-2 rounded-md bg-blue-700 px-4 py-2 text-white;
+}
+
+.auth-page a {
+  @apply text-blue-700 underline;
+}
+
+.auth-page nav {
+  @apply mt-5 flex flex-col gap-3;
+}
+
+.auth-page nav a {
+  @apply rounded-md border border-blue-700 px-4 py-2 text-center no-underline;
+}
+
+.auth-page nav a:first-child {
+  @apply bg-blue-700 text-white;
 }

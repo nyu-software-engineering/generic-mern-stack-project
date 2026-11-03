@@ -6,23 +6,27 @@ let users = []
 let listings = []
 let rentals = []
 let conversations = []
+let reviews = []
 let loading
 
 const sameId = (first, second) => String(first) === String(second)
 
 function validateData(data) {
-  const { users, listings, rentals, conversations } = data ?? {}
-  if (![users, listings, rentals, conversations].every(Array.isArray)) {
+  const { users, listings, rentals, conversations, reviews } = data ?? {}
+  if (![users, listings, rentals, conversations, reviews].every(Array.isArray)) {
     throw new Error('Mockaroo returned invalid data.')
   }
 
   const userIds = new Set(users.map((user) => user?.id))
   const listingIds = new Set(listings.map((listing) => listing?.id))
+  const rentalIds = new Set(rentals.map((rental) => rental?.id))
+
   const validUsers = users.every((user) =>
     typeof user?.id === 'string' && user.id.trim() &&
     typeof user.name === 'string' && user.name.trim() &&
     (user.completedRentals == null || (Number.isSafeInteger(user.completedRentals) && user.completedRentals >= 0)),
   )
+
   const validListings = listings.every((listing) =>
     Number.isSafeInteger(listing?.id) && listing.id > 0 &&
     userIds.has(listing.ownerId) && listingCategories.includes(listing.category) &&
@@ -30,6 +34,7 @@ function validateData(data) {
     [listing.title, listing.description, listing.rentalTerms].every((value) => typeof value === 'string' && value.trim()) &&
     Number.isFinite(listing.price) && listing.price >= 0,
   )
+
   const validRentals = validListings && rentals.every((rental) =>
     Number.isSafeInteger(rental?.id) && rental.id > 0 &&
     listingIds.has(rental.listingId) && userIds.has(rental.borrowerId) &&
@@ -39,6 +44,7 @@ function validateData(data) {
     [rental.terms?.message, rental.terms?.rentalTerms].every((value) => value == null || typeof value === 'string') &&
     typeof rental.startDate === 'string' && typeof rental.endDate === 'string',
   )
+
   const validConversations = conversations.every((conversation) =>
     Number.isSafeInteger(conversation?.id) && listingIds.has(conversation.listingId) &&
     Array.isArray(conversation.participantIds) && conversation.participantIds.length === 2 &&
@@ -56,9 +62,33 @@ function validateData(data) {
     ),
   )
 
-  if (!validUsers || !validListings || !validRentals || !validConversations ||
+  const reviewPairs = new Set()
+  const validReviews = reviews.every((review) => {
+    if (!Number.isSafeInteger(review?.id) || review.id < 1 ||
+        !Number.isSafeInteger(review.bookingId) || !rentalIds.has(review.bookingId)) return false
+
+    const rental = rentals.find((item) => item.id === review.bookingId)
+    const participants = [rental.ownerId, rental.borrowerId]
+    const pairKey = `${review.bookingId}:${review.reviewerId}`
+
+    if (reviewPairs.has(pairKey)) return false
+    reviewPairs.add(pairKey)
+
+    return rental.status === 'completed' &&
+      review.reviewerId !== review.reviewedUserId &&
+      participants.includes(review.reviewerId) &&
+      participants.includes(review.reviewedUserId) &&
+      [review.communicationRating, review.itemCareRating, review.overallRating].every(
+        (rating) => Number.isInteger(rating) && rating >= 1 && rating <= 5,
+      ) &&
+      typeof review.comment === 'string' && review.comment.length <= 500 &&
+      typeof review.createdAt === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(review.createdAt)
+  })
+
+  if (!validUsers || !validListings || !validRentals || !validConversations || !validReviews ||
     userIds.size !== users.length || listingIds.size !== listings.length ||
-    new Set(rentals.map((rental) => rental?.id)).size !== rentals.length) {
+    rentalIds.size !== rentals.length ||
+    new Set(reviews.map((review) => review?.id)).size !== reviews.length) {
     throw new Error('Mockaroo returned invalid data.')
   }
 }
@@ -68,18 +98,22 @@ export function loadMockData() {
     loading = fetch('/mock-api/dormshare.json', { signal: AbortSignal.timeout(15000) })
       .then(async (response) => {
         if (!response.ok) throw new Error(`Could not load mock data (${response.status}).`)
+
         const data = await response.json()
         validateData(data)
+
         users = data.users
         listings = data.listings
         rentals = data.rentals
         conversations = data.conversations
+        reviews = data.reviews
       })
       .catch((error) => {
         loading = undefined
         throw error
       })
   }
+
   return loading
 }
 
@@ -111,6 +145,7 @@ export function getRental(id) {
 
 export function createListing(details) {
   const id = Math.max(0, ...listings.map((item) => item.id)) + 1
+
   const listing = {
     id,
     ownerId: CURRENT_USER_ID,
@@ -142,6 +177,7 @@ export function updateListingStatus(id, status) {
 export function createRental(details) {
   const id = Math.max(0, ...rentals.map((item) => item.id)) + 1
   const rental = { id, ...details }
+
   rentals = [...rentals, rental]
   return structuredClone(rental)
 }
@@ -176,4 +212,16 @@ export function updateConversation(id, details) {
   )
 
   return structuredClone(updatedConversation)
+}
+
+export function getReviews() {
+  return structuredClone(reviews)
+}
+
+export function createReview(details) {
+  const id = Math.max(0, ...reviews.map((item) => item.id)) + 1
+  const review = { ...details, id }
+
+  reviews = [review, ...reviews]
+  return structuredClone(review)
 }

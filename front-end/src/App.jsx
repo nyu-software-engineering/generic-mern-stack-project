@@ -1,3 +1,4 @@
+
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 import Navbar from './components/Navbar'
@@ -6,6 +7,8 @@ import MockData from './components/MockData'
 import Welcome from './pages/auth/Welcome'
 import Login from './pages/auth/Login'
 import Signup from './pages/auth/Signup'
+import VerifyEmail from './pages/auth/VerifyEmail'
+import SetupProfile from './pages/auth/SetupProfile'
 import Profile from './pages/auth/Profile'
 
 import CreateListing from './pages/listings/CreateListing'
@@ -28,49 +31,64 @@ import ItemRequests from './pages/requests/ItemRequests'
 import PickupReturn from './pages/handoff/PickupReturn'
 import QuickBorrow from './pages/quickBorrow/QuickBorrow'
 import Report from './pages/reporting/Report'
+import ReportSubmitted from './pages/reporting/ReportSubmitted'
+import CommunityRules from './pages/reporting/CommunityRules'
 
+import Reputation from './pages/reviews/Reputation'
+import ReviewParticipant from './pages/reviews/ReviewParticipant'
 
 function App() {
   return (
     <BrowserRouter>
       <Navbar />
-      <Routes>
-        <Route path="/" element={<Welcome />} />
 
-        {/* Auth*/}
+      <Routes>
+        {/* Authentication */}
+        <Route path="/" element={<Welcome />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/setup-profile" element={<Profile />} />
+        <Route path="/verify-email" element={<VerifyEmail />} />
+        <Route path="/setup-profile" element={<SetupProfile />} />
+        <Route path="/profile" element={<Profile />} />
 
+        {/* Shared mock data pages */}
         <Route element={<MockData />}>
-          {/* Listings & owner dashboard*/}
+          {/* Listings and owner dashboard */}
           <Route path="/listings" element={<MyListings />} />
           <Route path="/listings/new" element={<CreateListing />} />
           <Route path="/owner-dashboard" element={<OwnerDashboard />} />
 
-          {/* Browse & chat*/}
+          {/* Browse and chat */}
           <Route path="/browse" element={<Browse />} />
           <Route path="/browse/:id" element={<ItemDetails />} />
           <Route path="/inbox" element={<Inbox />} />
 
-          {/* Booking*/}
+          {/* Booking */}
           <Route path="/listings/:listingId/request" element={<Booking />} />
           <Route path="/booking-requests" element={<BookingRequests />} />
           <Route path="/bookings/:bookingId" element={<BookingDetails />} />
           <Route path="/bookings/:bookingId/extension" element={<Extensions />} />
           <Route path="/bookings/:bookingId/cancel" element={<Cancellation />} />
 
-          {/* Renter dashboard*/}
+          {/* Renter dashboard */}
           <Route path="/renter-dashboard" element={<RenterDashboard />} />
+
+          {/* Reporting */}
+          <Route path="/report" element={<Report />} />
+          <Route path="/report/submitted/:reportId" element={<ReportSubmitted />} />
+
+          {/* Reviews */}
+          <Route path="/users/:userId/reputation" element={<Reputation />} />
+          <Route path="/bookings/:bookingId/review" element={<ReviewParticipant />} />
         </Route>
 
-        {/* Requests*/}
+        {/* Requests */}
         <Route path="/requests" element={<ItemRequests />} />
 
-        {/* Handoff, quick borrow, reporting*/}
+        {/* Handoff, quick borrow, reporting */}
         <Route path="/handoff/:rentalId" element={<PickupReturn />} />
         <Route path="/quick-borrow" element={<QuickBorrow />} />
-        <Route path="/report" element={<Report />} />
+        <Route path="/community-rules" element={<CommunityRules />} />
       </Routes>
     </BrowserRouter>
   )
