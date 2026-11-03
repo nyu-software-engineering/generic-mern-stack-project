@@ -16,7 +16,7 @@ function App() {
     return (
       <main className="page">
         <Routes>
-          <Route path="/login" element={<Login onLogin={setUser} />} />
+          <Route path="/login" element={<Login setUser={setUser} />} />
 
           <Route path="/register" element={<Register />} />
 
