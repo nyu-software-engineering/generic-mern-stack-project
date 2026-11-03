@@ -3,7 +3,7 @@ import { Link, useParams } from 'react-router-dom'
 import StatusBadge from '../../components/StatusBadge'
 import ListingSummary from './ListingSummary'
 import {
-  CURRENT_USER_ID, formatDate, getBooking, getListing, getUser, updateBookingStatus,
+  CURRENT_USER_ID, canCancel, displayStatus, formatDate, getBooking, getListing, getUser, updateBookingStatus,
 } from '../../services/bookings'
 import './booking.css'
 
@@ -34,10 +34,20 @@ function BookingSummary({ bookingId }) {
     <main className="booking-page">
       <h1>Booking summary</h1>
 
+      {booking.status === 'cancelled' && (
+        <p className="booking-alert">This booking was cancelled.</p>
+      )}
+      {displayStatus(booking) === 'overdue' && (
+        <p className="booking-alert">
+          Overdue: this item was due back on {formatDate(booking.endDate)}.{' '}
+          {isOwner ? 'Message the borrower to arrange the return.' : 'Please return it or request an extension.'}
+        </p>
+      )}
+
       <ListingSummary listing={listing} />
 
       <div className="booking-card">
-        <div><StatusBadge status={booking.status} /></div>
+        <div><StatusBadge status={displayStatus(booking)} /></div>
         <p>{formatDate(booking.startDate)} – {formatDate(booking.endDate)}</p>
         <p>{AGREED_STATUSES.includes(booking.status) ? 'Agreed' : 'Proposed'} total: ${booking.totalPrice}</p>
         <p>{isOwner ? 'Borrower' : 'Owner'}: {other?.name}</p>
@@ -84,6 +94,11 @@ function BookingSummary({ bookingId }) {
           </Link>
         )}
         <Link to="/inbox" className="booking-btn">Message {isOwner ? 'borrower' : 'owner'}</Link>
+        {canCancel(booking, CURRENT_USER_ID) && (
+          <Link to={`/bookings/${booking.id}/cancel`} className="booking-btn booking-btn--link">
+            {booking.status === 'requested' ? 'Withdraw request' : 'Cancel booking'}
+          </Link>
+        )}
         {canRespond && (
           <button type="button" className="booking-btn booking-btn--link" onClick={() => respond('declined')}>
             Decline request
