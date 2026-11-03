@@ -1,5 +1,5 @@
 import { api } from '../../api'
-import { ApplicationCard, Button, EmptyState, ErrorState, FilterChips, IconButton, LoadingState, Page } from '../../components'
+import { ApplicationCard, Button, EmptyState, ErrorState, FilterChips, IconButton, LoadingState, Page, SearchBar } from '../../components'
 import { APPLICATION_STATUSES } from '../../constants'
 import { useApi } from '../../hooks/useApi'
 import { useState } from 'react'
@@ -19,6 +19,9 @@ export default function Dashboard() {
   // "+" button in the header that opens Add Application
   const addButton = <IconButton icon="plus" label="Add application" variant="primary" to="/applications/new" />
 
+  // What the user typed in the search box
+  const [search, setSearch] = useState('')
+
   // Show a spinner while the data is loading
   if (loading && !applications) {
     return (
@@ -37,12 +40,21 @@ export default function Dashboard() {
     )
   }
 
-  // Only the applications that match the selected status
-  const visibleApplications =
-    statusFilter === 'all' ? applications : applications.filter((application) => application.status === statusFilter)
-  
+  // Search text in lowercase, so "stripe" also finds "Stripe"
+  const query = search.trim().toLowerCase()
+  // Only the applications that match both the search and the selected status
+  const visibleApplications = applications.filter(
+    (application) =>
+      (statusFilter === 'all' || application.status === statusFilter) &&
+      (application.company.toLowerCase().includes(query) || application.position.toLowerCase().includes(query)),
+  )
+  // Whether a search or a status filter is active
+  const filtering = query !== '' || statusFilter !== 'all'
+
   return (
     <Page title="Applications" action={addButton}>
+          {/* Search by company or position */}
+      <SearchBar value={search} onChange={setSearch} placeholder="Search company or position" />
             {/* Status filter chips */}
       <FilterChips options={STATUS_FILTERS} value={statusFilter} onChange={setStatusFilter} label="Filter by status" />
 
@@ -51,8 +63,15 @@ export default function Dashboard() {
         <span className="dashboard__count">
           {visibleApplications.length} {visibleApplications.length === 1 ? 'application' : 'applications'}
         </span>
-        {statusFilter !== 'all' && (
-          <Button variant="ghost" size="sm" onClick={() => setStatusFilter('all')}>
+                {filtering && (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => {
+              setSearch('')
+              setStatusFilter('all')
+            }}
+          >
             Clear filter
           </Button>
         )}
@@ -62,7 +81,7 @@ export default function Dashboard() {
       {visibleApplications.length > 0 ? (
         visibleApplications.map((application) => <ApplicationCard key={application.id} application={application} />)
       ) : (
-        <EmptyState title="No applications match" message="Try a different status." />
+        <EmptyState title="No applications match" message="Try a different search or status." />
       )}
     </Page>
   )
