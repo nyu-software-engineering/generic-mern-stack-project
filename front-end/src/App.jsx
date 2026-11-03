@@ -1,6 +1,6 @@
 import "./App.css";
 import Explore from "./pages/Explore";
-import PostSubletPage from "./pages/PostSubletPage";
+import ReviewForm from "./components/ReviewForm";
 
 function App() {
   return (
@@ -11,8 +11,7 @@ function App() {
 
       <main>
         <Explore />
-        <PostSubletPage/>
-        
+        <ReviewForm userName="Alex" />
       </main>
     </div>
   );
