@@ -3,81 +3,107 @@ import Button from '../components/ui/Button.jsx'
 import Card from '../components/ui/Card.jsx'
 import ScreenTitle from '../components/ui/ScreenTitle.jsx'
 import SectionTitle from '../components/ui/SectionTitle.jsx'
+import Toggle from '../components/ui/Toggle.jsx'
 import { getReport } from '../data/api.js'
 import { formatDate } from '../data/format.js'
 
-export default function ReliabilityReport() {
-  // Keep the report data and any loading error here.
-  const [report, setReport] = useState(null)
-  const [error, setError] = useState('')
+// Build the shareable sections from the report data.
+function buildSections(report) {
+  return [
+    { id: 'months', label: 'Verified rent payments', value: `${report.monthsVerified} months` },
+    { id: 'onTime', label: 'Paid on time', value: `${report.onTimePayments} of ${report.totalPayments}` },
+    { id: 'income', label: 'Income stability', value: report.incomeStability },
+    { id: 'rentToIncome', label: 'Rent compared to income', value: `${report.rentToIncomePercent}%` },
+  ]
+}
 
-  // Load the report when this screen opens.
+export default function ReliabilityReport() {
+  const [report, setReport] = useState(null)
+  const [hiddenSections, setHiddenSections] = useState([])
+
+  // Load the report when the screen opens.
   useEffect(() => {
-    getReport()
-      .then(setReport)
-      .catch(() => setError('We could not load your report. Please try again.'))
+    getReport().then(setReport)
   }, [])
 
-  // Show a message while the report is loading.
-  if (!report && !error) {
-    return <p className="text-sm text-muted">Loading your report...</p>
+  // Wait until the report data is ready.
+  if (!report) {
+    return <p className="text-sm text-muted">Loading your report…</p>
   }
 
-  // Let the user know if the report could not load.
-  if (error) {
-    return <p className="text-sm text-negative">{error}</p>
+  const sections = buildSections(report)
+  const shownSections = sections.filter((section) => !hiddenSections.includes(section.id))
+
+  // Update the preview when a switch changes.
+  const setSectionShown = (sectionId, shown) => {
+    setHiddenSections(
+      shown
+        ? hiddenSections.filter((id) => id !== sectionId)
+        : [...hiddenSections, sectionId],
+    )
   }
 
-  // Show the report title and verification date.
   return (
-    <div className="space-y-4">
+    <div>
       <ScreenTitle
-        title="Reliability Report"
-        subtitle={`Prepared for ${report.renterFirstName} · Verified ${formatDate(report.verifiedOn)}`}
+        title="Your Reliability Report"
+        subtitle="This is what a landlord sees when you share it."
       />
 
-      {/* Show which bank account was verified. */}
+      {/* Show which bank account and date were verified. */}
+      <p className="mb-4 inline-block border border-accent bg-accent-soft px-3 py-1.5 text-sm font-semibold text-accent">
+        ✓ Verified with {report.bankName} on {formatDate(report.verifiedOn)}
+      </p>
+
+      {/* Preview only the sections that are switched on. */}
       <Card>
-        <SectionTitle>Verified account</SectionTitle>
-        <p className="text-sm font-semibold">Verified with {report.bankName}</p>
-        <p className="mt-1 text-sm text-muted">
-          {report.monthsVerified} months of payment history reviewed
-        </p>
+        <p className="mb-2 text-lg font-semibold">{report.renterFirstName}</p>
+        {shownSections.length === 0 ? (
+          <p className="py-3 text-sm text-muted">
+            Turn on at least one section to share your report.
+          </p>
+        ) : (
+          <dl className="divide-y divide-line">
+            {shownSections.map((section) => (
+              <div key={section.id} className="flex items-center justify-between py-3">
+                <dt className="text-sm text-muted">{section.label}</dt>
+                <dd className="font-semibold">{section.value}</dd>
+              </div>
+            ))}
+          </dl>
+        )}
       </Card>
 
-      {/* Summarize the rent payments that were on time. */}
-      <Card>
-        <SectionTitle>Rent payment history</SectionTitle>
-        <p className="text-2xl font-semibold">
-          {report.onTimePayments} of {report.totalPayments} on time
-        </p>
-        <p className="mt-1 text-sm text-muted">
-          Your verified rent payments are summarized here.
-        </p>
-      </Card>
+      {/* Let the renter choose which sections to share. */}
+      <div className="mt-8">
+        <SectionTitle>Choose what to share</SectionTitle>
+        <ul className="divide-y divide-line border-y border-line">
+          {sections.map((section) => {
+            const shown = !hiddenSections.includes(section.id)
 
-      {/* Show the income stability from the report data. */}
-      <Card>
-        <SectionTitle>Income stability</SectionTitle>
-        <p className="text-lg font-semibold">{report.incomeStability}</p>
-        <p className="mt-1 text-sm text-muted">
-          Based on the income patterns in your verified history.
-        </p>
-      </Card>
+            return (
+              <li key={section.id} className="flex items-center justify-between py-3">
+                <span className={`text-sm ${shown ? 'text-ink' : 'text-muted'}`}>
+                  {section.label}
+                </span>
+                <Toggle
+                  checked={shown}
+                  onChange={(value) => setSectionShown(section.id, value)}
+                  label={`Share ${section.label}`}
+                />
+              </li>
+            )
+          })}
+        </ul>
+      </div>
 
-      {/* Show how much of the income goes toward rent. */}
-      <Card>
-        <SectionTitle>Rent compared with income</SectionTitle>
-        <p className="text-2xl font-semibold">{report.rentToIncomePercent}%</p>
-        <p className="mt-1 text-sm text-muted">
-          The share of your income that goes toward rent.
-        </p>
-      </Card>
-
-      {/* Open the page with the renter's shared links. */}
-      <Button to="/share-links" variant="secondary">
-        View shared links
-      </Button>
+      {/* Keep sharing disabled when every section is hidden. */}
+      <div className="mt-6 space-y-3">
+        <Button disabled={shownSections.length === 0}>Share report</Button>
+        <Button to="/share-links" variant="ghost">
+          See active share links
+        </Button>
+      </div>
     </div>
   )
 }
