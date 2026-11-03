@@ -1,1 +1,51 @@
+/* Import Tailwind CSS.*/
+
 @import "tailwindcss";
+
+/*Defining the project's custom design theme*/
+
+@theme {
+  /* Brand Colors */
+  --color-brand: #CE3F1B; /* Main terracotta brand color */
+  --color-brand-dark: #A93217; /* Darker terracotta for hover states */
+
+
+  /* Background Colors */
+  --color-background: #F8F7F4;
+
+  --color-surface: #FFFFFF;
+
+  /* Text Colors */
+  --color-ink: #17171B;
+  --color-muted: #777773;
+
+  /* Accent Colors */
+  --color-sage: #DCEAD4;
+  --color-powder: #D5E5F5;
+  --color-peach: #F1E3D8;
+
+  /* Border Colors */
+  --color-border: #E8E5DF;
+
+  /* Typography */
+  --font-sans: "Inter", sans-serif;  /*Defining the default sans-serif font for the project. */
+}
+
+/* GLOBAL BASE STYLES
+   Set the default appearance of the application.
+   These styles apply across all pages unless a component overrides them. */
+
+body {
+  /* Using the background and text colors from our theme. */
+  background-color: var(--color-background);
+  color: var(--color-ink);
+
+  /* Using the default font family defined in our theme. */
+  font-family: var(--font-sans);
+
+  /* Make text rendering look smoother. */
+  -webkit-font-smoothing: antialiased;
+}
+
+
+  
