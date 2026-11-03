@@ -16,3 +16,5 @@ export const rentalStatuses = [
   'completed',
   'cancelled',
 ]
+
+export const offerStatuses = ['pending', 'accepted', 'declined', 'countered']
