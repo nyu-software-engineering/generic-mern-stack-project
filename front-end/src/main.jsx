@@ -4,7 +4,6 @@ import './index.css'
 import App from './App.jsx'
 
 
-import './styles/tokens.css'
 import './styles/global.css'
 import './styles/components.css'
 
