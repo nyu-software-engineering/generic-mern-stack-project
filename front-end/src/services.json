@@ -1,0 +1,10 @@
+[{"id":1,"title":"Dress alterations","provider":"Rebecca Petett","category":"Tailoring","price":50,"priceUnit":"item"},
+{"id":2,"title":"Python programming tutoring","provider":"Gaston Tinham","category":"Tutoring","price":15,"priceUnit":"hour"},
+{"id":3,"title":"Calculus I tutoring","provider":"Marylynne Absalom","category":"Tutoring","price":25,"priceUnit":"hour"},
+{"id":4,"title":"Jacket zipper repair","provider":"Bryant Tampion","category":"Repairs","price":20,"priceUnit":"item"},
+{"id":5,"title":"Calculus I tutoring","provider":"Cristian Aliman","category":"Tutoring","price":35,"priceUnit":"hour"},
+{"id":6,"title":"Jeans hemming","provider":"Jakie Janssens","category":"Tailoring","price":18,"priceUnit":"item"},
+{"id":7,"title":"CSCI-UA.0430 tutoring","provider":"Linet de Quincey","category":"Tutoring","price":25,"priceUnit":"hour"},
+{"id":8,"title":"Jacket zipper repair","provider":"Kahlil Lunney","category":"Repairs","price":20,"priceUnit":"item"},
+{"id":9,"title":"Bicycle tune-up","provider":"Timi Frankowski","category":"Repairs","price":40,"priceUnit":"item"},
+{"id":10,"title":"Portrait photography session","provider":"Hillyer Gotch","category":"Photography","price":60,"priceUnit":"session"}]
