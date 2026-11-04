@@ -1,9 +1,5 @@
 
-body {
-  margin: 0;
-  background-color: #f5f5f5;
-}
-
+/* Discover People Page */
 .discover {
   max-width: 390px;
   min-height: 100vh;
@@ -11,10 +7,9 @@ body {
   padding: 25px;
   box-sizing: border-box;
   background-color: white;
-  font-family: Arial, sans-serif;
-  color: #303640;
 }
 
+/* Page Heading */
 .discover h1 {
   font-size: 28px;
   margin-top: 40px;
@@ -26,6 +21,7 @@ body {
   margin-bottom: 25px;
 }
 
+/* Search Bar */
 .discover label {
   display: block;
   font-weight: bold;
@@ -40,6 +36,7 @@ body {
   border-radius: 8px;
 }
 
+/* Filters */
 .filters {
   background-color: #f0f1f3;
   padding: 15px;
@@ -49,6 +46,7 @@ body {
   border-radius: 8px;
 }
 
+/* Person Cards */
 .person-card {
   display: flex;
   padding: 12px;
@@ -79,8 +77,9 @@ body {
   font-size: 13px;
 }
 
+/* View Profile Button */
 .person-info button {
-  background-color: #6941c6;
+  background-color: #635bff;
   color: white;
   border: none;
   border-radius: 8px;
@@ -90,13 +89,14 @@ body {
 }
 
 .person-info button:hover {
-  background-color: #5232a8;
+  background-color: #5148e8;
 }
 
-.discover .navigation {
-  text-align: center;
-  margin-top: 40px;
-  padding-top: 20px;
-  border-top: 1px solid lightgray;
-  font-size: 13px;
+
+.discover select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid lightgray;
+  border-radius: 8px;
+  background-color: white;
 }
