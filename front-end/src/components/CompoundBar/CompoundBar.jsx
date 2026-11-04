@@ -24,9 +24,11 @@ export function CompoundBar({ name, entries = [] }) {
 
     return (
     <Card className="compound-bar">
+        {name != null && (
         <h3 className="compound-bar__title">
             {name}
         </h3>
+        )}
 
         <div className="compound-bar__bar">
             {entries.map((outcome) => {
