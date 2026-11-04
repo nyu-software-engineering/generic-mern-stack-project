@@ -38,7 +38,10 @@ function App() {
           <Route path = "messages" element = {<Messages />} />
           <Route path = "post" element = {<Post />} />
           <Route path = "profile" element = {<Profile />} />
-          <Route path = "saved" element = {<MyListings />} />
+          <Route
+            path="saved"
+            element={<SavedListings savedIds={savedIds} onToggleSave={toggleSave} />}
+          />
         </Route>
 
         <Route path = "/" element = {<Login />} />
