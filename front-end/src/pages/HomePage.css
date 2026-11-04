@@ -43,3 +43,13 @@
 .home-search-button {
   align-self: center;
 }
+
+.homepage .home-search-label {
+  text-align: center;
+}
+
+.homepage .home-search-input {
+  width: 75%;
+  align-self: center;
+  box-sizing: border-box;
+}
