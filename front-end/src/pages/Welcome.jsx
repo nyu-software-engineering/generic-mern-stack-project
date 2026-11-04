@@ -10,11 +10,11 @@ export default function Welcome() {
         </header>
 
         <section className="welcome-content">
-          <div className="welcome-illustration" aria-hidden="true">
-            <div className="welcome-circle welcome-circle-one"></div>
-            <div className="welcome-circle welcome-circle-two"></div>
-            <span className="welcome-illustration-text">DOIN</span>
-          </div>
+          <img
+            src="/doin-illustration.svg"
+            alt="Friends spending time together"
+            className="welcome-illustration"
+          />
 
           <h1>Meet people. Do things together.</h1>
           <p>Discover people and events nearby.</p>
