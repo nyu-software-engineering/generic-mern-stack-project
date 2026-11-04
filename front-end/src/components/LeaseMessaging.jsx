@@ -2,7 +2,7 @@
 import { useState } from "react";
 import "./LeaseMessaging.css";
 
-function LeaseMessaging() {
+export default function LeaseMessaging({sublessor, subletName, onBack}) {
     const [message, setMessage] = useState("");
     const [messages, setMessages] = useState([]);
     const [fileName, setFileName] = useState("");
@@ -16,7 +16,7 @@ function LeaseMessaging() {
             return;
         }
 
-        setMessages([...messages, message]);
+        setMessages((currentMessages) => [...currentMessages, message.trim()]);
         setMessage("");
     }
 
@@ -40,7 +40,9 @@ function LeaseMessaging() {
 
     return (
         <div className="lease-messaging">
-        <h2>Lease Conversation</h2>
+        <button type="button" onClick={onBack}>Back to leases</button>
+        <h2>{sublessor}</h2>
+        <h3>{subletName}</h3>
         <p>Discuss lease details with the other user.</p>
 
         <div className="message-box">
@@ -113,4 +115,3 @@ function LeaseMessaging() {
     );
 }
 
-export default LeaseMessaging;
