@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom'
-{/* import './ArticleCard.css'*/}
 
 const ArticleCard = props => {
 
