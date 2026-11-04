@@ -1,15 +1,19 @@
 import { useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { api } from '../../api'
-import { ErrorState, LoadingState, Page } from '../../components'
+import { Button, ErrorState, LoadingState, Page, SuccessDialog } from '../../components'
 import { useApi } from '../../hooks/useApi'
 import ApplicationForm from './ApplicationForm'
-import { emptyRecruiter } from './applicationFormHelpers'
+import {
+  emptyRecruiter,
+  getApplicationErrors,
+  isApplicationValid,
+  removeEmptyRecruiters,
+} from './applicationFormHelpers'
 
 /**
  * Edit Application screen.
- * Owner: Bertin · Issues: #43, #49, #54
- * Wireframe: ux-design/prototype/edit-application.png · Pop-ups: changes-saved.png
+ * Written By Bertin · Issues
  */
 export default function EditApplication() {
   const { id } = useParams() // the :id from the URL, e.g. "app-1"
@@ -36,6 +40,8 @@ export default function EditApplication() {
 }
 
 function EditApplicationForm({ application }) {
+  const navigate = useNavigate()
+
   // The form starts filled in with the saved application
   const [form, setForm] = useState({
     company: application.company,
@@ -50,10 +56,55 @@ function EditApplicationForm({ application }) {
     recruiters: application.recruiters.length > 0 ? application.recruiters : [emptyRecruiter()],
     resume: application.resume,
   })
+  const [submitted, setSubmitted] = useState(false) // true after the first tap on Save
+  const [saving, setSaving] = useState(false) // true while the changes are being saved
+  const [saved, setSaved] = useState(false) // true when the "Changes saved" pop-up should show
+  const [saveError, setSaveError] = useState('') // message shown if saving fails
+
+  const errors = getApplicationErrors(form)
+  // Only show errors after the user has tried to save once
+  const shownErrors = submitted ? errors : {}
+
+  async function handleSave() {
+    setSubmitted(true)
+    if (!isApplicationValid(errors)) return
+
+    setSaving(true)
+    setSaveError('')
+    try {
+      await api.updateApplication(application.id, { ...form, recruiters: removeEmptyRecruiters(form.recruiters) })
+      setSaved(true)
+    } catch (err) {
+      setSaveError(err.message)
+    } finally {
+      setSaving(false)
+    }
+  }
 
   return (
-    <Page title="Edit Application" back>
-      <ApplicationForm form={form} onChange={setForm} errors={{}} />
+    <Page
+      title="Edit Application"
+      back
+      footer={
+        <Button fullWidth loading={saving} onClick={handleSave}>
+          Save changes
+        </Button>
+      }
+    >
+      <ApplicationForm form={form} onChange={setForm} errors={shownErrors} />
+
+      {saveError && (
+        <p className="field__error" role="alert">
+          {saveError}
+        </p>
+      )}
+
+      <SuccessDialog
+        open={saved}
+        title="Changes saved"
+        message="Your application has been updated."
+        onDone={() => navigate(`/applications/${application.id}`)}
+      />
     </Page>
   )
 }
