@@ -3,6 +3,7 @@ import heroImg from "./assets/hero.png";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "./assets/vite.svg";
 import CreateHousehold from "./pages/create_household/CreateHousehold";
+import Login from "./pages/login/Login";
 import Temphome from "./pages/temp_home";
 import Protocols from "./pages/protocols/Protocols";
 import React from "react";
@@ -21,6 +22,7 @@ function App() {
       <Routes>
         {/* <Route basename={import.meta.env.BASE_URL} /> */}
         <Route path="/" element={<Temphome />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/create" element={<CreateHousehold />} />
         <Route path="/protocols" element={<Protocols />} />
         <Route path="/register" element={<Register />} />
