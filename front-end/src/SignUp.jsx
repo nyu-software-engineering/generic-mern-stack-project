@@ -1,7 +1,9 @@
 import { useState } from "react";
-import "./SignUp.css";
+import {useNavigate, Link} from "react-router-dom";
+import "./Sign.css";
 
 function SignUp() {
+    const navigate = useNavigate();
     const [email, SetEmail] = useState("");
     const [password, SetPassword] = useState("");
     const [error, SetError] = useState("");
@@ -13,6 +15,7 @@ function SignUp() {
             return;
         }
         SetError("");
+        navigate("/"); 
     };
 
     return (
