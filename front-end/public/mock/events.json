@@ -1,0 +1,6 @@
+[
+  { "id": 1, "hobbyId": 1, "hobby": "Bouldering", "title": "Saturday Send", "host": "Maya Chen", "day": "Sat", "time": "Sat 10:00 AM - 12:00 PM", "location": "Brooklyn Boulders", "going": 12, "capacity": 20, "description": "A relaxed morning session. Every level is welcome." },
+  { "id": 2, "hobbyId": 1, "hobby": "Bouldering", "title": "Sunday Outdoor Climb", "host": "Jordan Lee", "day": "Sun", "time": "Sun 9:00 AM - 11:00 AM", "location": "Central Park", "going": 8, "capacity": 15, "description": "Climb the rocks in the park with a friendly group." },
+  { "id": 3, "hobbyId": 1, "hobby": "Bouldering", "title": "Midweek Climb", "host": "Maya Chen", "day": "Wed", "time": "Wed 7:00 PM - 9:00 PM", "location": "Vital Climbing", "going": 5, "capacity": 10, "description": "Break up the week with an evening climb." },
+  { "id": 4, "hobbyId": 8, "hobby": "Running", "title": "Sunset Run Club", "host": "Jordan Lee", "day": "Today", "time": "Today 6:30 PM - 8:30 PM", "location": "Hudson River Park, Pier 40", "going": 8, "capacity": 15, "description": "Easy 5k along the river at sunset. All paces welcome to join us." }
+]
