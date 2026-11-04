@@ -144,3 +144,41 @@ export function formatDate(isoDate) {
     timeZone: 'UTC',
   })
 }
+
+// Pickup and return checks (#54). The borrower confirms pickup of a confirmed
+// booking; the owner confirms the return of an active one, which completes it.
+export const ITEM_CONDITIONS = ['As described', 'Minor wear', 'Damaged']
+
+export const canConfirmPickup = (booking, userId) =>
+  Boolean(booking) && booking.status === 'confirmed' && sameId(booking.borrowerId, userId)
+
+export const canConfirmReturn = (booking, userId) =>
+  Boolean(booking) && booking.status === 'active' && sameId(booking.ownerId, userId)
+
+// Condition, accessories and notes recorded at a handoff, or null if the condition is invalid.
+function buildCheck({ condition, accessoriesComplete, notes = '' }, userId) {
+  if (!ITEM_CONDITIONS.includes(condition)) return null
+  return {
+    condition,
+    accessoriesComplete: Boolean(accessoriesComplete),
+    notes: notes.trim(),
+    confirmedBy: userId,
+    confirmedAt: new Date().toISOString(),
+  }
+}
+
+// Borrower confirms pickup: confirmed -> active. Returns null if not allowed.
+export function confirmPickup(id, userId, details) {
+  const booking = getBooking(id)
+  const pickupCheck = buildCheck(details, userId)
+  if (!canConfirmPickup(booking, userId) || !pickupCheck) return null
+  return updateRental(id, { status: 'active', pickupCheck })
+}
+
+// Owner confirms return: active -> completed. Returns null if not allowed.
+export function confirmReturn(id, userId, details) {
+  const booking = getBooking(id)
+  const returnCheck = buildCheck(details, userId)
+  if (!canConfirmReturn(booking, userId) || !returnCheck) return null
+  return updateRental(id, { status: 'completed', returnCheck })
+}

@@ -73,6 +73,9 @@ function App() {
           {/* Renter dashboard */}
           <Route path="/renter-dashboard" element={<RenterDashboard />} />
 
+          {/* Pickup and return */}
+          <Route path="/handoff/:rentalId" element={<PickupReturn />} />
+
           {/* Reporting */}
           <Route path="/report" element={<Report />} />
           <Route path="/report/submitted/:reportId" element={<ReportSubmitted />} />
@@ -85,8 +88,7 @@ function App() {
         {/* Requests */}
         <Route path="/requests" element={<ItemRequests />} />
 
-        {/* Handoff, quick borrow, reporting */}
-        <Route path="/handoff/:rentalId" element={<PickupReturn />} />
+        {/* Quick borrow, reporting */}
         <Route path="/quick-borrow" element={<QuickBorrow />} />
         <Route path="/community-rules" element={<CommunityRules />} />
       </Routes>

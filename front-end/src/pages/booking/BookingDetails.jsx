@@ -3,7 +3,7 @@ import { Link, useParams } from 'react-router-dom'
 import StatusBadge from '../../components/StatusBadge'
 import ListingSummary from './ListingSummary'
 import {
-  CURRENT_USER_ID, canCancel, displayStatus, formatDate, formatMoney, getBooking, getListing, getUser,
+  CURRENT_USER_ID, canCancel, canConfirmPickup, canConfirmReturn, displayStatus, formatDate, formatMoney, getBooking, getListing, getUser,
   updateBookingStatus,
 } from '../../services/bookings'
 import { getReviewForBooking, getReviewTarget } from '../../services/reviews.js'
@@ -104,6 +104,24 @@ function BookingSummary({ bookingId }) {
         {booking.status === 'extension_requested' && (
           <Link to={`/bookings/${booking.id}/extension`} className="booking-btn">
             {isOwner ? 'Review extension request' : 'View extension request'}
+          </Link>
+        )}
+
+        {canConfirmPickup(booking, CURRENT_USER_ID) && (
+          <Link to={`/handoff/${booking.id}`} className="booking-btn booking-btn--primary">
+            Confirm pickup
+          </Link>
+        )}
+
+        {canConfirmReturn(booking, CURRENT_USER_ID) && (
+          <Link to={`/handoff/${booking.id}`} className="booking-btn booking-btn--primary">
+            Confirm return
+          </Link>
+        )}
+
+        {booking.status === 'completed' && (
+          <Link to={`/handoff/${booking.id}`} className="booking-btn">
+            View pickup and return checks
           </Link>
         )}
 
