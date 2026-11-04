@@ -1,6 +1,11 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function Settings() {
+  const navigate = useNavigate();
+  function handleLogout() {
+    localStorage.removeItem("user");
+    navigate("/login");
+  }
   return (
     <div className="min-h-screen bg-white flex items-center justify-center">
       <div className="w-full max-w-md p-8">
@@ -42,6 +47,7 @@ function Settings() {
 
           <button
             type="button"
+            onClick={handleLogout}
             className="w-full mt-6 bg-purple-600 text-white p-3 rounded-lg font-semibold hover:bg-purple-700"
           >
             {" "}
