@@ -1,19 +1,8 @@
 import "./Explore.css";
-import { useState } from "react";
 import ListingCard from "../components/ListingCard";
 import mockListings from "../mockListings";
 
-function Explore() {
-    const [savedIds, setSavedIds] = useState([]);
-
-    function toggleSave(id) {
-        if (savedIds.includes(id)) {
-            setSavedIds(savedIds.filter(savedId => savedId !== id));
-        } else {
-            setSavedIds([...savedIds, id]);
-        }
-    }
-
+function Explore({ savedIds, onToggleSave }) {
     return (
         <div className="explore-page">
             <h2>Find Your Next Sublet</h2>
@@ -25,7 +14,7 @@ function Explore() {
                         key={listing.id}
                         listing={listing}
                         saved={savedIds.includes(listing.id)}
-                        onToggleSave={toggleSave}
+                        onToggleSave={onToggleSave}
                     />
                 ))}
             </div>
