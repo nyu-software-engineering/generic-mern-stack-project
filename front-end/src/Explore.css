@@ -37,7 +37,7 @@
   border-radius: 8px;
 }
 
-.event-filters {
+.explore .event-filters {
   background-color: #f0f1f3;
   padding: 12px;
   margin-top: 20px;
@@ -46,7 +46,7 @@
   border-radius: 8px;
 }
 
-.event-card {
+.explore .event-card {
   display: flex;
   gap: 12px;
   padding: 12px;
@@ -56,31 +56,31 @@
   background-color: white;
 }
 
-.event-card img {
+.explore .event-card img {
   width: 80px;
   height: 90px;
   object-fit: cover;
   border-radius: 8px;
 }
 
-.event-info {
+.explore .event-info{
   flex: 1;
   min-width: 0;
 }
 
-.event-info h3 {
+.explore .event-info h3 {
   font-size: 15px;
   margin: 3px 0 8px;
 }
 
-.event-info p {
+.explore .event-info p {
   font-size: 12px;
   margin-bottom: 16px;
 }
 
-.event-info button {
+.explore .event-info button {
   width: 100%;
-  background-color: #6941c6;
+  background-color: #635bff;
   color: white;
   border: none;
   border-radius: 8px;
@@ -92,7 +92,7 @@
   display: block;
   width: 105px;
   margin: 20px 0 0 auto;
-  background-color: #6941c6;
+  background-color: #635bff;
   color: white;
   border: none;
   border-radius: 20px;
@@ -100,10 +100,3 @@
   cursor: pointer;
 }
 
-.event-navigation {
-  text-align: center;
-  margin-top: 40px;
-  padding-top: 20px;
-  border-top: 1px solid lightgray;
-  font-size: 13px;
-}

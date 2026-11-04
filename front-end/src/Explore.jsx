@@ -39,9 +39,7 @@ function Explore({ onViewEvent, onCreateEvent }) {
         + Create
       </button>
 
-      <div className="event-navigation">
-        <p>People　 Events　 Connect　 Profile</p>
-      </div>
+
     </div>
   );
 }
