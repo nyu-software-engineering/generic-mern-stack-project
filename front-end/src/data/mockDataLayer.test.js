@@ -37,7 +37,7 @@ describe('getRankedCityPlaces', () => {
   it('tallies each valid vote option from members and keeps places with no votes', () => {
     const ranked = getRankedCityPlaces('c_nyc')
     expect(ranked.find(({ id }) => id === 'p_1')).toMatchObject({
-      savedPlaceId: 'sp_1', tally: { 'must-go': 4, down: 0, pass: 0 },
+      savedPlaceId: 'sp_1', categoryLabel: 'Viewpoint', tally: { 'must-go': 4, down: 0, pass: 0 },
     })
     expect(ranked.find(({ id }) => id === 'p_2').tally).toEqual({ 'must-go': 3, down: 0, pass: 1 })
     expect(ranked.find(({ id }) => id === 'p_3').tally).toEqual({ 'must-go': 0, down: 2, pass: 0 })

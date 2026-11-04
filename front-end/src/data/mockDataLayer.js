@@ -62,7 +62,8 @@ export function getRankedCityPlaces(cityId) {
           if (Object.hasOwn(tally, vote.value)) tally[vote.value] += 1
         })
 
-      return [{ ...place, savedPlaceId: saved.id, tally }]
+      const categoryLabel = categories.find((category) => category.id === place.categoryId)?.label ?? 'Other'
+      return [{ ...place, categoryLabel, savedPlaceId: saved.id, tally }]
     })
     .sort((a, b) => b.tally['must-go'] - a.tally['must-go'] || a.name.localeCompare(b.name))
 }

@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router'
 import CityHeader from '../components/CityHeader'
-import { loadCityHeaders } from '../data/mockDataLayer'
+import RankedCityList from '../components/RankedCityList'
+import { getRankedCityPlaces, loadCityHeaders } from '../data/mockDataLayer'
 import './CityPage.css'
 
 export default function CityPage() {
@@ -70,9 +71,10 @@ export default function CityPage() {
   return (
     <section className="city-page" aria-label={`${city.name} city list`}>
       <CityHeader city={city} view={view} onViewChange={changeView} />
-      {/* #88 and #90 will replace these view containers with map pins and ranked places. */}
       <section id="city-view" className={`city-page-view city-page-view--${view}`} aria-label={`${view === 'map' ? 'Map' : 'List'} view`}>
-        <h2 className="city-page-view-title">{view === 'map' ? 'Map view' : 'List view'}</h2>
+        {view === 'list' ? <RankedCityList places={getRankedCityPlaces(city.id)} /> : (
+          <h2 className="city-page-view-title">Map view</h2>
+        )}
       </section>
     </section>
   )
