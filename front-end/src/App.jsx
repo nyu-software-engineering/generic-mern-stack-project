@@ -17,26 +17,23 @@ import Support from './pages/Support';
 
 export default function App() {
   return (
-    <>
-      <BrowserRouter>
-          <Routes>
-            <Route element={<Layout/>}>
-              <Route path="/" element={<Landing/>}/>
-              <Route path="/login" element={<Login/>}/>
-              <Route path="/register" element={<Register/>}/>
-              <Route path="/home" element={<Home/>}/>
-              <Route path="/organizations" element={<OrganizationView/>}/>
-              <Route path="/calendar" element={<CalendarView/>}/>
-              <Route path="/add-flyer" element={<AddFlyer/>}/>
-              <Route path="/map" element={<MapView/>}/>
-              <Route path="/profile" element={<Profile/>}/>
-              <Route path="/edit-profile" element={<EditProfile/>}/>
-              <Route path="/notifications" element={<Notifications/>}/>
-              <Route path="/settings" element={<Settings/>}/>
-              <Route path="/support" element={<Support/>}/>
-            </Route>
-          </Routes>
-      </BrowserRouter>
-    </>
+    <BrowserRouter>
+      <Routes>
+        {/* No Header or NavBar */}
+        <Route path="/" element={<Landing />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+
+        {/* Main Application pages */}
+        <Route element={<Layout />}>
+          <Route path="/home" element={<Home />} />
+          <Route path="/organizations" element={<OrganizationView />} />
+          <Route path="/calendar" element={<CalendarView />} />
+          <Route path="/add-flyer" element={<AddFlyer />} />
+          <Route path="/map" element={<MapView />} />
+          <Route path="/profile" element={<Profile />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
