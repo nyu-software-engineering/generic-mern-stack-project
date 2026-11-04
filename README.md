@@ -4,8 +4,11 @@ MapMaker is a website where users can describe a map they want in plain English 
 
 ## Core Team Members
 [Georgi](https://github.com/gp2479)
+
 [Bhavya](https://github.com/bhavya20051)
+
 [Sean](https://github.com/seankimh)
+
 [Vincent](https://github.com/vincentcamp)
 
 
