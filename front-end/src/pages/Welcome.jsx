@@ -21,11 +21,17 @@ export default function Welcome() {
         </section>
 
         <nav className="welcome-actions" aria-label="Account navigation">
-          <Link to="/register" className="welcome-button welcome-primary">
+          <Link
+            to="/register"
+            className="doin-button doin-button--primary welcome-button"
+          >
             Create account
           </Link>
 
-          <Link to="/login" className="welcome-button welcome-secondary">
+          <Link
+            to="/login"
+            className="doin-button doin-button--secondary welcome-button"
+          >
             Login
           </Link>
         </nav>
