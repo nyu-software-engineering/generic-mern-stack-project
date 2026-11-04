@@ -17,6 +17,8 @@ function App() {
   const appState = useAppState()
   const [matchResource, setMatchResource] = useState({ status: 'loading' })
   const path = hash.replace(/^#/, '') || '/'
+  const [browseQuery, setBrowseQuery] = useState('')
+  const [browseSort, setBrowseSort] = useState('best-match')
   const route = parseJobRoute(hash)
   const requestKey = `${route.kind}:${route.id ?? ''}`
   const resource = resources[route.kind]
@@ -84,7 +86,8 @@ function App() {
         <Tracker />
       ) : route.kind === 'browse' ? (
         <BrowseJobs jobs={current.data ?? []} status={current.status} onRetry={retry} getJobHref={getJobHref}
-          filters={browseFilters} onFiltersChange={setBrowseFilters} profile={appState.profile} />
+          filters={browseFilters} onFiltersChange={setBrowseFilters} profile={appState.profile}
+          query={browseQuery} onQueryChange={setBrowseQuery} sort={browseSort} onSortChange={setBrowseSort} />
       ) : route.kind === 'details' ? (
         <JobDetails job={current.data} status={current.status} onRetry={retry}
           matchResource={matchResource}
