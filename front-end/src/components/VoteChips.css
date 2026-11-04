@@ -1,0 +1,94 @@
+/* Colors and shapes come from the shared index.css theme. */
+.vote-chips {
+  margin: 0;
+  min-width: 0;
+  border: 0;
+  padding: 0;
+}
+
+.vote-chips__legend {
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+.vote-chips__options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.vote-chips__button {
+  position: relative;
+  display: flex;
+  min-height: 4rem;
+  min-width: 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  border: 2px solid transparent;
+  border-radius: var(--radius-button);
+  padding: 0.75rem 0.5rem;
+  font: inherit;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.vote-chips__button--must-go {
+  background-color: var(--color-peach);
+  color: var(--color-brand-dark);
+}
+
+.vote-chips__button--down {
+  background-color: var(--color-powder);
+  color: var(--color-ink);
+}
+
+.vote-chips__button--pass {
+  background-color: var(--color-background);
+  color: var(--color-ink);
+}
+
+.vote-chips__button:not(.vote-chips__button--selected):not(:disabled):hover {
+  border-color: var(--color-border);
+}
+
+.vote-chips__button--selected {
+  border-color: var(--color-brand);
+  box-shadow: var(--shadow-button);
+}
+
+.vote-chips__button:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+}
+
+.vote-chips__button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.vote-chips__check {
+  position: absolute;
+  right: 0.25rem;
+  top: 0;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 700;
+}
+
+.vote-chips__count {
+  font-size: 1.125rem;
+  line-height: 1;
+  font-weight: 700;
+}
+
+.vote-chips__label {
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 600;
+}
