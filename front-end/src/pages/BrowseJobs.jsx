@@ -1,7 +1,7 @@
 import './BrowseJobs.css'
 import { useId, useState } from 'react'
 import { formatJobDate, formatSponsorship } from '../jobs/formatters.js'
-import { DEADLINES, DEFAULT_FILTERS, JOB_TYPES, filterJobs, searchJobs, sortJobs } from '../jobs/browse.js'
+import { DEADLINES, DEFAULT_FILTERS, JOB_TYPES, filterJobs, getJobLocations, searchJobs, sortJobs } from '../jobs/browse.js'
 import JobFilters from './JobFilters.jsx'
 
 function JobCard({ job, getJobHref }) {
@@ -48,6 +48,10 @@ export default function BrowseJobs({
     key: `type-${value}`, label: JOB_TYPES.find((type) => type.value === value)?.label ?? value,
     remove: () => onFiltersChange({ ...filters, jobTypes: filters.jobTypes.filter((type) => type !== value) }),
   }))
+  for (const location of filters.locations ?? []) chips.push({
+    key: `location-${location}`, label: location,
+    remove: () => onFiltersChange({ ...filters, locations: filters.locations.filter((value) => value !== location) }),
+  })
   if (filters.sponsorsOnly) chips.push({
     key: 'sponsorship', label: 'Sponsors visas', remove: () => onFiltersChange({ ...filters, sponsorsOnly: false }),
   })
@@ -106,7 +110,7 @@ export default function BrowseJobs({
             </div>
           )}
           {onFiltersChange && filtersOpen && <JobFilters filters={filters} onFiltersChange={onFiltersChange}
-            resultCount={visibleJobs.length} onClose={() => setFiltersOpen(false)} />}
+            locationOptions={getJobLocations(jobs)} resultCount={visibleJobs.length} onClose={() => setFiltersOpen(false)} />}
         </div>
       )}
 
