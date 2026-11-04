@@ -4,6 +4,8 @@ import ResultsPage from "./pages/ResultsPage";
 import HomePage from "./pages/HomePage";
 import Saved from "./pages/Saved";
 import EditSaved from "./pages/EditSaved";
+import SignUp from "./SignUp";
+import SignIn from "./SignIn";
 
 
 function App() {
@@ -16,6 +18,8 @@ function App() {
         <Route path="/results" element={<ResultsPage />} />
         <Route path="/saved" element={<Saved />} />
         <Route path="/editsaved" element={<EditSaved />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/signin" element={<SignIn />} />
       </Routes>
       </div>
 

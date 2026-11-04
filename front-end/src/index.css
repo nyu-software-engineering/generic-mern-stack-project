@@ -1,5 +1,6 @@
 :root {
   --border-radius: 25px;
+  --input-radius: 8px;
 }
 
 .phone-screen {
