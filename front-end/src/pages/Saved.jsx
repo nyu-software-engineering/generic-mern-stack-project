@@ -1,22 +1,7 @@
 import EditSaved from "./EditSaved";
 import "./Saved.css";
 import { useState, useEffect } from 'react';
-
-function Card(props) {
-  return (
-    <article className="card">
-      <div className="image_and_edit">
-        {props.imageSrc ? (
-          <img className="card-image" src={props.imageSrc} alt="" />
-        ) : (
-          <div className="card-image"> Place Holder Image</div>
-        )}
-        <button style={{flex:1}} onClick={props.Edit}>editButton</button>
-      </div>
-      <div className="card-info">{props.description}</div>
-    </article>
-  );
-}
+import Card from "../components/Card";
 
 function Saved() {
   {/* use the useState to load up the saved array from db when we get a db */}
@@ -42,6 +27,22 @@ function Saved() {
     setActiveItemEdit(null);
   }
 
+  {/*modify for data base later*/}
+  const handleSave = (id, newDescription) => {
+    setSavedItems(
+      savedItems.map((item) =>
+        item.id === id ? { ...item, description: newDescription } : item
+      )
+    );
+    handleGoBack();
+  };
+
+  {/*modify for data base later*/}
+  const handleDelete = (id) => { 
+    setSavedItems(savedItems.filter((item) => item.id !== id));
+    handleGoBack();
+  };
+
   if(currentView === 'noEdit'){
     return (
       <div className="page-wrapper">
@@ -62,9 +63,10 @@ function Saved() {
           <p>You haven't saved any hotels yet!</p>
         )}
 
+        <div className="list-end-spacer"/>
       </div>
     );
-  } else return <EditSaved id={activeItemEdit.id} description={activeItemEdit.description} goBack={handleGoBack}/>
+  } else return <EditSaved id={activeItemEdit.id} description={activeItemEdit.description} goBack={handleGoBack} onSave={handleSave} onDelete={handleDelete}/>
 }
 
 export default Saved;

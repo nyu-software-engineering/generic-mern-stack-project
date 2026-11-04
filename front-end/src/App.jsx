@@ -25,8 +25,8 @@ function App() {
       {/* Parts below is for bottom navigation, also links are to be filled*/}
       <nav className="bottom-nav">
         <Link to="/">home</Link>
-        <Link to="/">search</Link>
         <Link to="/saved">saved</Link>
+        <Link to="/">profile</Link>
       </nav>
       </div>
     </BrowserRouter>
