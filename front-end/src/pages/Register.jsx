@@ -1,11 +1,36 @@
 import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
 function Register() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
+
   const navigate = useNavigate();
 
   function handleRegister(event) {
     event.preventDefault();
+    setError("");
 
-    //need to validate inout and simulate account creation
+    //checking for empty fields
+    if (
+      name.trim() === "" ||
+      email.trim() === "" ||
+      password.trim() === "" ||
+      confirmPassword.trim() === ""
+    ) {
+      return setError("All fields are required");
+    }
+    if (password.length < 8) {
+      return setError("Password must have at least 8 characters");
+    }
+
+    if (password !== confirmPassword) {
+      return setError("Passwords do not match");
+    }
+
+    //all checks passed
     navigate("/login");
   }
   return (
@@ -24,10 +49,12 @@ function Register() {
             <input
               type="text"
               id="name"
-              required
+              value={name}
+              onChange={(event) => setName(event.target.value)}
               placeholder="Enter your full name"
               className="w-full border border-gray-300 rounded-lg p-3"
             />
+            <p className="text-sm text-gray-500">Current name: {name}</p>
           </div>
           {/* Email */}
           <div>
@@ -38,6 +65,8 @@ function Register() {
               type="email"
               id="email"
               required
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
               placeholder="Enter your email"
               className="w-full border border-gray-300 rounded-lg p-3"
             />
@@ -51,6 +80,8 @@ function Register() {
             <input
               type="password"
               required
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
               id="password"
               placeholder="Create a password"
               className="w-full border border-gray-300 rounded-lg p-3"
@@ -66,14 +97,19 @@ function Register() {
               type="password"
               required
               id="confirmPassword"
+              value={confirmPassword}
+              onChange={(event) => setConfirmPassword(event.target.value)}
               placeholder="Confirm your password"
               className="w-full border border-gray-300 rounded-lg p-3"
             />
           </div>
+          {error !== "" ? (
+            <p className="text-red-600 text-sm text-center">{error}</p>
+          ) : null}
           {/* Register Buttin */}
           <button
             type="submit"
-            className="w-full bg-purple-600 text-white p-3 rounded-lg font-semibold"
+            className="w-full bg-purple-600 text-white p-3 rounded-lg font-semibold hover:bg-purple-700"
           >
             Create Account
           </button>
