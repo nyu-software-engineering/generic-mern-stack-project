@@ -1,0 +1,104 @@
+.flow-page {
+  padding: 1rem;
+  padding-bottom: 5rem;
+}
+
+.flow-back {
+  display: inline-block;
+  margin-bottom: 1rem;
+  padding: 0.25rem 0.5rem;
+  border: 1px solid #000;
+  text-decoration: none;
+  color: inherit;
+}
+
+.flow-eyebrow {
+  margin: 0 0 0.25rem;
+  color: #666;
+  font-size: 0.875rem;
+}
+
+.flow-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 0 1rem;
+}
+
+.flow-place-card {
+  border: 1px solid #000;
+  margin-bottom: 1rem;
+}
+
+.flow-thumb {
+  display: block;
+  background: #ddd;
+  overflow: hidden;
+}
+
+.flow-thumb--large {
+  height: 160px;
+}
+
+.flow-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.flow-place-card-body {
+  padding: 0.75rem;
+}
+
+.flow-place-name {
+  font-size: 1.125rem;
+  font-weight: 700;
+  margin: 0 0 0.25rem;
+}
+
+.flow-place-subtitle {
+  margin: 0 0 0.5rem;
+  color: #555;
+  font-size: 0.875rem;
+}
+
+.flow-tags {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.flow-tag {
+  background: #eee;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+}
+
+.flow-info-box {
+  border: 1px solid #000;
+  padding: 0.75rem;
+  margin: 0 0 1rem;
+}
+
+.flow-page .btn-primary {
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 0.75rem;
+}
+
+.flow-link-button {
+  width: 100%;
+  border: none;
+  background: none;
+  color: #666;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0.5rem;
+}
+
+.flow-duplicate {
+  background: #fff3cd;
+  border: 1px solid #e0c060;
+  padding: 0.75rem;
+  margin: 0 0 1rem;
+  font-size: 0.875rem;
+}

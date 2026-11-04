@@ -65,18 +65,18 @@ export default function Create() {
       </h1>
 
       <p className="add-place-hint">
-        Paste a link from TikTok or Instagram
+        Paste a link from TikTok or Instagram. We find the place and pin it to the right city.
       </p>
 
       <form className="add-place-form" onSubmit={handleSubmit}>
         <div className="add-place-input-wrap">
           <input
-            className="add-place-input"
+            className="input-field"
             type="url"
             name="link"
             value={link}
             onChange={(event) => setLink(event.target.value)}
-            placeholder="link…."
+            placeholder="link…"
             autoComplete="off"
           />
           {/* Only show clear when there is text in the box */}
@@ -98,8 +98,8 @@ export default function Create() {
           </p>
         )}
 
-        <button type="submit" className="add-place-submit">
-          Find place
+        <button type="submit" className="btn-primary hover:btn-primary-hover">
+          Find the place
         </button>
       </form>
     </section>

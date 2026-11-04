@@ -1,25 +1,9 @@
-import { useState } from 'react'
 import { Link } from 'react-router'
+import AvatarStack from './AvatarStack'
 import './CityHeader.css'
-
-function MemberAvatar({ member }) {
-  const [imageFailed, setImageFailed] = useState(false)
-  const initials = member.name.trim().split(/\s+/).map((part) => part[0]).slice(0, 2).join('')
-
-  return (
-    <span className="city-header-avatar" title={member.name}>
-      <span aria-hidden="true">{initials}</span>
-      {member.photoUrl && !imageFailed && (
-        <img className="city-header-avatar-image" src={member.photoUrl} alt="" onError={() => setImageFailed(true)} />
-      )}
-    </span>
-  )
-}
 
 export default function CityHeader({ city, view, onViewChange }) {
   const members = city.members ?? []
-  const visibleMembers = members.slice(0, 3)
-  const extraMembers = members.length - visibleMembers.length
 
   return (
     <header className="city-header">
@@ -54,9 +38,8 @@ export default function CityHeader({ city, view, onViewChange }) {
           to={`/city/${encodeURIComponent(city.id)}/members`}
           aria-label={`View ${members.length} ${members.length === 1 ? 'member' : 'members'} of ${city.name}`}
         >
-          <span className="city-header-avatars" aria-hidden="true">
-            {visibleMembers.map((member) => <MemberAvatar key={`${member.id}-${member.photoUrl}`} member={member} />)}
-            {extraMembers > 0 && <span className="city-header-avatar city-header-avatar-extra">+{extraMembers}</span>}
+          <span aria-hidden="true">
+            <AvatarStack members={members} />
           </span>
           <span className="city-header-member-label">Members <span aria-hidden="true">↗</span></span>
         </Link>

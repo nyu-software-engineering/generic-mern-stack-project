@@ -48,11 +48,11 @@ export default function Signup() {
   }
 
   return (
-    <main className="mx-auto flex min-h-screen max-w-110 flex-col justify-center px-5 py-6">
-      <h1 className="text-4xl font-semibold leading-tight tracking-tight text-gray-900">
+    <main className="mx-auto flex min-h-screen w-full max-w-110 flex-col justify-center bg-background px-5 py-6 text-ink">
+      <h1 className="text-4xl font-semibold leading-tight tracking-tight text-ink">
         Join Later
       </h1>
-      <p className="mt-2.5 text-sm leading-normal text-gray-500">
+      <p className="mt-2.5 text-sm leading-normal text-muted">
         Stop losing places in the groupchat
       </p>
 
@@ -78,15 +78,14 @@ export default function Signup() {
         />
         <button
           type="submit"
-          className="mt-2 min-h-11 cursor-pointer rounded-xl bg-gray-900 text-base font-semibold text-white hover:bg-gray-700 focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-blue-600"
-        >
+          className="mt-2 min-h-11 btn-primary hover:btn-primary-hover focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-brand"        >
           Create account
         </button>
       </form>
 
-      <p className="mt-6 text-center text-sm text-gray-600">
+      <p className="mt-6 text-center text-sm text-muted">
         Already have an account?{' '}
-        <Link to="/login" className="font-semibold text-gray-900">
+        <Link to="/login" className="font-semibold text-brand hover:text-brand-dark">
           Log in
         </Link>
       </p>

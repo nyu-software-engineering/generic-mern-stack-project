@@ -6,7 +6,7 @@
  * in one place until a real back-end replaces these functions.
  */
 
-import { categories, cities, lists, places, savedPlaces, users, votes, friendships, listInvites, currentUserId, linkLookups } from './demoData.js'
+import { cities, lists, places, savedPlaces, users, votes, friendships, listInvites, currentUserId, linkLookups, categories } from './demoData.js'
 
 function createAbortError() {
   return new DOMException('The operation was aborted.', 'AbortError')
@@ -212,4 +212,155 @@ export function lookupLinkByUrl(rawUrl) {
     return { status: 'not_found' }
   }
   return { status: 'ok', lookup }
+}
+
+function firstName(fullName) {
+  return fullName.trim().split(/\s+/)[0]
+}
+
+/** Turn ["Samantha", "Tiffany", "Arjun"] into "Samantha, Tiffany, and Arjun". */
+function formatNameList(names) {
+  if (names.length === 0) return ''
+  if (names.length === 1) return names[0]
+  if (names.length === 2) return `${names[0]} and ${names[1]}`
+  return `${names.slice(0, -1).join(', ')}, and ${names[names.length - 1]}`
+}
+
+// categories like Food, Shopping, etc
+export function getCategoryLabel(categoryId) {
+  return categories.find((c) => c.id === categoryId)?.label ?? 'Other'
+}
+
+export function getPlaceById(placeId) {
+  return places.find((p) => p.id === placeId) ?? null
+}
+
+export function getCityById(cityId) {
+  return cities.find((c) => c.id === cityId) ?? null
+}
+
+/**
+ * List the current user saves into for this city.
+ */
+export function getListForUserAndCity(userId, cityId) {
+  return lists.find((list) => list.cityId === cityId && list.memberIds.includes(userId)) ?? null
+}
+
+/** Other people on the list, excluding the current user. */
+export function getListViewerFirstNames(list, userId) {
+  if (!list) return []
+  return list.memberIds
+    .filter((id) => id !== userId)
+    .map((id) => users.find((u) => u.id === id))
+    .filter(Boolean)
+    .map((u) => firstName(u.name))
+}
+/**
+ * "City information" that's in the wireframe
+ */
+export function getSharingMessage(cityId, userId = currentUserId) {
+  const city = getCityById(cityId)
+  const list = getListForUserAndCity(userId, cityId)
+  const cityName = city?.name ?? 'city'
+  let message = `Goes into your ${cityName} list.`
+  const viewers = getListViewerFirstNames(list, userId)
+  if (viewers.length > 0) {
+    message += ` ${formatNameList(viewers)} will see it.`
+  }
+  return message
+}
+
+/** If this place is already saved on the user's list for that city, return the saved row. */
+export function getDuplicateSavedPlace(placeId, userId = currentUserId) {
+  const place = getPlaceById(placeId)
+  if (!place) return null
+  const list = getListForUserAndCity(userId, place.cityId)
+  if (!list) return null
+  return savedPlaces.find((sp) => sp.listId === list.id && sp.placeId === placeId) ?? null
+}
+
+/** Card data for Place Found / list rows */
+export function getPlaceCardData(placeId, lookup) {
+  const place = getPlaceById(placeId)
+  if (!place) return null
+  const city = getCityById(place.cityId)
+  const categoryLabel = getCategoryLabel(place.categoryId)
+  const platform = lookup?.platform
+  return {
+    placeId: place.id,
+    name: place.name,
+    subtitle: `${categoryLabel} - ${place.neighborhood}`,
+    categoryLabel,
+    cityId: place.cityId,
+    cityName: city?.name ?? '',
+    thumbnailUrl: lookup?.thumbnailUrl ?? place.photoUrl,
+    platform,
+    sourceTag: platform ? `From ${platform}` : null,
+  }
+}
+
+/** Rows for "Did you mean?" candidate list. */
+export function getAmbiguousCandidates(lookup) {
+  if (!lookup?.candidates) return []
+  return lookup.candidates.map((candidate) => {
+    const place = getPlaceById(candidate.placeId)
+    if (!place) return null
+    return {
+      placeId: place.id,
+      name: place.name,
+      subtitle: `${getCategoryLabel(place.categoryId)} - ${place.neighborhood}`,
+      photoUrl: place.photoUrl,
+      bestMatch: candidate.bestMatch === true,
+    }
+  }).filter(Boolean)
+}
+
+/** City id for an ambiguous lookup (from its first candidate). */
+export function getLookupCityId(lookup) {
+  const firstPlaceId = lookup?.candidates?.[0]?.placeId ?? lookup?.placeId
+  const place = firstPlaceId ? getPlaceById(firstPlaceId) : null
+  return place?.cityId ?? null
+}
+
+/**
+ * Live search
+ * Filters mock places in one city by name, neighborhood, or category label.
+ */
+export function searchPlacesInCity(cityId, query) {
+  const q = query.trim().toLowerCase()
+  const inCity = places.filter((p) => p.cityId === cityId)
+  if (!q) return []
+  return inCity
+    .filter((place) => {
+      const categoryLabel = getCategoryLabel(place.categoryId).toLowerCase()
+      return (
+        place.name.toLowerCase().includes(q)
+        || place.neighborhood.toLowerCase().includes(q)
+        || categoryLabel.includes(q)
+      )
+    })
+    .map((place) => ({
+      placeId: place.id,
+      name: place.name,
+      subtitle: `${getCategoryLabel(place.categoryId)} - ${place.neighborhood}`,
+      photoUrl: place.photoUrl,
+      bestMatch: false,
+    }))
+}
+
+/** Sprint-1 fake save, Navigates to success either way. */
+export function mockSavePlaceToList({ placeId, userId = currentUserId }) {
+  const place = getPlaceById(placeId)
+  if (!place) return { ok: false }
+  const list = getListForUserAndCity(userId, place.cityId)
+  const duplicate = getDuplicateSavedPlace(placeId, userId)
+  if (duplicate) {
+    return { ok: false, reason: 'duplicate', savedPlaceId: duplicate.id, placeId }
+  }
+  return {
+    ok: true,
+    listId: list?.id ?? null,
+    placeId,
+    cityId: place.cityId,
+  }
 }
