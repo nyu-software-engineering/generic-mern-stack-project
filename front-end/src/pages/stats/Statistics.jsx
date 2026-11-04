@@ -3,7 +3,8 @@ import {
   PagePlaceholder,
   LoadingState,
   ErrorState, 
-  StatCard
+  StatCard,
+  StatCardBar
 } from '../../components'
 import { useApi } from '../../hooks/useApi'
 import { api } from '../../api'
@@ -87,9 +88,10 @@ export default function Statistics() {
               value={formatNumber(offers)}
             />
       </div>
-      <StatCard
+      <StatCardBar
         label="Response Rate"
         value={formatPercent(responseRate)}
+        percentage={responseRate} //Temporary
       />
     </Page>
   )
