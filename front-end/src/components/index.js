@@ -2,7 +2,7 @@
  * Every shared component, importable from one place:
  *   import { Page, Button, TextField, ConfirmDialog } from '../../components'
  *
- * See FRONTEND-GUIDE.md for what each one does, or open /dev/components in the running app.
+ * Open /dev/components in the running app to see each one.
  */
 
 // Layout and navigation

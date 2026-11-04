@@ -92,8 +92,6 @@ Other commands (run inside `front-end/`):
 | `npm run build` | Builds the production version into `front-end/dist/` |
 | `npm run preview` | Serves the production build locally |
 
-Team members: see the [Front-End Guide](./FRONTEND-GUIDE.md) for how the code is organized and how to build screens.
-
 ## Relevant Links/Materials
 - [Figma prototype](https://www.figma.com/proto/9EX5tzYDrlj3Gzjzbx0MYe/applytrack-wireframe?node-id=0-1&t=Lk0LxVGaovkle1CD-1)
 - [App map](ux-design/ApplyTrack_app_map.png)
