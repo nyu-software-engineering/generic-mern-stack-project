@@ -11,10 +11,12 @@ import Login from './pages/Login.jsx'
 import Register from './pages/Register.jsx'
 import BookingDetails from './pages/BookingDetails.jsx'
 import initialBookings from './data/bookings.json'
+import profileData from './profile1.json'
 import './App.css'
 
 function App() {
   const [user, setUser] = useState(null)
+  const [profile, setProfile] = useState(profileData[0])
   const [bookings, setBookings] = useState(initialBookings)
   const addBooking = booking => setBookings([...bookings, { ...booking, id: String(Date.now()), status: 'requested' }])
   const updateBooking = (id, changes) => setBookings(bookings.map(b => b.id === id ? { ...b, ...changes } : b))
@@ -54,8 +56,8 @@ function App() {
             <Route path="/bookings/:bookingId/reschedule" element={<BookingRequest bookings={bookings} updateBooking={updateBooking} />} />
 
             {/* Profile page */}
-            <Route path="/profile" element={<Profile setUser={setUser} />} />
-            <Route path="/profile/edit" element={<EditProfile />}/>
+            <Route path="/profile" element={<Profile setUser={setUser} profile={profile}/>} />
+            <Route path="/profile/edit" element={<EditProfile profile={profile} setProfile={setProfile}/>}/>
 
             {/* Other */}
             <Route path="/login" element={<Navigate to="/" replace />}/>

@@ -1,0 +1,61 @@
+.edit-profile h1{
+    margin-bottom: 16px;
+}
+
+.edit-profile-photo{
+    display: block;
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    border: 1px solid black;
+    border-radius: 8px;
+    background: #d9d9d9;
+}
+
+.edit-profile .profile-button-row{
+    margin: 8px 0 16px;
+}
+
+.edit-profile-field{
+    display: block;
+    padding: 12px 6px 6px;
+    border-bottom: 1px solid black;
+}
+
+.edit-profile-field span{
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.edit-profile-field input,
+.edit-profile-field textarea{
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 4px 0;
+    border: none;
+    background: transparent;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    resize: vertical;
+}
+
+.edit-profile-field input:focus,
+.edit-profile-field textarea:focus{
+    outline: none;
+}
+
+.edit-profile-field:focus-within{
+    border-bottom-width: 2px;
+}
+
+.edit-profile-note{
+    margin: 12px 0;
+    font-size: 13px;
+}
+
+.edit-profile > .profile-button{
+    margin: 0 0 8px;
+}

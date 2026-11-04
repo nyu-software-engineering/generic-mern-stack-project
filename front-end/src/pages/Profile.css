@@ -27,6 +27,7 @@
     font-weight: 600;
     text-align: center;
     cursor: pointer;
+    text-decoration: none;
 }
 
 .profile-button:hover{

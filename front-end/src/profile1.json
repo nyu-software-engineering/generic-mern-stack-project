@@ -1,5 +1,8 @@
 [{
-    "id":1,"full_name":"Cody Aartsen","university":"Texas Lutheran University",
+    "id":1,"full_name":"Cody Aartsen",
+    "university":"Texas Lutheran University",
+    "profile_picture": "https://picsum.photos/200/200",
     "email":"caartsen0@statcounter.com",
+    "bio": "Student tailor. Small clothing fixes with careful finishing.",
     "services": [1] 
 }]
