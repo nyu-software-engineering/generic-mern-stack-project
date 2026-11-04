@@ -54,7 +54,9 @@ function StageSection({
   const [expanded, setExpanded] = useState(false)
 
   const stageApplications = applications
-    .filter((application) => application.stage === stage)
+    .filter(
+      (application) => application.stage === stage
+    )
     .sort((a, b) => {
       if (sortBy === "deadline") {
         const aJob = getJobForApplication(a, jobs)
@@ -89,7 +91,8 @@ function StageSection({
     ? stageApplications
     : stageApplications.slice(0, 2)
 
-  const hiddenCount = stageApplications.length - 2
+  const hiddenCount =
+    stageApplications.length - 2
 
   return (
     <section>
@@ -98,7 +101,8 @@ function StageSection({
       </h3>
 
       {visibleApplications.map((application) => {
-        const job = getJobForApplication(application, jobs)
+        const job =
+          getJobForApplication(application, jobs)
 
         if (!job) {
           return null
@@ -115,7 +119,9 @@ function StageSection({
 
             <p>{job.company}</p>
 
-            <p>Stage: {application.stage}</p>
+            <p>
+              Stage: {application.stage}
+            </p>
 
             <p>
               Deadline: {formatDate(job.deadline)}
@@ -146,7 +152,9 @@ function StageSection({
 
       {stageApplications.length > 2 && (
         <button
-          onClick={() => setExpanded(!expanded)}
+          onClick={() =>
+            setExpanded(!expanded)
+          }
         >
           {expanded
             ? "Show less"
@@ -205,7 +213,9 @@ function Tracker() {
   if (!appState) {
     return (
       <main className="app">
-        <p>Application data is unavailable.</p>
+        <p>
+          Application data is unavailable.
+        </p>
       </main>
     )
   }
@@ -227,17 +237,21 @@ function Tracker() {
   ) {
     return (
       <main className="app">
-        <p>Could not load tracker data.</p>
+        <p>
+          Could not load tracker data.
+        </p>
       </main>
     )
   }
 
-  const applications = appState.applications
+  const applications =
+    appState.applications
 
   const selectedApplication =
     applications.find(
       (application) =>
-        application.id === selectedApplicationId
+        application.id ===
+        selectedApplicationId
     )
 
   if (selectedApplication) {
@@ -252,16 +266,22 @@ function Tracker() {
         application={selectedApplication}
         job={selectedJob}
         onBack={() =>
-            setSelectedApplicationId(null)
+          setSelectedApplicationId(null)
+        }
+        onNoteSave={(note) =>
+          appState.updateApplication(
+            selectedApplication.id,
+            { note }
+          )
         }
         onRemove={() => {
-            appState.removeApplication(
+          appState.removeApplication(
             selectedApplication.id
-            )
+          )
 
-            setSelectedApplicationId(null)
+          setSelectedApplicationId(null)
         }}
-     />
+      />
     )
   }
 
@@ -272,7 +292,8 @@ function Tracker() {
       <h2>My Tracker</h2>
 
       <p>
-        Total applications: {applications.length}
+        Total applications:{" "}
+        {applications.length}
       </p>
 
       <div>
@@ -281,7 +302,9 @@ function Tracker() {
           <select
             value={selectedStage}
             onChange={(event) =>
-              setSelectedStage(event.target.value)
+              setSelectedStage(
+                event.target.value
+              )
             }
           >
             <option value="All">
@@ -304,7 +327,9 @@ function Tracker() {
           <select
             value={sortBy}
             onChange={(event) =>
-              setSortBy(event.target.value)
+              setSortBy(
+                event.target.value
+              )
             }
           >
             <option value="default">
@@ -332,7 +357,9 @@ function Tracker() {
           <StageSection
             key={stage}
             stage={stage}
-            applications={applications}
+            applications={
+              applications
+            }
             jobs={jobs}
             sortBy={sortBy}
             onViewDetails={

@@ -1,3 +1,5 @@
+import { useState } from "react"
+
 function formatDate(date) {
   if (!date) {
     return "None"
@@ -14,8 +16,25 @@ function ApplicationDetails({
   application,
   job,
   onBack,
+  onNoteSave,
   onRemove,
 }) {
+  const [draftNote, setDraftNote] = useState(
+    application.note ?? ""
+  )
+
+  const savedNote = application.note ?? ""
+  const noteChanged = draftNote !== savedNote
+
+  function handleSaveNote() {
+    onNoteSave(draftNote)
+  }
+
+  function handleClearNote() {
+    setDraftNote("")
+    onNoteSave("")
+  }
+
   function handleRemove() {
     const confirmed = window.confirm(
       "Are you sure you want to remove this application from your Tracker?"
@@ -37,7 +56,6 @@ function ApplicationDetails({
       <h1>Application Details</h1>
 
       <h2>{job?.title || "Unknown job"}</h2>
-
       <p>{job?.company || "Unknown company"}</p>
 
       <section>
@@ -71,9 +89,32 @@ function ApplicationDetails({
       <section>
         <h3>Notes</h3>
 
-        <p>
-          {application.note || "No notes yet."}
-        </p>
+        <textarea
+          value={draftNote}
+          onChange={(event) =>
+            setDraftNote(event.target.value)
+          }
+          rows="5"
+          placeholder="Add notes about this application"
+        />
+
+        <div>
+          <button
+            onClick={handleSaveNote}
+            disabled={!noteChanged}
+          >
+            Save Note
+          </button>
+
+          <button
+            onClick={handleClearNote}
+            disabled={
+              draftNote === "" && savedNote === ""
+            }
+          >
+            Clear Note
+          </button>
+        </div>
       </section>
 
       <section>
