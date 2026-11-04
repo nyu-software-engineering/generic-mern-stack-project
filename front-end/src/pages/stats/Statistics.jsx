@@ -4,7 +4,8 @@ import {
   LoadingState,
   ErrorState, 
   StatCard,
-  StatCardBar
+  StatCardBar,
+  CompoundBar
 } from '../../components'
 import { useApi } from '../../hooks/useApi'
 import { api } from '../../api'
@@ -91,7 +92,17 @@ export default function Statistics() {
       <StatCardBar
         label="Response Rate"
         value={formatPercent(responseRate)}
-        percentage={responseRate} //Temporary
+        percentage={responseRate} 
+      />
+
+      <CompoundBar
+        name="Outcomes"
+        entries={[
+          { label: 'Pending', value: pending, color: '#F59E0B' },
+          { label: 'Interviews', value: interviews, color: '#6366F1' },
+          { label: 'Offers', value: offers, color: '#10B981' },
+          { label: 'Rejected', value: rejected, color: '#EF4444' },
+        ]}
       />
     </Page>
   )

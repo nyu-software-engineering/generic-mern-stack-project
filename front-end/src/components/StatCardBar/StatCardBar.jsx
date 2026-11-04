@@ -7,8 +7,7 @@ import './StatCardBar.css'
  *
  * @example
  * <div className="stat-grid">
- *   <StatCard value={stats.totalApplied} label="Total applied" />
- *   <StatCard value={stats.active} label="Active" />
+ *   <StatCardBar value={stats.totalApplied} label="Total applied" percentage={stats.totalAppliedPercentage} />
  * </div>
  */
 export function StatCardBar({ value, label, percentage}) {
