@@ -114,23 +114,16 @@ export default function AddApplication() {
     setSubmitted(true)
     if (!hasNoErrors(errors) || !hasNoErrors(recruiterEmailErrors)) return
 
-    // Don't save recruiter contacts that were left completely empty
-    const recruiters = form.recruiters.filter(
-      (recruiter) => recruiter.name.trim() || recruiter.email.trim() || recruiter.phone.trim(),
-    )
-
     setSaving(true)
     setSaveError('')
     try {
-      await api.createApplication({ ...form, recruiters })
-      setSaved(true)
+      await saveApplication()
     } catch (err) {
       setSaveError(err.message)
     } finally {
       setSaving(false)
     }
   }
-
   return (
     <Page
       title="Add Application"
