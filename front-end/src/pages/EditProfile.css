@@ -1,0 +1,103 @@
+.edit-profile-page {
+  min-height: 100vh;
+  background-color: #f5f6fb;
+  color: #202638;
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.edit-profile-container {
+  width: 100%;
+  max-width: 440px;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 16px;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.edit-profile-title {
+  font-size: 28px;
+  margin: 0 0 24px;
+}
+
+/* One field per row: a label above a full-width input */
+
+.edit-profile-field {
+  margin-bottom: 16px;
+}
+
+.edit-profile-field label,
+.edit-profile-label {
+  display: block;
+  font-weight: 600;
+  margin: 0 0 8px;
+}
+
+.edit-profile-field input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #e8eaf1;
+  border-radius: 8px;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+/* Interest toggle buttons */
+
+.edit-profile-interests {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.edit-profile-interest {
+  padding: 8px 12px;
+  border-radius: 12px;
+  font-size: 14px;
+  cursor: pointer;
+  background-color: white;
+  color: #202638;
+  border: 1px solid #e8eaf1;
+}
+
+.edit-profile-interest-on {
+  background-color: #635bff;
+  color: white;
+  border-color: transparent;
+}
+
+.edit-profile-saved {
+  color: #635bff;
+  font-weight: 600;
+}
+
+/* Save and back buttons */
+
+.edit-profile-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.edit-profile-button {
+  padding: 12px 20px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  background-color: white;
+  color: #202638;
+  border: 1px solid #e8eaf1;
+  text-align: center;
+  text-decoration: none;
+}
+
+.edit-profile-button-primary {
+  background-color: #635bff;
+  color: white;
+  border-color: transparent;
+}
