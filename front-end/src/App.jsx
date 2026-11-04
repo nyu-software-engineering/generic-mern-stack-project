@@ -6,25 +6,26 @@ import CreateHousehold from './pages/create_household/CreateHousehold'
 import Login from './pages/login/Login'
 import Templogin from './pages/temp_home'
 import React from 'react'
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
+import Temphome from "./pages/temp_home";
+import Register from "./pages/register/register";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 // import { Link } from "react-router-dom"
-import './App.css'
-
+import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
 
   return (
     <Router>
       <Routes>
         {/* <Route basename={import.meta.env.BASE_URL} /> */}
-        <Route path="/" element={<Templogin />} />
+        <Route path="/" element={<Temphome />} />
         <Route path="/create" element={<CreateHousehold />} />
         <Route path="/login" element={<Login />} />
-    </Routes>
+        <Route path="/register" element={<Register />} />
+      </Routes>
     </Router>
-    
   );
 }
 
-export default App
+export default App;
