@@ -1,10 +1,12 @@
+import './VoteChips.css'
+
 const choices = [
-  { value: 'must-go', label: 'Must-go', colors: 'bg-peach text-brand-dark' },
-  { value: 'down', label: 'Down for it', colors: 'bg-powder text-ink' },
-  { value: 'hard-pass', label: 'Hard pass', colors: 'bg-background text-ink' },
+  { value: 'must-go', label: 'Must-go' },
+  { value: 'down', label: 'Down for it' },
+  { value: 'pass', label: 'Hard pass' },
 ]
 
-// The parent owns the vote so it can save the choice and update other screens.
+// The parent saves the choice and supplies the latest counts.
 export default function VoteChips({
   value = null,
   onChange,
@@ -15,13 +17,14 @@ export default function VoteChips({
   const cannotVote = disabled || typeof onChange !== 'function'
 
   return (
-    <fieldset disabled={cannotVote} className="m-0 min-w-0 border-0 p-0">
-      <legend className="mb-2 text-sm font-semibold text-ink">{label}</legend>
-      <div className="grid grid-cols-3 gap-2">
+    <fieldset disabled={cannotVote} className="vote-chips">
+      <legend className="vote-chips__legend">{label}</legend>
+
+      <div className="vote-chips__options">
         {choices.map((choice) => {
           const selected = value === choice.value
           const total = counts?.[choice.value]
-          // Missing counts stay hidden; zero is still a valid count.
+          // Show zero, but hide missing or invalid counts.
           const showCount = Number.isSafeInteger(total) && total >= 0
 
           return (
@@ -31,26 +34,23 @@ export default function VoteChips({
               disabled={cannotVote}
               aria-pressed={selected}
               onClick={() => {
-                // Clicking the current choice keeps it selected.
                 if (!cannotVote && !selected) onChange(choice.value)
               }}
               className={[
-                'relative flex min-h-16 min-w-0 flex-col items-center justify-center',
-                'gap-1 rounded-button border-2 px-2 py-3 text-center',
-                'transition-colors focus-visible:outline-2',
-                'focus-visible:outline-offset-2 focus-visible:outline-brand',
-                'disabled:cursor-not-allowed disabled:opacity-50',
-                choice.colors,
-                selected ? 'border-brand shadow-button' : 'border-transparent hover:border-border',
+                'vote-chips__button',
+                `vote-chips__button--${choice.value}`,
+                selected ? 'vote-chips__button--selected' : '',
               ].join(' ')}
             >
               {selected && (
-                <span aria-hidden="true" className="absolute right-1 top-0 text-xs font-bold">
+                <span aria-hidden="true" className="vote-chips__check">
                   ✓
                 </span>
               )}
-              {showCount && <span className="text-lg font-bold leading-none">{total}</span>}
-              <span className="text-xs font-semibold">{choice.label}</span>
+              {showCount && (
+                <span className="vote-chips__count">{total}</span>
+              )}
+              <span className="vote-chips__label">{choice.label}</span>
             </button>
           )
         })}
