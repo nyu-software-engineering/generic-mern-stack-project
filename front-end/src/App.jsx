@@ -2,7 +2,7 @@
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import ResultsPage from "./pages/ResultsPage";
 import HomePage from "./pages/HomePage";
-
+import HotelDetails from "./pages/HotelDetails";
 
 function App() {
   return (
@@ -12,6 +12,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/results" element={<ResultsPage />} />
+        <Route path="/hotel/:id" element={<HotelDetails />} />
       </Routes>
     </div>
 
