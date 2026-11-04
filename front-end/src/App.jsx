@@ -7,6 +7,7 @@ import Temphome from "./pages/temp_home";
 import React from "react";
 import Register from "./pages/register/register";
 import AssetList from "./pages/assets/AssetList";
+import MonthlyActivity from "./pages/monthly_activity/MonthlyActivity";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 // import { Link } from "react-router-dom"
 import "./App.css";
@@ -22,6 +23,7 @@ function App() {
         <Route path="/create" element={<CreateHousehold />} />
         <Route path="/register" element={<Register />} />
         <Route path="/assets" element={<AssetList />} />
+        <Route path="/monthly-activity" element={<MonthlyActivity />} />
       </Routes>
     </Router>
   );
