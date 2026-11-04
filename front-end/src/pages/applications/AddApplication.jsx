@@ -132,6 +132,20 @@ export default function AddApplication() {
       setSaving(false)
     }
   }
+
+  // Save anyway in the duplicate warning
+  async function handleSaveAnyway() {
+    setDuplicate(null)
+    setSaving(true)
+    setSaveError('')
+    try {
+      await saveApplication()
+    } catch (err) {
+      setSaveError(err.message)
+    } finally {
+      setSaving(false)
+    }
+  }
   return (
     <Page
       title="Add Application"
@@ -292,6 +306,10 @@ export default function AddApplication() {
           </p>
         </div>
         <div className="dialog__actions dialog__actions--single">
+          <Button onClick={() => navigate(`/applications/${duplicate?.id}`)}>View existing</Button>
+          <Button variant="secondary" onClick={handleSaveAnyway}>
+            Save anyway
+          </Button>
           <Button variant="ghost" onClick={() => setDuplicate(null)}>
             Cancel
           </Button>
