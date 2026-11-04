@@ -1,13 +1,12 @@
 
 import { useState } from "react";
 import "./DiscoverPeople.css";
-import mockDiscoverPeople from "./mockDiscoverPeople";
 import SearchBar from "./SearchBar";
+import mockDiscoverPeople from "./mockDiscoverPeople";
 
 function DiscoverPeople({ onViewProfile }) {
   const [search, setSearch] = useState("");
   const [interest, setInterest] = useState("All");
-
 
   const filteredPeople = mockDiscoverPeople.filter((person) =>
     (person.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -21,11 +20,10 @@ function DiscoverPeople({ onViewProfile }) {
       <hr />
 
       <SearchBar
-  label="Search by interest or name"
-  value={search}
-  onChange={setSearch}
-/>
-      
+        label="Search by interest or name"
+        value={search}
+        onChange={setSearch}
+      />
 
       <div className="filters">
         <label htmlFor="interest-filter">Filter by interest</label>
@@ -53,11 +51,8 @@ function DiscoverPeople({ onViewProfile }) {
               View profile
             </button>
           </div>
-
         </div>
       ))}
-
-
     </div>
   );
 }

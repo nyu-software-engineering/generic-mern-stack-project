@@ -1,0 +1,15 @@
+.search-bar {
+  margin-bottom: 24px;
+}
+
+.search-bar-label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+/* Layout only - the input look comes from .doin-input */
+.search-bar-input {
+  width: 100%;
+  box-sizing: border-box;
+}
