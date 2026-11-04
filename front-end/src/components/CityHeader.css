@@ -1,0 +1,149 @@
+.city-header {
+  padding: 24px 20px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.city-header-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.city-header-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  color: #4b5563;
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.city-header-back:hover {
+  color: #111827;
+}
+
+.city-header-toggle {
+  display: flex;
+  flex-shrink: 0;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 12px;
+  background: #f3f4f6;
+}
+
+.city-header-view-button {
+  min-width: 60px;
+  min-height: 44px;
+  padding: 8px 14px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #4b5563;
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.city-header-view-button[aria-pressed='true'] {
+  background: #111827;
+  color: #fff;
+}
+
+.city-header-view-button:hover:not([aria-pressed='true']) {
+  background: #e5e7eb;
+  color: #111827;
+}
+
+.city-header-details {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px 12px;
+}
+
+.city-header-heading {
+  flex: 1 1 190px;
+  min-width: 0;
+}
+
+.city-header-title {
+  margin: 0;
+  font-size: clamp(28px, 7vw, 36px);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.035em;
+  overflow-wrap: anywhere;
+}
+
+.city-header-description {
+  margin: 10px 0 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #6b7280;
+}
+
+.city-header-members {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  min-height: 44px;
+  border-radius: 8px;
+  color: #4b5563;
+  text-decoration: none;
+}
+
+.city-header-members:hover {
+  color: #111827;
+}
+
+.city-header-avatars {
+  display: flex;
+  padding-left: 8px;
+}
+
+.city-header-avatar {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  margin-left: -8px;
+  overflow: hidden;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: #e5e7eb;
+  color: #374151;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.city-header-avatar-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.city-header-avatar-extra {
+  background: #111827;
+  color: #fff;
+}
+
+.city-header-member-label {
+  font-size: 12px;
+}
+
+.city-header-back:focus-visible,
+.city-header-members:focus-visible,
+.city-header-view-button:focus-visible {
+  outline: 3px solid #2563eb;
+  outline-offset: 3px;
+}
