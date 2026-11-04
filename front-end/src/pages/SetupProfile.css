@@ -12,10 +12,6 @@
 .setup-profile-container {
   width: 100%;
   max-width: 440px;
-  background-color: white;
-  border: 1px solid #ddd;
-  border-radius: 16px;
-  padding: 24px;
   box-sizing: border-box;
 }
 

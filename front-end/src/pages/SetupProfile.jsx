@@ -50,7 +50,7 @@ export default function SetupProfile() {
 
   return (
     <main className="setup-profile-page">
-      <div className="setup-profile-container">
+      <div className="doin-card setup-profile-container">
         <header className="setup-profile-header">
           <h1>Set up your profile</h1>
         </header>
