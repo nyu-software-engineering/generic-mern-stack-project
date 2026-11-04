@@ -1,6 +1,7 @@
 form {
     border: none;
     margin-bottom: 20px;
+    flex-direction: column;
 }
 
 form > div {
@@ -15,12 +16,14 @@ form textarea {
     padding: 8px;
     font-size: 1em;
     box-sizing: border-box;
+    align-items: center;
 }
 
 form input {
     margin-top: 16px;
     padding: 8px 16px;
     cursor: pointer;
+    align-items: center;
 }
 
 .PostSublet-Feedback {
