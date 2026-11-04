@@ -23,24 +23,32 @@ export default function Dashboard() {
   ];
 
   return (
-    <div className="dashboard-page">
-      <header className="header">
-        <h2 className="header-logo">Jargonot</h2>
-        <button className="header-button">Log Out</button>
+    <div className="min-h-screen bg-white">
+      <header className="flex items-center justify-between border-b border-gray-200 px-6 py-4">
+        <h2 className="text-xl font-bold text-purple-600">Jargonot</h2>
+        <button className="font-semibold text-purple-600 hover:underline">
+          Log Out
+        </button>
       </header>
 
-      <main className="main-content">
-        <section className="dashboard-intro">
-          <h1 className="dashboard-title">My Dashboard</h1>
-          <p className="dashboard-subtitle">Welcome back, {userName}!</p>
+      <main className="mx-auto w-full max-w-4xl px-6 py-10">
+        <section className="mb-8">
+          <h1 className="mb-1 text-3xl font-bold">My Dashboard</h1>
+          <p className="text-gray-600">Welcome back, {userName}!</p>
         </section>
 
-        <section className="dashboard-cards">
+        <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {cards.map((card) => (
-            <article key={card.title} className="dashboard-card">
-              <h3 className="card-title">{card.title}</h3>
-              <p className="card-description">{card.description}</p>
-              <a className="card-link" href={card.href}>
+            <article
+              key={card.title}
+              className="rounded-lg border border-gray-200 p-6"
+            >
+              <h3 className="mb-2 text-lg font-bold">{card.title}</h3>
+              <p className="mb-4 text-gray-600">{card.description}</p>
+              <a
+                className="font-semibold text-purple-600 hover:underline"
+                href={card.href}
+              >
                 {card.linkText}
               </a>
             </article>

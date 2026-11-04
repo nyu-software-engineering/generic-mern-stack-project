@@ -23,35 +23,50 @@ export default function Favorite() {
   ];
 
   return (
-    <div className="favorite-page">
-      <header className="header">
-        <h2 className="header-logo">Jargonot</h2>
-        <a className="header-link" href="/dashboard">My Dashboard</a>
+    <div className="min-h-screen bg-white">
+      <header className="flex items-center justify-between border-b border-gray-200 px-6 py-4">
+        <h2 className="text-xl font-bold text-purple-600">Jargonot</h2>
+        <a
+          className="font-semibold text-purple-600 hover:underline"
+          href="/dashboard"
+        >
+          My Dashboard
+        </a>
       </header>
 
-      <main className="main-content">
-        <section className="favorite-intro">
-          <h1 className="favorite-title">My Favourites</h1>
-          <p className="favorite-subtitle">Your saved papers</p>
+      <main className="mx-auto w-full max-w-4xl px-6 py-10">
+        <section className="mb-8">
+          <h1 className="mb-1 text-3xl font-bold">My Favourites</h1>
+          <p className="text-gray-600">Your saved papers</p>
         </section>
 
-        <section className="favorite-list">
+        <section className="space-y-4">
           {favorites.length === 0 ? (
-            <p className="favorite-empty">You haven't saved any papers yet.</p>
+            <p className="rounded-lg border border-gray-200 p-6 text-gray-600">
+              You haven't saved any papers yet.
+            </p>
           ) : (
             favorites.map((paper) => (
-              <article key={paper.id} className="article-card">
-                <div className="article-body">
-                  <p className="article-meta">
+              <article
+                key={paper.id}
+                className="rounded-lg border border-gray-200 p-6"
+              >
+                <div>
+                  <p className="mb-2 text-sm text-gray-500">
                     {paper.category} | {paper.source} | {paper.readTime}
                   </p>
-                  <h4 className="article-title">{paper.title}</h4>
-                  <p className="article-excerpt">{paper.excerpt}</p>
-                  <div className="article-actions">
-                    <a className="article-link" href={paper.href}>
+                  <h4 className="mb-2 text-lg font-bold">{paper.title}</h4>
+                  <p className="mb-4 text-gray-600">{paper.excerpt}</p>
+                  <div className="flex items-center gap-4">
+                    <a
+                      className="font-semibold text-purple-600 hover:underline"
+                      href={paper.href}
+                    >
                       Read Article →
                     </a>
-                    <button className="article-remove">Remove</button>
+                    <button className="text-sm font-medium text-gray-500 hover:text-gray-700">
+                      Remove
+                    </button>
                   </div>
                 </div>
               </article>
