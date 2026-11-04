@@ -477,21 +477,63 @@ export function searchPlacesInCity(cityId, query) {
     }))
 }
 
-/** Sprint-1 fake save, Navigates to success either way. */
-export function mockSavePlaceToList({ placeId, userId = currentUserId }) {
+/**
+ * Save a place onto the user's city list in memory (demoData arrays).
+ * Creates a new list if the user does not have one for that city yet.
+ */
+export function savePlaceToList({ placeId, lookup, userId = currentUserId }) {
   const place = getPlaceById(placeId)
-  if (!place) return { ok: false }
-  const list = getListForUserAndCity(userId, place.cityId)
+  if (!place) {
+    return { ok: false, reason: 'missing_place' }
+  }
+
   const duplicate = getDuplicateSavedPlace(placeId, userId)
   if (duplicate) {
     return { ok: false, reason: 'duplicate', savedPlaceId: duplicate.id, placeId }
   }
+
+  let list = getListForUserAndCity(userId, place.cityId)
+  if (!list) {
+    const city = getCityById(place.cityId)
+    list = {
+      id: `l_${userId}_${place.cityId}`,
+      cityId: place.cityId,
+      ownerId: userId,
+      memberIds: [userId],
+      description: `${city?.name ?? 'City'} list.`,
+      inviteCode: 'NEW-MOCK',
+      createdAt: new Date().toISOString().slice(0, 10),
+    }
+    lists.push(list)
+  }
+
+  const savedPlace = {
+    id: `sp_${Date.now()}`,
+    listId: list.id,
+    placeId,
+    savedBy: userId,
+    sourcePlatform: lookup?.platform ?? 'Instagram',
+    sourceUrl: lookup?.url ?? '',
+    thumbnailUrl: lookup?.thumbnailUrl ?? place.photoUrl,
+    savedAt: new Date().toISOString(),
+  }
+  savedPlaces.push(savedPlace)
+
+  const city = getCityById(place.cityId)
   return {
     ok: true,
-    listId: list?.id ?? null,
     placeId,
+    placeName: place.name,
     cityId: place.cityId,
+    cityName: city?.name ?? '',
+    listId: list.id,
+    savedPlaceId: savedPlace.id,
   }
+}
+
+/** @deprecated Use savePlaceToList */
+export function mockSavePlaceToList(args) {
+  return savePlaceToList(args)
 }
 
 /**
