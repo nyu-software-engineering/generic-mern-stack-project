@@ -24,7 +24,7 @@ import './Statistics.css'
 async function loadStatistics() {
   const statistics = await api.getStatistics()
 
-  return { statistics }
+  return  statistics 
 }
 
 function formatNumber(value) {
@@ -56,12 +56,12 @@ export default function Statistics() {
 
   const stats = data ?? {}
 
-  const totalApplications = stats.totalApplications ?? 0
-  const pending = stats.pending ?? 0
+  const totalApplications = stats.totalApplied ?? 0
+  const pending = stats.active ?? 0
   const interviews = stats.interviews ?? 0
   const offers = stats.offers ?? 0
-  const rejected = stats.rejected ?? 0
-
+  const rejected = stats.rejections ?? 0
+  
   const responseRate =
     stats.responseRate ??
     (totalApplications > 0 ? 
