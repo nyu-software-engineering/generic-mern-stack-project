@@ -21,7 +21,9 @@ Each task in a sprint backlog will have a member assigned to it. Each member is 
 Apps required:
 
 Git
+
 NodeJS
+
 VSCode
 
 App for database storing (TBD).
