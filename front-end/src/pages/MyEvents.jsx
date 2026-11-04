@@ -9,8 +9,10 @@ const MyEvents = (props) => {
 
   // Find events the current user has joined
   const joinedEvents = currentUser
-    ? events.filter((event) => event.attendeeIds.includes(currentUser.id))
-    : [];
+    ? events.filter((event) =>
+      (event.attendeeIds ?? []).includes(currentUser.id)
+    )
+  : [];
 
   // Find events the current user created
   const hostingEvents = currentUser
