@@ -5,9 +5,10 @@ import{
   Route,
   Routes,
 } from "react-router-dom"
-import Profile from "./components/profile/Profile"
-import ProfileSettings from "./components/profile/ProfileSettings"
+import Profile from "./components/Profile"
+import ProfileSettings from "./components/ProfileSettings"
 import "./App.css"
+import Chat from "./components/Chat"
 
 const App = () => {
   const [user, setUser] = useState(null)
@@ -57,6 +58,7 @@ const App = () => {
       <Routes>
           <Route path="/" element={<Navigate to="/profile" replace />} />
           <Route path="/profile" element={<Profile user={user} />} />
+          <Route path="/chat" element={<Chat />} />
           <Route 
             path="/profile/settings"
             element={<ProfileSettings />}

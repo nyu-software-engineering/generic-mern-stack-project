@@ -1,0 +1,145 @@
+.profile-page{
+    display: flex;
+    flex-direction: column;
+    max-width: 420px;
+    min-height: 100vh;
+    margin: 0 auto;
+    background-color: #ffffff;
+    border: 1px solid #eeeeee;
+    font-family: Arial, sans-serif;
+    color: #222222;
+}
+
+.profile-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 20px;
+    border-bottom: 1px solid #eeeeee;
+}
+
+.profile-brand{
+    font-size: 20px;
+    font-weight: bold;
+    color: #7164c7
+}
+
+.profile-chat{
+    padding: 8px 14px;
+    background-color: #f1effa;
+    border-radius: 8px;
+    color: #7164c7;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.profile-content{
+    flex: 1;
+    padding: 24px 20px;
+}
+
+.profile-top{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.profile-picture{
+    width: 100px;
+    height: 100px;
+    border-radius: 12px;
+    object-fit: cover;
+}
+
+.profile-settings-link{
+    font-size: 28px;
+    color: #333333;
+    text-decoration: none;
+}
+
+.profile-name{
+    margin: 14px 0 4px;
+    font-size: 22px;
+}
+
+.profile-username{
+    margin: 0;
+    font-size: 15px;
+    color: #777777
+}
+
+.profile-hobbies{
+    margin-top: 36px;
+}
+
+.profile-section title{
+    margin: 0 0 16px;
+    font-size: 18px;
+}
+
+.profile-empty-hobbies{
+    padding: 18px;
+    background-color: #f5f4f9;
+    border-radius: 8px;
+    color: #777777;
+    font-size: 14px;
+}
+
+.profile-edit-button{
+    display: block;
+    margin: 24px 0 40px;
+    padding: 13px;
+    border: 1px;
+    border-radius: 8px;
+    color: #7164c7;
+    font-size: 15px;
+    text-align: center;
+    text-decoration: none;
+}
+
+.profile-edit-button:hover{
+    background-color: #f5f4fb;
+}
+
+.profile-posts-title{
+    margin: 0 0 18px;
+    text-align: center;
+    font-size: 18px;
+}
+
+.profile-post-grid{
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 8px;
+}
+
+.profile-post-image{
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.profile-navigation{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 18px 4px;
+    border-top: 1px solid #eeeeee;
+}
+
+.profile-nav-item{
+    font-size: 12px;
+    color: #777777;
+}
+
+.profile-nav-active{
+    color: #7164c7;
+    font-weight: bold;
+}
+
+@media (max-width: 420px){
+    .profile-page{
+        border:none;
+    }
+}
