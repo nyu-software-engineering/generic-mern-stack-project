@@ -1,9 +1,18 @@
+import { useState } from 'react'
+import heroImg from './assets/hero.png'
+import reactLogo from './assets/react.svg'
+import viteLogo from './assets/vite.svg'
+import './App.css'
+import MyMaps from "./MyMaps";
+import MapEditor from "./Map-Editor";
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 
-import { useState } from "react";
-import "./App.css";
+
+
 
 function App() {
   const [isRegister, setIsRegister] = useState(false);
+  const [count, setCount] = useState(0)
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -11,6 +20,10 @@ function App() {
   }
 
   return (
+    <Router>
+      <Routes>
+        <Route path="/" element={
+    
     <div className="page">
       <div className="form-box">
         <h1>MapMaker</h1>
@@ -77,6 +90,16 @@ function App() {
         </button>
       </div>
     </div>
+
+     } />
+
+        <Route path="/MyMaps" element={<MyMaps />} />
+        <Route path="/Map-Editor" element={<MapEditor />} />
+
+      </Routes>
+    </Router>
+
+    
   );
 }
 
