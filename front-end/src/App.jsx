@@ -3,6 +3,7 @@ import { Navigate, NavLink, Route, Routes } from 'react-router'
 import Home from './pages/Home.jsx'
 import Search from './pages/Search.jsx'
 import Profile from './pages/Profile.jsx'
+import EditProfile from './pages/EditProfile.jsx'
 import ServiceDetails from './pages/ServiceDetails.jsx'
 import BookingRequest from './pages/BookingRequest.jsx'
 import Bookings from './pages/Bookings.jsx'
@@ -54,6 +55,7 @@ function App() {
 
             {/* Profile page */}
             <Route path="/profile" element={<Profile setUser={setUser} />} />
+            <Route path="/profile/edit" element={<EditProfile />}/>
 
             {/* Other */}
             <Route path="/login" element={<Navigate to="/" replace />}/>
