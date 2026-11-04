@@ -1,0 +1,59 @@
+/* Styles for the Search page only. Buttons and cards use the shared
+   styles, and the search bar and filter bar bring their own styles. */
+
+.search-page {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.search-page h1 {
+  color: #202638;
+}
+
+.search-page h2 {
+  color: #202638;
+  margin-top: 28px;
+}
+
+/* A little space under the search bar and above each list. */
+.search-page .search-bar {
+  margin-bottom: 10px;
+}
+
+/* The small label above each filter bar. */
+.search-filter-label {
+  color: #555f7a;
+  margin-bottom: 4px;
+}
+
+.search-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.search-event-card {
+  background-color: #ffffff;
+  border: 1px solid #e3e6f0;
+  border-radius: 8px;
+  padding: 12px 16px;
+}
+
+.search-person-card {
+  background-color: #ffffff;
+  border: 1px solid #e3e6f0;
+  border-radius: 8px;
+  padding: 12px 16px;
+}
+
+.search-event-card h3 {
+  margin-top: 0;
+  color: #202638;
+}
+
+.search-person-card h3 {
+  margin-top: 0;
+  color: #202638;
+}

@@ -1,0 +1,22 @@
+
+/* Shared Global Styles for Doin */
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  color: #202638;
+  background-color: #f5f6fb;
+}
+
+/* Consistent typography */
+h1, h2, h3 {
+  color: #202638;
+}
+
+button {
+    cursor: pointer;
+
+}
+img{
+    max-width: 100%;
+}
