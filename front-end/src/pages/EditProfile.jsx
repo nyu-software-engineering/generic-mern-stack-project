@@ -39,13 +39,14 @@ export default function EditProfile() {
 
   return (
     <main className="edit-profile-page">
-      <div className="edit-profile-container">
+      <div className="doin-card edit-profile-card">
         <h1 className="edit-profile-title">Edit profile</h1>
 
         <form onSubmit={handleSubmit}>
           <div className="edit-profile-field">
             <label htmlFor="name_field">Name:</label>
             <input
+              className="doin-input edit-profile-input"
               id="name_field"
               type="text"
               value={name}
@@ -59,6 +60,7 @@ export default function EditProfile() {
           <div className="edit-profile-field">
             <label htmlFor="location_field">Location:</label>
             <input
+              className="doin-input edit-profile-input"
               id="location_field"
               type="text"
               value={location}
@@ -72,6 +74,7 @@ export default function EditProfile() {
           <div className="edit-profile-field">
             <label htmlFor="bio_field">Bio:</label>
             <input
+              className="doin-input edit-profile-input"
               id="bio_field"
               type="text"
               value={bio}
@@ -103,10 +106,10 @@ export default function EditProfile() {
           {saved && <p className="edit-profile-saved">Saved!</p>}
 
           <div className="edit-profile-actions">
-            <button type="submit" className="edit-profile-button edit-profile-button-primary">
+            <button type="submit" className="doin-button doin-button--primary">
               Save
             </button>
-            <Link to="/profile" className="edit-profile-button">
+            <Link to="/profile" className="doin-button doin-button--secondary">
               Back to profile
             </Link>
           </div>
