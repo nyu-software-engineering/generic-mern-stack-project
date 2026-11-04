@@ -5,6 +5,7 @@ import {
   Button,
   FileUpload,
   FormSection,
+  Modal,
   Page,
   SegmentedControl,
   SelectField,
@@ -13,7 +14,7 @@ import {
   TextField,
 } from '../../components'
 import { APPLICATION_STATUSES, JOB_TYPES } from '../../constants'
-import { todayString } from '../../utils/format'
+import { formatDate, todayString } from '../../utils/format'
 import { hasNoErrors, validateEmail, validateRequired } from '../../utils/validation'
 import './AddApplication.css'
 
@@ -42,6 +43,7 @@ export default function AddApplication() {
   const [saved, setSaved] = useState(false) // true when the "Application saved" pop-up should show
   const [saveError, setSaveError] = useState('') // message shown if saving fails
   const [resumeError, setResumeError] = useState('') // message shown if the chosen file isn't a PDF
+  const [duplicate, setDuplicate] = useState(null) // an existing application with the same company and position
 
   // Company and position are required; every other field is optional
   const errors = {
@@ -100,20 +102,30 @@ export default function AddApplication() {
     setForm({ ...form, resume: null })
   }
 
-  async function handleSave() {
-    setSubmitted(true)
-    if (!hasNoErrors(errors) || !hasNoErrors(recruiterEmailErrors)) return
-
+  // Sends the application to the api and shows the "Application saved" pop-up
+  async function saveApplication() {
     // Don't save recruiter contacts that were left completely empty
     const recruiters = form.recruiters.filter(
       (recruiter) => recruiter.name.trim() || recruiter.email.trim() || recruiter.phone.trim(),
     )
+    await api.createApplication({ ...form, recruiters })
+    setSaved(true)
+  }
+
+  async function handleSave() {
+    setSubmitted(true)
+    if (!hasNoErrors(errors) || !hasNoErrors(recruiterEmailErrors)) return
 
     setSaving(true)
     setSaveError('')
-    try {
-      await api.createApplication({ ...form, recruiters })
-      setSaved(true)
+      try {
+      // If this company and position were already added, warn the user instead of saving
+      const existing = await api.findDuplicateApplication({ company: form.company, position: form.position })
+      if (existing) {
+        setDuplicate(existing)
+        return
+      }
+      await saveApplication()
     } catch (err) {
       setSaveError(err.message)
     } finally {
@@ -121,6 +133,19 @@ export default function AddApplication() {
     }
   }
 
+  // Save anyway in the duplicate warning
+  async function handleSaveAnyway() {
+    setDuplicate(null)
+    setSaving(true)
+    setSaveError('')
+    try {
+      await saveApplication()
+    } catch (err) {
+      setSaveError(err.message)
+    } finally {
+      setSaving(false)
+    }
+  }
   return (
     <Page
       title="Add Application"
@@ -271,6 +296,25 @@ export default function AddApplication() {
           </p>
         )}
       </div>
+
+      <Modal open={duplicate !== null} onClose={() => setDuplicate(null)} title="Already saved">
+        <div className="dialog__body">
+          <h2 className="dialog__title">Already saved</h2>
+          <p className="dialog__message">
+            You already have {duplicate?.company} – {duplicate?.position}, added{' '}
+            {formatDate(duplicate?.dateApplied)}. Save this one anyway?
+          </p>
+        </div>
+        <div className="dialog__actions dialog__actions--single">
+          <Button onClick={() => navigate(`/applications/${duplicate?.id}`)}>View existing</Button>
+          <Button variant="secondary" onClick={handleSaveAnyway}>
+            Save anyway
+          </Button>
+          <Button variant="ghost" onClick={() => setDuplicate(null)}>
+            Cancel
+          </Button>
+        </div>
+      </Modal>
 
       <SuccessDialog
         open={saved}
