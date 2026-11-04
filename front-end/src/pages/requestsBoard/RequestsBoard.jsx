@@ -36,7 +36,7 @@ function RequestsBoard() {
       </div>
 
       {requests.length === 0 ? (
-        <p>No requests yet.</p>
+        <p>{type === 'item' ? 'Item requests are coming soon.' : 'No requests yet.'}</p>
       ) : (
         <div className="rental-grid">
           {requests.map((request) => (

@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { CURRENT_USER_ID } from '../../services/mockDataService'
 import { REQUEST_TYPES } from '../../services/requestsBoard'
 
 const formatDate = (isoDate) =>
@@ -13,6 +14,8 @@ function RequestCard({ request }) {
     ? `${formatDate(request.neededBy)} at ${request.neededTime}`
     : formatDate(request.neededBy)
 
+  const isOwnRequest = request.requesterId === CURRENT_USER_ID
+
   return (
     <article className="rental-card">
       <div>
@@ -21,7 +24,7 @@ function RequestCard({ request }) {
         {request.borrowDuration && <p>For {request.borrowDuration}</p>}
         <p>Area: {request.approximateArea}</p>
         <p>{request.details}</p>
-        <Link to="/inbox" className="request-action">Message</Link>
+        {!isOwnRequest && <Link to="/inbox" className="request-action">Message</Link>}
       </div>
       <span className="rental-status">{REQUEST_TYPES[request.type]}</span>
     </article>
