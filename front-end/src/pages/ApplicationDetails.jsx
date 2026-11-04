@@ -17,6 +17,7 @@ function ApplicationDetails({
   job,
   onBack,
   onNoteSave,
+  onRemove,
 }) {
   const [draftNote, setDraftNote] = useState(
     application.note ?? ""
@@ -34,6 +35,18 @@ function ApplicationDetails({
     onNoteSave("")
   }
 
+  function handleRemove() {
+    const confirmed = window.confirm(
+      "Are you sure you want to remove this application from your Tracker?"
+    )
+
+    if (!confirmed) {
+      return
+    }
+
+    onRemove()
+  }
+
   return (
     <main className="app">
       <button onClick={onBack}>
@@ -43,7 +56,6 @@ function ApplicationDetails({
       <h1>Application Details</h1>
 
       <h2>{job?.title || "Unknown job"}</h2>
-
       <p>{job?.company || "Unknown company"}</p>
 
       <section>
@@ -103,6 +115,18 @@ function ApplicationDetails({
             Clear Note
           </button>
         </div>
+      </section>
+
+      <section>
+        <h3>Remove Application</h3>
+
+        <p>
+          Removing this application will remove it from your Tracker.
+        </p>
+
+        <button onClick={handleRemove}>
+          Remove Application
+        </button>
       </section>
     </main>
   )

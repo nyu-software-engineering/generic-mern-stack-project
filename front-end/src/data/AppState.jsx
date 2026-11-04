@@ -61,6 +61,14 @@ function AppState(props) {
     setApplications(nextApplications)
   }
 
+  function removeApplication(applicationId) {
+  setApplications((currentApplications) =>
+    currentApplications.filter(
+      (application) => application.id !== applicationId
+    )
+  )
+}
+
   function addPost(jobId, post) {
     const nextPost = {
       id: 'post-' + Date.now(),
@@ -111,6 +119,7 @@ function AppState(props) {
     addPost,
     resetAll,
     matchFor,
+    removeApplication,
   }
 
   return (

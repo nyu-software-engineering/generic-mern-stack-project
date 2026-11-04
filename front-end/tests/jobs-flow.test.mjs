@@ -501,3 +501,94 @@ test('search with read-only filters hides filter actions and removes an open she
   await enterSearch('Vue')
   assert.deepEqual(cardIds(), ['intern-3'])
 })
+
+const locationRecords = searchRecords.map((job, index) => ({
+  ...job, location: ['New York, NY', 'Boston, MA', 'new york, ny', 'Remote, United States'][index],
+}))
+
+for (const navigation of ['link', 'history']) {
+  test(`locations combine with query and every filter, survive ${navigation} Back, and reset independently of query/sort`, async () => {
+    const requests = []
+    globalThis.fetch = (url, options) => {
+      requests.push({ path: String(url), method: options?.method ?? 'GET' })
+      return Promise.resolve(response(String(url) === '/api/jobs' ? locationRecords : locationRecords.find((job) => String(url) === `/api/jobs/${job.id}`)))
+    }
+    await mount()
+    await waitFor(() => document.querySelectorAll('.job-card').length === 4)
+    const initialListRequests = requests.filter(({ path }) => path === '/api/jobs').length
+    const requestsAfterMount = requests.length
+    await enterSearch('React')
+    await chooseSort('newest')
+    await click(buttonNamed('Filters'))
+    const locationFieldset = [...document.querySelectorAll('fieldset')].find((item) => item.querySelector('legend')?.textContent === 'Location')
+    assert.ok(locationFieldset, 'Expected the labelled Location fieldset')
+    assert.deepEqual([...locationFieldset.querySelectorAll('label')].map((label) => label.textContent), ['Boston, MA', 'New York, NY', 'Remote, United States'])
+    await click(checkboxNamed('New York, NY'))
+    await click(checkboxNamed('Boston, MA'))
+    assert.deepEqual(cardIds(), ['intern-0', 'intern-2', 'intern-1'])
+    assert.ok(checkboxNamed('Remote, United States'), 'Choices come from the full feed even when search excludes a location')
+    await click(checkboxNamed('Internship'))
+    await click(checkboxNamed('Only show roles that sponsor visas'))
+    await act(async () => {
+      const deadline = document.querySelector('dialog select')
+      deadline.value = '7'
+      deadline.dispatchEvent(new window.Event('change', { bubbles: true }))
+    })
+    assert.deepEqual(cardIds(), ['intern-0'])
+    await click(buttonNamed('Show 1 Result'))
+    await click(document.querySelector('button[aria-label="Remove New York, NY filter"]'))
+    assert.deepEqual(cardIds(), [])
+    assert.match(document.body.textContent, /No matching opportunities/)
+    assert.ok(document.querySelector('button[aria-label="Remove Boston, MA filter"]'))
+    assert.ok(document.querySelector('button[aria-label="Remove Internship filter"]'))
+    await click(buttonNamed('Filters'))
+    assert.equal(checkboxNamed('Boston, MA').checked, true)
+    assert.equal(checkboxNamed('New York, NY').checked, false)
+    await click(buttonNamed('Show 0 Results'))
+    await click(buttonNamed('Filters'))
+    await click(checkboxNamed('New York, NY'))
+    await click(buttonNamed('Show 1 Result'))
+    await click(document.querySelector('.job-card'))
+    await waitFor(() => document.querySelector('h1')?.textContent === jobs[0].title)
+    if (navigation === 'link') await click(document.querySelector('a.job-back'))
+    else await act(async () => { window.history.back(); await tick() })
+    await waitFor(() => document.querySelectorAll('.job-card').length === 1)
+    assert.deepEqual(cardIds(), ['intern-0'])
+    assert.ok(document.querySelector('button[aria-label="Remove Boston, MA filter"]'))
+    assert.ok(document.querySelector('button[aria-label="Remove New York, NY filter"]'))
+    await click(buttonNamed('Clear all'))
+    assert.deepEqual(cardIds(), ['intern-0', 'intern-2', 'intern-1'])
+    assert.equal(document.querySelector('input[aria-label="Search jobs"]').value, 'React')
+    assert.equal(document.querySelector('select[aria-label="Sort jobs"]').value, 'newest')
+    await click(buttonNamed('Filters'))
+    assert.ok([...document.querySelectorAll('dialog input[type="checkbox"]')].every((input) => !input.checked))
+    assert.equal(document.querySelector('dialog select').value, '')
+    assert.ok(requests.slice(requestsAfterMount).every(({ path, method }) => method === 'GET' && (path === '/api/jobs' || path === '/api/jobs/intern-0')), 'Location filtering makes no additional profile or mutation request after shared-state initialization')
+    assert.equal(requests.filter(({ path }) => path === '/api/jobs').length, initialListRequests, 'Selection and navigation reuse the loaded feed')
+  })
+}
+
+test('a selected location stays removable when a refreshed feed no longer includes it', async () => {
+  let records = locationRecords
+  let filters = { jobTypes: [], locations: ['New York, NY', 'Boston, MA'], sponsorsOnly: false, deadlineDays: null }
+  function renderBrowse() {
+    root.render(createElement(BrowseJobs, {
+      jobs: records, filters, getJobHref: (id) => `#/jobs/${id}`,
+      onFiltersChange: (value) => { filters = value; renderBrowse() },
+    }))
+  }
+  await act(async () => renderBrowse())
+  assert.equal(document.querySelectorAll('.job-card').length, 3)
+  records = locationRecords.filter((job) => job.location === 'Remote, United States')
+  await act(async () => renderBrowse())
+  assert.deepEqual(cardIds(), [])
+  assert.ok(document.querySelector('button[aria-label="Remove New York, NY filter"]'))
+  await click(document.querySelector('button[aria-label="Remove New York, NY filter"]'))
+  assert.deepEqual(filters.locations, ['Boston, MA'])
+  assert.deepEqual(cardIds(), [])
+  await click(buttonNamed('Filters'))
+  await click(buttonNamed('Clear all'))
+  assert.deepEqual(filters.locations, [])
+  await click(buttonNamed('Show 1 Result'))
+  assert.deepEqual(cardIds(), ['intern-3'])
+})

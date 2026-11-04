@@ -97,6 +97,11 @@
   accent-color: var(--color-focus);
 }
 
+.filter-choice span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
 .filter-sheet-footer {
   flex-shrink: 0;
   padding: 16px 16px max(16px, env(safe-area-inset-bottom));
