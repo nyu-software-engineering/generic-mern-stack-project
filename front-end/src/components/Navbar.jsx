@@ -15,7 +15,7 @@ function Navbar() {
     { name: 'Messages', path: '/inbox' },
     { name: 'Profile', path: '/profile' },
     {
-      name: 'Demo reputation',
+      name: 'Reputation',
       path: `/users/${CURRENT_USER_ID}/reputation`,
     },
   ]
