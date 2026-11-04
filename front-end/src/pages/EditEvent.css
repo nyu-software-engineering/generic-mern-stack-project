@@ -1,0 +1,61 @@
+/* Edit Event page styles. The card surface, the inputs, and the
+   buttons come from the shared styles (styles/components.css).
+   This file only holds the layout and the parts the shared
+   styles do not cover. */
+
+.edit-event-page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.edit-event-card {
+  width: 100%;
+  max-width: 440px;
+  box-sizing: border-box;
+}
+
+.edit-event-title {
+  font-size: 28px;
+  margin: 0 0 24px;
+}
+
+/* One field per row: a label above a full width input */
+
+.edit-event-field {
+  margin-bottom: 16px;
+}
+
+.edit-event-field label {
+  display: block;
+  font-weight: 600;
+  margin: 0 0 8px;
+}
+
+/* Layout only. The input look comes from the shared input class */
+.edit-event-input {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.edit-event-textarea {
+  width: 100%;
+  box-sizing: border-box;
+  font-family: inherit;
+  resize: vertical;
+}
+
+.edit-event-saved {
+  color: #635bff;
+  font-weight: 600;
+}
+
+/* Save and cancel buttons. Their styles are the shared button class */
+
+.edit-event-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
