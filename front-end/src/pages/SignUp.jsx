@@ -1,19 +1,34 @@
 import { useState } from 'react'
+import { signUp } from '../data/api.js'
 import './Auth.css'
 
 const EMPTY_FORM = { name: '', email: '', password: '', confirm: '' }
+const SIGN_UP_ERROR = "Email in use or passwords don't match. Sign in or use matching passwords."
 
 function SignUp() {
   const [form, setForm] = useState(EMPTY_FORM)
-  const [error] = useState('')
-  const [submitting] = useState(false)
+  const [error, setError] = useState('')
+  const [submitting, setSubmitting] = useState(false)
 
   function update(field, value) {
     setForm((previous) => ({ ...previous, [field]: value }))
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault()
+    setError('')
+    if (form.password !== form.confirm) {
+      setError(SIGN_UP_ERROR)
+      return
+    }
+    setSubmitting(true)
+    try {
+      await signUp({ name: form.name.trim(), email: form.email.trim(), password: form.password })
+      window.location.hash = '#/profile/edit'
+    } catch (problem) {
+      setError(problem.message)
+      setSubmitting(false)
+    }
   }
 
   return (
