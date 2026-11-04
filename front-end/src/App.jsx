@@ -5,7 +5,7 @@ import Signup from "./pages/Signup";
 import Explore from "./pages/Explore";
 import ReviewForm from "./components/ReviewForm";
 import Messages from "./pages/Messages";
-import Post from "./pages/Post";
+import PostSubletPage from "./pages/PostSubletPage";
 import Profile from "./pages/Profile"
 import MyListings from "./pages/MyListings"
 import SavedListings from "./pages/SavedListings";
@@ -36,7 +36,7 @@ function App() {
           <Route path = "reviewForm" element = {<ReviewForm />} />
           <Route path = "signUp" element = {<Signup />} />
           <Route path = "messages" element = {<Messages />} />
-          <Route path = "post" element = {<Post />} />
+          <Route path = "post" element = {<PostSubletPage />} />
           <Route path = "profile" element = {<Profile />} />
           <Route
             path="saved"

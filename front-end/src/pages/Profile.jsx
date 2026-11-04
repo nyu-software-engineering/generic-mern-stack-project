@@ -33,7 +33,7 @@ export default function Profile({ user = USER, onLogout }) {
 
   return (
     <div>
-      <Header onMenu={() => {}} />
+      {/* <Header onMenu={() => {}} /> */}
 
       <div className="page">
         <h2>Profile</h2>
