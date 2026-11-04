@@ -1,0 +1,56 @@
+.messages-page {
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.messages-page > h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.messages-page > p {
+  font-size: 14px;
+  color: #666;
+}
+
+.conversation-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 20px;
+  padding: 0;
+  list-style: none;
+}
+
+.chat-dashboard-element {
+  width: 100%;
+  padding: 10px;
+  text-align: left;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.chat-dashboard-element h2 {
+  margin: 0 0 7px;
+  font-size: 16px;
+}
+
+.chat-dashboard-element p {
+  margin: 0;
+  color: #666;
+  font-size: 12px;
+}
+
+@media (max-width: 500px) {
+  .messages-page {
+    padding: 0 5px;
+  }
+
+  .messages-page > h2 {
+    font-size: 21px;
+  }
+} 
