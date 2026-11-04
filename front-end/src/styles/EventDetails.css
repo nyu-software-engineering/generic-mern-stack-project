@@ -1,0 +1,183 @@
+/* Event Details Page */
+
+.event-details {
+  max-width: 800px;
+  margin: 30px auto;
+  padding: 0 16px;
+}
+
+.event-details-card {
+  padding: 0;
+  overflow: hidden;
+}
+
+.event-details-image {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  display: block;
+}
+
+.event-details-content {
+  padding: 25px;
+}
+
+.event-details-content h1 {
+  font-size: 28px;
+  margin: 15px 0 10px;
+}
+
+.event-category {
+  display: inline-block;
+  background-color: #eeedff;
+  color: #635bff;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.event-organizer {
+  color: #666;
+  font-size: 14px;
+}
+
+.event-section {
+  margin-top: 30px;
+}
+
+.event-section h2 {
+  font-size: 20px;
+  margin-bottom: 12px;
+}
+
+.event-section p {
+  line-height: 1.6;
+}
+
+.event-info {
+  background-color: #f5f6fb;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.event-info p {
+  margin: 10px 0;
+}
+
+/* Mobile Styling */
+
+@media (max-width: 600px) {
+  .event-details {
+    margin: 15px auto;
+    padding: 0 10px;
+  }
+
+  .event-details-image {
+    height: 200px;
+  }
+
+  .event-details-content {
+    padding: 15px;
+  }
+
+  .event-details-content h1 {
+    font-size: 24px;
+  }
+}
+/* Attendee Section */
+
+.attendee-summary {
+  background-color: #f5f6fb;
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.attendee-count {
+  font-size: 16px;
+  font-weight: 600;
+  color: #202638;
+  margin: 0 0 12px;
+}
+
+.attendee-progress {
+  width: 100%;
+  height: 8px;
+  background-color: #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.attendee-progress-fill {
+  height: 100%;
+  background-color: #635bff;
+  border-radius: 8px;
+}
+
+.spots-remaining {
+  font-size: 14px;
+  color: #666;
+  margin: 10px 0 0;
+}
+
+/* Attendee List */
+
+.attendee-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.attendee {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+  background-color: white;
+  border: 1px solid #eee;
+  border-radius: 8px;
+}
+
+.attendee-image {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.attendee span {
+  font-size: 15px;
+  font-weight: 500;
+  color: #202638;
+}
+
+/* Mobile Styling */
+
+@media (max-width: 600px) {
+  .attendee-summary {
+    padding: 12px;
+  }
+
+  .attendee {
+    padding: 8px;
+  }
+
+  .attendee-image {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* Show/Hide Attendees Button */
+
+.attendee-toggle {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.attendee-toggle:hover {
+  background-color: #eeedff;
+  border-color: #635bff;
+  color: #635bff;
+}
