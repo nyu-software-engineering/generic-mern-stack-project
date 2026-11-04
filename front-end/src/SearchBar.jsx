@@ -11,7 +11,7 @@ export default function SearchBar({ label, value, onChange }) {
       </label>
       <input
         id="search_input"
-        className="search-bar-input"
+        className="doin-input search-bar-input"
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
