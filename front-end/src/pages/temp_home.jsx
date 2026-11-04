@@ -17,6 +17,8 @@ const Temphome = (props) => {
       <Link to="/create"> See create_household</Link>
       <br />
       <Link to="/register"> See register</Link>
+      <br />
+      <Link to="/individual-protocol"> See individual protocol</Link>
     </div>
   );
 };

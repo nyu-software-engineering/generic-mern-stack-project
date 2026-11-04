@@ -4,11 +4,6 @@ import { Link } from "react-router-dom";
 import SplitLeaseLogo from "../../assets/splitlease-blank-background-logo.png";
 
 const Register = (props) => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-
   return (
     <div className="registerContainer">
       <h1>
@@ -32,7 +27,6 @@ const Register = (props) => {
           type="text"
           className="textInput"
           placeholder="enter name here"
-          value={name}
         />
       </div>
 
@@ -42,7 +36,6 @@ const Register = (props) => {
           type="email"
           className="textInput"
           placeholder="enter email here"
-          value={email}
         />
       </div>
 
@@ -52,7 +45,6 @@ const Register = (props) => {
           type="password"
           className="textInput"
           placeholder="enter password here"
-          value={password}
         />
       </div>
 
@@ -62,7 +54,6 @@ const Register = (props) => {
           type="password"
           className="textInput"
           placeholder="confirm password here"
-          value={confirmPassword}
         />
       </div>
 
