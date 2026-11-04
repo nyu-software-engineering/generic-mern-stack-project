@@ -1,19 +1,75 @@
-# Project Repository
+# Anything but Fish
 
-This repository will be used for team projects.
+Anything but Fish is a mobile web game for players who enjoy illustrated stories and conversations with fictional characters. Players meet NPCs in a graphic novel and continue talking to them in a separate chat interface. Items collected from the story and conversations are stored in an inventory and can be submitted during the story to unlock content or continue.
 
-Several sets of instructions are included in this repository. They should each be treated as separate assignments with their own due dates and sets of requirements.
+This semester, our MVP will include the graphic novel with dialogue choices and selected p5.js interactions, the inventory and item submission system, and basic NPC chat with memory across sessions.
 
-1. See the [App Map & Wireframes](instructions-0a-app-map-wireframes.md) and [Prototyping](./instructions-0b-prototyping.md) instructions for the requirements of the initial user experience design of the app.
+## Background
 
-1. Delete the contents of this file and replace with the contents of a proper README.md, as described in the [project setup instructions](./instructions-0c-project-setup.md)
+Anything but Fish began as a [course proposal](https://github.com/liangchuxin/agile-project-proposal). We are developing it as a team project for Agile Software Development & DevOps.
 
-1. See the [Sprint Planning instructions](instructions-0d-sprint-planning.md) for the requirements of Sprint Planning for each Sprint.
+## Team
 
-1. See the [Front-End Development instructions](./instructions-1-front-end.md) for the requirements of the initial Front-End Development.
+- [Celia Liang](https://github.com/liangchuxin)
+- [Jonas Chen](https://github.com/JonasChenJusFox)
+- [Anthony Wang](https://github.com/aw4580)
+- [Nigina Rashidova](https://github.com/monbbdzy)
 
-1. See the [Back-End Development instructions](./instructions-2-back-end.md) for the requirements of the initial Back-End Development.
+## Documentation
 
-1. See the [Database Integration instructions](./instructions-3-database.md) for the requirements of integrating a database into the back-end.
+- [UX Design](UX-DESIGN.md): app map, wireframes, and prototype link
+- [Contributing](CONTRIBUTING.md): team norms and development workflow
+- [Story content](front-end/src/content/story/README.md): JSON structure, page templates, and image/text blocks
 
-1. See the [Deployment instructions](./instructions-4-deployment.md) for the requirements of deploying an app.
+## Setup and Testing
+
+Run `npm install` and `npm run dev` from `front-end`. Local configuration is in
+`front-end/.env` and `back-end/.env` (ignored by Git); copy the corresponding
+`.env.example` files on a new checkout. Run `npm run build` to verify the frontend.
+
+The authentication frontend uses native HTML form controls and calls a cookie-based API.
+MongoDB configuration is backend-only. The backend and email delivery still need
+to be implemented; see [frontend setup](front-end/readme.txt) and
+[backend API contract](back-end/readme.txt). Password recovery uses reset links
+without a verification-code step.
+
+
+## Sprint 1 Plans
+
+### Technology Stack
+
+| Component | Technology | Purpose |
+|---|---|---|
+| Frontend | React + Vite | Build interactive game pages |
+| Styling | CSS | Design responsive mobile interfaces |
+| Backend | Python + FastAPI | Handle API requests and game logic |
+| Database | MongoDB Atlas | Store user data and game progress |
+| Database Driver | PyMongo | Connect Python to MongoDB |
+| Authentication | Session / JWT | User login and registration |
+| API | REST API + Fetch | Connect frontend and backend |
+| Version Control | Git + GitHub | Team collaboration |
+
+### Main Tasks
+
+### Frontend
+- Build login, home, fishing, and investigation pages.
+- Convert the Sprint 0 prototype into React components.
+- Connect frontend pages to backend APIs.
+- Implement basic navigation and user interactions.
+
+### Backend
+- Set up the Python FastAPI server.
+- Implement user registration and login.
+- Create APIs for fishing and retrieving anomalous objects.
+- Implement investigation choices and game logic.
+- Create APIs for saving and loading player progress.
+
+### Database (MongoDB)
+- `users` — User accounts and character attributes.
+- `objects` — Anomalous objects, descriptions, and ratings.
+- `investigations` — Story scenes and player choices.
+- `playerProgress` — Current investigation progress and decisions.
+- `archives` — Completed investigations and collected trophies.
+
+### Sprint Goal
+Build a working version of *Anything but Fish* where users can log in, fish for an anomalous object, start an investigation, make story choices, and save their progress in MongoDB.
