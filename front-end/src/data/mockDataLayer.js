@@ -6,7 +6,7 @@
  * in one place until a real back-end replaces these functions.
  */
 
-import { cities, lists, places, savedPlaces, users, votes, friendships, listInvites, currentUserId, linkLookups } from './demoData.js'
+import { categories, cities, lists, places, savedPlaces, users, visits, votes, friendships, listInvites, currentUserId, linkLookups } from './demoData.js'
 
 function createAbortError() {
   return new DOMException('The operation was aborted.', 'AbortError')
@@ -211,4 +211,134 @@ export function lookupLinkByUrl(rawUrl) {
     return { status: 'not_found' }
   }
   return { status: 'ok', lookup }
+}
+
+/*
+ * Functions for the place, profile and invite screens.
+ *
+ * Sprint 1 only: the "save" and "respond" functions below edit the demoData
+ * records in place so the screens feel real while you click around. Nothing
+ * is stored anywhere, so a page refresh puts everything back.
+ */
+
+/** Everything the place detail and edit-place screens need, or null if the place doesn't exist. */
+export function getPlaceDetail(placeId) {
+  const place = places.find((item) => item.id === placeId)
+  if (!place) return null
+
+  const city = cities.find((item) => item.id === place.cityId)
+  const category = categories.find((item) => item.id === place.categoryId)
+  // A place can exist without being saved yet, so everything from the saved entry is optional
+  const saved = savedPlaces.find((item) => item.placeId === placeId)
+
+  return {
+    id: place.id,
+    cityId: place.cityId,
+    cityName: city?.name ?? '',
+    name: place.name,
+    categoryId: place.categoryId,
+    categoryLabel: category?.label ?? 'Other',
+    neighborhood: place.neighborhood,
+    coordinates: place.coordinates,
+    photoUrl: saved?.thumbnailUrl ?? place.photoUrl,
+    sourcePlatform: saved?.sourcePlatform ?? null,
+    sourceUrl: saved?.sourceUrl ?? null,
+    savedBy: toPublicUser(users.find((user) => user.id === saved?.savedBy)),
+  }
+}
+
+/** Sprint-1 mock of "correct this place". Returns { ok } or { ok: false, error }. */
+export function updatePlaceDetails(placeId, { name, categoryId, neighborhood }) {
+  const place = places.find((item) => item.id === placeId)
+  if (!place) return { ok: false, error: 'This place no longer exists.' }
+  if (!categories.some((item) => item.id === categoryId)) {
+    return { ok: false, error: 'Pick a category from the list.' }
+  }
+
+  place.name = name.trim()
+  place.categoryId = categoryId
+  place.neighborhood = neighborhood.trim()
+  return { ok: true }
+}
+
+/** Profile screen data: the user, their stats, their vibe tags and the city lists they belong to. */
+export function getUserProfile(userId) {
+  const user = users.find((item) => item.id === userId)
+  if (!user) return null
+
+  return {
+    id: user.id,
+    name: user.name,
+    username: user.username,
+    photoUrl: user.photoUrl,
+    interests: user.interests
+      .map((interestId) => categories.find((category) => category.id === interestId)?.label)
+      .filter(Boolean),
+    stats: {
+      placesSaved: savedPlaces.filter((saved) => saved.savedBy === userId).length,
+      cityLists: lists.filter((list) => list.memberIds.includes(userId)).length,
+      placesVisited: visits.filter((visit) => visit.userId === userId).length,
+    },
+    cities: getUserCityHeaders(userId).map(({ id, name, placeCount }) => ({ id, name, placeCount })),
+  }
+}
+
+/** True if another user already has this username (case doesn't matter). */
+export function isUsernameTaken(username, exceptUserId) {
+  const wanted = username.trim().toLowerCase()
+  return users.some((user) => user.id !== exceptUserId && user.username.toLowerCase() === wanted)
+}
+
+/** Sprint-1 mock of saving the edit profile form. Returns { ok } or { ok: false, error }. */
+export function updateUserProfile(userId, { name, username, photoUrl }) {
+  const user = users.find((item) => item.id === userId)
+  if (!user) return { ok: false, error: 'We could not find your account.' }
+  if (isUsernameTaken(username, userId)) return { ok: false, error: 'That username is taken.' }
+
+  user.name = name.trim()
+  user.username = username.trim()
+  if (photoUrl) user.photoUrl = photoUrl
+  return { ok: true }
+}
+
+/** Pending list invites sent to `userId`, shaped for the invitations inbox. */
+export function getPendingInvites(userId) {
+  return listInvites
+    .filter((invite) => invite.toUserId === userId && invite.status === 'pending')
+    .flatMap((invite) => {
+      const list = lists.find((item) => item.id === invite.listId)
+      const city = cities.find((item) => item.id === list?.cityId)
+      // Skip invites that point at a list or city we can't find
+      if (!list || !city) return []
+
+      return [{
+        id: invite.id,
+        cityId: city.id,
+        cityName: city.name,
+        sender: toPublicUser(users.find((user) => user.id === invite.fromUserId)),
+        placeCount: savedPlaces.filter((saved) => saved.listId === list.id).length,
+        memberCount: list.memberIds.length,
+      }]
+    })
+}
+
+/**
+ * Sprint-1 mock of accepting or declining an invite.
+ * Accepting adds the user to the list, so the city shows up on their home screen.
+ */
+export function respondToInvite(inviteId, response) {
+  const invite = listInvites.find((item) => item.id === inviteId)
+  if (!invite || invite.status !== 'pending') {
+    return { ok: false, error: 'This invite is no longer available.' }
+  }
+  if (response !== 'accept' && response !== 'decline') {
+    return { ok: false, error: 'Unknown response.' }
+  }
+
+  const list = lists.find((item) => item.id === invite.listId)
+  if (response === 'accept' && list && !list.memberIds.includes(invite.toUserId)) {
+    list.memberIds.push(invite.toUserId)
+  }
+  invite.status = response === 'accept' ? 'accepted' : 'declined'
+  return { ok: true, cityId: list?.cityId ?? null }
 }
