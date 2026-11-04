@@ -1,0 +1,18 @@
+[
+  {
+    "id": "post-brightspace-1",
+    "jobId": "brightspace-software-intern",
+    "topic": "Interview",
+    "body": "The first interview was one short technical call.",
+    "anonymous": false,
+    "createdAt": "2026-10-21T15:00:00.000Z"
+  },
+  {
+    "id": "post-brightspace-2",
+    "jobId": "brightspace-software-intern",
+    "topic": "Sponsorship",
+    "body": "The listing says CPT/OPT is accepted.",
+    "anonymous": true,
+    "createdAt": "2026-10-20T15:00:00.000Z"
+  }
+]

@@ -1,0 +1,158 @@
+.job-details {
+  overflow-wrap: anywhere;
+}
+
+.job-back {
+  display: inline-block;
+  margin-bottom: 24px;
+  color: #484e56;
+  font-size: 0.875rem;
+  text-underline-offset: 3px;
+}
+
+.job-detail-heading {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.job-detail-heading img {
+  flex-shrink: 0;
+  object-fit: cover;
+}
+
+.job-details h1 {
+  margin: 0 0 10px;
+  font-size: var(--page-title-size);
+  letter-spacing: -0.025em;
+  line-height: 1.25;
+}
+
+.job-metadata {
+  display: grid;
+  gap: 14px;
+  padding: 16px;
+  margin: 0 0 20px;
+  border: 1px solid #d4d7db;
+  font-size: 0.875rem;
+}
+
+.job-metadata > div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr);
+  gap: 16px;
+}
+
+.job-metadata dt {
+  color: #555b64;
+}
+
+.job-metadata dd {
+  margin: 0;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.job-actions {
+  display: grid;
+  gap: 10px;
+}
+
+.job-actions button,
+.job-actions a {
+  display: block;
+  min-height: 44px;
+  padding: 12px;
+  border: 1px solid #202328;
+  border-radius: 0;
+  background: #fff;
+  color: #202328;
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.4;
+  text-align: center;
+  text-decoration: none;
+}
+
+.job-actions a:hover {
+  background: #f6edcc;
+}
+
+.job-actions button:not(:disabled) {
+  background: #202328;
+  color: #fff;
+  cursor: pointer;
+}
+
+.job-action-note {
+  margin: 12px 0 24px;
+  color: #555b64;
+  font-size: 0.75rem;
+  line-height: 1.6;
+}
+
+.job-match-section {
+  padding: 16px;
+  margin-top: 24px;
+  background: #faf8ef;
+  border: 1px solid #e1d8ba;
+}
+
+.job-section-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.job-details h2 {
+  margin: 0;
+  font-size: 1.1rem;
+  line-height: 1.4;
+}
+
+.job-match-section p,
+.job-content p,
+.job-content li {
+  font-size: 0.9375rem;
+  line-height: 1.7;
+}
+
+.job-content {
+  margin-top: 28px;
+}
+
+.job-content ul {
+  padding-left: 20px;
+}
+
+.job-content li + li {
+  margin-top: 8px;
+}
+
+.job-text-action {
+  min-height: 44px;
+  padding: 8px 0;
+  border: 0;
+  background: transparent;
+  color: #202328;
+  font: inherit;
+  font-size: 0.875rem;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.job-details button:disabled {
+  color: #666b73;
+  border-color: #b6bac0;
+  cursor: not-allowed;
+}
+
+.job-details :is(a, button):focus-visible {
+  outline: 3px solid #7b5900;
+  outline-offset: 3px;
+}

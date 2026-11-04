@@ -1,0 +1,25 @@
+[
+  {
+    "id": "application-brightspace",
+    "jobId": "brightspace-software-intern",
+    "stage": "Interview",
+    "note": "Ask about the team mentor.",
+    "updatedAt": "2026-10-21T15:00:00.000Z",
+    "history": [
+      { "stage": "Saved", "at": "2026-10-18T15:00:00.000Z" },
+      { "stage": "Applied", "at": "2026-10-19T15:00:00.000Z" },
+      { "stage": "Interview", "at": "2026-10-21T15:00:00.000Z" }
+    ]
+  },
+  {
+    "id": "application-hathaway",
+    "jobId": "hathaway-data-intern",
+    "stage": "Applied",
+    "note": "",
+    "updatedAt": "2026-10-20T15:00:00.000Z",
+    "history": [
+      { "stage": "Saved", "at": "2026-10-18T15:00:00.000Z" },
+      { "stage": "Applied", "at": "2026-10-20T15:00:00.000Z" }
+    ]
+  }
+]

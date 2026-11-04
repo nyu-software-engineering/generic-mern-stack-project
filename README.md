@@ -72,7 +72,7 @@ See [UX-DESIGN.md](./UX-DESIGN.md) for the app map, wireframes, and outstanding 
 
 ## Running the front end
 
-You need [Node.js](https://nodejs.org/) 20 or newer, which includes npm.
+Use [Node.js](https://nodejs.org/) 24 with npm (the tested default). The current tooling supports Node `^20.19.0 || ^22.13.0 || >=24`; Node 21 and 23 are not supported by ESLint.
 
 ```bash
 cd front-end
@@ -84,7 +84,10 @@ Other commands, run inside `front-end/`:
 
 - `npm run build` builds the production version into `front-end/dist/`
 - `npm run lint` checks the code with ESLint
+- `npm test` runs component, DOM-interaction, and local mock-API tests; it does not verify real-browser layout or scrolling
 - `npm run preview` serves the production build locally
+
+See the [frontend README](./front-end/README.md) for the demo routes, mock API, and remaining integration/browser checks.
 
 ## Repository Structure
 
