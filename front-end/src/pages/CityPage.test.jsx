@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { act, cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import { createMemoryRouter, RouterProvider } from 'react-router'
 import CityPage from './CityPage'
 import CityHeader from '../components/CityHeader'
@@ -9,6 +9,8 @@ function renderCity(path = '/city/c_nyc') {
   const router = createMemoryRouter([
     { path: '/city/:cityId', element: <CityPage /> },
     { path: '/city/:cityId/members', element: <h1>Members screen</h1> },
+    { path: '/place/:placeId', element: <h1>Place detail</h1> },
+    { path: '/create', element: <h1>Add a place</h1> },
     { path: '/', element: <h1>Your lists</h1> },
   ], { initialEntries: [path] })
   render(<RouterProvider router={router} />)
@@ -17,6 +19,59 @@ function renderCity(path = '/city/c_nyc') {
 
 beforeEach(() => {
   vi.spyOn(mockDataLayer, 'loadCityHeaders')
+})
+
+describe('Ranked city list', () => {
+  it('shows saved places in vote order with the group tally and an unvoted state', async () => {
+    renderCity()
+    const list = await screen.findByRole('list', { name: 'Places ranked by must-go votes' })
+    const cards = within(list).getAllByRole('listitem')
+    expect(cards.map((card) => within(card).getByRole('heading').textContent)).toEqual([
+      'Top of the Rock', "Joe's Pizza", 'Artists & Fleas', 'Comedy Cellar', 'The Metropolitan Museum of Art',
+    ])
+    const pizza = within(cards[1])
+    expect(pizza.getByText('Food')).toBeTruthy()
+    expect(pizza.getByText('Greenwich Village')).toBeTruthy()
+    for (const [label, count] of [['Must-go', '3'], ['Down for it', '0'], ['Pass', '1']]) {
+      expect(pizza.getByText(label).nextElementSibling.textContent).toBe(count)
+    }
+    expect(within(cards[4]).getByText('No votes yet')).toBeTruthy()
+  })
+
+  it('links a place card to its detail route even when its photo fails', async () => {
+    const router = renderCity()
+    const card = await screen.findByRole('link', { name: "View Joe's Pizza" })
+    fireEvent.error(card.querySelector('img'))
+    expect(card.querySelector('img')).toBeNull()
+    fireEvent.click(card)
+    await screen.findByRole('heading', { name: 'Place detail' })
+    expect(router.state.location.pathname).toBe('/place/p_2')
+  })
+
+  it('changes city data and restores the ranked list after switching back from map', async () => {
+    const router = renderCity()
+    await screen.findByRole('link', { name: "View Joe's Pizza" })
+    await act(() => router.navigate('/city/c_paris'))
+    await screen.findByRole('heading', { name: 'Paris' })
+    const list = screen.getByRole('list', { name: 'Places ranked by must-go votes' })
+    expect(within(list).getAllByRole('listitem')).toHaveLength(3)
+    expect(screen.queryByRole('link', { name: "View Joe's Pizza" })).toBeNull()
+    fireEvent.click(screen.getByRole('button', { name: 'Map' }))
+    await screen.findByRole('region', { name: 'Map view' })
+    expect(screen.queryByRole('list', { name: 'Places ranked by must-go votes' })).toBeNull()
+    fireEvent.click(screen.getByRole('button', { name: 'List' }))
+    expect(within(await screen.findByRole('list', { name: 'Places ranked by must-go votes' })).getAllByRole('listitem')).toHaveLength(3)
+  })
+
+  it('offers the add-place flow when the city has no saved places', async () => {
+    vi.spyOn(mockDataLayer, 'getRankedCityPlaces').mockReturnValue([])
+    const router = renderCity()
+    await screen.findByRole('heading', { name: 'No places saved yet' })
+    expect(screen.queryByRole('list', { name: 'Places ranked by must-go votes' })).toBeNull()
+    fireEvent.click(screen.getByRole('link', { name: 'Add a place' }))
+    await screen.findByRole('heading', { name: 'Add a place' })
+    expect(router.state.location.pathname).toBe('/create')
+  })
 })
 
 afterEach(() => {

@@ -33,38 +33,37 @@
 .add-place-input-wrap {
   display: flex;
   align-items: center;
-  border: 1px solid #000;
-  padding: 0 0.5rem;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 0.75rem;
+  padding-right: 0.25rem;
 }
 
-.add-place-input {
+.add-place-input-wrap .input-field {
   flex: 1;
+  min-width: 0;
+  width: auto;
   border: none;
-  padding: 0.75rem 0;
-  font-size: 1rem;
+  border-radius: 0;
+  background: transparent;
+}
+
+.add-place-input-wrap .input-field:focus {
   outline: none;
 }
 
 .add-place-clear {
+  flex-shrink: 0;
   border: none;
   background: none;
   font-size: 1.25rem;
   cursor: pointer;
   padding: 0.25rem 0.5rem;
+  line-height: 1;
 }
 
 .add-place-error {
   margin: 0;
   color: #b00020;
   font-size: 0.875rem;
-}
-
-.add-place-submit {
-  width: 100%;
-  padding: 0.75rem;
-  background: #000;
-  color: #fff;
-  border: none;
-  font-size: 1rem;
-  cursor: pointer;
 }
