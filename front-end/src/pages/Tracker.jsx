@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { useAppState } from "../data/AppState.jsx"
+import { useAppState } from "../data/useAppState.js"
 import { getJobs } from "../jobs/api.js"
 import ApplicationDetails from "./ApplicationDetails"
 

@@ -1,5 +1,5 @@
-import { useEffect } from 'react'
-import { useAppState } from '../data/AppState.jsx'
+import { useEffect, useRef } from 'react'
+import { useAppState } from '../data/useAppState.js'
 import './Menu.css'
 
 const LINKS = [
@@ -8,22 +8,38 @@ const LINKS = [
   { href: '#/profile', label: 'My Profile' },
 ]
 
-function Menu({ onClose }) {
+function Menu({ onClose, onLogOut }) {
   const { profile } = useAppState()
+  const dialogRef = useRef(null)
+  const closeRef = useRef(null)
 
   useEffect(() => {
-    function handleKey(event) {
-      if (event.key === 'Escape') onClose()
+    const dialog = dialogRef.current
+    const previousFocus = document.activeElement
+    const previousOverflow = document.body.style.overflow
+    dialog.showModal()
+    closeRef.current.focus({ preventScroll: true })
+    document.body.style.overflow = 'hidden'
+    return () => {
+      dialog.close()
+      document.body.style.overflow = previousOverflow
+      if (previousFocus?.isConnected) previousFocus.focus({ preventScroll: true })
     }
-    window.addEventListener('keydown', handleKey)
-    return () => window.removeEventListener('keydown', handleKey)
-  }, [onClose])
+  }, [])
+
+  function closeFromBackdrop(event) {
+    if (event.target !== event.currentTarget) return
+    const rect = event.currentTarget.getBoundingClientRect()
+    if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) {
+      onClose()
+    }
+  }
 
   return (
-    <div className="menu" role="dialog" aria-modal="true" aria-label="Menu">
-      <button type="button" className="menu-backdrop" aria-label="Close menu" onClick={onClose} />
+    <dialog className="menu" ref={dialogRef} aria-label="Menu"
+      onCancel={(event) => { event.preventDefault(); onClose() }} onClick={closeFromBackdrop}>
       <nav className="menu-panel">
-        <button type="button" className="menu-close" onClick={onClose} autoFocus>Close</button>
+        <button ref={closeRef} type="button" className="menu-close" onClick={onClose}>Close</button>
         {profile && (
           <div className="menu-user">
             <img src={profile.photo} alt="" width="56" height="56" />
@@ -36,9 +52,9 @@ function Menu({ onClose }) {
         {LINKS.map((link) => (
           <a key={link.href} className="menu-link" href={link.href} onClick={onClose}>{link.label}</a>
         ))}
-        <a className="menu-link menu-logout" href="#/welcome" onClick={onClose}>Log Out</a>
+        <a className="menu-link menu-logout" href="#/welcome" onClick={(event) => { event.preventDefault(); onLogOut() }}>Log Out</a>
       </nav>
-    </div>
+    </dialog>
   )
 }
 

@@ -21,13 +21,21 @@ export function getDiscussion(jobId) {
   return request('/api/discussions/' + encodeURIComponent(jobId))
 }
 
-export function getMatch(jobId) {
-  return request('/api/matches/' + encodeURIComponent(jobId))
+export async function getMatch(jobId, profile, options) {
+  const match = await post('/api/matches/' + encodeURIComponent(jobId), { profile }, options)
+  const strings = (items) => Array.isArray(items) && items.every((item) => typeof item === 'string')
+  if (!match || match.jobId !== jobId || match.profileId !== profile.id || match.profileRevision !== profile.revision
+    || typeof match.summary !== 'string' || (match.score !== null && (!Number.isFinite(match.score) || match.score < 0 || match.score > 100))
+    || !['fitExplanation', 'missingSkills', 'keyQualifications'].every((field) => strings(match[field]))) {
+    throw new Error('Invalid match response')
+  }
+  return match
 }
 
-async function post(path, body) {
+async function post(path, body, { signal } = {}) {
   const response = await fetch(path, {
     method: 'POST',
+    signal,
     headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
     body: JSON.stringify(body),
   })
