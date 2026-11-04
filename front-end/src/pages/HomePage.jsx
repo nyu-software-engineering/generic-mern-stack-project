@@ -6,12 +6,6 @@ function HomePage() {
     <main className="homepage">
         <header className="home-header">
             <img src="https://picsum.photos/340/180" alt="Sample" className="logo" />
-
-            <div className="home-header-actions">
-            <button type="button" className="home-header-button">
-            profile
-          </button>
-        </div>
       </header>
 
 

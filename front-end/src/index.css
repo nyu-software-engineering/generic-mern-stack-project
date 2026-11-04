@@ -32,5 +32,5 @@
   padding: 2%;
   border-bottom-left-radius: var(--border-radius);
   border-bottom-right-radius: var(--border-radius);
-  border: solid;
+  background-color: lightgray;
 }
