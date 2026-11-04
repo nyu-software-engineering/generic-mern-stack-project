@@ -54,3 +54,28 @@
     font-size: 14px;
     font-weight: 400;
 }
+
+.logout-button{
+    padding: 8px 14px;
+    background: white;
+    color: black;
+    border: 1px solid black;
+    border-radius: 8px;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.logout-button:hover{
+    background: #f1f5f9;
+}
+
+.logout-button:active{
+    background: #e2e8f0;
+}
+
+.logout-button:focus-visible{
+    outline: 2px solid black;
+    outline-offset: 2px;
+}

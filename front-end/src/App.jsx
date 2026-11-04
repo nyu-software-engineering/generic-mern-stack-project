@@ -4,6 +4,7 @@ import Home from './pages/Home.jsx'
 import Search from './pages/Search.jsx'
 import Profile from './pages/Profile.jsx'
 import EditProfile from './pages/EditProfile.jsx'
+import MyServices from './pages/MyServices.jsx'
 import ServiceDetails from './pages/ServiceDetails.jsx'
 import BookingRequest from './pages/BookingRequest.jsx'
 import Bookings from './pages/Bookings.jsx'
@@ -12,11 +13,14 @@ import Register from './pages/Register.jsx'
 import BookingDetails from './pages/BookingDetails.jsx'
 import initialBookings from './data/bookings.json'
 import profileData from './profile1.json'
+import initialServices from './services.json'
 import './App.css'
 
 function App() {
   const [user, setUser] = useState(null)
   const [profile, setProfile] = useState(profileData[0])
+  const [services, setServices] = useState(initialServices)
+  const updateService = (id, changes) => setServices(services.map(s => s.id === id ? { ...s, ...changes } : s))
   const [bookings, setBookings] = useState(initialBookings)
   const addBooking = booking => setBookings([...bookings, { ...booking, id: String(Date.now()), status: 'requested' }])
   const updateBooking = (id, changes) => setBookings(bookings.map(b => b.id === id ? { ...b, ...changes } : b))
@@ -56,8 +60,9 @@ function App() {
             <Route path="/bookings/:bookingId/reschedule" element={<BookingRequest bookings={bookings} updateBooking={updateBooking} />} />
 
             {/* Profile page */}
-            <Route path="/profile" element={<Profile setUser={setUser} profile={profile}/>} />
+            <Route path="/profile" element={<Profile setUser={setUser} profile={profile} services={services}/>} />
             <Route path="/profile/edit" element={<EditProfile profile={profile} setProfile={setProfile}/>}/>
+            <Route path="/profile/services" element={<MyServices profile={profile} setProfile={setProfile} services={services} updateService={updateService}/>}/>
 
             {/* Other */}
             <Route path="/login" element={<Navigate to="/" replace />}/>

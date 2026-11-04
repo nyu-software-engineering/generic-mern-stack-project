@@ -1,0 +1,58 @@
+.my-services h1{
+    margin-bottom: 16px;
+}
+
+.my-services-count{
+    margin: 0 0 12px;
+    font-size: 14px;
+}
+
+.my-service{
+    margin-bottom: 24px;
+}
+
+.my-service img{
+    display: block;
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+    border: 1px solid black;
+    border-radius: 8px;
+}
+
+.my-service h2{
+    margin: 12px 0 4px;
+    font-size: 18px;
+}
+
+.my-service p{
+    margin: 2px 0;
+    font-size: 14px;
+}
+
+.my-service-link{
+    display: block;
+    margin-top: 6px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid black;
+    color: black;
+    font-size: 14px;
+}
+
+.my-service h3{
+    margin: 12px 0 8px;
+    font-size: 16px;
+}
+
+.my-service-actions{
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.my-service-actions .profile-button{
+    margin: 0;
+    padding: 10px 8px;
+    font-size: 14px;
+    font-weight: 400;
+}
