@@ -1,6 +1,7 @@
 import './Calendar.css';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { CalendarBlock } from './CalendarBlock';
+import { Card } from '../Card/Card';
 
 // Update CalendarBlock to accept and use the isToday prop
 
@@ -38,7 +39,7 @@ export function Calendar() {
     });
 
     return (
-        <div className="calendar">
+        <Card className="calendar">
 
             {/* Calendar Header */}
             <div className="calendar-header">
@@ -80,6 +81,6 @@ export function Calendar() {
                 ))}
 
             </div>
-        </div>
+        </Card>
     );
 }

@@ -1,5 +1,4 @@
 import './Calendar.css';
-import React from 'react';
 
 export function CalendarBlock({ date, isToday = false }) {
     if (date === null) {
@@ -14,6 +13,7 @@ export function CalendarBlock({ date, isToday = false }) {
             <span className="calendar-block-day">
                 {date}
             </span>
+            {isToday && <span className="calendar-block-today-indicator"/>}
         </div>
     );
 }
