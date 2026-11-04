@@ -24,7 +24,7 @@ import SignUp from './screens/SignUp.jsx'
 
 export default function App() {
   return (
-    <div className="mx-auto min-h-screen max-w-md bg-surface">
+      <div className="mx-auto min-h-screen max-w-md bg-canvas">
       <Routes>
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<LogIn />} />
