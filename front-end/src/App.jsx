@@ -22,6 +22,7 @@ import EditProfile from './pages/EditProfile'
 import ChangePassword from './pages/ChangePassword'
 import Invites from './pages/Invites'
 import InviteToList from './pages/InviteToList'
+import FriendProfile from './pages/FriendProfile'
 
 export default function App() {
   return (
@@ -42,6 +43,7 @@ export default function App() {
         <Route path="/create/search" element={<SearchPlace />} />
         <Route path="/create/success" element={<SaveSuccess />} />
         <Route path="/friends" element={<Friends />} />
+        <Route path="/friends/:userId" element={<FriendProfile />} />
         <Route path="/invites" element={<Invites />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/profile/edit" element={<EditProfile />} />

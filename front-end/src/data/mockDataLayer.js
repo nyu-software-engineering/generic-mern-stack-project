@@ -138,6 +138,35 @@ export function getListByCityId(cityId) {
   return lists.find((list) => list.cityId === cityId) ?? null
 }
 
+/** Names of cities where both users are on the list, e.g. ["Paris"]. */
+function getSharedCityNames(userId, otherUserId) {
+  return lists
+    .filter((list) => list.memberIds.includes(userId) && list.memberIds.includes(otherUserId))
+    .map((list) => cities.find((city) => city.id === list.cityId)?.name)
+    .filter(Boolean)
+}
+
+/**
+ * Friends tab (#107): every friend plus the cities you share lists in.
+ * Shape: { id, name, username, photoUrl, sharedCities: string[] }
+ */
+export function getFriendsWithSharedCities(userId) {
+  return getFriendsForUser(userId).map((friend) => ({
+    ...friend,
+    sharedCities: getSharedCityNames(userId, friend.id),
+  }))
+}
+
+/**
+ * Live username filter for the Friends tab. Case-insensitive, ignores a
+ * leading "@", and an empty query returns everyone.
+ */
+export function filterFriendsByUsername(friends, query) {
+  const wanted = query.trim().replace(/^@/, '').toLowerCase()
+  if (!wanted) return friends
+  return friends.filter((friend) => friend.username.toLowerCase().includes(wanted))
+}
+
 /**
  * Everything InviteToList needs
  */
@@ -591,4 +620,75 @@ export function getMostSavedByFriends(userId, limit = 6) {
 /** Home loader for "Most saved by friends". Uses mock currentUserId until real auth exists. */
 export function loadMostSavedByFriends(options) {
   return loadAsync(() => getMostSavedByFriends(currentUserId), options)
+}
+
+/**
+ * Friend's Profile screen. `viewerId` is the person looking (current user).
+ * Returns { status: 'self' } if you open your own id, { status: 'not_found' }
+ * if the user doesn't exist or isn't your friend, otherwise { status: 'ready', ... }.
+ */
+export function getFriendProfile(viewerId, friendId, recentLimit = 5) {
+  if (viewerId === friendId) return { status: 'self' }
+
+  const friendship = friendships.find(
+    (item) => item.userIds.includes(viewerId) && item.userIds.includes(friendId),
+  )
+  const profile = getUserProfile(friendId)
+  if (!profile || !friendship) return { status: 'not_found' }
+
+  // Lists you're both on. Only saves from these show up, since lists are private to members.
+  const sharedLists = lists.filter(
+    (list) => list.memberIds.includes(viewerId) && list.memberIds.includes(friendId),
+  )
+  const sharedListIds = new Set(sharedLists.map((list) => list.id))
+
+  const recentlySaved = savedPlaces
+    .filter((saved) => saved.savedBy === friendId && sharedListIds.has(saved.listId))
+    .sort((a, b) => b.savedAt.localeCompare(a.savedAt))
+    .slice(0, recentLimit)
+    .flatMap((saved) => {
+      const place = getPlaceById(saved.placeId)
+      if (!place) return []
+      return [{
+        savedPlaceId: saved.id,
+        placeId: place.id,
+        name: place.name,
+        cityName: getCityById(place.cityId)?.name ?? '',
+        sourcePlatform: saved.sourcePlatform,
+        thumbnailUrl: saved.thumbnailUrl ?? place.photoUrl,
+        // Your vote on it, or null if you haven't voted
+        myVote: votes.find((vote) => vote.savedPlaceId === saved.id && vote.userId === viewerId)?.value ?? null,
+      }]
+    })
+
+  // Your lists the friend isn't on yet, flagged if an invite is already pending
+  const pendingListIds = new Set(
+    listInvites
+      .filter((invite) => invite.toUserId === friendId && invite.status === 'pending')
+      .map((invite) => invite.listId),
+  )
+  const invitableLists = lists
+    .filter((list) => list.memberIds.includes(viewerId) && !list.memberIds.includes(friendId))
+    .flatMap((list) => {
+      const city = getCityById(list.cityId)
+      if (!city) return []
+      return [{ listId: list.id, cityId: city.id, cityName: city.name, alreadyInvited: pendingListIds.has(list.id) }]
+    })
+
+  return {
+    status: 'ready',
+    friend: { id: profile.id, name: profile.name, username: profile.username, photoUrl: profile.photoUrl },
+    friendsSince: friendship.since,
+    stats: {
+      placesSaved: profile.stats.placesSaved,
+      listsShared: sharedLists.length,
+      placesVisited: profile.stats.placesVisited,
+    },
+    sharedCities: sharedLists
+      .map((list) => getCityById(list.cityId))
+      .filter(Boolean)
+      .map((city) => ({ id: city.id, name: city.name })),
+    recentlySaved,
+    invitableLists,
+  }
 }
