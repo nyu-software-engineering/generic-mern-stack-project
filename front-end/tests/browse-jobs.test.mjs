@@ -51,7 +51,7 @@ test('every returned job is reachable through its own detail link', async () => 
       assert.ok(html.includes(job.title))
       assert.ok(html.includes(job.company))
     }
-    assert.deepEqual(requestedIds, jobs.map((job) => job.id))
+    assert.deepEqual(requestedIds, jobs.toReversed().map((job) => job.id))
   })
 })
 
@@ -91,4 +91,28 @@ test('an empty feed displays a clear state with no fabricated cards', async () =
   const html = await render({ jobs: [] })
   assert.match(html, /No opportunities yet/)
   assert.doesNotMatch(html, /href=/)
+})
+
+test('search and sort controls are labelled and the combined query/filter view renders in selected order', async () => {
+  const html = await render({
+    jobs: jobs.map((job, index) => ({ ...job, jobType: index < 3 ? 'internship' : 'entry-level' })),
+    filters: { jobTypes: ['internship'], sponsorsOnly: false, deadlineDays: null },
+    query: 'company', sort: 'best-match', onQueryChange: () => {}, onSortChange: () => {},
+    getJobHref: (id) => `/jobs/${id}`,
+  })
+  assert.match(html, /aria-label="Search jobs"/)
+  assert.match(html, /placeholder="Search title, company, or skill"/)
+  assert.match(html, /aria-label="Sort jobs"/)
+  assert.match(html, /aria-label="Clear search"/)
+  assert.match(html, /3 opportunities/)
+  assert.ok(html.indexOf('href="/jobs/internship-2"') < html.indexOf('href="/jobs/internship-0"'))
+  assert.doesNotMatch(html, /href="\/jobs\/internship-3"/)
+})
+
+test('a query with no matches offers search recovery without claiming the feed is empty', async () => {
+  const html = await render({ jobs, query: 'no such role', onQueryChange: () => {}, getJobHref: (id) => `/jobs/${id}` })
+  assert.match(html, /0 opportunities/)
+  assert.match(html, /No matching opportunities/)
+  assert.match(html, /Clear search/)
+  assert.doesNotMatch(html, /No opportunities yet|class="job-card"/)
 })

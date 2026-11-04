@@ -1,7 +1,7 @@
 import './BrowseJobs.css'
-import { useState } from 'react'
+import { useId, useState } from 'react'
 import { formatJobDate, formatSponsorship } from '../jobs/formatters.js'
-import { DEADLINES, DEFAULT_FILTERS, JOB_TYPES, filterJobs } from '../jobs/browse.js'
+import { DEADLINES, DEFAULT_FILTERS, JOB_TYPES, filterJobs, searchJobs, sortJobs } from '../jobs/browse.js'
 import JobFilters from './JobFilters.jsx'
 
 function JobCard({ job, getJobHref }) {
@@ -39,9 +39,11 @@ function JobCard({ job, getJobHref }) {
 
 export default function BrowseJobs({
   jobs = [], status = 'ready', onRetry, getJobHref, filters = DEFAULT_FILTERS, onFiltersChange, profile,
+  query = '', onQueryChange, sort = 'best-match', onSortChange,
 }) {
+  const controlId = useId()
   const [filtersOpen, setFiltersOpen] = useState(false)
-  const visibleJobs = filterJobs(jobs, filters)
+  const visibleJobs = sortJobs(searchJobs(filterJobs(jobs, filters), query), sort)
   const chips = filters.jobTypes.map((value) => ({
     key: `type-${value}`, label: JOB_TYPES.find((type) => type.value === value)?.label ?? value,
     remove: () => onFiltersChange({ ...filters, jobTypes: filters.jobTypes.filter((type) => type !== value) }),
@@ -63,11 +65,36 @@ export default function BrowseJobs({
         )}
       </header>
 
-      {status === 'ready' && onFiltersChange && (
+      {status === 'ready' && (onFiltersChange || onQueryChange || onSortChange) && (
         <div className="browse-controls">
-          <button type="button" className="ui-button ui-button-secondary" aria-haspopup="dialog"
-            aria-expanded={filtersOpen} onClick={() => setFiltersOpen(true)}>Filters</button>
-          {chips.length > 0 && (
+          {onQueryChange && (
+            <div className="browse-search">
+              <label htmlFor={`${controlId}-search`}>Search jobs</label>
+              <div className="browse-search-row">
+                <input className="ui-field" id={`${controlId}-search`} type="search" aria-label="Search jobs"
+                  placeholder="Search title, company, or skill" value={query}
+                  onChange={(event) => onQueryChange(event.target.value)} />
+                {query && <button type="button" className="ui-button ui-button-secondary"
+                  aria-label="Clear search" onClick={() => onQueryChange('')}>Clear search</button>}
+              </div>
+            </div>
+          )}
+          <div className="browse-control-row">
+            {onFiltersChange && <button type="button" className="ui-button ui-button-secondary" aria-haspopup="dialog"
+              aria-expanded={filtersOpen} onClick={() => setFiltersOpen(true)}>Filters</button>}
+            {onSortChange && (
+              <div className="browse-sort">
+                <label htmlFor={`${controlId}-sort`}>Sort jobs</label>
+                <select className="ui-field" id={`${controlId}-sort`} aria-label="Sort jobs" value={sort}
+                  onChange={(event) => onSortChange(event.target.value)}>
+                  <option value="best-match">Best match</option>
+                  <option value="deadline">Deadline soonest</option>
+                  <option value="newest">Newest</option>
+                </select>
+              </div>
+            )}
+          </div>
+          {onFiltersChange && chips.length > 0 && (
             <div className="filter-chips" aria-label="Applied filters">
               {chips.map((chip) => (
                 <button type="button" className="filter-chip" key={chip.key}
@@ -78,7 +105,7 @@ export default function BrowseJobs({
               <button type="button" className="ui-button ui-button-secondary" onClick={() => onFiltersChange(DEFAULT_FILTERS)}>Clear all</button>
             </div>
           )}
-          {filtersOpen && <JobFilters filters={filters} onFiltersChange={onFiltersChange}
+          {onFiltersChange && filtersOpen && <JobFilters filters={filters} onFiltersChange={onFiltersChange}
             resultCount={visibleJobs.length} onClose={() => setFiltersOpen(false)} />}
         </div>
       )}
@@ -102,7 +129,7 @@ export default function BrowseJobs({
       ) : visibleJobs.length === 0 ? (
         <div className="browse-state">
           <h2>No matching opportunities</h2>
-          <p>Remove a filter or clear all filters to see more jobs.</p>
+          <p>{query.trim() ? 'Try another search or clear search to see more jobs.' : 'Remove a filter or clear all filters to see more jobs.'}</p>
         </div>
       ) : (
         <>

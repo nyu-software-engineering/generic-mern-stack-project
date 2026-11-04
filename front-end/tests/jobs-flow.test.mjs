@@ -18,6 +18,8 @@ let server
 let dom
 let root
 let App
+let AppState
+let BrowseJobs
 
 function response(data, status = 200) {
   return new Response(JSON.stringify(data), { status, headers: { 'Content-Type': 'application/json' } })
@@ -37,6 +39,8 @@ before(async () => {
     logLevel: 'silent',
   })
   ;({ default: App } = await server.ssrLoadModule('/src/App.jsx'))
+  ;({ default: AppState } = await server.ssrLoadModule('/src/data/AppState.jsx'))
+  ;({ default: BrowseJobs } = await server.ssrLoadModule('/src/pages/BrowseJobs.jsx'))
 })
 
 beforeEach(async (context) => {
@@ -78,7 +82,7 @@ async function waitFor(check) {
 }
 
 async function mount() {
-  await act(async () => root.render(createElement(StrictMode, null, createElement(App))))
+  await act(async () => root.render(createElement(StrictMode, null, createElement(AppState, null, createElement(App)))))
 }
 
 async function click(element) {
@@ -102,7 +106,8 @@ test('Browse opens the sixth job, returns to the list, and opens a different job
 
 test('a failed list request exposes retry and can recover to real results', async () => {
   let rejectRequest
-  globalThis.fetch = () => new Promise((resolve, reject) => { rejectRequest = reject })
+  globalThis.fetch = (url) => String(url) === '/api/jobs'
+    ? new Promise((resolve, reject) => { rejectRequest = reject }) : serveJobs(url)
   await mount()
   assert.match(document.body.textContent, /Loading opportunities/)
   await act(async () => rejectRequest(new Error('Network down')))
@@ -235,7 +240,7 @@ test('filters combine, show live counts and removable chips, and clear without r
   await click(checkboxNamed('Internship'))
   await click(checkboxNamed('Only show roles that sponsor visas'))
   assert.equal(document.querySelectorAll('.job-card').length, 3)
-  const deadline = document.querySelector('select')
+  const deadline = document.querySelector('dialog select')
   await act(async () => {
     deadline.value = '7'
     deadline.dispatchEvent(new window.Event('change', { bubbles: true }))
@@ -316,7 +321,7 @@ test('the actual mixed fixture feed filters by type and opens different entry-le
   await click(checkboxNamed('Full-time entry-level'))
   assert.equal(document.querySelectorAll('.job-card').length, 3)
   await click(checkboxNamed('Only show roles that sponsor visas'))
-  const deadline = document.querySelector('select')
+  const deadline = document.querySelector('dialog select')
   await act(async () => {
     deadline.value = '7'
     deadline.dispatchEvent(new window.Event('change', { bubbles: true }))
@@ -339,4 +344,160 @@ test('the actual mixed fixture feed filters by type and opens different entry-le
   await waitFor(() => document.querySelectorAll('.job-card').length === 3)
   await click(buttonNamed('Clear all'))
   assert.equal(document.querySelectorAll('.job-card').length, 9)
+})
+
+const searchRecords = jobs.slice(0, 4).map((job, index) => ({
+  ...job, jobType: index === 1 ? 'entry-level' : 'internship',
+  matchScore: [0, 90, 90, null][index], sponsorsVisa: index !== 2,
+  requirements: [index === 3 ? 'Vue experience' : 'React experience'],
+  deadline: ['2026-11-09', '2026-11-06', '2026-11-04', null][index],
+  postedAt: ['2026-10-03', '2026-10-01', '2026-10-02', null][index],
+}))
+
+function serveSearchJobs(url) {
+  const path = String(url)
+  return Promise.resolve(response(path === '/api/jobs' ? searchRecords : searchRecords.find((job) => path === `/api/jobs/${job.id}`)))
+}
+
+function cardIds() {
+  return [...document.querySelectorAll('.job-card')].map((card) => card.getAttribute('href').split('/').at(-1))
+}
+
+async function enterSearch(value) {
+  const input = document.querySelector('input[aria-label="Search jobs"]')
+  assert.ok(input, 'Expected the Search jobs input')
+  await act(async () => {
+    Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set.call(input, value)
+    input.dispatchEvent(new window.Event('input', { bubbles: true }))
+  })
+}
+
+async function chooseSort(value) {
+  const select = document.querySelector('select[aria-label="Sort jobs"]')
+  assert.ok(select, 'Expected the Sort jobs select')
+  await act(async () => {
+    select.value = value
+    select.dispatchEvent(new window.Event('change', { bubbles: true }))
+  })
+}
+
+test('typing and clearing search updates immediately and each sort reorders the same cached matches', async () => {
+  globalThis.fetch = serveSearchJobs
+  await mount()
+  await waitFor(() => document.querySelectorAll('.job-card').length === 4)
+  assert.deepEqual(cardIds(), ['intern-1', 'intern-2', 'intern-0', 'intern-3'])
+  globalThis.fetch = () => { throw new Error('Search and sort must not refetch') }
+  await enterSearch(' rEaCt ')
+  assert.deepEqual(cardIds(), ['intern-1', 'intern-2', 'intern-0'])
+  await chooseSort('deadline')
+  assert.deepEqual(cardIds(), ['intern-2', 'intern-1', 'intern-0'])
+  await chooseSort('newest')
+  assert.deepEqual(cardIds(), ['intern-0', 'intern-2', 'intern-1'])
+  await chooseSort('best-match')
+  assert.deepEqual(cardIds(), ['intern-1', 'intern-2', 'intern-0'])
+  await enterSearch('no such role')
+  assert.deepEqual(cardIds(), [])
+  assert.match(document.body.textContent, /0 opportunities|No matching opportunities/)
+  await click(document.querySelector('button[aria-label="Clear search"]'))
+  assert.equal(document.querySelector('input[aria-label="Search jobs"]').value, '')
+  assert.deepEqual(cardIds(), ['intern-1', 'intern-2', 'intern-0', 'intern-3'])
+})
+
+test('query and all filters share counts while clearing search or filters preserves the other controls', async () => {
+  globalThis.fetch = serveSearchJobs
+  await mount()
+  await waitFor(() => document.querySelectorAll('.job-card').length === 4)
+  await enterSearch('React')
+  await chooseSort('newest')
+  await click(buttonNamed('Filters'))
+  await click(checkboxNamed('Internship'))
+  await click(checkboxNamed('Only show roles that sponsor visas'))
+  const deadline = document.querySelector('dialog select')
+  await act(async () => {
+    deadline.value = '7'
+    deadline.dispatchEvent(new window.Event('change', { bubbles: true }))
+  })
+  assert.deepEqual(cardIds(), ['intern-0'])
+  await click(buttonNamed('Show 1 Result'))
+  await click(buttonNamed('Filters'))
+  assert.equal(checkboxNamed('Internship').checked, true)
+  assert.equal(document.querySelector('dialog select').value, '7')
+  await click(buttonNamed('Show 1 Result'))
+  await click(document.querySelector('button[aria-label="Clear search"]'))
+  assert.deepEqual(cardIds(), ['intern-0'])
+  assert.equal(document.querySelector('select[aria-label="Sort jobs"]').value, 'newest')
+  await enterSearch('Vue')
+  assert.deepEqual(cardIds(), [])
+  await click(buttonNamed('Filters'))
+  await click(buttonNamed('Show 0 Results'))
+  await click(buttonNamed('Clear all'))
+  assert.deepEqual(cardIds(), ['intern-3'])
+  assert.equal(document.querySelector('input[aria-label="Search jobs"]').value, 'Vue')
+  assert.equal(document.querySelector('select[aria-label="Sort jobs"]').value, 'newest')
+  await enterSearch('   ')
+  assert.deepEqual(cardIds(), ['intern-0', 'intern-2', 'intern-1', 'intern-3'])
+})
+
+for (const navigation of ['link', 'history']) {
+  test(`search, sort, matching IDs and selected identity survive Details and ${navigation} Back without refetching`, async () => {
+    let listRequests = 0
+    globalThis.fetch = (url) => {
+      if (String(url) === '/api/jobs') listRequests++
+      return serveSearchJobs(url)
+    }
+    await mount()
+    await waitFor(() => document.querySelectorAll('.job-card').length === 4)
+    await enterSearch('React')
+    await chooseSort('deadline')
+    await click(buttonNamed('Filters'))
+    await click(checkboxNamed('Internship'))
+    await click(buttonNamed('Show 2 Results'))
+    const requestsBeforeDetails = listRequests
+    await click(document.querySelector('.job-card'))
+    await waitFor(() => document.querySelector('h1')?.textContent === jobs[2].title)
+    assert.equal(new URL(document.querySelector('a[target="_blank"]').href).searchParams.get('job'), 'intern-2')
+    if (navigation === 'link') await click(document.querySelector('a.job-back'))
+    else await act(async () => { window.history.back(); await tick() })
+    await waitFor(() => document.querySelectorAll('.job-card').length === 2)
+    assert.deepEqual(cardIds(), ['intern-2', 'intern-0'])
+    assert.equal(document.querySelector('input[aria-label="Search jobs"]').value, 'React')
+    assert.equal(document.querySelector('select[aria-label="Sort jobs"]').value, 'deadline')
+    assert.ok(document.querySelector('button[aria-label="Remove Internship filter"]'))
+    assert.equal(listRequests, requestsBeforeDetails)
+  })
+}
+
+test('search with read-only filters hides filter actions and removes an open sheet when its callback is withdrawn', async () => {
+  let query = ''
+  let onFiltersChange
+  function renderBrowse() {
+    root.render(createElement(BrowseJobs, {
+      jobs: searchRecords,
+      filters: { jobTypes: ['internship'], sponsorsOnly: false, deadlineDays: null },
+      getJobHref: (id) => `#/jobs/${id}`,
+      query,
+      onQueryChange: (value) => { query = value; renderBrowse() },
+      onFiltersChange,
+    }))
+  }
+
+  await act(async () => renderBrowse())
+  assert.equal(Boolean(document.querySelector('.filter-chips')), false, 'Read-only filters must not expose removal actions')
+  assert.equal(Boolean(document.querySelector('button[aria-haspopup="dialog"]')), false)
+  await enterSearch('React')
+  assert.deepEqual(cardIds(), ['intern-2', 'intern-0'])
+  await click(document.querySelector('button[aria-label="Clear search"]'))
+  assert.deepEqual(cardIds(), ['intern-2', 'intern-0', 'intern-3'])
+
+  onFiltersChange = () => {}
+  await act(async () => renderBrowse())
+  await click(buttonNamed('Filters'))
+  assert.ok(document.querySelector('dialog[open]'))
+  onFiltersChange = undefined
+  await act(async () => renderBrowse())
+  assert.equal(Boolean(document.querySelector('dialog')), false)
+  assert.equal(Boolean(document.querySelector('.filter-chips')), false)
+  assert.equal(document.body.style.overflow, '')
+  await enterSearch('Vue')
+  assert.deepEqual(cardIds(), ['intern-3'])
 })

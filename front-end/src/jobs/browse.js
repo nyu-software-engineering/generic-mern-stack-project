@@ -31,3 +31,25 @@ export function filterJobs(jobs, filters = DEFAULT_FILTERS, todayISO = new Date(
     return true
   })
 }
+
+export function searchJobs(jobs, query = '') {
+  const phrase = query.trim().toLowerCase()
+  if (!phrase) return [...jobs]
+  return jobs.filter((job) => [job.title, job.company, job.description?.join(' '), job.requirements?.join(' ')]
+    .some((text) => text?.toLowerCase().includes(phrase)))
+}
+
+export function sortJobs(jobs, sort = 'best-match') {
+  function value(job) {
+    if (sort === 'deadline') return calendarDay(job.deadline)
+    if (sort === 'newest') return calendarDay(job.postedAt)
+    return job.matchScore
+  }
+  return [...jobs].sort((a, b) => {
+    const first = value(a)
+    const second = value(b)
+    if (!Number.isFinite(first)) return Number.isFinite(second) ? 1 : 0
+    if (!Number.isFinite(second)) return -1
+    return sort === 'deadline' ? first - second : second - first
+  })
+}
