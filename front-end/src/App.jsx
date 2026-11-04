@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import MainPage from "./MainPage.jsx";
-import Dashboard from "./Dashboard.jsx";
-import Favorite from "./Favorite.jsx";
+import MainPage from "./pages/MainPage.jsx";
+import Dashboard from "./pages/Dashboard.jsx";
+import Favorite from "./pages/Favorite.jsx";
 
 export default function App() {
   return (
@@ -9,7 +9,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<MainPage />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/favorite" element={<Favorite />} />
+        <Route path="/favorites" element={<Favorite />} />
       </Routes>
     </BrowserRouter>
   );

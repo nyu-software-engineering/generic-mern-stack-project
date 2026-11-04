@@ -27,13 +27,13 @@ export default function MainPage() {
 
         <section className="search">
           <label className="search-label" htmlFor="search-input">
-            Search a topic or article
+            Search a topic or article&nbsp;
           </label>
           <input
             id="search-input"
             className="search-input"
             type="text"
-            placeholder="e.g. AI/ML, Cybersecurity"
+            placeholder="Search for..."
           />
         </section>
 
@@ -65,7 +65,7 @@ export default function MainPage() {
               </p>
               <h4 className="article-title">{todaysPick.title}</h4>
               <p className="article-excerpt">{todaysPick.excerpt}</p>
-              <a className="article-link" href="#">Read Article →</a>
+              <a className="article-link" href="./article">Read Article</a>
             </div>
           </article>
         </section>

@@ -3,10 +3,10 @@ export default function Dashboard() {
 
   const cards = [
     {
-      title: "My Favourites",
+      title: "My Favorites",
       description: "View your saved papers",
-      linkText: "View Favourites",
-      href: "/favourites",
+      linkText: "View Favorites",
+      href: "/favorites",
     },
     {
       title: "Browse Papers",
