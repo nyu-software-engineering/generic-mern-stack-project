@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useAppState } from '../data/AppState.jsx'
 import './EditProfile.css'
+import roleChoices from '../../mocks/roles.json'
 
 function EditProfile() {
     const appState = useAppState()
@@ -124,14 +125,13 @@ function EditProfile() {
         Locations
     <input name="locationsText" value={draft.locationsText} onChange={changeField} />
     </label>
-    <label>
-        <input type="checkbox" checked={draft.lookingFor.includes('Internships')} onChange={() => toggleRole('Internships')} />
-        Internships
-    </label>
-    <label>
-        <input type="checkbox" checked={draft.lookingFor.includes('Full-time entry-level roles')} onChange={() => toggleRole('Full-time entry-level roles')} />
-        Full-time entry-level roles
-    </label>
+        <p>Looking for</p>
+        {roleChoices.map((role) => (
+            <label key={role}>
+                <input type="checkbox" checked={draft.lookingFor.includes(role)} onChange={() => toggleRole(role)} />
+                {role}
+        </label>
+    ))}
 
     <button type="button" className="ui-button ui-button-secondary" onClick={cancelEdit}>Cancel</button>
     <button type="button" className="ui-button" onClick={saveEdit}>Save Changes</button>
