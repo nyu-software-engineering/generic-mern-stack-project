@@ -1,0 +1,142 @@
+.asset-page-container {
+    font-family: sans-serif;
+    width: 50%;
+    margin: auto;
+    padding: 20px;
+    color: #000000;
+}
+
+.logo {
+    width: 300px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+.page-title {
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+    margin: 5px;
+    color: #576490;
+}
+
+.main-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.assets-outer-container {
+    width: 100%;
+    background-color: #C9CAD9;
+    border: 10px solid #576490;
+    border-radius: 15px;
+    padding: 30px;
+    margin-bottom: 20px;
+    box-sizing: border-box; 
+}
+
+.action-container{
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.create-container {
+    width: 50%;
+}
+.create-asset-button {
+    display: block;
+    width: 50%; 
+    border: 2px solid #576490;
+    border-radius: 5px;
+    background-color: white;
+    color: rgb(0, 0, 0);
+    text-align: center;
+    padding: 12px;
+    text-decoration: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.create-asset-button:hover {
+    background-color: #576490;
+    color: white;
+}
+
+.search-container {
+    width: 50%;
+    height: 50%;
+    display: flex;
+    justify-content: flex-end;
+    
+}
+
+.search-input {
+    border: 2px solid #576490;
+    border-radius: 5px;
+    padding: 8px 12px;
+    width: 100%;
+    max-width: 200px;
+}
+
+.asset-inner-container {
+    background-color: white;
+    border: 2px solid #576490;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.asset-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.asset-card {
+    display: flex;
+    width: 100%;
+}
+
+.asset-square {
+    border: 2px solid #576490;
+    border-radius: 5px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: column;
+    padding: 15px;
+    background-color: #f4f4f4;
+    box-sizing: border-box;
+}
+
+.asset-name {
+    font-size: 14px;
+    font-weight: bold;
+    color: #576490;
+    text-align: center;
+    margin-bottom: 5px;
+}
+
+.asset-image {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.asset-description {
+    font-size: 12px;
+    color: #000000;
+    text-align: center;
+    margin-top: 5px;
+}
+.no-assets {
+    grid-column: span 2;
+    text-align: center;
+    color: #576490;
+}
+
+
+
