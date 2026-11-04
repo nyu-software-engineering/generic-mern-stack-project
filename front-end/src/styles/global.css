@@ -1,0 +1,38 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --color-ink: #111811;
+  --color-muted: #526052;
+  --color-accent: #b5f300;
+  --color-accent-hover: #a4dd00;
+  --color-border: #e7ece5;
+  --color-surface: #ffffff;
+  --color-hover: #f5f7f3;
+  --color-selected: #effbd7;
+  --color-selected-ink: #193000;
+  --color-focus: #436b00;
+}
+
+@layer base {
+  :root {
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply min-w-80 bg-surface font-sans text-ink;
+    line-height: normal;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-focus);
+    outline-offset: 4px;
+  }
+
+  h1[tabindex='-1']:focus {
+    outline: none;
+  }
+}

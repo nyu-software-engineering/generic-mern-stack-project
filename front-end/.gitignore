@@ -1,0 +1,7 @@
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# Keep the frontend dependency tree reproducible.
+!package-lock.json

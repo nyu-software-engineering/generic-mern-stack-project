@@ -32,7 +32,14 @@ We follow the course [Team Norms guidance](https://github.com/nyu-software-engin
 - **Code linter:** ESLint
 - **Version control:** Git and GitHub
 
-The application technology stack and ESLint configuration will be added once they are decided.
+The frontend uses React function components, JavaScript with JSX, Tailwind CSS,
+and Vite. ESLint is configured in `front-end/eslint.config.js`.
+
+Style components with Tailwind utilities in JSX. Shared colors and font settings
+live in `front-end/src/styles/global.css` using Tailwind's `@theme` directive.
+That file also contains the global accessibility and base styles. Use shared
+React components for repeated layouts instead of duplicating utility classes
+across screens. Tailwind is connected through its official Vite plugin.
 
 ## Issues and Task Board
 
@@ -79,7 +86,29 @@ cd StockSim
 
 Open the folder in Visual Studio Code. Make sure your Git author name matches your GitHub username, as required by the course.
 
-Additional dependency and environment setup instructions will be added after the team chooses the technology stack.
+Use Node.js 24 or newer for frontend development. From the repository root:
+
+```bash
+cd front-end
+npm ci
+npm run dev
+```
+
+Open the local URL printed by Vite. Run frontend npm commands inside
+`front-end/`.
+
+The app uses React Router in declarative mode with Vite. `/` opens Welcome
+with Create account and Log in options. `/create-account` and `/login` show
+their respective forms without the main navigation;
+`/portfolio`, `/market`, `/learn`, `/leaderboard`, and `/account` share the
+main header and bottom navigation. These section screens are placeholders
+until their features are implemented. Authentication is not implemented yet;
+the access forms skip validation and navigate straight to `/portfolio` on
+submission for the frontend demo. They do not save credentials or create a session.
+Unmatched URLs show Page Unavailable with a link back to Portfolio.
+
+When deploying, configure the host to serve `index.html` for frontend routes
+so that direct links and page refreshes work. Vite handles this locally.
 
 Do not commit passwords, API keys, or other sensitive information. Follow the repository's `.gitignore`.
 
@@ -87,6 +116,12 @@ Do not commit passwords, API keys, or other sensitive information. Follow the re
 
 Everyone must provide appropriate tests for the code they write and ensure that the code passes all necessary checks before merging it into `master`.
 
-Build, run, and test commands will be added when the application reaches the development stage.
+Inside `front-end/`, run `npm run lint` and `npm run build` before requesting
+review. Use `npm run dev` to check interface changes in the browser, or
+`npm run preview` to inspect the production build after building it.
+
+An automated feature test suite is not configured yet. Add meaningful tests
+as features are implemented, and include relevant manual verification in the
+pull request description.
 
 
