@@ -4,9 +4,13 @@ function Card(props) {
     <article className="card">
       <div className="image_and_edit">
         {props.imageSrc ? (
-          <img className="card-image" src={props.imageSrc} alt="" />
+          <div className="card-image">
+              <img src={props.imageSrc} alt="" />
+          </div>
         ) : (
-          <div className="card-image"> Place Holder Image</div>
+          <div className="card-image">
+              <img src="https://picsum.photos/200/300" alt="Random placeholder from Picsum"/>
+          </div>
         )}
         <button className='Saved-EditBtn' onClick={props.Edit}>editButton</button>
       </div>

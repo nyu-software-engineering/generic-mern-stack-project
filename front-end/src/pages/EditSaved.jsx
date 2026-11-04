@@ -10,9 +10,16 @@ function EditSaved(props){
                 <article className="edit-card">
                 <div className="edit-image_and_edit">
                     {props.imageSrc ? (
-                    <img className="edit-card-image" src={props.imageSrc} alt="" />
+                        <div className="edit-card-image">
+                            <img src={props.imageSrc} alt="" />
+                        </div>
                     ) : (
-                    <div className="edit-card-image"> Place Holder Image</div>
+                        <div className="edit-card-image">
+                            <img
+                                src="https://picsum.photos/200/300"
+                                alt="Random placeholder from Picsum"
+                            />
+                        </div>
                     )}
                     <button id='EditSaved-BackBtn' onClick={props.goBack}>Back</button>
                 </div>
@@ -20,8 +27,6 @@ function EditSaved(props){
                     className="edit-card-info"
                     value={draft}
                     onChange={(e) => setDraft(e.target.value)}
-                    rows={8}
-                    style={{ width: "100%" }}
                 />
                 </article>
             </div>
