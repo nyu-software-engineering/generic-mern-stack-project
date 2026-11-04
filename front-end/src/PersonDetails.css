@@ -1,96 +1,56 @@
 
-body {
-  margin: 0;
-  background-color: #f5f5f5;
-}
-
-.profile {
-  width: 100%;
-  max-width: 390px;
-  min-height: 100vh;
-  margin: auto;
-  padding: 25px;
-  box-sizing: border-box;
-  background-color: white;
-  color: #303640;
-  font-family: Arial, sans-serif;
-}
-
-.profile h1 {
-  font-size: 30px;
-}
-
-.profile h3 {
-  margin-top: 30px;
-}
-
-.photo {
-  height: 200px;
-  background-color: lightgray;
-  border-radius: 10px;
-  margin-top: 30px;
+/* Person Details Page */
+.person-details-page {
   display: flex;
-  align-items: center;
   justify-content: center;
-}
-
-.interests {
-  background-color: #f0f1f3;
   padding: 20px;
-  border: 1px solid lightgray;
-  border-radius: 10px;
-  margin-bottom: 40px;
 }
 
-.profile button {
+/* Profile Card */
+.person-details-card {
   width: 100%;
-  padding: 16px;
-  margin-bottom: 15px;
-  background-color: #d9dee3;
-  border: 1px solid lightgray;
-  border-radius: 10px;
-  font-size: 16px;
-  cursor: pointer;
+  max-width: 440px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
-.navigation {
-  text-align: center;
-  margin-top: 40px;
-  border-top: 1px solid lightgray;
-  padding-top: 20px;
-  font-size: 13px;
-
+/* Headings */
+.person-details-card h1 {
+  font-size: 30px;
+  margin: 0;
 }
-.profile .purple-button {
-  background-color: #6941c6;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  width: 100%;
-  padding: 16px;
+
+.person-details-card h3 {
+  font-size: 18px;
   margin-top: 15px;
-  font-size: 16px;
-  cursor: pointer;
 }
 
-.profile .purple-button:hover {
-  background-color: #5232a8;
-}
-
-.profile .back-link {
-  background-color: white;
-  color: #303640;
-  border: none;
-  text-align: left;
-  padding: 0;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-.photo img {
+/* Profile Photo */
+.person-details-photo {
   width: 100%;
-  height: 100%;
-  object-fit: contain;
-  border-radius: 10px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+  background-color: lightgray;
 }
 
+/* Profile Description */
+.person-details-card p {
+  font-size: 14px;
+  color: #687386;
+}
+
+/* Shared Interests */
+.person-details-interests {
+  background-color: #f0f1f3;
+  padding: 15px;
+  border: 1px solid lightgray;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+/* Buttons */
+.person-details-card button {
+  width: 100%;
+}
