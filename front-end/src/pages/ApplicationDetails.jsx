@@ -1,3 +1,5 @@
+import { useState } from "react"
+
 function formatDate(date) {
   if (!date) {
     return "None"
@@ -14,7 +16,24 @@ function ApplicationDetails({
   application,
   job,
   onBack,
+  onNoteSave,
 }) {
+  const [draftNote, setDraftNote] = useState(
+    application.note ?? ""
+  )
+
+  const savedNote = application.note ?? ""
+  const noteChanged = draftNote !== savedNote
+
+  function handleSaveNote() {
+    onNoteSave(draftNote)
+  }
+
+  function handleClearNote() {
+    setDraftNote("")
+    onNoteSave("")
+  }
+
   return (
     <main className="app">
       <button onClick={onBack}>
@@ -58,9 +77,32 @@ function ApplicationDetails({
       <section>
         <h3>Notes</h3>
 
-        <p>
-          {application.note || "No notes yet."}
-        </p>
+        <textarea
+          value={draftNote}
+          onChange={(event) =>
+            setDraftNote(event.target.value)
+          }
+          rows="5"
+          placeholder="Add notes about this application"
+        />
+
+        <div>
+          <button
+            onClick={handleSaveNote}
+            disabled={!noteChanged}
+          >
+            Save Note
+          </button>
+
+          <button
+            onClick={handleClearNote}
+            disabled={
+              draftNote === "" && savedNote === ""
+            }
+          >
+            Clear Note
+          </button>
+        </div>
       </section>
     </main>
   )

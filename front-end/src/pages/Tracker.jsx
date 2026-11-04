@@ -248,13 +248,19 @@ function Tracker() {
       )
 
     return (
-      <ApplicationDetails
-        application={selectedApplication}
-        job={selectedJob}
-        onBack={() =>
-          setSelectedApplicationId(null)
+     <ApplicationDetails
+         application={selectedApplication}
+         job={selectedJob}
+         onBack={() =>
+           setSelectedApplicationId(null)
+         }
+         onNoteSave={(note) =>
+           appState.updateApplication(
+             selectedApplication.id,
+             { note }
+         )
         }
-      />
+     />
     )
   }
 
