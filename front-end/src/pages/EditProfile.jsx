@@ -75,19 +75,37 @@ function EditProfile() {
       <img src={draft.photo} alt="" width="72" height="72" />
       <button type="button" className="ui-button ui-button-secondary" onClick={openPhoto}>Change photo</button>
 
-      <label>
+    <a href="#/profile">Back to profile</a>
+    <h1>Edit Profile</h1>
+    <img src={draft.photo} alt="" width="72" height="72" />
+    <button type="button" onClick={openPhoto}>Change photo</button>
+
+    <label>
+        Full name
+    <input name="name" value={draft.name} onChange={changeField} />
+    </label>
+    <label>
+        Major
+    <input name="major" value={draft.major} onChange={changeField} />
+    </label>
+    <label>
+        Graduation date
+    <input name="graduationDate" value={draft.graduationDate} onChange={changeField} />
+    </label>
+
+    <label>
         Work authorization
         <input name="workAuthorization" value={draft.workAuthorization} onChange={changeField} />
-      </label>
-      <label>
+    </label>
+    <label>
         Skills
         <input name="skillsText" value={draft.skillsText} onChange={changeField} />
-      </label>
-      <label>
+    </label>
+    <label>
         Locations
-        <input name="locationsText" value={draft.locationsText} onChange={changeField} />
-      </label>
-      <label>
+    <input name="locationsText" value={draft.locationsText} onChange={changeField} />
+    </label>
+    <label>
         <input type="checkbox" checked={draft.lookingFor.includes('Internships')} onChange={() => toggleRole('Internships')} />
         Internships
     </label>
@@ -96,8 +114,20 @@ function EditProfile() {
         Full-time entry-level roles
     </label>
 
-      <button type="button" className="ui-button ui-button-secondary" onClick={cancelEdit}>Cancel</button>
-      <button type="button" className="ui-button" onClick={saveEdit}>Save Changes</button>
+    <button type="button" className="ui-button ui-button-secondary" onClick={cancelEdit}>Cancel</button>
+    <button type="button" className="ui-button" onClick={saveEdit}>Save Changes</button>
+    {photoOpen && (
+    <div className="photo-dialog">
+        <div>
+        <button type="button" onClick={closePhoto}>Close</button>
+        <img src={photoChoice || draft.photo} alt="" width="72" height="72" />
+        <button type="button" onClick={takePhoto}>Take Photo Now</button>
+        <button type="button" onClick={chooseAlbum}>Choose from Album</button>
+        <button type="button" onClick={closePhoto}>Cancel</button>
+        <button type="button" onClick={updatePhoto}>Update</button>
+        </div>
+    </div>
+    )}
     </section>
   )
 }

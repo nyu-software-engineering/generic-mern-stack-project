@@ -11,6 +11,7 @@ function MyProfile() {
     <section>
       <h1>My Profile</h1>
       <img src={profile.photo} alt="" width="72" height="72" />
+      <p>{profile.name}</p>
       <p>{profile.workAuthorization}</p>
       <p>{profile.skills.join(', ')}</p>
       <p>{profile.lookingFor.join(', ')}</p>

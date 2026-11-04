@@ -9,3 +9,15 @@
   width: 100%;
   margin-top: 4px;
 }
+
+.photo-dialog {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  padding: 24px;
+}
+
+.photo-dialog div {
+  background: #ffffff;
+  padding: 16px;
+}
