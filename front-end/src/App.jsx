@@ -8,23 +8,40 @@ import Messages from "./pages/Messages";
 import Post from "./pages/Post";
 import Profile from "./pages/Profile"
 import MyListings from "./pages/MyListings"
+import SavedListings from "./pages/SavedListings";
 
 import {BrowserRouter, Routes, Route} from "react-router-dom";
 import "./App.css";
 
 function App() {
+  const [savedIds, setSavedIds] = useState([]);
+
+  function toggleSave(id) {
+    setSavedIds(current => {
+        if (current.includes(id)) {
+            return current.filter(savedId => savedId !== id);
+        }
+        return [...current, id];
+    });
+  }
   return (
     <BrowserRouter>
       <Routes>
         <Route path = "/app" element ={<Layout/>}>
           <Route index element = {<Login />} />
-          <Route path = "explore" element = {<Explore />} />
+          <Route
+            path="explore"
+            element={<Explore savedIds={savedIds} onToggleSave={toggleSave} />}
+          />
           <Route path = "reviewForm" element = {<ReviewForm />} />
           <Route path = "signUp" element = {<Signup />} />
           <Route path = "messages" element = {<Messages />} />
           <Route path = "post" element = {<Post />} />
           <Route path = "profile" element = {<Profile />} />
-          <Route path = "saved" element = {<MyListings />} />
+          <Route
+            path="saved"
+            element={<SavedListings savedIds={savedIds} onToggleSave={toggleSave} />}
+          />
         </Route>
 
         <Route path = "/" element = {<Login />} />
