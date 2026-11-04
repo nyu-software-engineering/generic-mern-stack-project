@@ -1,6 +1,6 @@
 import { useId } from 'react'
 
-export default function Input({ label, hint, error, prefix, id, className = '', ...props }) {
+export default function Input({ label, hint, error, prefix, id, suffix, className = '', ...props }) {
   const generatedId = useId()
   const inputId = id ?? generatedId
   const messageId = `${inputId}-message`
@@ -26,6 +26,7 @@ export default function Input({ label, hint, error, prefix, id, className = '', 
           className="h-full w-full bg-transparent text-base text-stone-900 outline-none placeholder:text-stone-400"
           {...props}
         />
+                {suffix}
       </div>
       {message && (
         <p id={messageId} className={`text-sm ${error ? 'text-red-600' : 'text-stone-500'}`}>
