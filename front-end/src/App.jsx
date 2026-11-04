@@ -50,7 +50,7 @@ function App() {
             <Route path="/" element={<Home />} />
 
             {/* Search page */}
-            <Route path="/search" element={<Search />} />
+            <Route path="/search" element={<Search services={services} />} />
             
             {/* Booking page */}
             <Route path="/services/:serviceId" element={<ServiceDetails />} />
