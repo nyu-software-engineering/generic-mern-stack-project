@@ -12,3 +12,32 @@
 .top-bar strong{
     font-size: 16px;
 }
+#edit-profile{
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    margin: 16px 0 24px;
+    padding: 14px 16px;
+    background: white;
+    color: black;
+    border: 1px solid black;
+    border-radius: 0;
+    font: inherit;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+    cursor: pointer;
+}
+
+#edit-profile:hover{
+    background: #f1f5f9;
+}
+
+#edit-profile:active{
+    background: #e2e8f0;
+}
+
+#edit-profile:focus-visible{
+    outline: 2px solid black;
+    outline-offset: 2px;
+}
