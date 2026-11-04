@@ -1,0 +1,63 @@
+.search-page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* The card surface comes from .doin-card - this is layout only */
+.search-container {
+  width: 100%;
+  max-width: 440px;
+  box-sizing: border-box;
+}
+
+.search-title {
+  font-size: 28px;
+  margin: 0 0 24px;
+}
+
+.search-section-title {
+  font-size: 20px;
+  margin: 24px 0 8px;
+}
+
+.search-empty {
+  color: #687386;
+  margin: 0 0 8px;
+}
+
+/* One result card: a small photo next to the title and details */
+
+.search-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid #e8eaf1;
+}
+
+.search-card-image {
+  width: 64px;
+  height: 64px;
+  border-radius: 8px;
+  object-fit: cover;
+  background-color: #e8eaf1;
+}
+
+.search-card-title {
+  font-size: 16px;
+  margin: 0 0 4px;
+}
+
+.search-card-details {
+  color: #687386;
+  font-size: 14px;
+  margin: 0;
+}
+
+.search-filter-label {
+  font-weight: 600;
+  margin: 0 0 8px;
+}
