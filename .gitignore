@@ -127,3 +127,7 @@ typings/
 ## Jekyll artifacts
 **/.jekyll-cache
 **/_site/
+
+# Local wireframe working notes
+careerhive-wireframe-checklist.md
+careerhive-figma-testing-guide.md

@@ -1,0 +1,130 @@
+:root {
+  --color-text: #202328;
+  --color-muted: #555b64;
+  --color-border: #d4d7db;
+  --color-surface: #ffffff;
+  --color-accent-surface: #f6edcc;
+  --color-accent-text: #634900;
+  --color-focus: #7b5900;
+  --page-title-size: 1.5rem;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  color: var(--color-text);
+  background: var(--color-surface);
+  line-height: 1.5;
+}
+
+.app {
+  min-height: 100dvh;
+  max-width: 430px;
+  margin: 0 auto;
+  padding: 0 16px 48px;
+}
+
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 0 16px;
+  border-bottom: 1px solid #d4d7db;
+}
+
+.app-header a {
+  color: #202328;
+  font-size: 1.125rem;
+  font-weight: 750;
+  letter-spacing: -0.04em;
+  text-decoration: none;
+}
+
+.app-header span {
+  color: #634900;
+  background: #f6edcc;
+  padding: 3px 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.demo-notice {
+  margin: 14px 0 24px;
+  color: #555b64;
+  font-size: 0.75rem;
+}
+
+.app-header a:focus-visible {
+  outline: 3px solid #7b5900;
+  outline-offset: 3px;
+}
+
+.ui-button {
+  min-height: 44px;
+  padding: 10px 16px;
+  border: 1px solid var(--color-text);
+  border-radius: 0;
+  background: var(--color-text);
+  color: var(--color-surface);
+  font: inherit;
+  font-weight: 600;
+  line-height: 1.4;
+  cursor: pointer;
+}
+
+.ui-button-secondary {
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.ui-button:hover {
+  background: #444950;
+  color: var(--color-surface);
+}
+
+.ui-button-secondary:hover {
+  background: var(--color-accent-surface);
+  color: var(--color-text);
+}
+
+.ui-field {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 0;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+}
+
+.ui-button:focus-visible,
+.ui-field:focus-visible,
+.filter-chip:focus-visible,
+.filter-choice input:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 3px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}

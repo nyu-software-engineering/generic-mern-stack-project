@@ -1,0 +1,240 @@
+[
+  {
+    "id": "brightspace-software-intern",
+    "title": "Software Engineering Intern",
+    "company": "Brightspace Labs",
+    "location": "New York, NY",
+    "term": "Summer 2027",
+    "deadline": "2026-11-13",
+    "postedAt": "2026-10-25",
+    "pay": "$40–45 / hour",
+    "sponsorsVisa": true,
+    "matchScore": 92,
+    "workAuthorization": "CPT/OPT accepted; visa sponsorship listed for this demo role.",
+    "matchSummary": "Your demo profile shares React and Python experience with this role.",
+    "description": [
+      "Work with a small engineering team building tools that help people organize their day. You will contribute to the web application and the services behind it.",
+      "Pair with a mentor to turn product requirements into clear, maintainable features. Take part in design discussions, code reviews, and short delivery cycles.",
+      "The internship includes time to learn the existing system, ship a focused project, and present your work to the team. Collaboration and asking useful questions matter as much as prior experience."
+    ],
+    "requirements": [
+      "Pursuing a degree in Computer Science or a related field.",
+      "Experience with Python or JavaScript.",
+      "Familiarity with Git and REST APIs.",
+      "Available for the full summer internship."
+    ],
+    "jobType": "internship",
+    "logoUrl": "https://picsum.photos/seed/careerhive-brightspace-software-intern/88/88",
+    "applicationUrl": "https://example.com/?job=brightspace-software-intern"
+  },
+  {
+    "id": "hathaway-data-intern",
+    "title": "Data Analyst Intern",
+    "company": "Hathaway Health",
+    "location": "New York, NY",
+    "term": "Summer 2027",
+    "deadline": "2026-11-16",
+    "postedAt": "2026-10-26",
+    "pay": "$28–32 / hour",
+    "sponsorsVisa": true,
+    "matchScore": 88,
+    "workAuthorization": "Work authorization and sponsorship eligibility must be confirmed with the employer.",
+    "matchSummary": "The demo profile includes Python and data analysis skills relevant to this role.",
+    "description": [
+      "Help a research operations team understand how its services are used. Prepare reliable datasets and explain what the numbers show.",
+      "Work with an analyst to check data quality, build simple reports, and document the assumptions behind your conclusions.",
+      "Present a small analysis project at the end of the internship. The work emphasizes careful reasoning and clear communication."
+    ],
+    "requirements": [
+      "Comfortable using spreadsheets and SQL.",
+      "Experience with Python or another analysis language.",
+      "Able to explain findings to a nontechnical audience."
+    ],
+    "jobType": "internship",
+    "logoUrl": "https://picsum.photos/seed/careerhive-hathaway-data-intern/88/88",
+    "applicationUrl": "https://example.com/?job=hathaway-data-intern"
+  },
+  {
+    "id": "coffee-design-intern",
+    "title": "Product Design Intern",
+    "company": "Coffee Studio",
+    "location": "Brooklyn, NY",
+    "term": "Summer 2027",
+    "deadline": "2026-11-19",
+    "postedAt": "2026-10-27",
+    "pay": "$26–30 / hour",
+    "sponsorsVisa": false,
+    "matchScore": 74,
+    "workAuthorization": "Existing U.S. work authorization required; this demo listing does not offer sponsorship.",
+    "matchSummary": "The demo profile has related product experience; a design portfolio would strengthen the match.",
+    "description": [
+      "Help shape simple mobile experiences for a small product studio. Explore user needs and translate them into testable flows.",
+      "Create wireframes and prototypes, discuss tradeoffs with engineering, and revise designs after feedback.",
+      "You will own a bounded design problem with guidance from a mentor and share the reasoning behind your final proposal."
+    ],
+    "requirements": [
+      "A portfolio showing your design process.",
+      "Familiarity with Figma or a similar prototyping tool.",
+      "Interest in accessible mobile interfaces."
+    ],
+    "jobType": "internship",
+    "logoUrl": "https://picsum.photos/seed/careerhive-coffee-design-intern/88/88",
+    "applicationUrl": "https://example.com/?job=coffee-design-intern"
+  },
+  {
+    "id": "boxgrid-cloud-intern",
+    "title": "Cloud Support Intern",
+    "company": "Box Grid",
+    "location": "Jersey City, NJ",
+    "term": "Summer 2027",
+    "deadline": "2026-11-22",
+    "postedAt": "2026-10-28",
+    "pay": "$25–29 / hour",
+    "sponsorsVisa": null,
+    "matchScore": 69,
+    "workAuthorization": null,
+    "matchSummary": "The demo profile has troubleshooting experience; cloud networking is an area to develop.",
+    "description": [
+      "Learn how a platform support team investigates customer issues and keeps useful technical documentation.",
+      "Reproduce problems in a safe test environment, collect evidence, and work with engineers to explain the cause.",
+      "A mentor will help you learn the platform. Your final project will improve a recurring support workflow or a piece of documentation."
+    ],
+    "requirements": [
+      "Familiarity with Linux and basic networking.",
+      "Comfortable writing clear technical notes.",
+      "Patient, methodical troubleshooting skills."
+    ],
+    "jobType": "internship",
+    "logoUrl": "https://picsum.photos/seed/careerhive-boxgrid-cloud-intern/88/88",
+    "applicationUrl": "https://example.com/?job=boxgrid-cloud-intern"
+  },
+  {
+    "id": "northstar-frontend-intern",
+    "title": "Frontend Development Intern",
+    "company": "Northstar Civic Labs",
+    "location": "Remote, United States",
+    "term": "Summer 2027",
+    "deadline": "2026-11-25",
+    "postedAt": "2026-10-29",
+    "pay": "$30–35 / hour",
+    "sponsorsVisa": false,
+    "matchScore": 86,
+    "workAuthorization": "Existing work authorization required for this demo internship.",
+    "matchSummary": "The demo profile includes JavaScript and React, which are central to this role.",
+    "description": [
+      "Build accessible web interfaces that help a small public-interest team share its work.",
+      "Translate approved designs into responsive components and check keyboard interaction, error handling, and small-screen behavior.",
+      "Work with a mentor on a complete feature, including tests and documentation, and explain your choices during review."
+    ],
+    "requirements": [
+      "Experience with HTML, CSS, and JavaScript.",
+      "Some React experience.",
+      "Interest in accessibility and responsive design."
+    ],
+    "jobType": "internship",
+    "logoUrl": "https://picsum.photos/seed/careerhive-northstar-frontend-intern/88/88",
+    "applicationUrl": "https://example.com/?job=northstar-frontend-intern"
+  },
+  {
+    "id": "fieldnote-quality-intern",
+    "title": "Quality Engineering Intern",
+    "company": "Fieldnote Systems",
+    "location": "Boston, MA",
+    "term": "Summer 2027",
+    "deadline": "2026-11-28",
+    "postedAt": "2026-10-30",
+    "pay": "$27–31 / hour",
+    "sponsorsVisa": true,
+    "matchScore": 81,
+    "workAuthorization": "Sponsorship listed; confirm eligibility and timing with the employer.",
+    "matchSummary": "The demo profile shows programming experience useful for writing repeatable checks.",
+    "description": [
+      "Help a product team find important problems before a release. Explore features, document clear reproductions, and build repeatable checks.",
+      "Work with developers to understand expected behavior and choose useful edge cases instead of testing only the happy path.",
+      "Your internship project will improve the reliability of a focused product area and leave clear documentation for the next person."
+    ],
+    "requirements": [
+      "Experience with a programming language.",
+      "Attention to detail when describing a problem.",
+      "Interest in automated testing and practical debugging."
+    ],
+    "jobType": "internship",
+    "logoUrl": "https://picsum.photos/seed/careerhive-fieldnote-quality-intern/88/88",
+    "applicationUrl": "https://example.com/?job=fieldnote-quality-intern"
+  },
+  {
+    "id": "brightspace-frontend-entry",
+    "title": "Frontend Engineer",
+    "company": "Brightspace Labs",
+    "location": "New York, NY",
+    "jobType": "entry-level",
+    "deadline": "2026-11-05",
+    "postedAt": "2026-10-31",
+    "pay": "$85,000–100,000 / year",
+    "sponsorsVisa": true,
+    "matchScore": 91,
+    "workAuthorization": "Sponsorship listed for this fictional entry-level role; confirm eligibility with the employer.",
+    "matchSummary": "Your demo profile includes React and accessible interface development, which align with this role.",
+    "description": [
+      "Join a product team building clear, accessible web experiences. This is a full-time entry-level position with mentorship from experienced engineers.",
+      "Develop React components, collaborate with designers, and test complete user flows. You will help maintain shared interface patterns and explain implementation choices during review."
+    ],
+    "requirements": [
+      "Experience with HTML, CSS, JavaScript, and React through coursework or projects.",
+      "Familiarity with Git and automated testing.",
+      "Interest in accessible and responsive web interfaces."
+    ],
+    "logoUrl": "https://picsum.photos/seed/careerhive-brightspace-frontend-entry/88/88",
+    "applicationUrl": "https://example.com/?job=brightspace-frontend-entry"
+  },
+  {
+    "id": "hathaway-analyst-entry",
+    "title": "Data Analyst",
+    "company": "Hathaway Health",
+    "location": "Boston, MA",
+    "jobType": "entry-level",
+    "deadline": "2026-11-08",
+    "postedAt": "2026-10-30",
+    "pay": "$65,000–78,000 / year",
+    "sponsorsVisa": false,
+    "matchScore": 84,
+    "workAuthorization": "Existing U.S. work authorization required; this fictional role does not offer sponsorship.",
+    "matchSummary": "Python and analytical coursework in the demo profile align with the reporting work described here.",
+    "description": [
+      "Help an operations team turn reliable data into useful reports. This full-time entry-level role includes guidance on analysis methods, data quality, and stakeholder communication.",
+      "Prepare datasets, investigate unusual results, and document the assumptions behind your findings. Share your work with colleagues who use the reports to plan their services."
+    ],
+    "requirements": [
+      "Experience with SQL, spreadsheets, and basic statistics.",
+      "Python or equivalent analytical programming experience.",
+      "Ability to explain findings clearly and check the quality of source data."
+    ],
+    "logoUrl": "https://picsum.photos/seed/careerhive-hathaway-analyst-entry/88/88",
+    "applicationUrl": "https://example.com/?job=hathaway-analyst-entry"
+  },
+  {
+    "id": "northstar-quality-entry",
+    "title": "Quality Engineer",
+    "company": "Northstar Civic Labs",
+    "location": "Remote, United States",
+    "jobType": "entry-level",
+    "deadline": null,
+    "postedAt": "2026-11-01",
+    "pay": "$70,000–85,000 / year",
+    "sponsorsVisa": null,
+    "matchScore": 79,
+    "workAuthorization": null,
+    "matchSummary": "Programming and methodical troubleshooting in the demo profile are relevant to this role's testing responsibilities.",
+    "description": [
+      "Support the quality of web tools used by a public-interest team. This full-time entry-level role combines exploratory testing with repeatable automated checks.",
+      "Investigate defects, write clear reproduction steps, and work with developers to verify fixes. A mentor will help you develop test plans and prioritize high-impact user journeys."
+    ],
+    "requirements": [
+      "Experience programming in JavaScript or Python.",
+      "Careful problem solving and clear written communication.",
+      "Interest in browser testing and accessible user experiences."
+    ],
+    "logoUrl": "https://picsum.photos/seed/careerhive-northstar-quality-entry/88/88",
+    "applicationUrl": "https://example.com/?job=northstar-quality-entry"
+  }
+]
