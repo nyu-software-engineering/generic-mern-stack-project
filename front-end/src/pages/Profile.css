@@ -12,16 +12,16 @@
 .top-bar strong{
     font-size: 16px;
 }
-#edit-profile{
+.profile-button{
     display: block;
     box-sizing: border-box;
     width: 100%;
-    margin: 16px 0 24px;
+    margin: 12px 0 24px;
     padding: 14px 16px;
     background: white;
     color: black;
     border: 1px solid black;
-    border-radius: 0;
+    border-radius: 8px;
     font: inherit;
     font-size: 16px;
     font-weight: 600;
@@ -29,15 +29,27 @@
     cursor: pointer;
 }
 
-#edit-profile:hover{
+.profile-button:hover{
     background: #f1f5f9;
 }
 
-#edit-profile:active{
+.profile-button:active{
     background: #e2e8f0;
 }
 
-#edit-profile:focus-visible{
+.profile-button:focus-visible{
     outline: 2px solid black;
     outline-offset: 2px;
+}
+
+.profile-button-row{
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.profile-button-row .profile-button{
+    margin: 0;
+    font-size: 14px;
+    font-weight: 400;
 }
