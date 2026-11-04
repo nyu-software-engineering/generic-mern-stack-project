@@ -120,3 +120,55 @@ export const badges = [
     progress: { done: 3, total: 6 },
   },
 ]
+
+// Sample lessons for the Learning Hub. Later these will come from the back end.
+export const lessons = [
+  {
+    id: 'first-steps',
+    title: 'First steps',
+    description: 'What StockSim is and how virtual cash works.',
+    duration: '2 min',
+    content:
+      'StockSim lets you practice investing with fake money. You start with virtual cash, pick stocks, and see how your choices affect your portfolio. Nothing here uses real money, so you can learn without risk.',
+  },
+  {
+    id: 'stock-prices',
+    title: 'Understanding stock prices',
+    description: 'Learn what a share price means and why it changes.',
+    duration: '3 min',
+    content:
+      'A stock price is what one share of a company costs right now. Prices go up when more people want to buy, and down when more people want to sell. Checking the latest price helps you decide when to buy or sell in StockSim.',
+  },
+  {
+    id: 'balanced-portfolio',
+    title: 'Building a balanced portfolio',
+    description: 'Why spreading your money across investments can help.',
+    duration: '4 min',
+    content:
+      'A portfolio is the collection of investments you own. Putting all your money into one stock is risky. Spreading money across a few companies or ETFs can reduce the chance that one bad day hurts everything at once.',
+  },
+  {
+    id: 'reading-returns',
+    title: 'Reading your returns',
+    description: 'How to tell if your practice trades are gaining or losing.',
+    duration: '3 min',
+    content:
+      'A return shows how much your investment has gained or lost compared with what you paid. A positive return means you are ahead. A negative return means the value has dropped. StockSim shows this so you can learn from each trade.',
+  },
+  {
+    id: 'market-orders',
+    title: 'Market orders',
+    description: 'What happens when you buy or sell at the current price.',
+    duration: '3 min',
+    content:
+      'A market order means you want to buy or sell right away at the best available price. In StockSim, this is the simple way to practice a trade. The price can change quickly, so the final amount may be a little different from what you first saw.',
+  },
+  {
+    id: 'dividends',
+    title: 'What is a dividend?',
+    description: 'How some companies share profits with shareholders.',
+    duration: '2 min',
+    content:
+      'A dividend is money a company pays to people who own its shares. Not every company pays dividends. When one does, shareholders receive a small payment based on how many shares they own.',
+  },
+]
