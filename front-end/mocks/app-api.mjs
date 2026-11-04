@@ -107,6 +107,7 @@ function authMiddleware(request, response, next) {
           "Email in use or passwords don't match. Sign in or use matching passwords.",
       });
     }
+    accounts.push({ email, password });
     return send(response, 201, { ok: true });
   });
 }
