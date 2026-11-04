@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import { fetchArticles, searchArticles } from './mock_data'
 import ArticleCard from './ArticleCard'
-//import './Catalog.css'
+import './styles/Catalog.css'
 
 const topics = ['All', 'AI/ML', 'Cybersecurity', 'Algorithms', 'Computer Vision']
 const numArticles = 10
@@ -10,7 +10,6 @@ const Catalog = () => {
   const [articles, setArticles] = useState([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
-  const [errorMessage, setError] = useState('')
   const [topic, setTopic] = useState('All')
   const [page, setPage] = useState(1)
 
@@ -21,9 +20,6 @@ const Catalog = () => {
         setArticles(response.data)
         setLoading(false)
       })
-      .catch(
-        setError("Articles could not be loaded.")
-      )
   }, [])
 
   const handleSearchChange = e => {
@@ -44,14 +40,12 @@ const Catalog = () => {
   const results = searchArticles(articles, searchTerm, topic)
 
   const pageCount = Math.ceil(results.length / numArticles)
-  const firstIndex = (page - 1) * articlesPerPage
+  const firstIndex = (page - 1) * numArticles
   const articlesOnPage = results.slice(firstIndex, firstIndex + numArticles)
 
   let message = ''
   if (loading) {
     message = 'Loading articles...'
-  } else if (errorMessage != '') {
-    message = errorMessage
   } else if (results.length == 0) {
     message = 'No articles found.'
   }
@@ -92,8 +86,8 @@ const Catalog = () => {
           <button
             type="button"
             className="page-button"
-            onClick={() => handlePageClick(page - 1)}
-            disabled={page === 1}
+            onClick = {() => handlePageClick(page - 1)}
+            disabled = {page <= 1}
           >
             Previous
           </button>
@@ -103,8 +97,8 @@ const Catalog = () => {
           <button
             type="button"
             className="page-button"
-            onClick={() => handlePageClick(page + 1)}
-            disabled={page === pageCount}
+            onClick = {() => handlePageClick(page + 1)}
+            disabled = {page >= pageCount}
           >
             Next
           </button>

@@ -1,5 +1,5 @@
-const axios = require("axios")
-const url = 'https://my.api.mockaroo.com/articles.json?key=f61ca6a0'
+import axios from 'axios'
+const url = 'https://api.mockaroo.com/api/befa3120?count=20&key=f61ca6a0'
 
 /* the hook for front-end paper data fetching.
 
@@ -35,7 +35,7 @@ const searchArticles = (articles, searchTerm, topic) => {
   const term = (searchTerm || '').trim().toLowerCase()
 
   return articles.filter(article => {
-    if (topic !== 'All' && article.topic !== topic) {
+    if (topic && topic !== 'All' && article.topic !== topic) {
       return false
     }
 

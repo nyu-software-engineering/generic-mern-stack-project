@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+.Catalog { @apply mx-auto max-w-md p-8; }
+.Catalog .page-title { @apply text-3xl font-bold text-center; }
+.Catalog .search { @apply mt-8; }
+.Catalog .search-label { @apply block mb-2 font-medium; }
+.Catalog .search-box { @apply w-full border border-gray-300 rounded-lg p-3; }
+.Catalog .topics { @apply mt-4 flex flex-wrap gap-2; }
+.Catalog .topic, .Catalog .page-button { @apply border border-gray-300 rounded-lg p-3; }
+.Catalog .topic.selected { @apply border-purple-600 bg-purple-600 text-white font-semibold; }
+.Catalog .page-button:disabled { @apply text-gray-300; }
+.Catalog .message { @apply mt-6 text-gray-500 text-center; }
+.Catalog .articles { @apply mt-6; }
+.Catalog .pages { @apply mt-6 flex items-center justify-between; }
+.Catalog .page-number { @apply text-gray-500; }
