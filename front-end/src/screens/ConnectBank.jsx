@@ -7,6 +7,7 @@ import Button from '../components/ui/Button.jsx'
 import Card from '../components/ui/Card.jsx'
 import ScreenTitle from '../components/ui/ScreenTitle.jsx'
 import SectionTitle from '../components/ui/SectionTitle.jsx'
+import { saveBankConnection } from '../data/bankConnection.js'
 
 // These are explanatory screen labels, not data from the back end.
 const weCheck = [
@@ -30,7 +31,10 @@ export default function ConnectBank() {
   // Sprint 1 simulates the connection; a real bank connection comes later.
   const handleConnect = () => {
     setIsConnecting(true)
-    setTimeout(() => navigate('/report'), connectDelayMs)
+    setTimeout(() => {
+      saveBankConnection()
+      navigate('/report')
+    }, connectDelayMs)
   }
 
   // Render the screen title, privacy details, and connect action.
@@ -71,8 +75,8 @@ export default function ConnectBank() {
         <summary className="cursor-pointer text-sm font-semibold">
           Why connect my bank?
         </summary>
-        <p className = "mt-2 test-sm test-muted">
-          We use rent payment history and income patterns to prepapre your Reliability Report.
+        <p className="mt-2 text-sm text-muted">
+          We use rent payment history and income patterns to prepare your Reliability Report.
         </p>
       </details>
         

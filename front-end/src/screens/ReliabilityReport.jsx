@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react'
+import { Navigate, useNavigate } from 'react-router'
 import Button from '../components/ui/Button.jsx'
 import Card from '../components/ui/Card.jsx'
 import ScreenTitle from '../components/ui/ScreenTitle.jsx'
 import SectionTitle from '../components/ui/SectionTitle.jsx'
 import Toggle from '../components/ui/Toggle.jsx'
-import { getReport } from '../data/api.js'
-import { formatDate } from '../data/format.js'
 import SharePopup from '../components/SharePopup.jsx'
+import { getReport } from '../data/api.js'
+import { clearBankConnection, isBankConnected } from '../data/bankConnection.js'
+import { formatDate } from '../data/format.js'
 
 // Build the shareable sections from the report data.
 function buildSections(report) {
@@ -22,11 +24,18 @@ export default function ReliabilityReport() {
   const [report, setReport] = useState(null)
   const [hiddenSections, setHiddenSections] = useState([])
   const [sharing, setSharing] = useState(false)
+  const navigate = useNavigate()
 
   // Load the report when the screen opens.
   useEffect(() => {
-    getReport().then(setReport)
+    if (isBankConnected()) {
+      getReport().then(setReport)
+    }
   }, [])
+
+  if (!isBankConnected()) {
+    return <Navigate to="/connect-bank" replace />
+  }
 
   // Wait until the report data is ready.
   if (!report) {
@@ -43,6 +52,12 @@ export default function ReliabilityReport() {
         ? hiddenSections.filter((id) => id !== sectionId)
         : [...hiddenSections, sectionId],
     )
+  }
+
+  // Clear the saved connection and return to Connect Bank.
+  const handleDisconnect = () => {
+    clearBankConnection()
+    navigate('/connect-bank')
   }
 
   return (
@@ -107,7 +122,11 @@ export default function ReliabilityReport() {
         <Button to="/share-links" variant="ghost">
           See active share links
         </Button>
+        <Button onClick={handleDisconnect} variant="secondary">
+          Disconnect bank
+        </Button>
       </div>
+
       {sharing && <SharePopup onClose={() => setSharing(false)} />}
     </div>
   )
