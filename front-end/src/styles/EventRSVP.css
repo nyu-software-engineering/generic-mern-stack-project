@@ -1,0 +1,68 @@
+
+/* RSVP and Leave Event Styling */
+
+/* Join and Leave Buttons */
+
+.rsvp-actions {
+  margin-top: 25px;
+}
+
+.rsvp-actions .doin-button {
+  width: 100%;
+}
+
+.rsvp-actions .doin-button:disabled {
+  background-color: #ddd;
+  color: #666;
+  cursor: not-allowed;
+}
+
+/* Confirmation Sections */
+
+.rsvp-confirmation {
+  background-color: #f5f6fb;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.rsvp-confirmation h2 {
+  font-size: 20px;
+  margin-top: 0;
+  color: #202638;
+}
+
+.rsvp-confirmation p {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #202638;
+}
+
+.rsvp-confirmation .doin-button {
+  margin-right: 8px;
+  margin-bottom: 8px;
+}
+
+/* Success Messages */
+
+.rsvp-message {
+  margin-top: 15px;
+  padding: 12px;
+  background-color: #eeedff;
+  color: #202638;
+  border-radius: 8px;
+  text-align: center;
+}
+
+/* Mobile Styling */
+
+@media (max-width: 600px) {
+  .rsvp-confirmation {
+    padding: 15px;
+  }
+
+  .rsvp-confirmation .doin-button {
+    width: 100%;
+    margin-right: 0;
+  }
+}
