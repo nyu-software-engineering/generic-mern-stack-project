@@ -7,6 +7,7 @@ import ClosetSummaryPage from './pages/ClosetSummaryPage'
 import DashboardPage from './pages/DashboardPage'
 import EditEmailPage from './pages/EditEmailPage'
 import EditItemPage from './pages/EditItemPage'
+import ForgotPasswordPage from './pages/ForgotPasswordPage'
 import ItemDetailPage from './pages/ItemDetailPage'
 import ItemRankingsPage from './pages/ItemRankingsPage'
 import LogInPage from './pages/LogInPage'
@@ -22,6 +23,7 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Navigate to="/welcome" replace />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/welcome" element={<WelcomePage />} />
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/login" element={<LogInPage />} />
