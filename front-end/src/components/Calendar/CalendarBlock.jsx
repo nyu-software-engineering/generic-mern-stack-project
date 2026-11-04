@@ -1,5 +1,4 @@
 import './Calendar.css';
-import React from 'react';
 
 export function CalendarBlock({ date, isToday = false }) {
     if (date === null) {
