@@ -2,20 +2,42 @@
 // useState lets the screen remember things (the list of invites, the message).
 import React, { useState } from "react"
 
+// All the data comes from demoData.js so every screen stays consistent.
+// currentUserId = the logged-in user (u_1)
+// listInvites   = invites to join a list (who sent it, who got it, status)
+// lists         = each list belongs to a city
+// cities        = city names
+// users         = user info (used to show the sender's username)
+import {
+  currentUserId,
+  listInvites,
+  lists,
+  cities,
+  users,
+} from "../data/demoData"
+
 // Invitations inbox (Issue #100, User Stories #67, #68)
 // Each invite shows who sent it and which city.
 // Accepting or declining removes it from the list.
-// Uses mocked data for Sprint 1 (no back-end yet).
 
-// Fake invites for now. Later these will come from the database.
-// id    = unique number for each invite
-// from  = username of the friend who sent it
-// city  = the city list they invited you to
-const MOCK_INVITES = [
-  { id: 1, from: "siyona", city: "New York City" },
-  { id: 2, from: "aashma", city: "Paris" },
-  { id: 3, from: "inoo", city: "Prague" },
-]
+// Turn a raw invite from demoData into what the screen needs:
+// the sender's username and the city name.
+function buildInvite(invite) {
+  const sender = users.find((u) => u.id === invite.fromUserId)
+  const list = lists.find((l) => l.id === invite.listId)
+  const city = list ? cities.find((c) => c.id === list.cityId) : null
+
+  return {
+    id: invite.id,
+    from: sender ? sender.username : "someone",
+    city: city ? city.name : "a city list",
+  }
+}
+
+// Only the invites sent TO the current user that are still waiting for an answer.
+const INITIAL_INVITES = listInvites
+  .filter((i) => i.toUserId === currentUserId && i.status === "pending")
+  .map(buildInvite)
 
 // All the CSS for this screen, kept inside this file so it works on its own.
 // Class names start with "inv-" so they don't clash with other screens.
@@ -48,7 +70,7 @@ const styles = `
   padding: 14px;
   background: #fff;
 }
-/* The text inside a card: "@siyona invited you to join New York City" */
+/* The text inside a card: "@johnl invited you to join New York" */
 .inv-text {
   margin: 0 0 12px;
   font-size: 16px;
@@ -92,9 +114,10 @@ const styles = `
 
 // The screen itself. "export default" lets other files import and show it.
 export default function InvitationsInbox() {
-  // invites = the current list of invites. setInvites = how we change the list.
-  // It starts with the fake invites from above.
-  const [invites, setInvites] = useState(MOCK_INVITES)
+  // invites = the current list of invites shown on screen.
+  // setInvites = how we change the list.
+  // It starts with the pending invites from demoData.
+  const [invites, setInvites] = useState(INITIAL_INVITES)
 
   // message = the small note shown after a button click.
   // It starts empty, so nothing is shown at first.
