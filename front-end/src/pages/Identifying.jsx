@@ -7,7 +7,7 @@ import {
   getPlaceById,
   getPlaceCardData,
   getSharingMessage,
-  mockSavePlaceToList,
+  savePlaceToList,
 } from '../data/mockDataLayer'
 import './Identifying.css'
 
@@ -48,11 +48,16 @@ export default function Identifying() {
   const place = getPlaceById(placeId)
 
   function handleSave() {
-    const result = mockSavePlaceToList({ placeId })
-    if (!result.ok && result.reason === 'duplicate') return
+    const result = savePlaceToList({ placeId, lookup })
+    if (!result.ok) return
 
     navigate('/create/success', {
-      state: { placeId, cityId: card.cityId, placeName: card.name },
+      state: {
+        placeId: result.placeId,
+        cityId: result.cityId,
+        cityName: result.cityName,
+        placeName: result.placeName,
+      },
     })
   }
 
