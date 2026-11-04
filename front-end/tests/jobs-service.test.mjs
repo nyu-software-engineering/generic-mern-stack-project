@@ -84,3 +84,29 @@ test('job type accepts unknown strings and legacy values, but rejects malformed 
     globalThis.fetch = transport
   }
 })
+
+test('one shared feed includes internships and entry-level records with matching detail identities', async () => {
+  const { getJobs, getJob } = await server.ssrLoadModule('/src/jobs/api.js')
+  const { filterJobs } = await server.ssrLoadModule('/src/jobs/browse.js')
+  const jobs = await getJobs()
+  assert.equal(jobs.length, 9)
+  assert.equal(new Set(jobs.map((job) => job.id)).size, 9)
+  const entries = jobs.filter((job) => job.jobType === 'entry-level')
+  assert.deepEqual(entries.map((job) => job.id),
+    ['brightspace-frontend-entry', 'hathaway-analyst-entry', 'northstar-quality-entry'])
+  const base = { sponsorsOnly: false, deadlineDays: null }
+  assert.equal(filterJobs(jobs, { ...base, jobTypes: [] }, '2026-11-02').length, 9)
+  assert.equal(filterJobs(jobs, { ...base, jobTypes: ['internship'] }, '2026-11-02').length, 6)
+  assert.equal(filterJobs(jobs, { ...base, jobTypes: ['entry-level'] }, '2026-11-02').length, 3)
+  assert.equal(filterJobs(jobs, { ...base, jobTypes: ['internship', 'entry-level'] }, '2026-11-02').length, 9)
+  assert.deepEqual(filterJobs(jobs, { jobTypes: ['entry-level'], sponsorsOnly: true, deadlineDays: 7 }, '2026-11-02')
+    .map((job) => job.id), ['brightspace-frontend-entry'])
+  for (const summary of entries) {
+    const detail = await getJob(summary.id)
+    assert.deepEqual(detail, summary)
+    assert.ok(detail.description.length && detail.requirements.length)
+    assert.equal(detail.term, undefined, 'Full-time roles must not inherit an internship term')
+    assert.match(detail.logoUrl, /^https:\/\/picsum\.photos\//)
+    assert.equal(new URL(detail.applicationUrl).searchParams.get('job'), detail.id)
+  }
+})

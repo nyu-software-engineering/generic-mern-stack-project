@@ -161,5 +161,80 @@
     "jobType": "internship",
     "logoUrl": "https://picsum.photos/seed/careerhive-fieldnote-quality-intern/88/88",
     "applicationUrl": "https://example.com/?job=fieldnote-quality-intern"
+  },
+  {
+    "id": "brightspace-frontend-entry",
+    "title": "Frontend Engineer",
+    "company": "Brightspace Labs",
+    "location": "New York, NY",
+    "jobType": "entry-level",
+    "deadline": "2026-11-05",
+    "postedAt": "2026-10-31",
+    "pay": "$85,000–100,000 / year",
+    "sponsorsVisa": true,
+    "matchScore": 91,
+    "workAuthorization": "Sponsorship listed for this fictional entry-level role; confirm eligibility with the employer.",
+    "matchSummary": "Your demo profile includes React and accessible interface development, which align with this role.",
+    "description": [
+      "Join a product team building clear, accessible web experiences. This is a full-time entry-level position with mentorship from experienced engineers.",
+      "Develop React components, collaborate with designers, and test complete user flows. You will help maintain shared interface patterns and explain implementation choices during review."
+    ],
+    "requirements": [
+      "Experience with HTML, CSS, JavaScript, and React through coursework or projects.",
+      "Familiarity with Git and automated testing.",
+      "Interest in accessible and responsive web interfaces."
+    ],
+    "logoUrl": "https://picsum.photos/seed/careerhive-brightspace-frontend-entry/88/88",
+    "applicationUrl": "https://example.com/?job=brightspace-frontend-entry"
+  },
+  {
+    "id": "hathaway-analyst-entry",
+    "title": "Data Analyst",
+    "company": "Hathaway Health",
+    "location": "Boston, MA",
+    "jobType": "entry-level",
+    "deadline": "2026-11-08",
+    "postedAt": "2026-10-30",
+    "pay": "$65,000–78,000 / year",
+    "sponsorsVisa": false,
+    "matchScore": 84,
+    "workAuthorization": "Existing U.S. work authorization required; this fictional role does not offer sponsorship.",
+    "matchSummary": "Python and analytical coursework in the demo profile align with the reporting work described here.",
+    "description": [
+      "Help an operations team turn reliable data into useful reports. This full-time entry-level role includes guidance on analysis methods, data quality, and stakeholder communication.",
+      "Prepare datasets, investigate unusual results, and document the assumptions behind your findings. Share your work with colleagues who use the reports to plan their services."
+    ],
+    "requirements": [
+      "Experience with SQL, spreadsheets, and basic statistics.",
+      "Python or equivalent analytical programming experience.",
+      "Ability to explain findings clearly and check the quality of source data."
+    ],
+    "logoUrl": "https://picsum.photos/seed/careerhive-hathaway-analyst-entry/88/88",
+    "applicationUrl": "https://example.com/?job=hathaway-analyst-entry"
+  },
+  {
+    "id": "northstar-quality-entry",
+    "title": "Quality Engineer",
+    "company": "Northstar Civic Labs",
+    "location": "Remote, United States",
+    "jobType": "entry-level",
+    "deadline": null,
+    "postedAt": "2026-11-01",
+    "pay": "$70,000–85,000 / year",
+    "sponsorsVisa": null,
+    "matchScore": 79,
+    "workAuthorization": null,
+    "matchSummary": "Programming and methodical troubleshooting in the demo profile are relevant to this role's testing responsibilities.",
+    "description": [
+      "Support the quality of web tools used by a public-interest team. This full-time entry-level role combines exploratory testing with repeatable automated checks.",
+      "Investigate defects, write clear reproduction steps, and work with developers to verify fixes. A mentor will help you develop test plans and prioritize high-impact user journeys."
+    ],
+    "requirements": [
+      "Experience programming in JavaScript or Python.",
+      "Careful problem solving and clear written communication.",
+      "Interest in browser testing and accessible user experiences."
+    ],
+    "logoUrl": "https://picsum.photos/seed/careerhive-northstar-quality-entry/88/88",
+    "applicationUrl": "https://example.com/?job=northstar-quality-entry"
   }
 ]
