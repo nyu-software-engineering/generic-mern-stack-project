@@ -2,10 +2,14 @@ import assert from 'node:assert/strict'
 import { before, test } from 'node:test'
 
 let filterJobs
+let searchJobs
+let sortJobs
 before(async () => {
   const module = await import('../src/jobs/browse.js').catch(() => null)
   assert.equal(typeof module?.filterJobs, 'function', 'The Browse filtering helper must be implemented')
   filterJobs = module.filterJobs
+  searchJobs = module.searchJobs
+  sortJobs = module.sortJobs
 })
 
 const jobs = Object.freeze([
@@ -53,4 +57,63 @@ test('impossible calendar dates are rejected instead of rolling into another mon
 test('valid future job types remain in the unrestricted feed but do not match an explicit type', () => {
   assert.ok(filterJobs(jobs, {}, today).some((job) => job.id === 'unknown'))
   assert.deepEqual(filterJobs(jobs, { jobTypes: ['entry-level'], sponsorsOnly: true, deadlineDays: 7 }, today), [])
+})
+
+const searchRecords = Object.freeze([
+  Object.freeze({ id: 'unknown', title: 'Designer', company: 'Studio', matchScore: null, notes: 'React' }),
+  Object.freeze({ id: 'zero', title: 'Engineer', company: 'Labs', matchScore: 0, requirements: Object.freeze(['React experience']) }),
+  Object.freeze({ id: 'high', title: 'Engineer', company: 'Labs', matchScore: 90, description: Object.freeze(['Build React interfaces']) }),
+])
+
+test('search matches a trimmed case-insensitive phrase in title, company, description, or requirements', () => {
+  assert.equal(typeof searchJobs, 'function', 'The Browse search helper must be implemented')
+  assert.deepEqual(ids(searchJobs(searchRecords, ' react ')), ['zero', 'high'])
+  assert.deepEqual(ids(searchJobs(searchRecords, 'ENGINEER')), ['zero', 'high'])
+  assert.deepEqual(ids(searchJobs(searchRecords, 'studio')), ['unknown'])
+  assert.deepEqual(ids(searchJobs(searchRecords, 'build react')), ['high'])
+  assert.deepEqual(ids(searchJobs(searchRecords, 'react build')), [])
+  assert.deepEqual(ids(searchJobs(searchRecords, 'no match')), [])
+})
+
+test('empty search preserves filtered source order in a fresh array', () => {
+  assert.equal(typeof searchJobs, 'function', 'The Browse search helper must be implemented')
+  for (const query of ['', '   ']) {
+    const result = searchJobs(searchRecords, query)
+    assert.deepEqual(result, searchRecords)
+    assert.notEqual(result, searchRecords)
+  }
+  assert.deepEqual(searchJobs([{ id: 'missing-text' }], '   '), [{ id: 'missing-text' }])
+  const records = searchRecords.map((job) => ({ ...job, jobType: job.id === 'high' ? 'entry-level' : 'internship' }))
+  assert.deepEqual(ids(searchJobs(filterJobs(records, { jobTypes: ['internship'] }), 'react')), ['zero'])
+})
+
+test('best match puts zero before unknown and keeps tied scores in source order without mutation', () => {
+  assert.equal(typeof sortJobs, 'function', 'The Browse sort helper must be implemented')
+  assert.deepEqual(ids(sortJobs(searchRecords, 'best-match')), ['high', 'zero', 'unknown'])
+  assert.deepEqual(ids(sortJobs(searchRecords)), ['high', 'zero', 'unknown'])
+  const records = Object.freeze([
+    ...searchRecords,
+    Object.freeze({ id: 'also-high', matchScore: 90 }),
+    Object.freeze({ id: 'missing' }),
+  ])
+  assert.deepEqual(ids(sortJobs(records, 'best-match')), ['high', 'also-high', 'zero', 'unknown', 'missing'])
+  assert.deepEqual(ids(searchRecords), ['unknown', 'zero', 'high'])
+  assert.notEqual(sortJobs(records, 'best-match'), records)
+})
+
+test('deadline and newest sort strict calendar dates with stable ties and unknown dates last', () => {
+  assert.equal(typeof sortJobs, 'function', 'The Browse sort helper must be implemented')
+  const records = Object.freeze([
+    Object.freeze({ id: 'rollover', deadline: '2026-02-31', postedAt: '2026-02-31' }),
+    Object.freeze({ id: 'later', deadline: '2026-11-09', postedAt: '2026-11-09' }),
+    Object.freeze({ id: 'earlier', deadline: '2026-11-02', postedAt: '2026-11-02' }),
+    Object.freeze({ id: 'tie', deadline: '2026-11-09', postedAt: '2026-11-09' }),
+    Object.freeze({ id: 'missing' }),
+    Object.freeze({ id: 'invalid', deadline: 'not-a-date', postedAt: '2026-13-01' }),
+    Object.freeze({ id: 'null', deadline: null, postedAt: null }),
+  ])
+  assert.deepEqual(ids(sortJobs(records, 'deadline')), ['earlier', 'later', 'tie', 'rollover', 'missing', 'invalid', 'null'])
+  assert.deepEqual(ids(sortJobs(records, 'newest')), ['later', 'tie', 'earlier', 'rollover', 'missing', 'invalid', 'null'])
+  assert.deepEqual(ids(records), ['rollover', 'later', 'earlier', 'tie', 'missing', 'invalid', 'null'])
+  assert.deepEqual(sortJobs([], 'newest'), [])
 })

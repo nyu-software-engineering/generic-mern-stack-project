@@ -145,6 +145,35 @@
   margin-bottom: var(--space-6);
 }
 
+.browse-search {
+  margin-bottom: var(--space-3);
+}
+
+.browse-search label,
+.browse-sort label {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.browse-search-row,
+.browse-control-row {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-2);
+}
+
+.browse-search-row input,
+.browse-sort {
+  flex: 1;
+  min-width: 0;
+}
+
+.browse-search-row button {
+  flex-shrink: 0;
+}
+
 .filter-chips {
   display: flex;
   flex-wrap: wrap;
