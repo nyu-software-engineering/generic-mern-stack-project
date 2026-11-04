@@ -1,25 +1,12 @@
-import { Link } from "react-router-dom";
-import SplitLeaseLogo from "../assets/splitlease-blank-background-logo.png";
+import { Link } from "react-router-dom"
 
-const Temphome = (props) => {
-  return (
-    <div>
-      <img
-        src={SplitLeaseLogo}
-        alt="SplitLeaseLogo"
-        style={{
-          width: "300px",
-          height: "auto",
-          display: "block",
-          margin: "0 auto",
-        }}
-      />
-      <Link to="/create"> See create_household</Link>
-      <br />
-      <Link to="/register"> See register</Link>
-      <br />
-      <Link to="/assets"> See assets</Link>
-    </div>
-  );
-};
-export default Temphome;
+const Templogin = props => {
+    return(
+        <div>
+            <h1>This is a temp page</h1>
+            <Link to="/home"> See create_household</Link>
+        </div>
+        
+    );
+}
+export default Templogin;
