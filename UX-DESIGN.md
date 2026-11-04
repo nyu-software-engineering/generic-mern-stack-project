@@ -1,12 +1,5 @@
 # User Experience Design
 
-This repository contains instructions and files for two assignments that together comprise the user experience design phase of a web app.
-
-Replace the contents of this file with the completed assignments, as described in:
-
-- [app map & wireframe instructions](instructions-0a-app-map-wireframes.md).
-- [prototype instructions](instructions-0b-prototyping.md)
-
 ## App_Map/SiteMap
 
 ![alt text](image-1.png)
@@ -21,7 +14,7 @@ Login in page for user.
 
 ![alt text](image-2.png)
 
-Home page for MapMaker. As seen by App_Map, this is the root layer of Mapmaker app
+Home page for MapMaker. As seen by App_Map, this is the root layer of Mapmaker app.
 
 ### Map Editor:
 
@@ -53,14 +46,14 @@ Page where user can select map style
 ![alt text](image-6.png)
 
 
-The page that contains all  of the user's maps along with a  picture of those maps
+The page that contains all of the user's maps along with a picture of those maps
 
 ## Prototype:
 
 [Figma Prototype](https://www.figma.com/proto/dplkXyPyJCOaQeVkIOdziE/MapMaker-Wireframe?node-id=2-2&p=f&t=08xnKSglZYAJCKb5-0&scaling=scale-down&content-scaling=fixed&starting-point-node-id=2%3A20)
 
 
-Link to Figma prototype. Begins on home page. Menu navigates to users maps. currently only one map but click on roman empire map in My maps. leads to map interface. can click through buttons to edit map. each of these buttons return to the main map page. 
+Link to Figma prototype. The prototype begins on home page.Clicking on the menus navigates to user maps page. Clicking on the top map in my maps will lead to the map editor interface. You can click through the buttons to edit the map. All of these buttons return to the main map editor page. 
 
 
 

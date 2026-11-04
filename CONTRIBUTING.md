@@ -19,6 +19,7 @@ Roles: TBD
 Each task in a sprint backlog will have a member assigned to it. Each member is responsible for communicating what they have done and what they are working on during each daily standup. They will also be responsible for communicating any delays or spikes that are impeding them from accomplishing a task.
 ## Local Environment Setup
 Apps required:
+
 Git
 NodeJS
 VSCode

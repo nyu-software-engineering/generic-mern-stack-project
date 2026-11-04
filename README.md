@@ -4,15 +4,15 @@ MapMaker is a website where users can describe a map they want in plain English 
 
 ## Core Team Members
 [Georgi](https://github.com/gp2479)
-[Bhavya]https://github.com/bhavya20051
-[Sean]https://github.com/seankimh
-[Vincent]https://github.com/vincentcamp
+[Bhavya](https://github.com/bhavya20051)
+[Sean](https://github.com/seankimh)
+[Vincent](https://github.com/vincentcamp)
 
 
 ## History
 
-[Initial_Project_Proposal](https://github.com/gp2479/project-proposal
-What and why?)
+[Initial_Project_Proposal](https://github.com/gp2479/project-proposal)
+
 
 ## Other Important Documents
 [UX_Design](https://github.com/agile-students-fall2026/generic-mern-stack-project-MapMaker/blob/master/UX-DESIGN.md) 
