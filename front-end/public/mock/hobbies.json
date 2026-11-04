@@ -1,0 +1,10 @@
+[
+  { "id": 1, "name": "Bouldering", "category": "Outdoors", "members": 152, "isPopular": true, "description": "Indoor and outdoor climbing for all levels. Beginners welcome." },
+  { "id": 2, "name": "Pottery", "category": "Arts", "members": 67, "isPopular": true, "description": "Learn wheel throwing and hand building." },
+  { "id": 3, "name": "Rock climbing", "category": "Outdoors", "members": 12, "isPopular": true, "description": "Climb outdoors with people at your level." },
+  { "id": 4, "name": "Pickup soccer", "category": "Sport", "members": 300, "isPopular": true, "description": "Casual games, all skill levels." },
+  { "id": 5, "name": "Pottery Club", "category": "Arts", "members": 13, "isPopular": false, "description": "A small weekly pottery group." },
+  { "id": 6, "name": "Pottery & Wine", "category": "Arts", "members": 54, "isPopular": false, "description": "Make something and have a drink." },
+  { "id": 7, "name": "Open mic nights", "category": "Music", "members": 89, "isPopular": false, "description": "Play a set or come to listen." },
+  { "id": 8, "name": "Running", "category": "Sport", "members": 45, "isPopular": false, "description": "Group runs for every pace." }
+]

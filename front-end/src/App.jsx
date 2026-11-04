@@ -68,14 +68,22 @@
 
 // export default App
 
+
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
+import Discover from "./discover/Discover"
+import HobbyDetail from "./discover/HobbyDetail"
+import EventDetail from "./discover/EventDetail"
 import './App.css'
 
 const App = () => {
   return(
-    <main>
-      <h1>HobbyHub</h1>
-      <p>React front-end setup completed</p>
-    </main>
+    <Router>
+      <Routes>
+        <Route path="/discover" element={<Discover />} />
+        <Route path="/hobbies/:id" element={<HobbyDetail />} />
+        <Route path="/events/:id" element={<EventDetail />} />
+      </Routes>
+    </Router>
   )
 }
 
