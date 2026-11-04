@@ -41,17 +41,5 @@
 }
 
 .city-page-view--map {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 320px;
-  border: 1px dashed #d1d5db;
-  border-radius: 16px;
-  background: #f3f4f6;
-}
-
-.city-page-view-title {
-  color: #6b7280;
-  font-size: 16px;
-  font-weight: 400;
+  min-width: 0;
 }

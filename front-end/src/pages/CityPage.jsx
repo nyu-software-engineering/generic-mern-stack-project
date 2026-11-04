@@ -2,7 +2,10 @@ import { useEffect, useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router'
 import CityHeader from '../components/CityHeader'
 import RankedCityList from '../components/RankedCityList'
-import { getRankedCityPlaces, loadCityHeaders } from '../data/mockDataLayer'
+import PlaceMap from '../components/PlaceMap'
+import CategoryFilter from '../components/CategoryFilter'
+import { filterPlacesByCategory } from '../components/mapPresentation'
+import { getCityById, getPlaceCategories, getRankedCityPlaces, loadCityHeaders } from '../data/mockDataLayer'
 import './CityPage.css'
 
 export default function CityPage() {
@@ -11,6 +14,8 @@ export default function CityPage() {
   const [attempt, setAttempt] = useState(0)
   const [result, setResult] = useState(null)
   const view = searchParams.get('view') === 'map' ? 'map' : 'list'
+  const categoryParam = searchParams.get('category')
+  const category = getPlaceCategories().some(({ id }) => id === categoryParam) ? categoryParam : 'all'
   const currentResult = result?.cityId === cityId && result?.attempt === attempt
     ? result
     : null
@@ -45,6 +50,15 @@ export default function CityPage() {
     })
   }
 
+  function changeCategory(nextCategory) {
+    setSearchParams((previous) => {
+      const next = new URLSearchParams(previous)
+      if (nextCategory === 'all') next.delete('category')
+      else next.set('category', nextCategory)
+      return next
+    })
+  }
+
   if (!currentResult) {
     return <p className="city-page-message" role="status">Loading city…</p>
   }
@@ -68,12 +82,23 @@ export default function CityPage() {
   }
 
   const { city } = currentResult
+  const allPlaces = getRankedCityPlaces(city.id)
+  const visiblePlaces = filterPlacesByCategory(allPlaces, category)
   return (
     <section className="city-page" aria-label={`${city.name} city list`}>
       <CityHeader city={city} view={view} onViewChange={changeView} />
+      <CategoryFilter value={category} onChange={changeCategory} />
       <section id="city-view" className={`city-page-view city-page-view--${view}`} aria-label={`${view === 'map' ? 'Map' : 'List'} view`}>
-        {view === 'list' ? <RankedCityList places={getRankedCityPlaces(city.id)} /> : (
-          <h2 className="city-page-view-title">Map view</h2>
+        {visiblePlaces.length === 0 && category !== 'all' && (
+          <div className="place-filter-empty" role="status">
+            <p>No saved places in this category.</p>
+            <button type="button" onClick={() => changeCategory('all')}>Show all categories</button>
+          </div>
+        )}
+        {view === 'list' ? (
+          (visiblePlaces.length > 0 || category === 'all') && <RankedCityList places={visiblePlaces} />
+        ) : (
+          <PlaceMap places={visiblePlaces} center={getCityById(city.id)?.coordinates} label={city.name} />
         )}
       </section>
     </section>
