@@ -22,7 +22,11 @@ function Profile() {
       <h1>Profile</h1>
 
       <div className="booking-card">
-        <h2>{currentUser.displayName || currentUser.email} · Verified NYU</h2>
+        <h2>
+          {currentUser.displayName || currentUser.email}
+          {' · '}
+          {currentUser.emailVerified ? 'Verified NYU' : 'Email not verified'}
+        </h2>
         {/* Ratings and rental counts live in the shared mock data, which has no record for new accounts. */}
         <p>Not rated yet · 0 completed rentals</p>
         <p>{currentUser.email}</p>
@@ -51,7 +55,7 @@ function Profile() {
         <h2>Account</h2>
         <div className="booking-actions">
           <Link to={`/users/${CURRENT_USER_ID}/reputation`} className="booking-btn">
-            View reputation profile
+            View demo reputation
           </Link>
         </div>
         <p className="profile-links">
