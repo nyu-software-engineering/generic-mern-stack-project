@@ -3,7 +3,6 @@ import CreateHousehold from "./pages/create_household/CreateHousehold";
 import Login from "./pages/login/Login";
 import Temphome from "./pages/temp_home";
 import IndividualProtocol from "./pages/individual_protocol/individual_protocol";
-import CreateHousehold from "./pages/create_household/CreateHousehold";
 import Protocols from "./pages/protocols/Protocols";
 import React from "react";
 import Register from "./pages/register/register";

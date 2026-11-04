@@ -5,29 +5,61 @@ import SplitLeaseLogo from "../../assets/splitlease-blank-background-logo.png";
 
 const IndividualProtocol = (props) => {
   return (
-    <header className="protocolHeader">
-      <div className="protocolHeaderTop">
-        <img
-          src={SplitLeaseLogo}
-          alt="SplitLease Logo"
-          className="protocolLogo"
-        />
-        <button
-          type="button"
-          className="backButton"
-          onClick={() => navigate(-1)}
-        >
-          Back
-        </button>
-      </div>
+    <>
+      <header className="protocolHeader">
+        <div className="protocolHeaderTop">
+          <img
+            src={SplitLeaseLogo}
+            alt="SplitLease Logo"
+            className="protocolLogo"
+          />
+          <button
+            type="button"
+            className="backButton"
+            onClick={() => navigate(-1)}
+          >
+            Back
+          </button>
+        </div>
 
-      <h1 className="protocolTitle">Protocol for {props.householdName}</h1>
+        <h1 className="protocolTitle">Protocol for {props.householdName}</h1>
 
-      <div className="protocolInfo">
-        <p>Status of Protocol: </p>
-        <p>Proposed by: </p>
-      </div>
-    </header>
+        <div className="protocolInfo">
+          <p>Status of Protocol: </p>
+          <p>Proposed by: </p>
+        </div>
+      </header>
+
+      <main className="protocolBody">
+        <section className="descriptionSection">
+          <div className="sectionHeaderRow">
+            <h2 className="sectionTitle">Description</h2>
+            <button type="button" className="editButton">
+              Edit/Request Edit
+            </button>
+          </div>
+          <div className="descriptionBox">{props.description}</div>
+        </section>
+
+        <section className="membersSection">
+          <h2 className="sectionTitle">Members and status</h2>
+          <div className="membersList">
+            <div className="memberRow">
+              <div className="memberName">Member 1</div>
+              <div className="memberStatus">Status</div>
+            </div>
+            <div className="memberRow">
+              <div className="memberName">Member 2</div>
+              <div className="memberStatus">Status</div>
+            </div>
+            <div className="memberRow">
+              <div className="memberName">Member 3</div>
+              <div className="memberStatus">Status</div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </>
   );
 };
 
