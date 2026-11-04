@@ -4,6 +4,7 @@ import reactLogo from "./assets/react.svg";
 import viteLogo from "./assets/vite.svg";
 import CreateHousehold from "./pages/create_household/CreateHousehold";
 import Temphome from "./pages/temp_home";
+import Protocols from "./pages/protocols/Protocols";
 import React from "react";
 import Register from "./pages/register/register";
 import AssetList from "./pages/assets/AssetList";
@@ -21,6 +22,7 @@ function App() {
         {/* <Route basename={import.meta.env.BASE_URL} /> */}
         <Route path="/" element={<Temphome />} />
         <Route path="/create" element={<CreateHousehold />} />
+        <Route path="/protocols" element={<Protocols />} />
         <Route path="/register" element={<Register />} />
         <Route path="/assets" element={<AssetList />} />
         <Route path="/monthly-activity" element={<MonthlyActivity />} />
