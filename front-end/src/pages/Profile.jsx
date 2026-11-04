@@ -5,7 +5,7 @@ import "./Profile.css";
 export default function Profile() {
   return (
     <main className="profile-page">
-      <div className="profile-container">
+      <div className="doin-card profile-card">
         <h1 className="profile-heading">My profile</h1>
 
         <img
@@ -21,11 +21,11 @@ export default function Profile() {
         </p>
 
         <div className="profile-actions">
-          <button className="profile-button profile-button-primary">
+          <button className="doin-button doin-button--primary">
             Edit profile
           </button>
-          <button className="profile-button">My events</button>
-          <button className="profile-button">Settings</button>
+          <button className="doin-button doin-button--secondary">My events</button>
+          <button className="doin-button doin-button--secondary">Settings</button>
         </div>
 
         <h2 className="profile-section-title">
