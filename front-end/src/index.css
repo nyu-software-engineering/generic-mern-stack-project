@@ -51,13 +51,6 @@ body {
   text-decoration: none;
 }
 
-.app-header span {
-  color: #634900;
-  background: #f6edcc;
-  padding: 3px 8px;
-  font-size: 0.75rem;
-  font-weight: 600;
-}
 
 .demo-notice {
   margin: 14px 0 24px;

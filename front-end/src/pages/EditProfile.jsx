@@ -1,25 +1,20 @@
-import { useEffect, useState } from 'react'
-import { useAppState } from '../data/AppState.jsx'
+import { useState } from 'react'
+import { useAppState } from '../data/useAppState.js'
 import './EditProfile.css'
 import roleChoices from '../../mocks/roles.json'
 
 function EditProfile() {
     const appState = useAppState()
-    const [draft, setDraft] = useState(null)
+    if (appState.status === 'error') return <p role="alert">{appState.message}</p>
+    if (appState.status === 'loading' || !appState.profile) return <p>Loading profile…</p>
+    return <EditProfileForm key={appState.profile.id} profile={appState.profile} onSave={appState.saveProfile} />
+}
+
+function EditProfileForm({ profile, onSave }) {
+    const [draft, setDraft] = useState(() => ({ ...profile, locationsText: profile.locations.join(', ') }))
     const [photoOpen, setPhotoOpen] = useState(false)
     const [photoChoice, setPhotoChoice] = useState('')
     const [skillInput, setSkillInput] = useState('')
-
-  useEffect(() => {
-    if (!appState.profile) return
-    setDraft({
-      ...appState.profile,
-      locationsText: appState.profile.locations.join(', '),
-    })
-  }, [appState.profile])
-
-  if (appState.status === 'loading' || !draft) return <p>Loading profile…</p>
-  if (appState.status === 'error') return <p>{appState.message}</p>
 
     function changeField(event) {
         setDraft({ ...draft, [event.target.name]: event.target.value })
@@ -74,9 +69,10 @@ function EditProfile() {
     }
 
     function saveEdit() {
-        appState.saveProfile({
-        ...draft,
-        locations: draft.locationsText.split(',').map((item) => item.trim()).filter((item) => item !== ''),
+        const { locationsText, ...fields } = draft
+        onSave({
+        ...fields,
+        locations: locationsText.split(',').map((item) => item.trim()).filter((item) => item !== ''),
         })
         window.location.hash = '#/profile'
     }

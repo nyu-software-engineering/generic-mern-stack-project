@@ -5,8 +5,19 @@
     "profileRevision": 1,
     "score": 92,
     "summary": "Your demo profile shares React and Python experience with this role.",
-    "fitExplanation": ["The profile lists React and Python."],
-    "missingSkills": ["Git"],
-    "keyQualifications": ["Pursuing a Computer Science degree."]
+    "fitExplanation": [
+      "The profile lists React and Python."
+    ],
+    "missingSkills": [
+      "Git"
+    ],
+    "keyQualifications": [
+      "Pursuing a Computer Science degree."
+    ],
+    "skillWeights": {
+      "React": 46,
+      "Python": 46,
+      "Git": 8
+    }
   }
 ]

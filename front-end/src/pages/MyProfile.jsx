@@ -1,11 +1,11 @@
-import { useAppState } from '../data/AppState.jsx'
+import { useAppState } from '../data/useAppState.js'
 
 function MyProfile() {
   const appState = useAppState()
   const profile = appState.profile
 
+  if (appState.status === 'error') return <p role="alert">{appState.message}</p>
   if (appState.status === 'loading' || !profile) return <p>Loading profile…</p>
-  if (appState.status === 'error') return <p>{appState.message}</p>
 
   return (
     <section>
