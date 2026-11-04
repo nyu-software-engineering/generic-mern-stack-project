@@ -11,6 +11,7 @@ const CategoryLookup = {
 export default function FlyerCarousel({ category }) {
   return (
     <>
+      <h1>{CategoryLookup[category]}</h1>
       
     </>
   );
