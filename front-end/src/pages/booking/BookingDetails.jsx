@@ -12,6 +12,10 @@ import './booking.css'
 // Statuses where the owner has accepted, so the price is agreed rather than proposed.
 const AGREED_STATUSES = ['confirmed', 'active', 'extension_requested', 'completed']
 
+// Statuses where the handoff screen has checks worth reopening. The owner's
+// "Confirm return" button already links there while a rental is active.
+const HANDOFF_VIEW_STATUSES = ['active', 'extension_requested', 'completed']
+
 // Booking summary shared by owner and borrower (prototype m23).
 // Keyed by bookingId so its state resets when the route moves to another booking.
 function BookingDetails() {
@@ -119,7 +123,7 @@ function BookingSummary({ bookingId }) {
           </Link>
         )}
 
-        {booking.status === 'completed' && (
+        {HANDOFF_VIEW_STATUSES.includes(booking.status) && !canConfirmReturn(booking, CURRENT_USER_ID) && (
           <Link to={`/handoff/${booking.id}`} className="booking-btn">
             View pickup and return checks
           </Link>
