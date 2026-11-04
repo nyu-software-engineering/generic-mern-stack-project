@@ -125,7 +125,7 @@ function Conversation({ conversationId }) {
         </div>
       </form>
 
-      <Link to="/report" className="chat-report">Report conversation</Link>
+      <Link to={`/report?conversationId=${conversation.id}`} className="chat-report">Report conversation</Link>
 
       {offerFormOpen && (
         <OfferForm

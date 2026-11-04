@@ -109,6 +109,34 @@ export const getExtensionRequests = (ownerId) =>
       Boolean(rental.extensionRequest?.newEndDate),
   )
 
+// Today as YYYY-MM-DD in the viewer's local time.
+export const todayISO = () => new Date().toLocaleDateString('en-CA')
+
+// Overdue is derived, never stored (#56): an item that was picked up
+// (active or waiting on an extension) and is past its return date.
+export function isOverdue(booking, today = todayISO()) {
+  return ['active', 'extension_requested'].includes(booking.status) && booking.endDate < today
+}
+
+// Status to show in the UI: the stored status, or "overdue" when derived.
+export const displayStatus = (booking, today = todayISO()) =>
+  isOverdue(booking, today) ? 'overdue' : booking.status
+
+// Bookings can be cancelled before pickup (#56). The borrower can withdraw a
+// request; once confirmed, either person can cancel. Owners decline requests instead.
+export function canCancel(booking, userId) {
+  if (!booking) return false
+  const isBorrower = sameId(booking.borrowerId, userId)
+  const isOwner = sameId(booking.ownerId, userId)
+  if (booking.status === 'requested') return isBorrower
+  if (booking.status === 'confirmed') return isBorrower || isOwner
+  return false
+}
+
+export function cancelBooking(id, userId) {
+  return canCancel(getBooking(id), userId) ? updateRentalStatus(id, 'cancelled') : null
+}
+
 export function formatDate(isoDate) {
   return new Date(isoDate).toLocaleDateString('en-US', {
     month: 'short',

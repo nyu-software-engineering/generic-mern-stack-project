@@ -119,6 +119,21 @@
   cursor: not-allowed;
 }
 
+.booking-btn--danger {
+  border-color: #c81e1e;
+  background: #c81e1e;
+  color: white;
+}
+
+.booking-alert {
+  margin-bottom: 12px;
+  padding: 12px 16px;
+  border: 1px solid #f5c2c2;
+  border-radius: 10px;
+  background: #fde8e8;
+  color: #9b1c1c;
+}
+
 .booking-btn--link {
   border: 0;
   background: transparent;

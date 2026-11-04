@@ -171,6 +171,10 @@ function ItemDetails() {
           <button type="submit">Request rental</button>
         </form>
       )}
+
+      {!isOwnListing && (
+        <p><Link to={`/report?listingId=${listing.id}`}>Report this listing</Link></p>
+      )}
     </main>
   )
 }

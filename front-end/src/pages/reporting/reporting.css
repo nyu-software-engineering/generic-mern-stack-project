@@ -1,0 +1,58 @@
+/* Reporting screens (M33-M35). Cards and page layout come from the shared styles in index.css. */
+.report-page {
+  max-width: 560px;
+}
+
+.report-form {
+  display: grid;
+  gap: 16px;
+  margin: 20px 0;
+}
+
+.report-form label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.report-form select,
+.report-form textarea,
+.report-form input[type='file'] {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #cbd0d8;
+  border-radius: 6px;
+  background: white;
+}
+
+.report-form textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.report-button,
+.report-link {
+  display: block;
+  padding: 10px;
+  border: 1px solid #222;
+  border-radius: 6px;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.report-button {
+  background: #222;
+  color: white;
+}
+
+.report-link {
+  margin-top: 12px;
+  background: white;
+  color: #222;
+}
+
+.report-error {
+  color: #b42318;
+}

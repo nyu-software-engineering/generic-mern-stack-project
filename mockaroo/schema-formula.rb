@@ -22,4 +22,16 @@ conversations = [[5, "owner-1"], [1, "student-3"], [2, "student-4"]].each_with_i
   end;
   {"id" => i + 1, "listingId" => item["id"], "participantIds" => [item["ownerId"], borrower_id], "messages" => messages}
 };
-{"users" => users, "listings" => listings, "rentals" => rentals, "conversations" => conversations}
+
+# Seed reviews from actual completed rentals, so participants stay consistent.
+review_specs = [
+  {"bookingId" => 106, "rating" => 5, "comment" => "Quick replies and an easy pickup."},
+  {"bookingId" => 113, "rating" => 4, "comment" => "Friendly and easy to coordinate with."}
+];
+reviews = review_specs.each_with_index.map { |spec, i|
+  rental = rentals.find { |record| record["id"] == spec["bookingId"] };
+  reviewer_id = rental["ownerId"] == "owner-1" ? rental["borrowerId"] : rental["ownerId"];
+  {"id" => i + 1, "bookingId" => rental["id"], "reviewerId" => reviewer_id, "reviewedUserId" => "owner-1", "communicationRating" => spec["rating"], "itemCareRating" => spec["rating"], "overallRating" => spec["rating"], "comment" => spec["comment"], "createdAt" => (today - 1 - i).strftime("%Y-%m-%d")}
+};
+
+{"users" => users, "listings" => listings, "rentals" => rentals, "conversations" => conversations, "reviews" => reviews}
