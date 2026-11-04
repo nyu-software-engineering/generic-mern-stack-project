@@ -1,0 +1,98 @@
+/* Styles for the Login screen. Colors come from the theme in index.css. */
+
+.login-page {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 27.5rem;
+  min-height: 100vh;
+  margin-inline: auto;
+  padding: 2.5rem 1.25rem;
+  background-color: var(--color-surface);
+  color: var(--color-ink);
+}
+
+/* "Later?" logo at the top */
+.login-logo {
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+.login-intro {
+  margin-top: 5rem;
+}
+
+.login-title {
+  font-size: 2.25rem;
+  line-height: 1.25;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+.login-subtitle {
+  margin-top: 0.5rem;
+  font-size: 1rem;
+  line-height: 1.625;
+  color: var(--color-muted);
+}
+
+/*fields stacked vertically with even space between them*/
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+/* Puts "Forgot password?" closer to the password field */
+.login-forgot {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: -0.75rem;
+}
+
+/* "Forgot password?" link. small and semi-bold, in the brand color */
+.login-forgot-link {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 600;
+  color: var(--color-brand);
+}
+
+.login-forgot-link:hover {
+  color: var(--color-brand-dark);
+}
+
+/* Layout for the button*/
+.login-submit {
+  width: 100%;
+  min-height: 2.75rem;
+  margin-top: 1rem;
+}
+
+
+.login-submit:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+}
+
+/* The "New here?" line at the bottom, centered */
+.login-footer {
+  margin-top: 2rem;
+  text-align: center;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: var(--color-ink);
+}
+
+/* "Create an account" link: bold and brand-colored*/
+.login-link {
+  font-weight: 700;
+  color: var(--color-brand);
+}
+
+.login-link:hover {
+  color: var(--color-brand-dark);
+}

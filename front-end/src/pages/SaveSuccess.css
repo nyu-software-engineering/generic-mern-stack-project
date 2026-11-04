@@ -1,0 +1,29 @@
+.save-success {
+  padding: 1rem;
+  padding-bottom: 5rem;
+}
+
+.save-success-title {
+  font-size: 1.75rem;
+  margin: 0 0 1rem;
+}
+
+.save-success-message {
+  margin: 0 0 1.5rem;
+  line-height: 1.5;
+}
+
+.save-success-cta {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.save-success-secondary {
+  display: block;
+  text-align: center;
+  color: var(--color-muted);
+  text-decoration: underline;
+}

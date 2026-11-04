@@ -1,6 +1,23 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router'
 import TextField from '../components/TextField'
+import './Signup.css'
+
+//TEMPORARY. TESTING BEFORE BACKEND DONE
+//Will change to real test once the backend exists 
+
+const TAKEN_USERNAMES = ['admin', 'later', 'test']
+
+// Checks a username and returns an error message, or '' if it's fine.
+function validateUsername(username) {
+  const value = username.trim().toLowerCase()
+  if (!value) return 'Pick a username.'
+  if (value.length < 3) return 'Use at least 3 characters.'
+  if (!/^[a-z0-9_]+$/.test(value)) return 'Use only letters, numbers, and underscores.'
+  if (TAKEN_USERNAMES.includes(value)) return 'That username is taken.'
+  return ''
+}
+
 
 // Checks an email and returns an error message, or '' if the email is fine.
 function validateEmail(email) {
@@ -25,12 +42,14 @@ export default function Signup() {
   const navigate = useNavigate()
 
   // What the user has typed so far. Each useState gives a value and a function to change it.
+  const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   // Tracks whether the user has finished with each field (clicked away or tried to submit)
-  const [touched, setTouched] = useState({ email: false, password: false })
+  const [touched, setTouched] = useState({ username: false, email: false, password: false })
 
   // Only show an error once the field has been touched; otherwise the message is empty.
+  const usernameError = touched.username ? validateUsername(username) : ''
   const emailError = touched.email ? validateEmail(email) : ''
   const passwordError = touched.password ? validatePassword(password) : ''
 
@@ -40,23 +59,34 @@ export default function Signup() {
     // Stops the browser's default behavior of reloading the page on submit
     event.preventDefault()
     // Mark both fields as touched so any errors show, even for fields the user skipped
-    setTouched({ email: true, password: true })
+    setTouched({ username: true, email: true, password: true })
     // If either field has an error, stop here and let the user fix it
-    if (validateEmail(email) || validatePassword(password)) return
-    //will go to the choose-username screen once it is done
-    navigate('/choose-username')
+    if (validateUsername(username) || validateEmail(email) || validatePassword(password)) return
+    
+    navigate('/home', { replace: true })
+
   }
 
-  return (
-    <main className="mx-auto flex min-h-screen w-full max-w-110 flex-col justify-center bg-background px-5 py-6 text-ink">
-      <h1 className="text-4xl font-semibold leading-tight tracking-tight text-ink">
-        Join Later
-      </h1>
-      <p className="mt-2.5 text-sm leading-normal text-muted">
-        Stop losing places in the groupchat
-      </p>
+    return (
+    <main className="signup-page">
+      
+      <h1 className="signup-logo">Later?</h1>
 
-      <form onSubmit={handleSubmit} noValidate className="mt-8 flex flex-col gap-4">
+      <section className="signup-intro">
+        <h2 className="signup-title">Stop losing places in the group chat.</h2>
+        <p className="signup-subtitle">Pick a username so friends can find you.</p>
+      </section>
+
+      <form onSubmit={handleSubmit} noValidate className="signup-form">
+        <TextField
+          label="Username"
+          value={username}
+          onChange={(event) => setUsername(event.target.value)}
+          onBlur={() => setTouched((current) => ({ ...current, username: true }))}
+          error={usernameError}
+          hint="Letters, numbers, and underscores."
+          autoComplete="username"
+        />
         <TextField
           label="Email"
           type="email"
@@ -76,16 +106,14 @@ export default function Signup() {
           hint="At least 8 characters, including a number."
           autoComplete="new-password"
         />
-        <button
-          type="submit"
-          className="mt-2 min-h-11 btn-primary hover:btn-primary-hover focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-brand"        >
+        <button type="submit" className="signup-submit btn-primary hover:btn-primary-hover">
           Create account
         </button>
       </form>
 
-      <p className="mt-6 text-center text-sm text-muted">
+      <p className="signup-footer">
         Already have an account?{' '}
-        <Link to="/login" className="font-semibold text-brand hover:text-brand-dark">
+        <Link to="/login" className="signup-link">
           Log in
         </Link>
       </p>
