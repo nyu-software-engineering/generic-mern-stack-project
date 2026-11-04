@@ -252,9 +252,16 @@ function Tracker() {
         application={selectedApplication}
         job={selectedJob}
         onBack={() =>
-          setSelectedApplicationId(null)
+            setSelectedApplicationId(null)
         }
-      />
+        onRemove={() => {
+            appState.removeApplication(
+            selectedApplication.id
+            )
+
+            setSelectedApplicationId(null)
+        }}
+     />
     )
   }
 

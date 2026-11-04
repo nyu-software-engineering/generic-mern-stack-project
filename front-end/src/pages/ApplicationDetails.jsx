@@ -14,7 +14,20 @@ function ApplicationDetails({
   application,
   job,
   onBack,
+  onRemove,
 }) {
+  function handleRemove() {
+    const confirmed = window.confirm(
+      "Are you sure you want to remove this application from your Tracker?"
+    )
+
+    if (!confirmed) {
+      return
+    }
+
+    onRemove()
+  }
+
   return (
     <main className="app">
       <button onClick={onBack}>
@@ -61,6 +74,18 @@ function ApplicationDetails({
         <p>
           {application.note || "No notes yet."}
         </p>
+      </section>
+
+      <section>
+        <h3>Remove Application</h3>
+
+        <p>
+          Removing this application will remove it from your Tracker.
+        </p>
+
+        <button onClick={handleRemove}>
+          Remove Application
+        </button>
       </section>
     </main>
   )
