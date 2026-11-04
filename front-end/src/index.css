@@ -3,13 +3,13 @@
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
 
-  --color-ink: #141414;
-  --color-muted: #6b6b6b;
-  --color-line: #e3e3e0;
-  --color-canvas: #f3f3f1;
+  --color-ink: #16213a;
+  --color-muted: #5b6475;
+  --color-line: #dce3ec;
+  --color-canvas: #eef2f7;
   --color-surface: #ffffff;
-  --color-accent: #1f4d3a;
-  --color-accent-soft: #e5eee9;
+  --color-accent: #0f766e;
+  --color-accent-soft: #e0f2ef;
   --color-positive: #1e7a46;
   --color-negative: #b3261e;
 }
