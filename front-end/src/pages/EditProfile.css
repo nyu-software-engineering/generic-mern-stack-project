@@ -1,0 +1,37 @@
+.edit-profile label,
+.edit-profile button {
+  display: block;
+  margin-top: 12px;
+}
+
+.edit-profile input[type="text"] {
+  display: block;
+  width: 100%;
+  margin-top: 4px;
+}
+
+.photo-dialog {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  padding: 24px;
+}
+
+.photo-dialog div {
+  background: #ffffff;
+  padding: 16px;
+}
+
+.skill-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 8px 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.edit-profile .skill-tags button {
+    display: inline-block;
+    margin: 0;
+}
