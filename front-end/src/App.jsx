@@ -1,12 +1,11 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import CreateHousehold from './pages/create_household/CreateHousehold'
-import Protocols from './pages/protocols/Protocols'
-import Templogin from './pages/temp_home'
-import React from 'react'
+import { useState } from "react";
+import heroImg from "./assets/hero.png";
+import reactLogo from "./assets/react.svg";
+import viteLogo from "./assets/vite.svg";
+import CreateHousehold from "./pages/create_household/CreateHousehold";
 import Temphome from "./pages/temp_home";
+import Protocols from "./pages/protocols/Protocols";
+import React from "react";
 import Register from "./pages/register/register";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 // import { Link } from "react-router-dom"
