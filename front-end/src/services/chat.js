@@ -2,6 +2,7 @@
 // fixtures directly, so they can later be swapped for backend requests.
 // Conversations come from the shared Mockaroo data in mockDataService.js.
 import {
+  createConversation,
   getConversations as getAllConversations,
   updateConversation as saveConversation,
 } from './mockDataService.js'
@@ -70,6 +71,18 @@ export function sendOffer(conversationId, senderId, { totalPrice, startDate, end
     startDate,
     endDate,
     status: 'pending',
+  })
+}
+
+// Opens a new conversation, e.g. when a student responds to an item request.
+// Messages get their IDs and timestamps here, like sendMessage does.
+export function startConversation({ listingId, participantIds, messages }) {
+  const firstId = nextMessageId()
+  const sentAt = new Date().toISOString()
+  return createConversation({
+    listingId,
+    participantIds,
+    messages: messages.map((message, index) => ({ id: firstId + index, sentAt, ...message })),
   })
 }
 

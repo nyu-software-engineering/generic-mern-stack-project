@@ -18,3 +18,5 @@ export const rentalStatuses = [
 ]
 
 export const offerStatuses = ['pending', 'accepted', 'declined', 'countered']
+
+export const itemRequestStatuses = ['open', 'closed']

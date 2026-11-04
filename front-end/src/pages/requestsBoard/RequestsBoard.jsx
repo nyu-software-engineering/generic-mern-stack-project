@@ -4,7 +4,7 @@ import RequestCard from './RequestCard'
 import { REQUEST_TYPES, getBoardRequests } from '../../services/requestsBoard'
 import './requestsBoard.css'
 
-const TABS = [['all', 'All'], ...Object.entries(REQUEST_TYPES)]
+const TABS = [['all', 'All'], ...Object.entries(REQUEST_TYPES), ['mine', 'My requests']]
 
 // Shared board of item requests and quick borrow requests.
 function RequestsBoard() {
@@ -15,9 +15,14 @@ function RequestsBoard() {
     <main className="page">
       <header className="page-header">
         <h1>Requests</h1>
-        <Link to="/quick-borrow" className="request-action request-action--primary">
-          Post a quick borrow
-        </Link>
+        <div className="request-actions">
+          <Link to="/requests?new" className="request-action request-action--primary">
+            Post an item request
+          </Link>
+          <Link to="/quick-borrow" className="request-action">
+            Post a quick borrow
+          </Link>
+        </div>
       </header>
 
       <div className="request-tabs" role="tablist" aria-label="Request type">
@@ -36,7 +41,7 @@ function RequestsBoard() {
       </div>
 
       {requests.length === 0 ? (
-        <p>{type === 'item' ? 'Item requests are coming soon.' : 'No requests yet.'}</p>
+        <p>{type === 'mine' ? "You haven't posted any requests yet." : 'No requests yet.'}</p>
       ) : (
         <div className="rental-grid">
           {requests.map((request) => (

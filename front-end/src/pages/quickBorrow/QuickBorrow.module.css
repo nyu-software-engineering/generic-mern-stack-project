@@ -1,4 +1,13 @@
 
+/* Same width as the form so the link lines up with its left edge. */
+.back {
+  display: block;
+  max-width: 450px;
+  margin: 24px auto 8px;
+  color: #315fce;
+  text-decoration: none;
+}
+
 .header {
   margin-bottom: 24px;
   text-align: center;

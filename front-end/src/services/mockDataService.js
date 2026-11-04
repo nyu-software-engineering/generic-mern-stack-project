@@ -1,4 +1,6 @@
-import { listingCategories, listingStatuses, offerStatuses, rentalStatuses } from '../data/options.js'
+import {
+  itemRequestStatuses, listingCategories, listingStatuses, offerStatuses, rentalStatuses,
+} from '../data/options.js'
 
 export const CURRENT_USER_ID = 'owner-1'
 
@@ -7,13 +9,14 @@ let listings = []
 let rentals = []
 let conversations = []
 let reviews = []
+let itemRequests = []
 let loading
 
 const sameId = (first, second) => String(first) === String(second)
 
 function validateData(data) {
-  const { users, listings, rentals, conversations, reviews } = data ?? {}
-  if (![users, listings, rentals, conversations, reviews].every(Array.isArray)) {
+  const { users, listings, rentals, conversations, reviews, itemRequests } = data ?? {}
+  if (![users, listings, rentals, conversations, reviews, itemRequests].every(Array.isArray)) {
     throw new Error('Mockaroo returned invalid data.')
   }
 
@@ -85,10 +88,31 @@ function validateData(data) {
       typeof review.createdAt === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(review.createdAt)
   })
 
+  const validItemRequests = itemRequests.every((request) =>
+    Number.isSafeInteger(request?.id) && request.id > 0 &&
+    userIds.has(request.requesterId) &&
+    [request.itemName, request.approximateArea].every((value) => typeof value === 'string' && value.trim()) &&
+    [request.neededBy, request.neededUntil, request.createdAt].every((value) => typeof value === 'string') &&
+    (request.targetPrice == null || (Number.isFinite(request.targetPrice) && request.targetPrice >= 0)) &&
+    typeof request.details === 'string' &&
+    itemRequestStatuses.includes(request.status) &&
+    Array.isArray(request.responses) &&
+    request.responses.every((response) => {
+      const conversation = conversations.find((item) => item.id === response?.conversationId)
+      return userIds.has(response?.responderId) && conversation &&
+        Array.isArray(response.messageIds) &&
+        response.messageIds.every((id) =>
+          conversation.messages.find((message) => message.id === id)?.senderId === response.responderId,
+        )
+    }),
+  )
+
   if (!validUsers || !validListings || !validRentals || !validConversations || !validReviews ||
+    !validItemRequests ||
     userIds.size !== users.length || listingIds.size !== listings.length ||
     rentalIds.size !== rentals.length ||
-    new Set(reviews.map((review) => review?.id)).size !== reviews.length) {
+    new Set(reviews.map((review) => review?.id)).size !== reviews.length ||
+    new Set(itemRequests.map((request) => request?.id)).size !== itemRequests.length) {
     throw new Error('Mockaroo returned invalid data.')
   }
 }
@@ -107,6 +131,7 @@ export function loadMockData() {
         rentals = data.rentals
         conversations = data.conversations
         reviews = data.reviews
+        itemRequests = data.itemRequests
       })
       .catch((error) => {
         loading = undefined
@@ -212,6 +237,45 @@ export function updateConversation(id, details) {
   )
 
   return structuredClone(updatedConversation)
+}
+
+export function createConversation(details) {
+  const id = Math.max(0, ...conversations.map((item) => item.id)) + 1
+  const conversation = { ...details, id }
+
+  conversations = [...conversations, conversation]
+  return structuredClone(conversation)
+}
+
+export function getItemRequests() {
+  return structuredClone(itemRequests)
+}
+
+export function createItemRequest(details) {
+  const id = Math.max(0, ...itemRequests.map((item) => item.id)) + 1
+  const request = {
+    requesterId: CURRENT_USER_ID,
+    status: 'open',
+    responses: [],
+    createdAt: new Date().toISOString(),
+    ...details,
+    id,
+  }
+
+  itemRequests = [request, ...itemRequests]
+  return structuredClone(request)
+}
+
+export function updateItemRequest(id, details) {
+  const existingRequest = itemRequests.find((item) => sameId(item.id, id))
+  if (!existingRequest) return null
+
+  const updatedRequest = { ...existingRequest, ...details }
+  itemRequests = itemRequests.map((item) =>
+    sameId(item.id, id) ? updatedRequest : item,
+  )
+
+  return structuredClone(updatedRequest)
 }
 
 export function getReviews() {

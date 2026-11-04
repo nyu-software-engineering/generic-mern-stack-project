@@ -84,11 +84,11 @@ function App() {
           {/* Reviews */}
           <Route path="/users/:userId/reputation" element={<Reputation />} />
           <Route path="/bookings/:bookingId/review" element={<ReviewParticipant />} />
-        </Route>
 
-        {/* Requests */}
-        <Route path="/requests" element={<ItemRequests />} />
-        <Route path="/requests-board" element={<RequestsBoard />} />
+          {/* Requests */}
+          <Route path="/requests" element={<ItemRequests />} />
+          <Route path="/requests-board" element={<RequestsBoard />} />
+        </Route>
 
         {/* Quick borrow, reporting */}
         <Route path="/quick-borrow" element={<QuickBorrow />} />
