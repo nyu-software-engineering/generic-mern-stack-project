@@ -15,7 +15,12 @@ import {
 } from '../../components'
 import { APPLICATION_STATUSES, JOB_TYPES } from '../../constants'
 import { formatDate, todayString } from '../../utils/format'
-import { hasNoErrors, validateEmail, validateRequired } from '../../utils/validation'
+import {
+  emptyRecruiter,
+  getApplicationErrors,
+  isApplicationValid,
+  removeEmptyRecruiters,
+} from './applicationFormHelpers'
 import './AddApplication.css'
 
 /**
@@ -35,7 +40,7 @@ export default function AddApplication() {
     location: '',
     jobPostingUrl: '',
     notes: '',
-    recruiters: [{ name: '', email: '', phone: '' }],
+    recruiters: [emptyRecruiter()],
     resume: null,
   })
   const [submitted, setSubmitted] = useState(false) // true after the first tap on Save
@@ -45,16 +50,8 @@ export default function AddApplication() {
   const [resumeError, setResumeError] = useState('') // message shown if the chosen file isn't a PDF
   const [duplicate, setDuplicate] = useState(null) // an existing application with the same company and position
 
-  // Company and position are required; every other field is optional
-  const errors = {
-    company: validateRequired(form.company, 'Company'),
-    position: validateRequired(form.position, 'Position'),
-  }
-
-  // A recruiter's email is optional, but if one is typed it must be actual email
-  const recruiterEmailErrors = form.recruiters.map((recruiter) =>
-    recruiter.email ? validateEmail(recruiter.email) : '',
-  )
+  // Company and position are required. check whether the email is valid
+  const errors = getApplicationErrors(form)
 
   // Only show errors after the user has tried to save once
   const shownErrors = submitted ? errors : {}
@@ -78,7 +75,7 @@ export default function AddApplication() {
 
   // function for adding a recruiter contact info
   function addRecruiter() {
-    setForm({ ...form, recruiters: [...form.recruiters, { name: '', email: '', phone: '' }] })
+    setForm({ ...form, recruiters: [...form.recruiters, emptyRecruiter()] })
   }
 
   // function that removes a recruiter contact
@@ -105,16 +102,13 @@ export default function AddApplication() {
   // Sends the application to the api and shows the "Application saved" pop-up
   async function saveApplication() {
     // Don't save recruiter contacts that were left completely empty
-    const recruiters = form.recruiters.filter(
-      (recruiter) => recruiter.name.trim() || recruiter.email.trim() || recruiter.phone.trim(),
-    )
-    await api.createApplication({ ...form, recruiters })
+    await api.createApplication({ ...form, recruiters: removeEmptyRecruiters(form.recruiters) })
     setSaved(true)
   }
 
   async function handleSave() {
     setSubmitted(true)
-    if (!hasNoErrors(errors) || !hasNoErrors(recruiterEmailErrors)) return
+    if (!isApplicationValid(errors)) return
 
     setSaving(true)
     setSaveError('')
@@ -234,7 +228,7 @@ export default function AddApplication() {
                 placeholder="name@company.com"
                 value={recruiter.email}
                 onChange={updateRecruiter(index, 'email')}
-                error={submitted ? recruiterEmailErrors[index] : ''}
+                error={shownErrors.recruiterEmails?.[index]}
               />
               <TextField
                 label="Phone"
