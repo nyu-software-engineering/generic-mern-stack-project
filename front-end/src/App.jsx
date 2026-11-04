@@ -1,122 +1,153 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
 
-function App() {
-  const [count, setCount] = useState(0)
+import { BrowserRouter, Route, Routes, useNavigate, useParams } from "react-router";
+
+import Layout from "./Components/Layout";
+
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import SelectInterests from "./pages/SelectInterests";
+import SetupProfile from "./pages/SetupProfile";
+import Welcome from "./pages/Welcome";
+
+import DiscoverPeople from "./DiscoverPeople";
+import Explore from "./Explore";
+import CreateEvent from "./pages/CreateEvent";
+import EditEvent from "./pages/EditEvent";
+import EventDetails from "./pages/EventDetails";
+import PersonDetails from "./PersonDetails";
+
+import Connections from "./pages/Connections";
+import EditProfile from "./pages/EditProfile";
+import MyEvents from "./pages/MyEvents";
+import Profile from "./pages/Profile";
+import SearchPage from "./pages/SearchPage";
+
+import mockPeople from "./mockDiscoverPeople";
+import mockEvents from "./mockEvents";
+import { mockUsers } from "./mocks/users";
+
+// Discover People navigation
+function PeoplePage() {
+  const navigate = useNavigate();
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+    <DiscoverPeople
+      onViewProfile={(person) => navigate(`/people/${person.id}`)}
+    />
+  );
 }
 
-export default App
+// Individual person profile
+function PersonPage() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+
+  const person = mockPeople.find((person) => String(person.id) === id);
+
+  if (!person) {
+    return <h2>Person not found</h2>;
+  }
+
+  const profile = {
+    ...person,
+    hobbies: person.hobbies.split(" • "),
+    bio: "Enjoys meeting people and trying new activities.",
+    sharedInterests: person.hobbies.split(" • ")
+  };
+
+  return (
+    <PersonDetails
+      person={profile}
+      onBack={() => navigate("/people")}
+    />
+  );
+}
+
+// Explore Events navigation
+function EventsPage() {
+  const navigate = useNavigate();
+
+  return (
+    <Explore
+      onViewEvent={(event) => navigate(`/events/${event.id}`)}
+      onCreateEvent={() => navigate("/events/create")}
+    />
+  );
+}
+
+// Individual event details
+function EventPage() {
+  const { id } = useParams();
+  const event = mockEvents.find((event) => String(event.id) === id);
+
+  if (!event) {
+    return <h2>Event not found</h2>;
+  }
+
+  const eventDetails = {
+    ...event,
+    description: "Meet new people and enjoy this activity together.",
+    startTime: event.time,
+    endTime: "",
+    capacity: 20,
+    attendeeIds: [],
+    organizer: "Doin member",
+    imageUrl: event.image
+  };
+
+  return (
+    <EventDetails
+      event={eventDetails}
+      users={mockUsers}
+      currentUser={mockUsers[0]}
+    />
+  );
+}
+
+// Create Event form
+function CreateEventPage() {
+  const navigate = useNavigate();
+
+  function handleCreate(event) {
+    console.log("Created event:", event);
+    navigate("/events");
+  }
+
+  return <CreateEvent onCreate={handleCreate} />;
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        {/* Welcome and account pages */}
+        <Route path="/" element={<Welcome />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/select-interests" element={<SelectInterests />} />
+        <Route path="/setup-profile" element={<SetupProfile />} />
+
+        {/* Main app pages with bottom navigation */}
+        <Route path="/people" element={<Layout><PeoplePage /></Layout>} />
+        <Route path="/discover" element={<Layout><PeoplePage /></Layout>} />
+        <Route path="/people/:id" element={<Layout><PersonPage /></Layout>} />
+
+        <Route path="/events" element={<Layout><EventsPage /></Layout>} />
+        <Route path="/events/create" element={<Layout><CreateEventPage /></Layout>} />
+        <Route path="/events/:id" element={<Layout><EventPage /></Layout>} />
+        <Route path="/events/:id/edit" element={<Layout><EditEvent /></Layout>} />
+        <Route path="/my-events" element={<Layout><MyEvents /></Layout>} />
+
+        <Route path="/connect" element={<Layout><Connections /></Layout>} />
+        <Route path="/connections" element={<Layout><Connections /></Layout>} />
+        <Route path="/profile" element={<Layout><Profile /></Layout>} />
+        <Route path="/profile/edit" element={<Layout><EditProfile /></Layout>} />
+        <Route path="/search" element={<Layout><SearchPage /></Layout>} />
+
+        <Route path="*" element={<h2>Page not found</h2>} />
+      </Routes>
+    </BrowserRouter>
+  );
+}
+
+export default App;
