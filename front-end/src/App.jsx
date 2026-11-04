@@ -11,10 +11,13 @@ import Tracker from './pages/Tracker.jsx'
 import Welcome from './pages/Welcome.jsx'
 import SignUp from './pages/SignUp.jsx'
 import LogIn from './pages/LogIn.jsx'
+import Menu from './components/Menu.jsx'
+
 
 function App() {
   const [hash, setHash] = useState(() => window.location.hash)
   const [attempt, setAttempt] = useState(0)
+  const [menuOpen, setMenuOpen] = useState(false)
   const [resources, setResources] = useState({ browse: null, details: null })
   const [browseFilters, setBrowseFilters] = useState(DEFAULT_FILTERS)
   const appState = useAppState()
@@ -87,8 +90,9 @@ function App() {
     <main className="app">
       <header className="app-header">
         <a href="#/jobs" aria-label="CareerHive — Browse Jobs">CareerHive</a>
-        <span>Demo</span>
+        <button type="button" className="ui-button ui-button-secondary" onClick={() => setMenuOpen(true)}>Menu</button>
       </header>
+      {menuOpen && <Menu onClose={() => setMenuOpen(false)} />}
       <p className="demo-notice">Fictional listings. Application links open example pages.</p>
       {path === '/profile' ? (
         <MyProfile />
