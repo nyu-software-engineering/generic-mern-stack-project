@@ -22,6 +22,8 @@ export default function JobDetails({
       </section>
     )
   }
+
+
   if (!job) {
     return <section className="job-details">{backLink}<h1>Job not found</h1><p>This listing is no longer available.</p></section>
   }

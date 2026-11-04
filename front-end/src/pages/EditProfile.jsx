@@ -7,12 +7,12 @@ function EditProfile() {
     const [draft, setDraft] = useState(null)
     const [photoOpen, setPhotoOpen] = useState(false)
     const [photoChoice, setPhotoChoice] = useState('')
+    const [skillInput, setSkillInput] = useState('')
 
   useEffect(() => {
     if (!appState.profile) return
     setDraft({
       ...appState.profile,
-      skillsText: appState.profile.skills.join(', '),
       locationsText: appState.profile.locations.join(', '),
     })
   }, [appState.profile])
@@ -22,6 +22,22 @@ function EditProfile() {
 
     function changeField(event) {
         setDraft({ ...draft, [event.target.name]: event.target.value })
+    }
+    function changeSkillInput(event) {
+        setSkillInput(event.target.value)
+    }
+    function addSkill(event) {
+        if (event.key !== 'Enter') return
+        event.preventDefault()
+        const skill = skillInput.trim()
+        if (skill === '') return
+        if (!draft.skills.includes(skill)) {
+            setDraft({ ...draft, skills: draft.skills.concat(skill) })
+        }
+        setSkillInput('')
+    }
+    function removeSkill(skill) {
+        setDraft({ ...draft, skills: draft.skills.filter((item) => item !== skill) })
     }
 
     function toggleRole(role) {
@@ -57,12 +73,11 @@ function EditProfile() {
     }
 
     function saveEdit() {
-    appState.saveProfile({
-      ...draft,
-      skills: draft.skillsText.split(',').map((item) => item.trim()).filter((item) => item !== ''),
-      locations: draft.locationsText.split(',').map((item) => item.trim()).filter((item) => item !== ''),
-    })
-    window.location.hash = '#/profile'
+        appState.saveProfile({
+        ...draft,
+        locations: draft.locationsText.split(',').map((item) => item.trim()).filter((item) => item !== ''),
+        })
+        window.location.hash = '#/profile'
     }
 
     function cancelEdit() {
@@ -95,8 +110,16 @@ function EditProfile() {
     </label>
     <label>
         Skills
-        <input name="skillsText" value={draft.skillsText} onChange={changeField} />
+        <input value={skillInput} onChange={changeSkillInput} onKeyDown={addSkill} />
     </label>
+    <ul className="skill-tags">
+        {draft.skills.map((skill) => (
+            <li key={skill}>
+                <button type="button" onClick={() => removeSkill(skill)}>{skill}</button>
+            </li>
+        ))}
+    </ul>
+
     <label>
         Locations
     <input name="locationsText" value={draft.locationsText} onChange={changeField} />
