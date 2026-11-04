@@ -27,6 +27,7 @@ import Cancellation from './pages/booking/Cancellation'
 
 import Inbox from './pages/chat/Inbox'
 import ItemRequests from './pages/requests/ItemRequests'
+import RequestsBoard from './pages/requestsBoard/RequestsBoard'
 
 import PickupReturn from './pages/handoff/PickupReturn'
 import QuickBorrow from './pages/quickBorrow/QuickBorrow'
@@ -87,6 +88,7 @@ function App() {
 
         {/* Requests */}
         <Route path="/requests" element={<ItemRequests />} />
+        <Route path="/requests-board" element={<RequestsBoard />} />
 
         {/* Quick borrow, reporting */}
         <Route path="/quick-borrow" element={<QuickBorrow />} />

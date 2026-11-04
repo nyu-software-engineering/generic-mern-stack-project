@@ -10,7 +10,7 @@ function Navbar() {
 
   const links = [
     { name: 'Browse', path: '/browse' },
-    { name: 'Requests', path: '/requests' },
+    { name: 'Requests', path: '/requests-board' },
     { name: 'List', path: '/listings/new' },
     { name: 'Messages', path: '/inbox' },
     { name: 'Profile', path: '/profile' },
