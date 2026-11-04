@@ -5,7 +5,7 @@ import "../styles/EventRSVP.css";
 const EventDetails = (props) => {
   const event = props.event;
   const users = props.users || [];
-  const currentUser = props.currentUser || users[0];
+  const currentUser = props.currentUser;
 
   const [showAttendees, setShowAttendees] = useState(false);
   const [attendeeIds, setAttendeeIds] = useState(event?.attendeeIds || []);
