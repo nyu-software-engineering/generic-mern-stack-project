@@ -1,0 +1,18 @@
+.page-wrapper {
+  flex: 1;
+  min-height: 0;
+  height: 100%;
+  padding: 5%;
+}
+
+.saved_header{
+    display: flex;
+    flex-direction: row;
+    height: 7%;
+    width: 100%;
+}
+
+.list-end-spacer {
+  height: .5vh;
+  flex-shrink: 0;
+}
