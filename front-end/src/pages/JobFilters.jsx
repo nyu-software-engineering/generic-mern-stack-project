@@ -2,9 +2,10 @@ import { useEffect, useId, useRef } from 'react'
 import { DEADLINES, DEFAULT_FILTERS, JOB_TYPES } from '../jobs/browse.js'
 import './JobFilters.css'
 
-export default function JobFilters({ filters, onFiltersChange, resultCount, onClose }) {
+export default function JobFilters({ filters, onFiltersChange, locationOptions = [], resultCount, onClose }) {
   const dialogRef = useRef(null)
   const titleId = useId()
+  const locations = filters.locations ?? []
 
   useEffect(() => {
     const dialog = dialogRef.current
@@ -24,6 +25,11 @@ export default function JobFilters({ filters, onFiltersChange, resultCount, onCl
     onFiltersChange({
       ...filters, jobTypes: types.includes(value) ? types.filter((type) => type !== value) : [...types, value],
     })
+  }
+
+  function toggleLocation(value) {
+    const selected = locations.find((location) => location.trim().toLowerCase() === value.toLowerCase())
+    onFiltersChange({ ...filters, locations: selected === undefined ? [...locations, value] : locations.filter((location) => location !== selected) })
   }
 
   function closeFromBackdrop(event) {
@@ -51,6 +57,18 @@ export default function JobFilters({ filters, onFiltersChange, resultCount, onCl
                 <label className="filter-choice" key={value}>
                   <input type="checkbox" checked={filters.jobTypes.includes(value)} onChange={() => toggleType(value)} />
                   <span>{label}</span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+          <fieldset>
+            <legend>Location</legend>
+            <div className="filter-choices">
+              {locationOptions.map((location) => (
+                <label className="filter-choice" key={location}>
+                  <input type="checkbox" checked={locations.some((value) => value.trim().toLowerCase() === location.toLowerCase())}
+                    onChange={() => toggleLocation(location)} />
+                  <span>{location}</span>
                 </label>
               ))}
             </div>

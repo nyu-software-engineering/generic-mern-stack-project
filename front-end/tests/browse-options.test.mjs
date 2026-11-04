@@ -4,12 +4,14 @@ import { before, test } from 'node:test'
 let filterJobs
 let searchJobs
 let sortJobs
+let getJobLocations
 before(async () => {
   const module = await import('../src/jobs/browse.js').catch(() => null)
   assert.equal(typeof module?.filterJobs, 'function', 'The Browse filtering helper must be implemented')
   filterJobs = module.filterJobs
   searchJobs = module.searchJobs
   sortJobs = module.sortJobs
+  getJobLocations = module.getJobLocations
 })
 
 const jobs = Object.freeze([
@@ -22,6 +24,45 @@ const jobs = Object.freeze([
 ])
 const ids = (items) => items.map((job) => job.id)
 const today = '2026-11-02'
+
+const locationRecords = Object.freeze([
+  Object.freeze({ id: 'ny', location: ' New York, NY ', jobType: 'internship', sponsorsVisa: true, deadline: '2026-11-09', title: 'React Intern' }),
+  Object.freeze({ id: 'boston', location: 'Boston, MA', jobType: 'internship', sponsorsVisa: false, deadline: '2026-11-09', title: 'React Intern' }),
+  Object.freeze({ id: 'duplicate', location: 'new york, ny', jobType: 'entry-level', sponsorsVisa: true, deadline: '2026-11-10', title: 'React Engineer' }),
+  Object.freeze({ id: 'remote', location: 'Remote, United States', sponsorsVisa: true }),
+  Object.freeze({ id: 'partial', location: 'New York' }),
+  Object.freeze({ id: 'empty', location: '  ' }),
+  Object.freeze({ id: 'missing' }),
+  Object.freeze({ id: 'null', location: null }),
+])
+
+test('location choices trim and deduplicate complete labels case-insensitively, then sort alphabetically', () => {
+  assert.equal(typeof getJobLocations, 'function', 'The location choices helper must be implemented')
+  assert.deepEqual(getJobLocations(locationRecords), ['Boston, MA', 'New York', 'New York, NY', 'Remote, United States'])
+  assert.deepEqual(getJobLocations([]), [])
+  assert.equal(locationRecords[0].location, ' New York, NY ')
+})
+
+test('empty or absent location selection preserves every record, including unknown locations', () => {
+  assert.deepEqual(ids(filterJobs(locationRecords, {}, today)), ids(locationRecords))
+  assert.deepEqual(ids(filterJobs(locationRecords, { locations: [] }, today)), ids(locationRecords))
+})
+
+test('selected locations use normalized exact labels and OR without changing source order or data', () => {
+  const selected = Object.freeze([' NEW YORK, NY ', 'Boston, MA'])
+  assert.deepEqual(ids(filterJobs(locationRecords, { locations: selected }, today)), ['ny', 'boston', 'duplicate'])
+  assert.deepEqual(ids(filterJobs(locationRecords, { locations: ['Remote, United States'] }, today)), ['remote'])
+  assert.deepEqual(filterJobs(locationRecords, { locations: ['New York, NY unavailable'] }, today), [])
+  assert.deepEqual(selected, [' NEW YORK, NY ', 'Boston, MA'])
+  assert.deepEqual(ids(locationRecords), ['ny', 'boston', 'duplicate', 'remote', 'partial', 'empty', 'missing', 'null'])
+})
+
+test('location selection intersects type, sponsorship, deadline, and search rather than replacing them', () => {
+  const filters = { locations: ['New York, NY', 'Boston, MA'], jobTypes: ['internship'], sponsorsOnly: true, deadlineDays: 7 }
+  assert.deepEqual(ids(searchJobs(filterJobs(locationRecords, filters, today), ' react ')), ['ny'])
+  assert.deepEqual(searchJobs(filterJobs(locationRecords, filters, today), 'engineer'), [])
+  assert.deepEqual(ids(filterJobs(locationRecords, { locations: ['New York, NY', 'Boston, MA'], sponsorsOnly: true }, today)), ['ny', 'duplicate'])
+})
 
 test('no filters returns every record in source order without mutating the shared feed', () => {
   const result = filterJobs(jobs, {}, today)

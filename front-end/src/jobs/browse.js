@@ -1,4 +1,4 @@
-export const DEFAULT_FILTERS = Object.freeze({ jobTypes: Object.freeze([]), sponsorsOnly: false, deadlineDays: null })
+export const DEFAULT_FILTERS = Object.freeze({ jobTypes: Object.freeze([]), locations: Object.freeze([]), sponsorsOnly: false, deadlineDays: null })
 
 export const JOB_TYPES = [
   { value: 'internship', label: 'Internship' },
@@ -17,12 +17,27 @@ function calendarDay(value) {
   return Number.isFinite(time) && new Date(time).toISOString().slice(0, 10) === value ? time : NaN
 }
 
+function normalizeLocation(location) {
+  return typeof location === 'string' ? location.trim().toLowerCase() : ''
+}
+
+export function getJobLocations(jobs) {
+  const locations = new Map()
+  for (const { location } of jobs) {
+    const key = normalizeLocation(location)
+    if (key && !locations.has(key)) locations.set(key, location.trim())
+  }
+  return [...locations.values()].sort((a, b) => a.localeCompare(b))
+}
+
 export function filterJobs(jobs, filters = DEFAULT_FILTERS, todayISO = new Date().toISOString().slice(0, 10)) {
-  const { jobTypes = [], sponsorsOnly = false, deadlineDays = null } = filters
+  const { jobTypes = [], locations = [], sponsorsOnly = false, deadlineDays = null } = filters
+  const selectedLocations = locations.map(normalizeLocation)
   const start = calendarDay(todayISO)
   const end = start + deadlineDays * 86400000
   return jobs.filter((job) => {
     if (jobTypes.length && !jobTypes.includes(job.jobType)) return false
+    if (selectedLocations.length && !selectedLocations.includes(normalizeLocation(job.location))) return false
     if (sponsorsOnly && job.sponsorsVisa !== true) return false
     if (deadlineDays !== null) {
       const deadline = calendarDay(job.deadline)
