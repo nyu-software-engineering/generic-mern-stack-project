@@ -1,6 +1,7 @@
 import LeaseMessaging from "../components/LeaseMessaging";
 import MockConversations from "../mockConversations.js"
 import ChatDashboardElement from "../components/ChatDashboardElement"
+import "./Messages.css";
 
 import { useState } from "react";
 
@@ -18,9 +19,10 @@ export default function Messages(){
     }
 
     return (
-        <div>
-            <h1>Lease Messages</h1>
-            <ul>
+        <div className="messages-page">
+            <h2>Lease Messages</h2>
+            <p>{MockConversations.length} leases</p>
+            <ul className="conversation-list">
                 {MockConversations.map((conversation) => (
                     <li key={conversation.id}>
                         <ChatDashboardElement

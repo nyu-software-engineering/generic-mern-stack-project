@@ -7,7 +7,7 @@ const MockConversations = [
   },
   {
     id: 1,
-    sublessor: "Alex Morgan",
+    sublessor: "Jordan Davis",
     subletName: "Campus 1BR Apt",
   },
   {
