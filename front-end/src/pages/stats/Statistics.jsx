@@ -69,9 +69,7 @@ export default function Statistics() {
     : 0)
 
   return (
-    <Page title="Statistics">
-      <PagePlaceholder owner="Ryan" issues={[77]} wireframe="statistics.png" />
-    
+    <Page title="Statistics">    
       <div className="stat-grid--two">
             <StatCard
               label="Total Applied"
