@@ -33,7 +33,7 @@ export default function SearchPage() {
 
   return (
     <main className="search-page">
-      <div className="search-container">
+      <div className="doin-card search-container">
         <h1 className="search-title">Search</h1>
 
         <p className="search-filter-label">Filter events by category:</p>

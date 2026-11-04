@@ -1,20 +1,15 @@
 .search-page {
   min-height: 100vh;
-  background-color: #f5f6fb;
-  color: #202638;
   display: flex;
   justify-content: center;
   padding: 20px;
   box-sizing: border-box;
 }
 
+/* The card surface comes from .doin-card - this is layout only */
 .search-container {
   width: 100%;
   max-width: 440px;
-  background-color: white;
-  border: 1px solid #ddd;
-  border-radius: 16px;
-  padding: 24px;
   box-sizing: border-box;
 }
 
