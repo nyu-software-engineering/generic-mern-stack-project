@@ -3,9 +3,10 @@
 // Later this data will come from the back end instead of a file.
 
 const mockProfile = {
-  name: "Alp Ozbay",
+  name: "Taylor Brooks",
   location: "New York, NY",
-  bio: "NYU student who likes trying new activities around the city.",
+  bio: "Weekend explorer who loves trying new activities around the city.",
+  imageUrl: "https://picsum.photos/seed/doin-profile/200/200",
   interests: ["Hiking", "Photography", "Cooking", "Live Music", "Soccer"],
 };
 

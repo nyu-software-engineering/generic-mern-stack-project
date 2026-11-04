@@ -21,23 +21,24 @@
   box-sizing: border-box;
 }
 
-/* Photo placeholder: a gray circle with the user's initials */
+.profile-heading {
+  font-size: 28px;
+  align-self: flex-start;
+  margin: 0 0 16px;
+}
+
+/* Profile photo */
 
 .profile-photo {
   width: 96px;
   height: 96px;
   border-radius: 50%;
+  object-fit: cover;
   background-color: #e8eaf1;
-  color: #687386;
-  font-size: 32px;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .profile-name {
-  font-size: 28px;
+  font-size: 24px;
   margin: 16px 0 4px;
 }
 
