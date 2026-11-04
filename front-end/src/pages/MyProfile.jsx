@@ -14,7 +14,7 @@ function MyProfile() {
       <p>{profile.name}</p>
       <p>{profile.workAuthorization}</p>
       <p>{profile.skills.join(', ')}</p>
-      <p>{profile.lookingFor.join(', ')}</p>
+      <p>Looking for: {profile.lookingFor.join(', ')}</p>
       <p>{profile.locations.join(', ')}</p>
       <a href="#/profile/edit">Edit Profile</a>
     </section>
