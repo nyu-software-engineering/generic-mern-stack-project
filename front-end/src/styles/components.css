@@ -1,0 +1,47 @@
+
+/* ========================================
+   DOIN SHARED COMPONENT STYLES
+   ======================================== */
+
+/* Buttons */
+.doin-button {
+  padding: 12px 20px;
+  border: 1px solid lightgray;
+  border-radius: 8px;
+  font-size: 16px;
+  text-decoration: none;
+  cursor: pointer;
+
+}
+
+/* Primary Button */
+.doin-button--primary {
+  background-color: #635bff;
+  color: white;
+}
+
+
+/* Secondary Button */
+.doin-button--secondary {
+  background-color: white;
+  color: #202638;
+ 
+}
+
+
+
+/* Cards */
+.doin-card {
+  background-color: white;
+  border: 1px solid lightgray;
+  border-radius: 8px;
+  padding: 15px;
+}
+
+/* Input Fields */
+.doin-input {
+  padding: 10px;
+  border: 1px solid lightgray;
+  border-radius: 5px;
+  font-size: 16px;
+}
