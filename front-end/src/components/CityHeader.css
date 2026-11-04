@@ -101,42 +101,6 @@
   color: #111827;
 }
 
-.city-header-avatars {
-  display: flex;
-  padding-left: 8px;
-}
-
-.city-header-avatar {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  width: 34px;
-  height: 34px;
-  margin-left: -8px;
-  overflow: hidden;
-  border: 2px solid #fff;
-  border-radius: 50%;
-  background: #e5e7eb;
-  color: #374151;
-  font-size: 11px;
-  font-weight: 600;
-}
-
-.city-header-avatar-image {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.city-header-avatar-extra {
-  background: #111827;
-  color: #fff;
-}
-
 .city-header-member-label {
   font-size: 12px;
 }

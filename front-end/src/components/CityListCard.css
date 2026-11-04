@@ -12,17 +12,3 @@
 }
 .city-card__city { margin: 0; font-size: 1.1rem; }
 .city-card__count { margin: 4px 0 0; color: #666; font-size: 0.9rem; }
-
-.city-card__avatars { display: flex; }
-.avatar {
-  width: 32px; height: 32px;
-  border-radius: 50%;
-  border: 2px solid #fff;
-  margin-left: -8px;          /* overlap effect */
-  object-fit: cover;
-  display: inline-flex; align-items: center; justify-content: center;
-  font-size: 0.8rem; font-weight: 600;
-  background: #ddd;
-}
-.avatar:first-child { margin-left: 0; }
-.avatar--more { background: #eee; color: #444; }
