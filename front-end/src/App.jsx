@@ -5,6 +5,7 @@ import BulkLogPage from './pages/BulkLogPage'
 import ClosetPage from './pages/ClosetPage'
 import ClosetSummaryPage from './pages/ClosetSummaryPage'
 import DashboardPage from './pages/DashboardPage'
+import EditEmailPage from './pages/EditEmailPage'
 import EditItemPage from './pages/EditItemPage'
 import ItemDetailPage from './pages/ItemDetailPage'
 import ItemRankingsPage from './pages/ItemRankingsPage'
@@ -14,6 +15,7 @@ import ProfilePage from './pages/ProfilePage'
 import SignUpPage from './pages/SignUpPage'
 import SpendByCategoryPage from './pages/SpendByCategoryPage'
 import WelcomePage from './pages/WelcomePage'
+
 
 export default function App() {
   return (
@@ -37,6 +39,7 @@ export default function App() {
           <Route path="/dashboard/categories" element={<SpendByCategoryPage />} />
 
           <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/profile/edit-email" element={<EditEmailPage />} />
         </Route>
 
         <Route path="*" element={<NotFoundPage />} />

@@ -52,10 +52,10 @@ export default function ProfilePage() {
         <h2 className="text-xs font-semibold text-stone-500">ACCOUNT</h2>
 
         {/* don't have routes for these yet */}
-        <button type="button" className="flex w-full justify-between border-b border-stone-200 py-3 text-sm">
-          <span>Change email</span>
-          <span>&gt;</span>
-        </button>
+   <button type="button" onClick={() => navigate('/profile/edit-email')} className="flex w-full justify-between border-b border-stone-200 py-3 text-sm">
+     <span>Edit email</span>
+     <span>&gt;</span>
+   </button>
         <button type="button" className="flex w-full justify-between border-b border-stone-200 py-3 text-sm">
           <span>Change password</span>
           <span>&gt;</span>
