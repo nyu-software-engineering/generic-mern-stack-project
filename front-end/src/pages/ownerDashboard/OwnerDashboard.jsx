@@ -104,6 +104,7 @@ function OwnerDashboard() {
                       {rental.startDate} to {rental.endDate}
                     </p>
                     <p>Total: ${rental.totalPrice.toFixed(2)}</p>
+                    <Link to={`/bookings/${rental.id}`}>View booking</Link>
                   </div>
                   <span className="rental-status">
                     {formatStatus(rental.status)}

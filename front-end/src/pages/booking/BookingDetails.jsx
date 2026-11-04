@@ -3,7 +3,7 @@ import { Link, useParams } from 'react-router-dom'
 import StatusBadge from '../../components/StatusBadge'
 import ListingSummary from './ListingSummary'
 import {
-  CURRENT_USER_ID, canCancel, displayStatus, formatDate, formatMoney, getBooking, getListing, getUser,
+  CURRENT_USER_ID, canCancel, canConfirmPickup, canConfirmReturn, displayStatus, formatDate, formatMoney, getBooking, getListing, getUser,
   updateBookingStatus,
 } from '../../services/bookings'
 import { getReviewForBooking, getReviewTarget } from '../../services/reviews.js'
@@ -11,6 +11,10 @@ import './booking.css'
 
 // Statuses where the owner has accepted, so the price is agreed rather than proposed.
 const AGREED_STATUSES = ['confirmed', 'active', 'extension_requested', 'completed']
+
+// Statuses where the handoff screen has checks worth reopening. The owner's
+// "Confirm return" button already links there while a rental is active.
+const HANDOFF_VIEW_STATUSES = ['active', 'extension_requested', 'completed']
 
 // Booking summary shared by owner and borrower (prototype m23).
 // Keyed by bookingId so its state resets when the route moves to another booking.
@@ -104,6 +108,24 @@ function BookingSummary({ bookingId }) {
         {booking.status === 'extension_requested' && (
           <Link to={`/bookings/${booking.id}/extension`} className="booking-btn">
             {isOwner ? 'Review extension request' : 'View extension request'}
+          </Link>
+        )}
+
+        {canConfirmPickup(booking, CURRENT_USER_ID) && (
+          <Link to={`/handoff/${booking.id}`} className="booking-btn booking-btn--primary">
+            Confirm pickup
+          </Link>
+        )}
+
+        {canConfirmReturn(booking, CURRENT_USER_ID) && (
+          <Link to={`/handoff/${booking.id}`} className="booking-btn booking-btn--primary">
+            Confirm return
+          </Link>
+        )}
+
+        {HANDOFF_VIEW_STATUSES.includes(booking.status) && !canConfirmReturn(booking, CURRENT_USER_ID) && (
+          <Link to={`/handoff/${booking.id}`} className="booking-btn">
+            View pickup and return checks
           </Link>
         )}
 
