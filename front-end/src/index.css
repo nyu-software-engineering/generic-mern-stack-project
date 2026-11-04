@@ -1,10 +1,12 @@
 @import "tailwindcss";
 
-* {
-  /* remove default styling from each element for a consistent starting point */
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+@layer base {
+  * {
+    /* remove default styling from each element for a consistent starting point */
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
 }
 
 :root {

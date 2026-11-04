@@ -10,6 +10,10 @@ import CalendarView from './pages/CalendarView';
 import AddFlyer from './pages/AddFlyer';
 import MapView from './pages/MapView';
 import Profile from './pages/Profile';
+import EditProfile from './pages/EditProfile';
+import Notifications from './pages/Notifications';
+import Settings from './pages/Settings';
+import Support from './pages/Support';
 
 export default function App() {
   return (
