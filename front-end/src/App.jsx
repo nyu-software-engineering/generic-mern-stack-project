@@ -50,7 +50,6 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="/setup-profile" element={<SetupProfile />} />
-        <Route path="/profile" element={<Profile />} />
 
         {/* Shared mock data pages */}
         <Route element={<MockData />}>
@@ -76,6 +75,9 @@ function App() {
 
           {/* Pickup and return */}
           <Route path="/handoff/:rentalId" element={<PickupReturn />} />
+
+          {/* Profile */}
+          <Route path="/profile" element={<Profile />} />
 
           {/* Reporting */}
           <Route path="/report" element={<Report />} />
