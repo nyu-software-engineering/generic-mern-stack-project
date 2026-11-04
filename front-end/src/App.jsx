@@ -7,6 +7,7 @@ import JobDetails from './pages/JobDetails.jsx'
 import { useAppState } from './data/AppState.jsx'
 import EditProfile from './pages/EditProfile.jsx'
 import MyProfile from './pages/MyProfile.jsx'
+import Tracker from './pages/Tracker.jsx'
 
 function App() {
   const [hash, setHash] = useState(() => window.location.hash)
@@ -79,6 +80,8 @@ function App() {
         <MyProfile />
       ) : path === '/profile/edit' ? (
         <EditProfile />
+      ) : path === '/tracker' ? (
+        <Tracker />
       ) : route.kind === 'browse' ? (
         <BrowseJobs jobs={current.data ?? []} status={current.status} onRetry={retry} getJobHref={getJobHref}
           filters={browseFilters} onFiltersChange={setBrowseFilters} profile={appState.profile} />

@@ -1,6 +1,6 @@
-import { useState } from "react"
-import mockApplications from "../data/mockApplications"
-import mockJobs from "../data/mockJobs"
+import { useEffect, useState } from "react"
+import { useAppState } from "../data/AppState.jsx"
+import { getJobs } from "../jobs/api.js"
 import ApplicationDetails from "./ApplicationDetails"
 
 const stages = [
@@ -17,6 +17,20 @@ function formatDate(date) {
     return "None"
   }
 
+  if (/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+    const [year, month, day] = date.split("-")
+
+    return new Date(
+      Number(year),
+      Number(month) - 1,
+      Number(day)
+    ).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    })
+  }
+
   return new Date(date).toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
@@ -24,8 +38,8 @@ function formatDate(date) {
   })
 }
 
-function getJobForApplication(application) {
-  return mockJobs.find(
+function getJobForApplication(application, jobs) {
+  return jobs.find(
     (job) => job.id === application.jobId
   )
 }
@@ -33,6 +47,7 @@ function getJobForApplication(application) {
 function StageSection({
   stage,
   applications,
+  jobs,
   sortBy,
   onViewDetails,
 }) {
@@ -42,8 +57,8 @@ function StageSection({
     .filter((application) => application.stage === stage)
     .sort((a, b) => {
       if (sortBy === "deadline") {
-        const aJob = getJobForApplication(a)
-        const bJob = getJobForApplication(b)
+        const aJob = getJobForApplication(a, jobs)
+        const bJob = getJobForApplication(b, jobs)
 
         const aDeadline = aJob?.deadline
           ? new Date(aJob.deadline).getTime()
@@ -83,7 +98,7 @@ function StageSection({
       </h3>
 
       {visibleApplications.map((application) => {
-        const job = getJobForApplication(application)
+        const job = getJobForApplication(application, jobs)
 
         if (!job) {
           return null
@@ -120,7 +135,7 @@ function StageSection({
 
             <button
               onClick={() =>
-                onViewDetails(application)
+                onViewDetails(application.id)
               }
             >
               View Details
@@ -143,6 +158,8 @@ function StageSection({
 }
 
 function Tracker() {
+  const appState = useAppState()
+
   const [selectedStage, setSelectedStage] =
     useState("All")
 
@@ -150,20 +167,92 @@ function Tracker() {
     useState("default")
 
   const [
-    selectedApplication,
-    setSelectedApplication,
+    selectedApplicationId,
+    setSelectedApplicationId,
   ] = useState(null)
+
+  const [jobs, setJobs] = useState([])
+  const [jobsStatus, setJobsStatus] =
+    useState("loading")
+
+  useEffect(() => {
+    let active = true
+
+    getJobs().then(
+      (jobData) => {
+        if (!active) {
+          return
+        }
+
+        setJobs(jobData)
+        setJobsStatus("ready")
+      },
+      () => {
+        if (!active) {
+          return
+        }
+
+        setJobs([])
+        setJobsStatus("error")
+      }
+    )
+
+    return () => {
+      active = false
+    }
+  }, [])
+
+  if (!appState) {
+    return (
+      <main className="app">
+        <p>Application data is unavailable.</p>
+      </main>
+    )
+  }
+
+  if (
+    appState.status === "loading" ||
+    jobsStatus === "loading"
+  ) {
+    return (
+      <main className="app">
+        <p>Loading tracker...</p>
+      </main>
+    )
+  }
+
+  if (
+    appState.status === "error" ||
+    jobsStatus === "error"
+  ) {
+    return (
+      <main className="app">
+        <p>Could not load tracker data.</p>
+      </main>
+    )
+  }
+
+  const applications = appState.applications
+
+  const selectedApplication =
+    applications.find(
+      (application) =>
+        application.id === selectedApplicationId
+    )
 
   if (selectedApplication) {
     const selectedJob =
-      getJobForApplication(selectedApplication)
+      getJobForApplication(
+        selectedApplication,
+        jobs
+      )
 
     return (
       <ApplicationDetails
         application={selectedApplication}
         job={selectedJob}
         onBack={() =>
-          setSelectedApplication(null)
+          setSelectedApplicationId(null)
         }
       />
     )
@@ -176,7 +265,7 @@ function Tracker() {
       <h2>My Tracker</h2>
 
       <p>
-        Total applications: {mockApplications.length}
+        Total applications: {applications.length}
       </p>
 
       <div>
@@ -236,10 +325,11 @@ function Tracker() {
           <StageSection
             key={stage}
             stage={stage}
-            applications={mockApplications}
+            applications={applications}
+            jobs={jobs}
             sortBy={sortBy}
             onViewDetails={
-              setSelectedApplication
+              setSelectedApplicationId
             }
           />
         ))}
