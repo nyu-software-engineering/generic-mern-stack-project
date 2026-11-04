@@ -71,10 +71,6 @@ function EditProfile() {
 
     return (
     <section className="edit-profile">
-      <h1>Edit Profile</h1>
-      <img src={draft.photo} alt="" width="72" height="72" />
-      <button type="button" className="ui-button ui-button-secondary" onClick={openPhoto}>Change photo</button>
-
     <a href="#/profile">Back to profile</a>
     <h1>Edit Profile</h1>
     <img src={draft.photo} alt="" width="72" height="72" />
