@@ -14,11 +14,21 @@ const Temphome = (props) => {
           margin: "0 auto",
         }}
       />
-      <Link to="/create"> See create_household</Link>
+      <Link to="/login"> See Login</Link>
       <br />
-      <Link to="/register"> See register</Link>
+      <Link to="/register"> See Register</Link>
       <br />
-      <Link to="/assets"> See assets</Link>
+      <Link to="/create"> See Create Household</Link>
+      <br />
+      <Link to="/home"> See User Home Page</Link>
+      <br />
+      <Link to="/individual-protocol"> See Individual Protocol</Link>
+      <br />
+      <Link to="/protocols"> See Protocols</Link>
+      <br />
+      <Link to="/assets"> See Assets</Link>
+      <br />
+      <Link to="/monthly-activity"> See Monthly Activity</Link>
     </div>
   );
 };
