@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict'
 import { beforeEach, test } from 'node:test'
+import { loadMockData } from '../src/services/mockDataService.js'
 import { getBoardRequests } from '../src/services/requestsBoard.js'
+import { mockResponse } from './fixtures.js'
 
 beforeEach(() => {
   const store = new Map()
@@ -25,6 +27,13 @@ test('the board lists saved quick borrow requests newest first', () => {
   assert.ok(requests.every((item) => item.type === 'quick'))
 })
 
-test('item requests stay empty until that service is added', () => {
+test('open item requests appear once the shared mock data loads', async (t) => {
   assert.deepEqual(getBoardRequests('item'), [])
+
+  t.mock.method(globalThis, 'fetch', async () => Response.json(mockResponse()))
+  await loadMockData()
+
+  const items = getBoardRequests('item')
+  assert.deepEqual(items.map((item) => item.itemName), ['Rice cooker', 'HDMI cable'])
+  assert.ok(items.every((item) => item.type === 'item'))
 })

@@ -114,5 +114,34 @@ export function mockResponse() {
         createdAt: '2026-11-01',
       },
     ],
+
+    itemRequests: [
+      {
+        id: 1,
+        requesterId: 'student-2',
+        itemName: 'Rice cooker',
+        neededBy: '2099-01-10',
+        neededUntil: '2099-01-12',
+        approximateArea: 'A6 building',
+        targetPrice: 15,
+        details: 'Cooking for a study group.',
+        status: 'open',
+        responses: [],
+        createdAt: '2026-11-02T12:00:00Z',
+      },
+      {
+        id: 2,
+        requesterId: 'owner-1',
+        itemName: 'HDMI cable',
+        neededBy: '2099-01-11',
+        neededUntil: '2099-01-13',
+        approximateArea: 'Campus Center',
+        targetPrice: null,
+        details: '',
+        status: 'open',
+        responses: [],
+        createdAt: '2026-11-01T12:00:00Z',
+      },
+    ],
   }
 }

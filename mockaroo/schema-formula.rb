@@ -34,4 +34,10 @@ reviews = review_specs.each_with_index.map { |spec, i|
   {"id" => i + 1, "bookingId" => rental["id"], "reviewerId" => reviewer_id, "reviewedUserId" => "owner-1", "communicationRating" => spec["rating"], "itemCareRating" => spec["rating"], "overallRating" => spec["rating"], "comment" => spec["comment"], "createdAt" => (today - 1 - i).strftime("%Y-%m-%d")}
 };
 
-{"users" => users, "listings" => listings, "rentals" => rentals, "conversations" => conversations, "reviews" => reviews}
+request_items = [["Portable speaker", "Near Third North", "For a small birthday party in the dorm lounge."], ["Rice cooker", "A6 building", "Cooking for a study group this week."], ["Graphing calculator", "Library", "Mine broke right before a midterm."], ["Camping tent", "Baraha", "Weekend trip with friends."], ["HDMI cable", "Campus Center", "Presenting at a club meeting."]];
+item_requests = request_items.each_with_index.map { |(item_name, area, details), i|
+  needed_by = today + 2 + i;
+  {"id" => i + 1, "requesterId" => (i == 4 ? "owner-1" : "student-#{3 + i}"), "itemName" => item_name, "neededBy" => needed_by.strftime("%Y-%m-%d"), "neededUntil" => (needed_by + 2).strftime("%Y-%m-%d"), "approximateArea" => area, "targetPrice" => (i == 1 ? nil : random(5, 30)), "details" => details, "status" => "open", "responses" => [], "createdAt" => "#{(today - i - 1).strftime("%Y-%m-%d")}T12:00:00Z"}
+};
+
+{"users" => users, "listings" => listings, "rentals" => rentals, "conversations" => conversations, "reviews" => reviews, "itemRequests" => item_requests}
