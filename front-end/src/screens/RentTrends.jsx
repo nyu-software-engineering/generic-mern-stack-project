@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import Button from '../components/ui/Button.jsx'
 import Card from '../components/ui/Card.jsx'
 import PercentChange from '../components/ui/PercentChange.jsx'
 import ScreenTitle from '../components/ui/ScreenTitle.jsx'
 import SectionTitle from '../components/ui/SectionTitle.jsx'
 import { getArea, getRentTrend } from '../data/api.js'
+import { isFollowingArea, setFollowingArea } from '../data/followedAreas.js'
 import { formatRent } from '../data/format.js'
 
 const BASE_YEAR = 2023
@@ -36,10 +38,12 @@ export default function RentTrends() {
   const { areaId } = useParams()
   const [area, setArea] = useState(undefined)
   const [points, setPoints] = useState([])
+  const [following, setFollowing] = useState(false)
 
   useEffect(() => {
     getArea(areaId).then((found) => setArea(found ?? null))
     getRentTrend(areaId).then((trend) => setPoints(trend ? trend.points : []))
+    isFollowingArea(areaId).then(setFollowing)
   }, [areaId])
 
   if (area === undefined) {
@@ -48,6 +52,11 @@ export default function RentTrends() {
 
   if (area === null) {
     return <ScreenTitle title="Area not found" subtitle="We don't have rent data for this area yet." />
+  }
+
+  const toggleFollow = async () => {
+    await setFollowingArea(areaId, !following)
+    setFollowing(!following)
   }
 
   const scale = points.length > 0 ? axisScale(points) : { domain: ['auto', 'auto'], ticks: undefined }
@@ -96,6 +105,15 @@ export default function RentTrends() {
             <Line type="monotone" dataKey="averageRent" stroke={ACCENT} strokeWidth={2.5} dot={{ r: 3, fill: ACCENT }} />
           </LineChart>
         </ResponsiveContainer>
+      </div>
+
+      <div className="mt-6">
+        <Button onClick={toggleFollow} variant={following ? 'secondary' : 'primary'}>
+          {following ? '✓ Following' : 'Follow this area'}
+        </Button>
+        <p className="mt-2 text-center text-xs text-muted">
+          {following ? "We'll alert you when rents here change a lot. Tap again to unfollow." : 'Get alerted when rents here change a lot.'}
+        </p>
       </div>
     </div>
   )
