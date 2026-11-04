@@ -130,7 +130,7 @@ export const lessons = [
     duration: '2 min',
     imageUrl: 'https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=640&h=360&fit=crop',
     content:
-      'StockSim lets you practice investing with fake money. You start with virtual cash, pick stocks, and see how your choices affect your portfolio. Nothing here uses real money, so you can learn without risk.',
+      'StockSim lets you practice investing with fake money. Nothing here uses real money, so you can learn without risk. You start with virtual cash, pick stocks, and build a practice portfolio. As you buy and sell, you will see how your choices change your portfolio value over time.',
   },
   {
     id: 'stock-prices',
@@ -148,7 +148,7 @@ export const lessons = [
     duration: '4 min',
     imageUrl: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=640&h=360&fit=crop',
     content:
-      'A portfolio is the collection of investments you own. Putting all your money into one stock is risky. Spreading money across a few companies or ETFs can reduce the chance that one bad day hurts everything at once.',
+      'A portfolio is the collection of investments you own. Putting all your money into one stock is risky because one bad day can hurt a lot. Spreading money across a few companies or ETFs can reduce that risk.',
   },
   {
     id: 'reading-returns',
@@ -157,7 +157,7 @@ export const lessons = [
     duration: '3 min',
     imageUrl: 'https://images.unsplash.com/photo-1535320903710-d993d3d77d29?w=640&h=360&fit=crop',
     content:
-      'A return shows how much your investment has gained or lost compared with what you paid. A positive return means you are ahead. A negative return means the value has dropped. StockSim shows this so you can learn from each trade.',
+      'A return shows how much your investment has gained or lost compared with what you paid. A positive return means you are ahead. A negative return means the value has dropped. StockSim shows returns so you can learn from each practice trade.',
   },
   {
     id: 'market-orders',

@@ -1,8 +1,9 @@
-import { Link, useParams } from 'react-router'
+import { Link, useOutletContext, useParams } from 'react-router'
 import { lessons } from '../../services/mockData.js'
 
 function LessonPage() {
   const { lessonId } = useParams()
+  const { completedLessons, setCompletedLessons } = useOutletContext()
   const lessonIndex = lessons.findIndex((item) => item.id === lessonId)
   const lesson = lessons[lessonIndex]
 
@@ -25,6 +26,13 @@ function LessonPage() {
   const lessonNumber = lessonIndex + 1
   const previousLesson = lessonIndex > 0 ? lessons[lessonIndex - 1] : null
   const nextLesson = lessonIndex < lessons.length - 1 ? lessons[lessonIndex + 1] : null
+  const isComplete = completedLessons.includes(lesson.id)
+
+  function markAsComplete() {
+    if (!isComplete) {
+      setCompletedLessons([...completedLessons, lesson.id])
+    }
+  }
 
   return (
     <>
@@ -43,11 +51,23 @@ function LessonPage() {
 
       <img
         src={lesson.imageUrl}
-        alt={lesson.imageAlt}
+        alt={lesson.title}
         className="mt-6 w-full rounded-2xl border border-border object-cover"
       />
 
       <p className="mt-6 text-lg leading-[1.7] text-muted">{lesson.content}</p>
+
+      {isComplete ? (
+        <p className="mt-8 font-[650]">Completed</p>
+      ) : (
+        <button
+          type="button"
+          onClick={markAsComplete}
+          className="mt-8 min-h-12 w-full cursor-pointer rounded-[2rem] bg-accent px-6 py-3.5 font-[650] text-ink hover:bg-accent-hover"
+        >
+          Mark as Complete
+        </button>
+      )}
 
       <div className="mt-8 flex flex-col gap-3">
         {previousLesson && (
@@ -55,7 +75,7 @@ function LessonPage() {
             to={`/learn/${previousLesson.id}`}
             className="inline-flex min-h-12 items-center justify-center rounded-[2rem] border border-border px-6 py-3.5 font-[650] text-ink no-underline hover:bg-hover"
           >
-            Previous: {previousLesson.title}
+            Previous lesson
           </Link>
         )}
         {nextLesson && (
@@ -63,7 +83,7 @@ function LessonPage() {
             to={`/learn/${nextLesson.id}`}
             className="inline-flex min-h-12 items-center justify-center rounded-[2rem] border border-border px-6 py-3.5 font-[650] text-ink no-underline hover:bg-hover"
           >
-            Next: {nextLesson.title}
+            Next lesson
           </Link>
         )}
       </div>
