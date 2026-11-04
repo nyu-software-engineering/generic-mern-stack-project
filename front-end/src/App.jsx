@@ -3,6 +3,7 @@ import heroImg from './assets/hero.png'
 import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
 import CreateHousehold from './pages/create_household/CreateHousehold'
+import MonthlyActivity from './pages/monthly_activity/MonthlyActivity'
 import Templogin from './pages/temp_home'
 import React from 'react'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
@@ -19,6 +20,7 @@ function App() {
         {/* <Route basename={import.meta.env.BASE_URL} /> */}
         <Route path="/" element={<Templogin />} />
         <Route path="/create" element={<CreateHousehold />} />
+        <Route path="/monthly-activity" element={<MonthlyActivity />} />
     </Routes>
     </Router>
     
