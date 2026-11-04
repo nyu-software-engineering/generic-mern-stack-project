@@ -1,50 +1,38 @@
 /* Shared authentication page styling */
 
 .auth-page {
-  --auth-primary: #635bff;
-  --auth-text: #202638;
-  --auth-muted: #687386;
-
   min-height: 100vh;
-  min-height: 100svh;
-  background: #f5f6fb;
-  color: var(--auth-text);
+  background-color: #f5f6fb;
   display: flex;
   justify-content: center;
+  align-items: center;
   padding: 24px;
-  font-family: Inter, system-ui, sans-serif;
-}
-
-.auth-page,
-.auth-page * {
   box-sizing: border-box;
 }
 
 .auth-container {
   width: 100%;
   max-width: 440px;
-  min-height: calc(100svh - 48px);
-  background: white;
-  border: 1px solid #e8eaf1;
-  border-radius: 24px;
-  padding: 28px;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 16px;
+  padding: 24px;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 12px 48px rgba(32, 38, 56, 0.05);
+  box-sizing: border-box;
 }
 
 /* Header */
 
 .auth-header {
-  padding-bottom: 20px;
-  margin-bottom: 36px;
-  border-bottom: 1px solid #edf0f5;
+  padding-bottom: 16px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid #eee;
 }
 
 .auth-header h1 {
   font-size: 26px;
-  font-weight: 750;
-  letter-spacing: -0.7px;
+  font-weight: bold;
   margin: 0;
 }
 
@@ -65,21 +53,15 @@
 
 .auth-field label {
   font-size: 14px;
-  font-weight: 650;
+  font-weight: bold;
 }
 
-.auth-field input {
+.auth-field .doin-input {
   width: 100%;
   height: 52px;
-  padding: 0 15px;
-  border: 1px solid #dce0eb;
-  border-radius: 12px;
-  background: white;
-  color: var(--auth-text);
-  font: inherit;
-  font-size: 15px;
-  outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  background-color: white;
+  color: #202638;
+  box-sizing: border-box;
 }
 
 .auth-field input::placeholder {
@@ -87,8 +69,8 @@
 }
 
 .auth-field input:focus {
-  border-color: var(--auth-primary);
-  box-shadow: 0 0 0 3px rgba(99, 91, 255, 0.12);
+  border-color: #635bff;
+  outline: 2px solid #635bff;
 }
 
 .auth-field input[aria-invalid="true"] {
@@ -107,46 +89,37 @@
 /* Buttons and navigation */
 
 .auth-actions {
-  margin-top: auto;
-  padding-top: 36px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
+  margin-top: 12px;
 }
 
 .auth-primary-button {
   width: 100%;
   min-height: 54px;
-  border: none;
-  border-radius: 14px;
-  background: var(--auth-primary);
-  color: white;
-  font: inherit;
-  font-size: 15px;
-  font-weight: 650;
-  cursor: pointer;
-  transition: background-color 0.2s;
+  font-weight: bold;
 }
 
-.auth-primary-button:hover {
-  background: #5148e8;
+.auth-actions .doin-button--primary:hover {
+  background-color: #5148e8;
 }
 
 .auth-primary-button:focus-visible {
-  outline: 3px solid #aba5ff;
-  outline-offset: 3px;
+  outline: 2px solid #202638;
+  outline-offset: 2px;
 }
 
 .auth-switch {
   font-size: 14px;
   text-align: center;
-  color: var(--auth-muted);
+  color: #687386;
   margin: 0;
 }
 
 .auth-switch a {
-  color: var(--auth-primary);
-  font-weight: 650;
+  color: #635bff;
+  font-weight: bold;
   text-decoration: none;
 }
 
@@ -154,32 +127,7 @@
   text-decoration: underline;
 }
 
-/* Mobile */
-
-@media (max-width: 480px) {
-  .auth-page {
-    padding: 0;
-    background: white;
-  }
-
-  .auth-container {
-    min-height: 100svh;
-    border: none;
-    border-radius: 0;
-    box-shadow: none;
-    padding: 28px 22px 32px;
-  }
-
-  .auth-header {
-    margin-bottom: 30px;
-  }
-}
-
 /* Login-specific styling */
-
-.auth-login-form {
-  padding-top: 14px;
-}
 
 .auth-forgot {
   display: flex;
@@ -190,11 +138,9 @@
   background: none;
   border: none;
   padding: 0;
-  color: var(--auth-primary);
+  color: #635bff;
   font: inherit;
-  font-size: 13px;
-  font-weight: 550;
-  cursor: pointer;
+  font-size: 14px;
 }
 
 .auth-forgot button:hover {
@@ -202,7 +148,7 @@
 }
 
 .auth-forgot button:focus-visible {
-  outline: 2px solid var(--auth-primary);
+  outline: 2px solid #635bff;
   outline-offset: 4px;
 }
 
@@ -214,4 +160,20 @@
   color: #4740a0;
   font-size: 13px;
   line-height: 1.5;
+}
+
+/* Mobile */
+
+@media (max-width: 480px) {
+  .auth-page {
+    background-color: white;
+    padding: 0;
+  }
+
+  .auth-container {
+    min-height: 100vh;
+    border: none;
+    border-radius: 0;
+    padding: 24px;
+  }
 }

@@ -78,6 +78,7 @@ export default function Register() {
           <div className="auth-field">
             <label htmlFor="fullName">Full name</label>
             <input
+              className="doin-input"
               id="fullName"
               name="fullName"
               type="text"
@@ -97,6 +98,7 @@ export default function Register() {
           <div className="auth-field">
             <label htmlFor="email">Email</label>
             <input
+              className="doin-input"
               id="email"
               name="email"
               type="email"
@@ -116,6 +118,7 @@ export default function Register() {
           <div className="auth-field">
             <label htmlFor="password">Password</label>
             <input
+              className="doin-input"
               id="password"
               name="password"
               type="password"
@@ -135,6 +138,7 @@ export default function Register() {
           <div className="auth-field">
             <label htmlFor="confirmPassword">Confirm password</label>
             <input
+              className="doin-input"
               id="confirmPassword"
               name="confirmPassword"
               type="password"
@@ -152,7 +156,10 @@ export default function Register() {
           </div>
 
           <div className="auth-actions">
-            <button type="submit" className="auth-primary-button">
+            <button
+              type="submit"
+              className="doin-button doin-button--primary auth-primary-button"
+            >
               Continue
             </button>
 

@@ -62,13 +62,14 @@ export default function Login() {
         </header>
 
         <form
-          className="auth-form auth-login-form"
+          className="auth-form"
           onSubmit={handleSubmit}
           noValidate
         >
           <div className="auth-field">
             <label htmlFor="login-email">Email</label>
             <input
+              className="doin-input"
               id="login-email"
               name="email"
               type="email"
@@ -89,6 +90,7 @@ export default function Login() {
           <div className="auth-field">
             <label htmlFor="login-password">Password</label>
             <input
+              className="doin-input"
               id="login-password"
               name="password"
               type="password"
@@ -119,7 +121,10 @@ export default function Login() {
           )}
 
           <div className="auth-actions">
-            <button type="submit" className="auth-primary-button">
+            <button
+              type="submit"
+              className="doin-button doin-button--primary auth-primary-button"
+            >
               Log in
             </button>
 
