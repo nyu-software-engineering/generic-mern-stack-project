@@ -1,4 +1,4 @@
-import "./HomePage.css";
+import "./Home&ResultsPage.css";
 import { Link } from "react-router-dom";
 
 function HomePage() {
@@ -6,16 +6,6 @@ function HomePage() {
     <main className="homepage">
         <header className="home-header">
             <img src="https://picsum.photos/340/180" alt="Sample" className="logo" />
-
-            <div className="home-header-actions">
-            <button type="button" className="home-header-button">
-            profile
-          </button>
-
-          <button type="button" className="home-header-button">
-            saved
-          </button>
-        </div>
       </header>
 
 

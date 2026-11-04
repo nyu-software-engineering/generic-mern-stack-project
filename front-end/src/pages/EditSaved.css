@@ -1,0 +1,87 @@
+.edit-page-wrapper{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 5%;
+    height: 80%;
+}
+
+.edit-card {
+    margin-top: 10%;
+    display: flex;
+    flex-direction: column;
+    min-height: 75%;
+    height: 75%;
+    width: 100%;
+    margin-top: auto;
+}
+
+.edit-image_and_edit{
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+    min-height: 0;
+}
+
+.edit-card-info {
+    flex:3;
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 0;
+    resize: none;
+    font-family: inherit;
+    font-size: inherit;
+    padding-top: 2%;
+    padding-bottom: 2%;
+    padding-left: 1%;
+    padding-right: 1%;
+    border: solid;
+    border-top: none;
+    overflow-y: auto;
+    scrollbar-width: none;
+}
+
+.edit-card-image{
+    flex:5;
+    border: solid;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.edit-card-image img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+#edit-card-container{
+    display: flex;
+    flex: 5;
+    min-height: 30%;
+    height: 30%;
+    width: 100%;
+}
+
+#edit-card-actions-container{
+    flex: 3;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+}
+
+.EditSaved-Btn{
+    height: 20%;
+    width: 30%;
+    margin-top: 8%;
+}
+
+#EditSaved-BackBtn{
+    flex:1;
+    border: solid;
+    border-left: none;
+}
+

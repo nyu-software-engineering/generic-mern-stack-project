@@ -1,21 +1,37 @@
+:root {
+  --border-radius: 25px;
+  --input-radius: 8px;
+}
 
 .phone-screen {
   width: 390px;
   max-width: 100%;
-  height: min(844px, 100dvh);
+  height: min(844px, 98dvh); /*maybe change view height back to 100 later*/
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  margin: auto;
+  min-height: 0;
+  
+  border: 1px solid #ddd;
+  border-radius: var(--border-radius);
+  background-color: #fff;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 }
 
 .page-content {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
+  scrollbar-width: none;
 }
 
 .bottom-nav {
   display: flex;
   justify-content: space-around;
   flex-shrink: 0;
+  padding: 2%;
+  border-bottom-left-radius: var(--border-radius);
+  border-bottom-right-radius: var(--border-radius);
+  background-color: lightgray;
 }

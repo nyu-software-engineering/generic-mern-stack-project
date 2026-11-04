@@ -1,0 +1,89 @@
+.sign-in,
+.sign-up {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+    height: 100%;
+}
+
+/* Heading */
+.sign-in h2,
+.sign-up h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+/*. Form */
+.sign-in form,
+.sign-up form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+    max-width: 400px;
+}
+
+/* Field groups (label above input) */
+.form-email,
+.form-password {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+/* Labels */
+.sign-in label,
+.sign-up label {
+  font-size: 0.875rem;
+  font-weight: bold;
+}
+
+/* Inputs */
+.sign-in input,
+.sign-up input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.5rem;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: var(--input-radius);
+}
+
+.sign-in input:focus,
+.sign-up input:focus {
+  border-color: #aaa;
+  outline: none;
+}
+
+/* Button */
+.sign-in button,
+.sign-up button {
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 0.875rem;
+    background-color: lightgray;
+    border: none;
+    border-radius: var(--input-radius);
+    cursor: pointer;
+
+}
+
+.sign-in button:hover,
+.sign-up button:hover {
+  background-color: #c8c8c8;
+}
+
+.sign-in button:active,
+.sign-up button:active {
+  background-color: #b0b0b0;
+  transform: scale(0.98);
+}
+
+/*  Error message  */
+.sign-in .error,
+.sign-up .error {
+    color: red;
+    font-size: 0.875rem;
+    margin: 0;
+}

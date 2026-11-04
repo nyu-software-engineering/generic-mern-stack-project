@@ -1,27 +1,16 @@
 import HotelDetails from "../components/HotelDetails";
 import { Link } from "react-router-dom";
+import "./Home&ResultsPage.css";
 
 function ResultsPage() {
   return (
-    <main className="homepage">
+    <main className="homepage results-page">
         <header className="home-header">
             <img src="https://picsum.photos/340/180" alt="Sample" className="logo" />
 
-            <div className="home-header-actions">
-            <button type="button" className="home-header-button">
-            profile
-          </button>
-
-          <button type="button" className="home-header-button">
-            saved
-          </button>
+        <div className="home-header-actions">
         </div>
       </header>
-
-
-
-
-
 
 
       <section className="home-search">

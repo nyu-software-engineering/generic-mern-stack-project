@@ -1,0 +1,73 @@
+.logo{
+  width: 230px;
+  height: 80px;
+  object-fit: cover;
+}
+
+.home-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+}
+
+.home-header-button {
+  width: 72px;
+  height: 36px;
+}
+
+.home-search-label {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-size: 0.875rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+.home-search {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-weight: bold;
+  text-align: left;
+}
+
+.home-search-input {
+  width: 75%;
+  align-self: center;
+  box-sizing: border-box;
+  padding: 0.5rem;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: var(--input-radius);
+}
+
+.home-search-button {
+  align-self: center;
+}
+
+.home-search-button,
+.home-header-button {
+  padding: 0.5rem;
+  font-size: 0.875rem;
+  background-color: lightgray;
+  border: none;
+  border-radius: var(--input-radius);
+  cursor: pointer;
+}
+
+/* These are from the home page elements, copied from the home page for reuse*/
+.results-page .hotel-details {
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+.results-page .hotel-details-image {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.results-page .results-title {
+  padding: 0 16px;
+}
