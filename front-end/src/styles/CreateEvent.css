@@ -1,0 +1,111 @@
+
+/* Create Event Page */
+
+.create-event-page {
+  min-height: 100vh;
+  background-color: #f5f6fb;
+  color: #202638;
+  padding: 30px 16px;
+  box-sizing: border-box;
+}
+
+.create-event-card {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 25px;
+  background-color: white;
+  border: 1px solid lightgray;
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+.create-event-card h1 {
+  font-size: 28px;
+  margin: 0 0 10px;
+}
+
+.create-event-description {
+  color: #666;
+  margin-bottom: 25px;
+}
+
+/* Form Fields */
+
+.create-event-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.create-event-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.create-event-field label {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.create-event-form .doin-input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid lightgray;
+  border-radius: 5px;
+  font-size: 16px;
+  font-family: inherit;
+  background-color: white;
+  color: #202638;
+  box-sizing: border-box;
+}
+
+.create-event-form textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+/* Time Fields */
+
+.create-event-times {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+/* Submit Button */
+
+.create-event-submit {
+  width: 100%;
+  padding: 12px 20px;
+  background-color: #635bff;
+  color: white;
+  border: 1px solid #635bff;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.create-event-submit:hover {
+  background-color: #5148e5;
+}
+
+/* Mobile Styling */
+
+@media (max-width: 600px) {
+  .create-event-page {
+    padding: 15px 10px;
+  }
+
+  .create-event-card {
+    padding: 18px;
+  }
+
+  .create-event-card h1 {
+    font-size: 24px;
+  }
+
+  .create-event-times {
+    grid-template-columns: 1fr;
+  }
+}
