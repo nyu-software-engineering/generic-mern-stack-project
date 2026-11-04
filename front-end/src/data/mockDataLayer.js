@@ -62,7 +62,8 @@ export function getRankedCityPlaces(cityId) {
           if (Object.hasOwn(tally, vote.value)) tally[vote.value] += 1
         })
 
-      return [{ ...place, savedPlaceId: saved.id, tally }]
+      const categoryLabel = categories.find((category) => category.id === place.categoryId)?.label ?? 'Other'
+      return [{ ...place, categoryLabel, savedPlaceId: saved.id, tally }]
     })
     .sort((a, b) => b.tally['must-go'] - a.tally['must-go'] || a.name.localeCompare(b.name))
 }
@@ -404,4 +405,61 @@ export function savePlaceToList({ placeId, lookup, userId = currentUserId }) {
 /** @deprecated Use savePlaceToList */
 export function mockSavePlaceToList(args) {
   return savePlaceToList(args)
+}
+
+/**
+ * Home "Most saved by friends" (#80).
+ * Places the user's friends have saved, ranked by how many distinct friends saved
+ * each one (ties: most recent save first, then name). The user's own saves and
+ * saves by non-friends don't count.
+ * Shape: { id, name, categoryId, categoryLabel, cityName, photoUrl,
+ *          saveCount, savedByLabel, lastSavedAt }
+ */
+export function getMostSavedByFriends(userId, limit = 6) {
+  const friends = getFriendsForUser(userId)
+  const friendIds = new Set(friends.map((friend) => friend.id))
+
+  // placeId -> { savers: Set of friend ids, lastSavedAt }
+  const byPlace = new Map()
+  savedPlaces
+    .filter((saved) => friendIds.has(saved.savedBy))
+    .forEach((saved) => {
+      const entry = byPlace.get(saved.placeId) ?? { savers: new Set(), lastSavedAt: '' }
+      entry.savers.add(saved.savedBy) // Set, so one friend saving twice counts once
+      if (saved.savedAt > entry.lastSavedAt) entry.lastSavedAt = saved.savedAt
+      byPlace.set(saved.placeId, entry)
+    })
+
+  return [...byPlace.entries()]
+    .flatMap(([placeId, { savers, lastSavedAt }]) => {
+      const place = getPlaceById(placeId)
+      if (!place) return []
+
+      const names = friends
+        .filter((friend) => savers.has(friend.id))
+        .map((friend) => firstName(friend.name))
+
+      return [{
+        id: place.id,
+        name: place.name,
+        categoryId: place.categoryId,
+        categoryLabel: getCategoryLabel(place.categoryId),
+        cityName: getCityById(place.cityId)?.name ?? '',
+        photoUrl: place.photoUrl,
+        saveCount: savers.size,
+        // "Saved by Samantha", "Saved by Samantha and Tiffany", "Saved by 3 friends"
+        savedByLabel: savers.size <= 2 ? `Saved by ${formatNameList(names)}` : `Saved by ${savers.size} friends`,
+        lastSavedAt,
+      }]
+    })
+    .sort((a, b) =>
+      b.saveCount - a.saveCount
+      || b.lastSavedAt.localeCompare(a.lastSavedAt)
+      || a.name.localeCompare(b.name))
+    .slice(0, limit)
+}
+
+/** Home loader for "Most saved by friends". Uses mock currentUserId until real auth exists. */
+export function loadMostSavedByFriends(options) {
+  return loadAsync(() => getMostSavedByFriends(currentUserId), options)
 }

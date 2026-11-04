@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { loadMyCityHeaders } from '../data/mockDataLayer.js'
 import CityListCard from '../components/CityListCard.jsx'
+import MostSavedByFriends from '../components/MostSavedByFriends.jsx'
 
 /**
  * home screen (#79): shows a card for each city list the logged-in user is a member of.
@@ -67,6 +68,7 @@ export default function Home() {
       ) : (
         cities.map((city) => <CityListCard key={city.id} city={city} />)
       )}
+      <MostSavedByFriends />
     </main>
   )
 }
