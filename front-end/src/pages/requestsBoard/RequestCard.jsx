@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { formatMoney, getListing } from '../../services/bookings'
-import { getConversation, getLatestOffer } from '../../services/chat'
+import { getLatestResponse } from '../../services/itemRequests'
 import { CURRENT_USER_ID, getUser } from '../../services/mockDataService'
 import { REQUEST_TYPES } from '../../services/requestsBoard'
 
@@ -13,15 +13,14 @@ const formatDate = (isoDate) =>
 // Summary of the newest reply to one of your item requests, e.g.
 // "Omer offered Projector for $18.00." Returns null when there are no replies.
 function latestReply(request) {
-  const response = request.responses.at(-1)
-  const conversation = response && getConversation(response.conversationId)
-  if (!conversation) return null
+  const response = getLatestResponse(request)
+  if (!response) return null
 
   const name = getUser(response.responderId)?.name ?? 'Someone'
-  const offer = getLatestOffer(conversation)
-  const listing = getListing(conversation.listingId)
+  const { offer } = response
+  const listing = getListing(response.listingId)
   return {
-    conversationId: conversation.id,
+    conversationId: response.conversationId,
     hasOffer: Boolean(offer),
     text: offer
       ? `${name} offered ${listing?.title ?? 'an item'} for ${formatMoney(offer.totalPrice)}.`

@@ -87,8 +87,12 @@ for (const [name, corrupt] of [
   ['unknown item requester', (data) => { data.itemRequests[0].requesterId = 'missing' }],
   ['invalid item request status', (data) => { data.itemRequests[0].status = 'pending' }],
   ['response to a missing conversation', (data) => {
-    data.itemRequests[0].responses = [{ responderId: 'owner-1', conversationId: 99 }]
+    data.itemRequests[0].responses = [{ responderId: 'owner-1', conversationId: 99, messageIds: [] }]
   }],
+  ['response citing another sender\'s message', (data) => {
+    data.itemRequests[0].responses = [{ responderId: 'owner-1', conversationId: 1, messageIds: [2] }]
+  }],
+  ['missing item requests', (data) => { delete data.itemRequests }],
 ]) {
   test(`rejects ${name} before storing records`, async (t) => {
     const payload = mockResponse()

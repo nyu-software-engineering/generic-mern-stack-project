@@ -61,7 +61,7 @@ An item request is something a student needs that is not listed yet. Other stude
 | `targetPrice` | number or `null` (optional) |
 | `details` | string (may be empty) |
 | `status` | `open` or `closed` |
-| `responses` | array of `{ responderId, conversationId }`, empty when generated |
+| `responses` | array of `{ responderId, conversationId, messageIds }`, where `messageIds` are the messages the responder sent for this request; empty when generated |
 | `createdAt` | ISO timestamp |
 
 The seed contains four open requests from other students and one from `owner-1`, so both the board and "My requests" have data. One request has no target price. Request dates are in the future when generated. New requests and responses are added to the shared frontend in-memory store and reset on a full reload.

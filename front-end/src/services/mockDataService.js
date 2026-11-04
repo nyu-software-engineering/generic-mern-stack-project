@@ -15,8 +15,7 @@ let loading
 const sameId = (first, second) => String(first) === String(second)
 
 function validateData(data) {
-  // TODO(#57): make itemRequests required again once the live Mockaroo schema includes it.
-  const { users, listings, rentals, conversations, reviews, itemRequests = [] } = data ?? {}
+  const { users, listings, rentals, conversations, reviews, itemRequests } = data ?? {}
   if (![users, listings, rentals, conversations, reviews, itemRequests].every(Array.isArray)) {
     throw new Error('Mockaroo returned invalid data.')
   }
@@ -89,7 +88,6 @@ function validateData(data) {
       typeof review.createdAt === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(review.createdAt)
   })
 
-  const conversationIds = new Set(conversations.map((conversation) => conversation?.id))
   const validItemRequests = itemRequests.every((request) =>
     Number.isSafeInteger(request?.id) && request.id > 0 &&
     userIds.has(request.requesterId) &&
@@ -99,9 +97,14 @@ function validateData(data) {
     typeof request.details === 'string' &&
     itemRequestStatuses.includes(request.status) &&
     Array.isArray(request.responses) &&
-    request.responses.every((response) =>
-      userIds.has(response?.responderId) && conversationIds.has(response.conversationId),
-    ),
+    request.responses.every((response) => {
+      const conversation = conversations.find((item) => item.id === response?.conversationId)
+      return userIds.has(response?.responderId) && conversation &&
+        Array.isArray(response.messageIds) &&
+        response.messageIds.every((id) =>
+          conversation.messages.find((message) => message.id === id)?.senderId === response.responderId,
+        )
+    }),
   )
 
   if (!validUsers || !validListings || !validRentals || !validConversations || !validReviews ||
@@ -128,7 +131,7 @@ export function loadMockData() {
         rentals = data.rentals
         conversations = data.conversations
         reviews = data.reviews
-        itemRequests = data.itemRequests ?? []
+        itemRequests = data.itemRequests
       })
       .catch((error) => {
         loading = undefined

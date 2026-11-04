@@ -8,7 +8,7 @@ import {
   updateItemRequest,
 } from './mockDataService.js'
 import { todayISO } from './bookings.js'
-import { getConversations, sendMessage, sendOffer, startConversation } from './chat.js'
+import { getConversation, getConversations, sendMessage, sendOffer, startConversation } from './chat.js'
 
 // Route params are strings and mock IDs are numbers, so compare as strings.
 const sameId = (a, b) => String(a) === String(b)
@@ -74,25 +74,45 @@ export function respondToRequest(requestId, responderId, { listingId, message = 
   )
 
   let conversationId
+  const messageIds = []
   if (existing) {
     conversationId = existing.id
-    if (text) sendMessage(conversationId, responderId, text)
-    if (offer) sendOffer(conversationId, responderId, offer)
+    if (text) messageIds.push(sendMessage(conversationId, responderId, text).messages.at(-1).id)
+    if (offer) messageIds.push(sendOffer(conversationId, responderId, offer).messages.at(-1).id)
   } else {
     const messages = []
     if (text) messages.push({ senderId: responderId, type: 'text', text })
     if (offer) messages.push({ senderId: responderId, type: 'offer', ...offer, status: 'pending' })
-    conversationId = startConversation({
+    const conversation = startConversation({
       listingId: listing.id,
       participantIds: [responderId, request.requesterId],
       messages,
-    }).id
+    })
+    conversationId = conversation.id
+    messageIds.push(...conversation.messages.map((m) => m.id))
   }
 
-  if (!request.responses.some((r) => sameId(r.conversationId, conversationId))) {
-    updateItemRequest(request.id, {
-      responses: [...request.responses, { responderId, conversationId }],
-    })
-  }
+  // The response keeps the IDs of the messages it sent, so the requester's summary
+  // ignores older messages in the same chat.
+  const previous = request.responses.find((r) => sameId(r.conversationId, conversationId))
+  updateItemRequest(request.id, {
+    responses: previous
+      ? request.responses.map((r) =>
+        r === previous ? { ...r, messageIds: [...r.messageIds, ...messageIds] } : r)
+      : [...request.responses, { responderId, conversationId, messageIds }],
+  })
   return conversationId
+}
+
+// The newest response to a request: who sent it, and their latest offer for it
+// (or null for a message-only reply). Counteroffers from the requester are not
+// counted. Returns null when there are no responses.
+export function getLatestResponse(request) {
+  const response = request.responses.at(-1)
+  const conversation = response && getConversation(response.conversationId)
+  if (!conversation) return null
+
+  const offer = conversation.messages.findLast((m) =>
+    m.type === 'offer' && m.senderId === response.responderId && response.messageIds.includes(m.id))
+  return { ...response, listingId: conversation.listingId, offer: offer ?? null }
 }
