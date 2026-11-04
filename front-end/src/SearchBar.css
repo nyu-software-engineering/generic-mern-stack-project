@@ -1,0 +1,18 @@
+.search-bar {
+  margin-bottom: 24px;
+}
+
+.search-bar-label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.search-bar-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #e8eaf1;
+  border-radius: 8px;
+  font-size: 16px;
+  box-sizing: border-box;
+}
