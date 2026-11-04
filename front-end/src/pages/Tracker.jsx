@@ -252,9 +252,15 @@ function Tracker() {
         application={selectedApplication}
         job={selectedJob}
         onBack={() =>
-          setSelectedApplicationId(null)
+            setSelectedApplicationId(null)
         }
-      />
+        onStageChange={(newStage) =>
+            appState.updateApplication(
+            selectedApplication.id,
+            { stage: newStage }
+            )
+        }
+     />
     )
   }
 

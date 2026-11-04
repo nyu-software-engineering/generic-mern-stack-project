@@ -1,3 +1,12 @@
+const stages = [
+  "Saved",
+  "Preparing",
+  "Applied",
+  "Interview",
+  "Rejected",
+  "Offer",
+]
+
 function formatDate(date) {
   if (!date) {
     return "None"
@@ -14,6 +23,7 @@ function ApplicationDetails({
   application,
   job,
   onBack,
+  onStageChange,
 }) {
   return (
     <main className="app">
@@ -29,7 +39,19 @@ function ApplicationDetails({
 
       <section>
         <h3>Current Stage</h3>
-        <p>{application.stage}</p>
+
+        <select
+          value={application.stage}
+          onChange={(event) =>
+            onStageChange(event.target.value)
+          }
+        >
+          {stages.map((stage) => (
+            <option key={stage} value={stage}>
+              {stage}
+            </option>
+          ))}
+        </select>
       </section>
 
       <section>
