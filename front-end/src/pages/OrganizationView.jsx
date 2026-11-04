@@ -3,36 +3,43 @@ import { useState } from "react";
 // Stand-in for the club directory until it comes from the API.
 const clubs = [
   {
+    id: "ballroom",
     name: "Ballroom Dance",
     description: "Social dance every Thursday",
     logo: "https://picsum.photos/seed/flier-ballroom/96/96",
   },
   {
+    id: "code-lab",
     name: "Code Lab",
     description: "Weekly project nights",
     logo: "https://picsum.photos/seed/flier-code/96/96",
   },
   {
+    id: "film",
     name: "Film Society",
     description: "Screenings and short films",
     logo: "https://picsum.photos/seed/flier-film/96/96",
   },
   {
+    id: "hiking",
     name: "Hiking Club",
     description: "Day trips outside the city",
     logo: "https://picsum.photos/seed/flier-hike/96/96",
   },
   {
+    id: "jazz",
     name: "Jazz Ensemble",
     description: "Open rehearsals on campus",
     logo: "https://picsum.photos/seed/flier-jazz/96/96",
   },
   {
+    id: "photo",
     name: "Photography Club",
     description: "Walks and photo critiques",
     logo: "https://picsum.photos/seed/flier-photo/96/96",
   },
   {
+    id: "volunteer",
     name: "Volunteer Network",
     description: "Local service projects",
     logo: "https://picsum.photos/seed/flier-volunteer/96/96",
@@ -48,18 +55,37 @@ function SearchIcon() {
   );
 }
 
+function ClubCard({ club }) {
+  return (
+    <li>
+      <button type="button" className="flex w-full items-center gap-4 rounded-2xl bg-white px-4 py-4 text-left shadow-sm ring-1 ring-black/5">
+        <img
+          src={club.logo}
+          alt=""
+          className="size-14 shrink-0 rounded-full bg-(--paper) object-cover"
+        />
+        <span>
+          <span className="block text-lg font-bold [font-family:var(--font-petrona)]">{club.name}</span>
+          <span className="body-copy block">{club.description}</span>
+        </span>
+      </button>
+    </li>
+  );
+}
+
 export default function OrganizationView() {
   const [query, setQuery] = useState("");
   const [searchOpen, setSearchOpen] = useState(false);
+  const needle = query.trim().toLowerCase();
   const shownClubs = clubs.filter((club) => {
-    return club.name.toLowerCase().includes(query.trim().toLowerCase());
+    return club.name.toLowerCase().includes(needle);
   });
 
   function toggleSearch() {
     if (searchOpen) {
       setQuery("");
     }
-    setSearchOpen(!searchOpen);
+    setSearchOpen((open) => !open);
   }
 
   return (
@@ -69,10 +95,11 @@ export default function OrganizationView() {
           <h1 className="heading">Organization List</h1>
           <button
             type="button"
-            aria-label="Search clubs"
+            aria-label={searchOpen ? "Close search" : "Search clubs"}
             aria-expanded={searchOpen}
+            aria-controls="club-search"
             onClick={toggleSearch}
-            className="flex size-10 shrink-0 items-center justify-center"
+            className="flex size-10 shrink-0 items-center justify-center rounded-full focus-visible:outline-2 focus-visible:outline-(--nyu-indigo)"
           >
             <SearchIcon />
           </button>
@@ -80,13 +107,15 @@ export default function OrganizationView() {
 
         {searchOpen ? (
           <input
+            id="club-search"
             type="search"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder="Search clubs"
             aria-label="Search clubs by name"
+            autoComplete="off"
             autoFocus
-            className="body-copy mt-4 w-full rounded-xl border border-black/10 bg-white px-4 py-3 outline-none"
+            className="body-copy mt-4 w-full rounded-xl border border-black/10 bg-white px-4 py-3 outline-none focus-visible:ring-2 focus-visible:ring-(--nyu-indigo)"
           />
         ) : null}
 
@@ -95,19 +124,7 @@ export default function OrganizationView() {
         ) : (
           <ul className="mt-5 flex flex-col gap-3">
             {shownClubs.map((club) => (
-              <li key={club.name}>
-                <button type="button" className="flex w-full items-center gap-4 rounded-2xl bg-white px-4 py-4 text-left shadow-sm ring-1 ring-black/5">
-                  <img
-                    src={club.logo}
-                    alt=""
-                    className="size-14 shrink-0 rounded-full bg-(--paper) object-cover"
-                  />
-                  <span>
-                    <span className="block text-lg font-bold [font-family:var(--font-petrona)]">{club.name}</span>
-                    <span className="body-copy block">{club.description}</span>
-                  </span>
-                </button>
-              </li>
+              <ClubCard key={club.id} club={club} />
             ))}
           </ul>
         )}
