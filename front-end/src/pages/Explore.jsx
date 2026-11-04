@@ -6,7 +6,7 @@ import Header from "../components/Header";
 function Explore({ savedIds, onToggleSave }) {
     return (
         <div>
-            <Header onMenu={() => {}} />
+            {/* <Header onMenu={() => {}} /> */}
         <div className="explore-page">
             <h2>Find Your Next Sublet</h2>
             <p>{mockListings.length} listings</p>

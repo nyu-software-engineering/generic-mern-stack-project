@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import axios from 'axios'
+// import axios from 'axios'
 import PostSubletPhoto from './PostSubletPhoto'
 import './PostSubletForm.css'
 
@@ -43,23 +43,23 @@ const PostSublet = () => {
             formData.append('photos', photos[i].file)
         }
 
-        const config = {
-            headers: {
-                'content-type': 'multipart/form-data',
-            },
-        }
-        const apiUrl = 'https://someserversomehwere.com/puppy/save' //CHANGE
-        axios
-            .post(apiUrl, formData, config)
-            .then(response => {
-                console.log(`Received server response: ${response.data}`)
-            })
-            .catch(err => {
-                console.log(`Received server error: ${err}`)
-                setError(
-                    "This form doesn't actually work, sorry.  There is no back-end for this example app in which to save the data. Pop open your web browser's Javascript Console to see the error trying to connect to a non-existent back-end.",
-                )
-            })
+        // const config = {
+        //     headers: {
+        //         'content-type': 'multipart/form-data',
+        //     },
+        // }
+        // const apiUrl = 'https://someserversomehwere.com/puppy/save' //CHANGE
+        // axios
+        //     .post(apiUrl, formData, config)
+        //     .then(response => {
+        //         console.log(`Received server response: ${response.data}`)
+        //     })
+        //     .catch(err => {
+        //         console.log(`Received server error: ${err}`)
+        //         setError(
+        //             "This form doesn't actually work, sorry.  There is no back-end for this example app in which to save the data. Pop open your web browser's Javascript Console to see the error trying to connect to a non-existent back-end.",
+        //         )
+        //     })
     }
 
     return (
