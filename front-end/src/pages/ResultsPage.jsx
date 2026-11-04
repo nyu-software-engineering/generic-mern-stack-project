@@ -1,6 +1,6 @@
 import HotelDetails from "../components/HotelDetails";
 import { Link } from "react-router-dom";
-import "./ResultsPage.css";
+import "./Home&ResultsPage.css";
 
 function ResultsPage() {
   return (
