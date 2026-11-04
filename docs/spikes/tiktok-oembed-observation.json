@@ -1,0 +1,26 @@
+{
+  "checkedAt": "2026-11-03T20:45:10.100Z",
+  "sourceUrl": "https://www.tiktok.com/@scout2015/video/6718335390845095173",
+  "method": "Unauthenticated HTTPS GET to TikTok oEmbed; metadata only, no video download.",
+  "limitation": "One smoke-test URL; not a venue-caption dataset or a platform-wide guarantee.",
+  "httpStatus": 200,
+  "contentType": "application/json; charset=utf-8",
+  "returnedFields": [
+    "embed_product_id",
+    "embed_type",
+    "height",
+    "html",
+    "provider_name",
+    "provider_url",
+    "type",
+    "version",
+    "width"
+  ],
+  "caption": null,
+  "hasCaption": false,
+  "hasCreatorName": false,
+  "hasThumbnail": false,
+  "hasEmbedMarkup": true,
+  "nextStep": "manual-search",
+  "elapsedMs": 166
+}
