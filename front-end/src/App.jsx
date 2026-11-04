@@ -13,22 +13,23 @@ import Profile from './pages/Profile';
 
 export default function App() {
   return (
-    <>
-      <BrowserRouter>
-          <Routes>
-            <Route element={<Layout/>}>
-              <Route path="/" element={<Landing/>}/>
-              <Route path="/login" element={<Login/>}/>
-              <Route path="/register" element={<Register/>}/>
-              <Route path="/home" element={<Home/>}/>
-              <Route path="/organizations" element={<OrganizationView/>}/>
-              <Route path="/calendar" element={<CalendarView/>}/>
-              <Route path="/add-flyer" element={<AddFlyer/>}/>
-              <Route path="/map" element={<MapView/>}/>
-              <Route path="/profile" element={<Profile/>}/>
-            </Route>
-          </Routes>
-      </BrowserRouter>
-    </>
+    <BrowserRouter>
+      <Routes>
+        {/* No Header or NavBar */}
+        <Route path="/" element={<Landing />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+
+        {/* Main Application pages */}
+        <Route element={<Layout />}>
+          <Route path="/home" element={<Home />} />
+          <Route path="/organizations" element={<OrganizationView />} />
+          <Route path="/calendar" element={<CalendarView />} />
+          <Route path="/add-flyer" element={<AddFlyer />} />
+          <Route path="/map" element={<MapView />} />
+          <Route path="/profile" element={<Profile />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
