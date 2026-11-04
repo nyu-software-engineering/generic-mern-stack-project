@@ -1,133 +1,133 @@
 const mockApplications = [
   {
     id: 1,
-    company: "Google",
-    title: "Software Engineer",
+    jobId: "brightspace-software-intern",
     stage: "Saved",
+    updatedAt: "2026-11-01T18:30:00.000Z",
     note: "Review the job description before applying.",
     history: [
       {
         stage: "Saved",
-        date: "Oct 29, 2026",
+        at: "2026-10-29T15:00:00.000Z",
       },
     ],
   },
   {
     id: 2,
-    company: "Amazon",
-    title: "Frontend Developer",
+    jobId: "hathaway-data-intern",
     stage: "Saved",
+    updatedAt: "2026-10-30T15:00:00.000Z",
     note: "",
     history: [
       {
         stage: "Saved",
-        date: "Oct 30, 2026",
+        at: "2026-10-30T15:00:00.000Z",
       },
     ],
   },
   {
     id: 3,
-    company: "Microsoft",
-    title: "Software Engineer Intern",
+    jobId: "coffee-design-intern",
     stage: "Saved",
-    note: "Check internship eligibility requirements.",
+    updatedAt: "2026-11-02T09:00:00.000Z",
+    note: "Check portfolio requirements before applying.",
     history: [
       {
         stage: "Saved",
-        date: "Oct 30, 2026",
+        at: "2026-10-30T15:00:00.000Z",
       },
     ],
   },
   {
     id: 4,
-    company: "Meta",
-    title: "Product Engineer",
+    jobId: "boxgrid-cloud-intern",
     stage: "Preparing",
+    updatedAt: "2026-10-31T14:00:00.000Z",
     note: "Update resume before submitting.",
     history: [
       {
         stage: "Saved",
-        date: "Oct 25, 2026",
+        at: "2026-10-25T15:00:00.000Z",
       },
       {
         stage: "Preparing",
-        date: "Oct 28, 2026",
+        at: "2026-10-28T15:00:00.000Z",
       },
     ],
   },
   {
     id: 5,
-    company: "Adobe",
-    title: "Frontend Intern",
+    jobId: "northstar-frontend-intern",
     stage: "Preparing",
+    updatedAt: "2026-10-29T12:00:00.000Z",
     note: "",
     history: [
       {
         stage: "Saved",
-        date: "Oct 24, 2026",
+        at: "2026-10-24T15:00:00.000Z",
       },
       {
         stage: "Preparing",
-        date: "Oct 29, 2026",
+        at: "2026-10-29T15:00:00.000Z",
       },
     ],
   },
   {
     id: 6,
-    company: "Netflix",
-    title: "Software Engineer",
+    jobId: "fieldnote-quality-intern",
     stage: "Applied",
+    updatedAt: "2026-11-01T11:00:00.000Z",
     note: "Application submitted through company website.",
     history: [
       {
         stage: "Saved",
-        date: "Oct 20, 2026",
+        at: "2026-10-20T15:00:00.000Z",
       },
       {
         stage: "Preparing",
-        date: "Oct 23, 2026",
+        at: "2026-10-23T15:00:00.000Z",
       },
       {
         stage: "Applied",
-        date: "Oct 27, 2026",
+        at: "2026-10-27T15:00:00.000Z",
       },
     ],
   },
   {
     id: 7,
-    company: "Spotify",
-    title: "Web Developer",
+    jobId: "brightspace-software-intern",
     stage: "Applied",
+    updatedAt: "2026-10-28T16:00:00.000Z",
     note: "Follow up if there is no response in one week.",
     history: [
       {
         stage: "Saved",
-        date: "Oct 21, 2026",
+        at: "2026-10-21T15:00:00.000Z",
       },
       {
         stage: "Applied",
-        date: "Oct 28, 2026",
+        at: "2026-10-28T15:00:00.000Z",
       },
     ],
   },
   {
     id: 8,
-    company: "Apple",
-    title: "Software Engineer Intern",
+    jobId: "hathaway-data-intern",
     stage: "Interview",
-    note: "Prepare for the technical interview.",
+    updatedAt: "2026-11-02T08:00:00.000Z",
+    note: "Prepare for the interview.",
     history: [
       {
         stage: "Saved",
-        date: "Oct 15, 2026",
+        at: "2026-10-15T15:00:00.000Z",
       },
       {
         stage: "Applied",
-        date: "Oct 18, 2026",
+        at: "2026-10-18T15:00:00.000Z",
       },
       {
         stage: "Interview",
-        date: "Oct 30, 2026",
+        at: "2026-10-30T15:00:00.000Z",
       },
     ],
   },
