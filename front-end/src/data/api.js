@@ -24,3 +24,22 @@ export function getDiscussion(jobId) {
 export function getMatch(jobId) {
   return request('/api/matches/' + encodeURIComponent(jobId))
 }
+
+async function post(path, body) {
+  const response = await fetch(path, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+    body: JSON.stringify(body),
+  })
+  const data = await response.json().catch(() => ({}))
+  if (!response.ok) throw new Error(data.error || 'Could not reach CareerHive. Please try again.')
+  return data
+}
+
+export function logIn(email, password) {
+  return post('/api/login', { email, password })
+}
+
+export function signUp(account) {
+  return post('/api/signup', account)
+}

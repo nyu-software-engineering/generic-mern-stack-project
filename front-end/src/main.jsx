@@ -4,6 +4,8 @@ import './index.css'
 import App from './App.jsx'
 import AppState from './data/AppState.jsx'
 
+if (!window.location.hash) window.location.hash = '#/welcome'
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <AppState>

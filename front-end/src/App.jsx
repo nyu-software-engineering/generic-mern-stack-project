@@ -8,6 +8,9 @@ import { useAppState } from './data/AppState.jsx'
 import EditProfile from './pages/EditProfile.jsx'
 import MyProfile from './pages/MyProfile.jsx'
 import Tracker from './pages/Tracker.jsx'
+import Welcome from './pages/Welcome.jsx'
+import SignUp from './pages/SignUp.jsx'
+import LogIn from './pages/LogIn.jsx'
 
 function App() {
   const [hash, setHash] = useState(() => window.location.hash)
@@ -69,6 +72,15 @@ function App() {
   function retry() {
     setResources((previous) => ({ ...previous, [route.kind]: null }))
     setAttempt((value) => value + 1)
+  }
+
+  const signedOutScreens = {
+    '/welcome': <Welcome />,
+    '/login': <LogIn />,
+    '/signup': <SignUp />,
+  }
+  if (signedOutScreens[path]) {
+    return <main className="app">{signedOutScreens[path]}</main>
   }
 
   return (
