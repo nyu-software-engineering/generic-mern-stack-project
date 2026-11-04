@@ -1,0 +1,79 @@
+.createUserHomePageContainer{
+    background-color: #C9CAD9;
+    width: 50%;
+    min-height: 750px;
+    /* align-items: center; */
+    margin: auto;
+    border-color: #576490;
+    border-radius: 15px;
+    border: 10px solid #576490;
+}
+.textInput{
+    width: 90%;
+    aspect-ratio: 15/1;
+    border-radius: 5px;
+}
+.householdListContainer{
+    background-color: #A3BCF9;
+    width:70%;
+    min-height: 500px;
+    margin: auto;
+    border-color: #576490;
+    border-radius: 15px;
+    border: 10px solid #576490;
+}
+.createButton{
+    /* background-color: #7796CB; */
+    width: 50%;
+}
+.createButton:hover{
+    background-color: #7796CB;
+}
+.fieldText{
+    justify-self: start;
+    padding: 10px;
+    color: #2b2b2b;
+}
+
+.header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: left;
+    font-size: 10px;
+    font-weight: normal;
+}
+
+.header-logo {
+    font-size: 18px;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.profileButton {
+    font-size: 12px;
+    padding: 6px 10px;
+}
+
+.householdList {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.householdItem {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #576490;
+    background-color: #C9CAD9;
+    text-align: left;
+    cursor: pointer;
+}
+
+.actionButtons{
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+}
