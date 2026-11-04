@@ -10,6 +10,10 @@ import CalendarView from './pages/CalendarView';
 import AddFlyer from './pages/AddFlyer';
 import MapView from './pages/MapView';
 import Profile from './pages/Profile';
+import EditProfile from './pages/EditProfile';
+import Notifications from './pages/Notifications';
+import Settings from './pages/Settings';
+import Support from './pages/Support';
 
 export default function App() {
   return (
@@ -26,6 +30,10 @@ export default function App() {
               <Route path="/add-flyer" element={<AddFlyer/>}/>
               <Route path="/map" element={<MapView/>}/>
               <Route path="/profile" element={<Profile/>}/>
+              <Route path="/edit-profile" element={<EditProfile/>}/>
+              <Route path="/notifications" element={<Notifications/>}/>
+              <Route path="/settings" element={<Settings/>}/>
+              <Route path="/support" element={<Support/>}/>
             </Route>
           </Routes>
       </BrowserRouter>

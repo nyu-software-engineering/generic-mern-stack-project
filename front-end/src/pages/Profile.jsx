@@ -13,37 +13,24 @@ const mockUser = {
 };
 
 const accountItems = [
-  { label: "Edit Profile Information", icon: editIcon },
+  { label: "Edit Profile Information", icon: editIcon, to: "/edit-profile" },
   { label: "My Organizations", icon: groupIcon, to: "/organizations" },
-  { label: "Notifications", icon: notificationsIcon },
+  { label: "Notifications", icon: notificationsIcon, to: "/notifications" },
 ];
 
 const appItems = [
-  { label: "Settings", icon: settingsIcon },
-  { label: "Support", icon: supportIcon },
+  { label: "Settings", icon: settingsIcon, to: "/settings" },
+  { label: "Support", icon: supportIcon, to: "/support" },
   { label: "Log Out", icon: logoutIcon, to: "/" },
 ];
 
 function MenuRow({ icon, label, to }) {
-  const className = "flex w-full items-center gap-3 px-4 py-3.5 text-left";
-  const content = (
-    <>
-      <img src={icon} alt="" className="size-5 brightness-0" />
-      <span className="body-copy">{label}</span>
-    </>
-  );
-
-  if (to) {
-    return (
-      <li>
-        <Link to={to} className={className}>{content}</Link>
-      </li>
-    );
-  }
-  
   return (
     <li>
-      <button type="button" className={className}>{content}</button>
+      <Link to={to} className="flex w-full items-center gap-3 px-4 py-3.5 text-left">
+        <img src={icon} alt="" className="size-5 brightness-0" />
+        <span className="body-copy">{label}</span>
+      </Link>
     </li>
   );
 }
