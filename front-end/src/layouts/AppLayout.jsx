@@ -3,10 +3,11 @@ import { TabBar } from '../components'
 
 // hiding tab bar on the add, edit, bulk-log and photo screens
 function shouldShowTabBar(pathname) {
-  const hidden =
-    pathname.startsWith('/closet/new') ||
-    pathname.endsWith('/edit') ||
-    pathname.endsWith('/bulk-log')
+   const hidden =
+     pathname.startsWith('/closet/new') ||
+     pathname.endsWith('/edit') ||
+     pathname.endsWith('/edit-email') ||
+     pathname.endsWith('/bulk-log')
   return !hidden
 }
 
