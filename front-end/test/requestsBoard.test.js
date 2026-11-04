@@ -17,14 +17,15 @@ const request = (id, createdAt) => ({
   borrowDuration: '1 day', approximateArea: 'Library', details: 'Need light.', status: 'open', createdAt,
 })
 
-test('the board lists saved quick borrow requests newest first', () => {
+test('your own quick borrow requests are listed under My requests, newest first', () => {
   localStorage.setItem('dormshare.quickBorrowRequests', JSON.stringify([
     request('qb-1', '2026-11-01T09:00:00.000Z'),
     request('qb-2', '2026-11-02T09:00:00.000Z'),
   ]))
-  const requests = getBoardRequests()
-  assert.deepEqual(requests.map((item) => item.id), ['qb-2', 'qb-1'])
-  assert.ok(requests.every((item) => item.type === 'quick'))
+  const mine = getBoardRequests('mine')
+  assert.deepEqual(mine.map((item) => item.id), ['qb-2', 'qb-1'])
+  assert.ok(mine.every((item) => item.type === 'quick'))
+  assert.deepEqual(getBoardRequests('all'), [], 'own requests are kept out of the other tabs')
 })
 
 test('open item requests appear once the shared mock data loads', async (t) => {
@@ -33,7 +34,9 @@ test('open item requests appear once the shared mock data loads', async (t) => {
   t.mock.method(globalThis, 'fetch', async () => Response.json(mockResponse()))
   await loadMockData()
 
+  // Fixtures: "Rice cooker" is from student-2, "HDMI cable" is from owner-1 (you).
   const items = getBoardRequests('item')
-  assert.deepEqual(items.map((item) => item.itemName), ['Rice cooker', 'HDMI cable'])
+  assert.deepEqual(items.map((item) => item.itemName), ['Rice cooker'])
   assert.ok(items.every((item) => item.type === 'item'))
+  assert.deepEqual(getBoardRequests('mine').map((item) => item.itemName), ['HDMI cable'])
 })

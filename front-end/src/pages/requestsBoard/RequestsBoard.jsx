@@ -4,7 +4,7 @@ import RequestCard from './RequestCard'
 import { REQUEST_TYPES, getBoardRequests } from '../../services/requestsBoard'
 import './requestsBoard.css'
 
-const TABS = [['all', 'All'], ...Object.entries(REQUEST_TYPES)]
+const TABS = [['all', 'All'], ...Object.entries(REQUEST_TYPES), ['mine', 'My requests']]
 
 // Shared board of item requests and quick borrow requests.
 function RequestsBoard() {
@@ -41,7 +41,7 @@ function RequestsBoard() {
       </div>
 
       {requests.length === 0 ? (
-        <p>No requests yet.</p>
+        <p>{type === 'mine' ? "You haven't posted any requests yet." : 'No requests yet.'}</p>
       ) : (
         <div className="rental-grid">
           {requests.map((request) => (

@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { Link } from 'react-router-dom'
 import styles from './QuickBorrow.module.css'
 import { createQuickBorrowRequest } from '../../services/quickBorrow'
 
@@ -34,6 +35,7 @@ function QuickBorrow() {
   return (
     <>
     <div>
+      <Link to="/requests-board" className={styles.back}>← All requests</Link>
       <header className={styles.header}>
         <h3>Quick Borrow</h3>
       </header>
