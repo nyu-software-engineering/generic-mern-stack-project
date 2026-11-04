@@ -1,0 +1,141 @@
+
+/* Hotel Details Page */
+
+.hotel-details {
+  padding: 18px;
+  height: 100%;
+  overflow-y: auto;
+  box-sizing: border-box;
+  background-color: #ffffff;
+  color: #222;
+  font-family: Arial, sans-serif;
+}
+
+/* Header */
+
+.hotel-details-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.hotel-details-header h1 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.hotel-back {
+  color: #333;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.hotel-back:hover {
+  text-decoration: underline;
+}
+
+/* Main Hotel Image */
+
+.hotel-main-image {
+  display: block;
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+/* Hotel Information */
+
+.hotel-information h2 {
+  margin: 18px 0 8px;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.hotel-information h3 {
+  font-size: 17px;
+  margin: 22px 0 10px;
+}
+
+.hotel-location {
+  color: #666;
+  font-size: 14px;
+  margin: 8px 0;
+}
+
+.hotel-rating {
+  color: #d18b00;
+  font-size: 15px;
+  font-weight: bold;
+  margin: 12px 0;
+}
+
+/* Description */
+
+.hotel-description {
+  color: #555;
+  line-height: 1.6;
+  font-size: 14px;
+}
+
+/* Amenities */
+
+.hotel-amenities {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding-left: 20px;
+  margin-top: 12px;
+  font-size: 14px;
+}
+
+.hotel-amenities li {
+  line-height: 1.5;
+}
+
+/* Save Hotel Button */
+
+.hotel-save-button {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  margin: 24px 0 8px;
+  border: none;
+  border-radius: 10px;
+  background-color: #243a69;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.hotel-save-button:hover {
+  background-color: #344f86;
+}
+
+.hotel-save-button.is-saved {
+  background-color: #287a53;
+}
+
+.hotel-save-button.is-saved:hover {
+  background-color: #206642;
+}
+
+/* Mobile Layout */
+
+@media (max-width: 480px) {
+  .hotel-details {
+    padding: 15px;
+  }
+
+  .hotel-main-image {
+    height: 180px;
+  }
+
+  .hotel-information h2 {
+    font-size: 22px;
+  }
+}

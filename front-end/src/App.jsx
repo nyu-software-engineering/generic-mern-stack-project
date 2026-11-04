@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Link, useLocation } from "react-router-dom";
 import ResultsPage from "./pages/ResultsPage";
 import HomePage from "./pages/HomePage";
+import HotelDetails from "./pages/HotelDetails";
 import Saved from "./pages/Saved";
 import EditSaved from "./pages/EditSaved";
 import SignUp from "./pages/SignUp";
@@ -22,6 +23,7 @@ function AppContent() {
           <Route path="/editsaved" element={<EditSaved />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/signin" element={<SignIn />} />
+          <Route path="/hotel/:id" element={<HotelDetails />} />
         </Routes>
       </div>
 
