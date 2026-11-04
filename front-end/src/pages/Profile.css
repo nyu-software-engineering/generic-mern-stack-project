@@ -1,0 +1,70 @@
+/* My Profile page styles. The card surface and the buttons come
+   from the shared styles (styles/components.css) - this file only
+   holds the layout and the parts the shared styles do not cover. */
+
+.profile-page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.profile-card {
+  width: 100%;
+  max-width: 440px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.profile-heading {
+  font-size: 28px;
+  align-self: flex-start;
+  margin: 0 0 16px;
+}
+
+/* Profile photo */
+
+.profile-photo {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  object-fit: cover;
+  background-color: #e8eaf1;
+}
+
+.profile-name {
+  font-size: 24px;
+  margin: 16px 0 4px;
+}
+
+.profile-details {
+  color: #687386;
+  margin: 0 0 24px;
+  text-align: center;
+}
+
+/* Buttons (the button styles themselves are .doin-button) */
+
+.profile-actions {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Connections and hosted events section */
+
+.profile-section-title {
+  font-size: 20px;
+  align-self: flex-start;
+  margin: 32px 0 8px;
+}
+
+.profile-empty {
+  color: #687386;
+  align-self: flex-start;
+  margin: 0;
+}
