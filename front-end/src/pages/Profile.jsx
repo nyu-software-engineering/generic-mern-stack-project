@@ -1,6 +1,7 @@
 import ProfileServiceCard from './ProfileServiceCard'
 import { Link } from 'react-router'
 import './Profile.css'
+import './Header.css'
 
 
 
@@ -12,7 +13,7 @@ export default function Profile(props) {
 
   return (
     <>
-      <header className="top-bar">
+      <header className="site-header">
         <strong>CampusMart</strong>
         <button className="logout-button" type="button" onClick={() => props.setUser(null)}>
           Log Out

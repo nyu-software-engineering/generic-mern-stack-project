@@ -12,6 +12,13 @@
   padding: 32px 20px;
 }
 
+.auth-page{
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 /* bottom navigation */
 .tab-bar {
   position: sticky;

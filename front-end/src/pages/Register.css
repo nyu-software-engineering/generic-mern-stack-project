@@ -1,9 +1,11 @@
 .register-card {
     max-width: 420px;
+    width: 100%;
     margin: 40px auto;
-    padding: 20px;
-    border: 1px solid;
-    border-radius: 8px;
+    padding: 18px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
 }
 
 .register-form label {
@@ -13,9 +15,26 @@
 
 .register-form input {
     display: block;
+    box-sizing: border-box;
+    width: 100%;
+    margin-top: 6px;
+    padding: 11px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font: inherit;
 }
 
-.register-form input,
 .register-form button {
+    width: 100%;
+    padding: 10px 16px;
+    background: #010101;
+    color: white;
+    border: 1px solid #0d0d0e;
     border-radius: 8px;
+    font: inherit;
+    cursor: pointer;
+}
+
+.register-form button:hover{
+    background: #0d0d0d;
 }

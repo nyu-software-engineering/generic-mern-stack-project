@@ -28,7 +28,7 @@ function App() {
   //not logged in
   if(!user){
     return (
-      <main className="page">
+      <main className="page auth-page">
         <Routes>
           <Route path="/login" element={<Login setUser={setUser} />} />
 

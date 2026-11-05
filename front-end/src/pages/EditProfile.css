@@ -18,13 +18,12 @@
 
 .edit-profile-field{
     display: block;
-    padding: 12px 6px 6px;
-    border-bottom: 1px solid black;
+    padding: 18px 0;
 }
 
 .edit-profile-field span{
     display: block;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 600;
 }
 
@@ -33,22 +32,18 @@
     display: block;
     box-sizing: border-box;
     width: 100%;
-    padding: 4px 0;
-    border: none;
-    background: transparent;
+    padding: 11px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    background: white;
     font: inherit;
-    font-size: 14px;
+    /* font-size: 14px;
     font-weight: 600;
+    resize: vertical; */
+}
+
+.edit-profile-field textarea{
     resize: vertical;
-}
-
-.edit-profile-field input:focus,
-.edit-profile-field textarea:focus{
-    outline: none;
-}
-
-.edit-profile-field:focus-within{
-    border-bottom-width: 2px;
 }
 
 .edit-profile-note{
