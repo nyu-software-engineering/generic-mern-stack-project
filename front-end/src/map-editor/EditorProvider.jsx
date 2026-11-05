@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { EditorContext } from './editorContext'
-import { DEFAULT_MAP, getInitialMap, saveMap } from './editorData'
+import { getInitialMap, getMapFor, saveMap } from './editorData'
 
 export default function EditorProvider({ children }) {
   const [map, setMap] = useState(getInitialMap)
@@ -19,13 +19,7 @@ export default function EditorProvider({ children }) {
     const id = String(selectedMap.id ?? selectedMap.number ?? selectedMap.name ?? 'demo-world')
     setMap((current) => {
       if (current.id === id) return current
-      return {
-        ...DEFAULT_MAP,
-        id,
-        title: selectedMap.name?.trim() || DEFAULT_MAP.title,
-        selectedCountries: [],
-        legendLabels: [...DEFAULT_MAP.legendLabels],
-      }
+      return getMapFor(selectedMap)
     })
   }, [])
 

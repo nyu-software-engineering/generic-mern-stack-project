@@ -38,10 +38,7 @@ function MyMaps({ maps, onCreateMap }){
                 onClick={() => navigate("/Map-Editor", { state: {  map:map } })}
             > 
                 <div className="map-picture">
-                <img
-                src={map.image}
-                alt="Map Preview"
-                />
+                {map.asset ? <img src={map.image} alt="Map Preview" /> : <span>World map</span>}
                 </div>
                 <div className="map-name">
                     <p>{map.name}</p>
@@ -63,6 +60,7 @@ function MyMaps({ maps, onCreateMap }){
             Send
             </button>
         </form>
+        <button onClick={() => navigate('/search')}>Browse historical maps</button>
       
 
         </div>

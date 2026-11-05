@@ -1,21 +1,27 @@
 import { useEffect, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import MapPreview from './map-editor/MapPreview'
+import MapImage from './map-editor/MapImage'
 import { EditorHeader } from './map-editor/EditorScreens'
-import { STYLES } from './map-editor/editorData'
+import { STYLES, IMAGE_STYLES } from './map-editor/editorData'
 import { useEditor } from './map-editor/editorContext'
 import './Map-Editor.css'
 
-async function exportPng(svg, map, colors) {
-  const copy = svg.cloneNode(true)
-  copy.setAttribute('width', '840')
-  copy.setAttribute('height', '450')
-  const url = URL.createObjectURL(new Blob([new XMLSerializer().serializeToString(copy)], { type: 'image/svg+xml' }))
+async function exportPng(svg, map, colors, rasterImage) {
+  let url
 
   try {
-    const image = new Image()
-    image.src = url
-    await image.decode()
+    let image = rasterImage
+    if (!map.asset) {
+      const copy = svg.cloneNode(true)
+      copy.setAttribute('width', '840')
+      copy.setAttribute('height', '450')
+      url = URL.createObjectURL(new Blob([new XMLSerializer().serializeToString(copy)], { type: 'image/svg+xml' }))
+      image = new Image()
+      image.src = url
+      await image.decode()
+    }
+    if (!image?.naturalWidth) throw new Error('Image has not loaded yet')
     const canvas = document.createElement('canvas')
     canvas.width = 1400
     canvas.height = 900
@@ -26,21 +32,35 @@ async function exportPng(svg, map, colors) {
     ctx.fillStyle = '#222'
     ctx.font = 'bold 34px Arial'
     ctx.fillText(map.title, 40, 54, 1320)
-    ctx.drawImage(image, 40, 90, 1320, 707)
-    ctx.font = '21px Arial'
-    map.legendLabels.forEach((label, i) => {
-      const x = 40 + i * 670
-      ctx.fillStyle = i ? colors.land : colors.highlight
-      ctx.fillRect(x, 830, 22, 22)
-      ctx.fillStyle = '#222'
-      ctx.fillText(label, x + 34, 849, 600)
-    })
+    if (map.asset) {
+      const ratio = Math.min(1320 / image.naturalWidth, 710 / image.naturalHeight)
+      const width = image.naturalWidth * ratio
+      const height = image.naturalHeight * ratio
+      ctx.filter = IMAGE_STYLES.find((s) => s.id === map.imageStyle)?.filter || 'none'
+      ctx.drawImage(image, 40 + (1320 - width) / 2, 90 + (710 - height) / 2, width, height)
+      ctx.filter = 'none'
+      ctx.font = '16px Arial'
+      ctx.fillStyle = '#444'
+      ctx.fillText(`${map.asset.provider} · ${map.asset.license} · ${map.asset.author}`, 40, 850, 1320)
+      ctx.font = '13px Arial'
+      ctx.fillText(map.asset.pageUrl, 40, 877, 1320)
+    } else {
+      ctx.drawImage(image, 40, 90, 1320, 707)
+      ctx.font = '21px Arial'
+      map.legendLabels.forEach((label, i) => {
+        const x = 40 + i * 670
+        ctx.fillStyle = i ? colors.land : colors.highlight
+        ctx.fillRect(x, 830, 22, 22)
+        ctx.fillStyle = '#222'
+        ctx.fillText(label, x + 34, 849, 600)
+      })
+    }
     const link = document.createElement('a')
     link.href = canvas.toDataURL('image/png')
     link.download = (map.title.toLowerCase().replace(/[^a-z0-9]+/g, '-') || 'map') + '.png'
     link.click()
   } finally {
-    URL.revokeObjectURL(url)
+    if (url) URL.revokeObjectURL(url)
   }
 }
 
@@ -51,6 +71,7 @@ export default function MapEditor({ onRenameMap }) {
   const [instruction, setInstruction] = useState('')
   const [message, setMessage] = useState('')
   const mapRef = useRef(null)
+  const imageRef = useRef(null)
   const colors = STYLES.find(({ id }) => id === map.styleId) || STYLES[0]
 
   useEffect(() => { if (location.state?.map) openMap(location.state.map) }, [location.state?.map, openMap])
@@ -74,6 +95,14 @@ export default function MapEditor({ onRenameMap }) {
       updateMap({ title: newTitle })
       onRenameMap?.(Number(map.id), newTitle)
     }
+    else if (/^(normal|revert|reset|original)(\s+(style|colou?rs|appearance))?$/i.test(command)) {
+      updateMap(map.asset ? { imageStyle: 'original' } : { styleId: 'atlas' })
+    }
+    else if (map.asset) {
+      if (/black.and.white|grayscale/i.test(command)) updateMap({ imageStyle: 'black-white' })
+      else if (/warm|sepia/i.test(command)) updateMap({ imageStyle: 'warm' })
+      else setMessage('Try "title: My map", "black and white", or "warm".')
+    }
     else if (color) updateMap({ styleId: color })
     else setMessage('Try "title: My map" or "make it green".')
     setInstruction('')
@@ -81,7 +110,7 @@ export default function MapEditor({ onRenameMap }) {
 
   async function download() {
     try {
-      await exportPng(mapRef.current, map, colors)
+      await exportPng(mapRef.current, map, colors, imageRef.current)
       setMessage('Map downloaded as PNG.')
     } catch {
       setMessage('Export failed. Please try again.')
@@ -94,14 +123,16 @@ export default function MapEditor({ onRenameMap }) {
         <EditorHeader />
         <h1 className="mm-map-title">{map.title}</h1>
         <div className="mm-editor-map-art">
-          <MapPreview svgRef={mapRef} interactive styleId={map.styleId} selectedCountries={map.selectedCountries}
-            onToggleCountry={toggleCountry} onClearSelection={() => updateMap({ selectedCountries: [] })} />
+          {map.asset ? <MapImage asset={map.asset} imgRef={imageRef} interactive
+            filter={IMAGE_STYLES.find((style) => style.id === map.imageStyle)?.filter} />
+            : <MapPreview svgRef={mapRef} interactive styleId={map.styleId} selectedCountries={map.selectedCountries}
+              onToggleCountry={toggleCountry} onClearSelection={() => updateMap({ selectedCountries: [] })} />}
         </div>
-        <div className="mm-editor-legend">
+        {!map.asset && <div className="mm-editor-legend">
           {map.legendLabels.map((label, i) => (
             <div key={i}><span className="mm-editor-swatch" style={{ background: i ? colors.land : colors.highlight }} />{label}</div>
           ))}
-        </div>
+        </div>}
         <div className="mm-editor-tools">
           <button onClick={() => navigate('/style')}>Style</button>
           <button onClick={() => navigate('/source')}>Source</button>
