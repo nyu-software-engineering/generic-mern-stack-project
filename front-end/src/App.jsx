@@ -12,12 +12,13 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/" element={<Navigate to="/login" replace/>} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/article" element={<Article />} />
         <Route path="/De-Jargoned" element={<DeJargoned />} />
-        <Route path="/" element={<MainPage />} />
+        <Route path="/mainpage" element={<MainPage />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/favorites" element={<Favorite />} />
       </Routes>
