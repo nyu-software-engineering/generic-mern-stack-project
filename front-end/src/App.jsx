@@ -47,7 +47,7 @@ function App() {
         <main className="page">
           <Routes>
             {/* Home page */}
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<Home services={services}/>} />
 
             {/* Search page */}
             <Route path="/search" element={<Search services={services} />} />
