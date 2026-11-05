@@ -11,10 +11,11 @@ function EditProfile() {
 }
 
 function EditProfileForm({ profile, onSave }) {
-    const [draft, setDraft] = useState(() => ({ ...profile, locationsText: profile.locations.join(', ') }))
+    const [draft, setDraft] = useState(() => ({ ...profile }))
     const [photoOpen, setPhotoOpen] = useState(false)
     const [photoChoice, setPhotoChoice] = useState('')
     const [skillInput, setSkillInput] = useState('')
+    const [locationInput, setLocationInput] = useState('')
 
     function changeField(event) {
         setDraft({ ...draft, [event.target.name]: event.target.value })
@@ -34,6 +35,24 @@ function EditProfileForm({ profile, onSave }) {
     }
     function removeSkill(skill) {
         setDraft({ ...draft, skills: draft.skills.filter((item) => item !== skill) })
+    }
+    function changeLocationInput(event) {
+        setLocationInput(event.target.value)
+    }
+
+    function addLocation(event) {
+        if (event.key !== 'Enter') return
+        event.preventDefault()
+        const location = locationInput.trim()
+        if (location === '') return
+        if (!draft.locations.includes(location)) {
+            setDraft({ ...draft, locations: draft.locations.concat(location) })
+        }
+        setLocationInput('')
+    }
+
+    function removeLocation(location) {
+        setDraft({ ...draft, locations: draft.locations.filter((item) => item !== location) })
     }
 
     function toggleRole(role) {
@@ -69,11 +88,7 @@ function EditProfileForm({ profile, onSave }) {
     }
 
     function saveEdit() {
-        const { locationsText, ...fields } = draft
-        onSave({
-        ...fields,
-        locations: locationsText.split(',').map((item) => item.trim()).filter((item) => item !== ''),
-        })
+        onSave(draft)
         window.location.hash = '#/profile'
     }
 
@@ -118,16 +133,16 @@ function EditProfileForm({ profile, onSave }) {
     </ul>
 
     <label>
-        Locations
-    <input name="locationsText" value={draft.locationsText} onChange={changeField} />
+    Locations
+        <input value={locationInput} onChange={changeLocationInput} onKeyDown={addLocation} />
     </label>
-        <p>Looking for</p>
-        {roleChoices.map((role) => (
-            <label key={role}>
-                <input type="checkbox" checked={draft.lookingFor.includes(role)} onChange={() => toggleRole(role)} />
-                {role}
-        </label>
-    ))}
+    <ul className="skill-tags">
+        {draft.locations.map((location) => (
+            <li key={location}>
+                <button type="button" onClick={() => removeLocation(location)}>{location}</button>
+            </li>
+        ))}
+    </ul>
 
     <button type="button" className="ui-button ui-button-secondary" onClick={cancelEdit}>Cancel</button>
     <button type="button" className="ui-button" onClick={saveEdit}>Save Changes</button>
