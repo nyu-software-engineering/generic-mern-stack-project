@@ -1,3 +1,12 @@
-.map-editor {
-    width: 100%;
-}
+.map-editor { width: 100%; }
+.map-preview { max-width: 400px; margin: 0 auto; }
+.map-preview img { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; background: #e1e8f1; }
+.map-key, .map-editing-tools { display: flex; flex-wrap: wrap; gap: 10px; margin: 15px 0; }
+.category-color { display: flex; align-items: center; gap: 7px; }
+.category-color::before { content: ''; width: 13px; height: 13px; background: #aebed6; border: 1px solid #999; }
+.map-category:nth-child(2) .category-color::before { background: #e1e8f1; }
+.tool-panel { border: 1px solid #bbb; padding: 12px; }
+.tool-panel button { margin: 0 6px 6px 0; }
+.tool-panel input { width: 100%; padding: 8px; }
+.map-editor .change { display: flex; gap: 8px; margin: 15px 0; }
+.map-editor .change input { flex: 1; min-width: 0; padding: 8px; }
