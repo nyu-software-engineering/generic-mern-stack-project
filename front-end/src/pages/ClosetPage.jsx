@@ -130,7 +130,7 @@ export default function ClosetPage() {
                 <option value="least">Least worn</option>
               </select>
             </label>
-            <Button size="sm" variant="secondary" aria-pressed={isGrid} onClick={() => setIsGrid(!isGrid)}>
+            <Button size="sm" variant={isGrid ? 'primary' : 'secondary'} aria-pressed={isGrid} onClick={() => setIsGrid(!isGrid)}>
               Grid
             </Button>
           </div>
