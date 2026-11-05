@@ -33,7 +33,7 @@ By contributing to this repository, you agree to follow the norms and processes 
 
 ## Git Workflow
 
-We follow the  feature branch workflow. All changes are made in branches, peer-reviewed through pull requests, and merged into `master`, which must always be in a deployable state.
+We follow the feature branch workflow. All changes are made in branches, peer-reviewed through pull requests, and merged into `master`, which must always be in a deployable state.
 
 
 ### Step by step
