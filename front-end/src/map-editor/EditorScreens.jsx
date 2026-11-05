@@ -9,8 +9,8 @@ export function EditorHeader() {
   const navigate = useNavigate()
   return (
     <header className="mm-header">
-      <button className="mm-logo" onClick={() => navigate('/MyMaps')}>Logo</button>
-      <button onClick={() => navigate('/MyMaps')}>Menu</button>
+      <button className="mm-logo" onClick={() => navigate('/')}>Logo</button>
+      <button onClick={() => navigate('/menu')}>Menu</button>
     </header>
   )
 }
@@ -54,7 +54,7 @@ export function StylePage() {
   )
 }
 
-export function EditTextPage() {
+export function EditTextPage({ onRenameMap }) {
   const navigate = useNavigate()
   const { map, updateMap } = useEditor()
   const [draft, setDraft] = useState({
@@ -71,6 +71,7 @@ export function EditTextPage() {
       return
     }
     updateMap({ ...draft, title: draft.title.trim(), legendLabels: draft.legendLabels.map((label) => label.trim()) })
+    onRenameMap?.(Number(map.id), draft.title.trim())
     navigate('/Map-Editor')
   }
 

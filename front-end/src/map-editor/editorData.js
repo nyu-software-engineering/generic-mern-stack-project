@@ -39,5 +39,5 @@ export function getInitialMap() {
 }
 
 export function saveMap(map) {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(map)) } catch {}
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(map)) } catch { /* Storage can be unavailable. */ }
 }

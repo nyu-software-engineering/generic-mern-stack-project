@@ -95,20 +95,3 @@
 .switch-button:hover {
   text-decoration: underline;
 }
-
-.demo-entry {
-  margin-top: 21px;
-  padding-top: 17px;
-  border-top: 1px solid #edf0f5;
-}
-
-.demo-entry a {
-  color: #2563eb;
-  font-size: 13px;
-  font-weight: 650;
-  text-decoration: none;
-}
-
-.demo-entry a:hover {
-  text-decoration: underline;
-}

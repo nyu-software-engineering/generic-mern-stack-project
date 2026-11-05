@@ -1,16 +1,40 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
 import MyMaps from "./MyMaps";
 import MapEditor from "./Map-Editor";
+import Home from "./Home";
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import EditorProvider from './map-editor/EditorProvider'
 import { StylePage, EditTextPage, SourcesPage } from './map-editor/EditorScreens'
 
-
-
+const sampleMaps = [1, 2, 3].map((number) => ({ number, name: "Map Title", image: "https://picsum.photos/100/100" }));
 
 function App() {
   const [isRegister, setIsRegister] = useState(false);
+  const [maps, setMaps] = useState(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem('mapmaker-maps'))
+      return Array.isArray(saved)
+        ? saved.map((map) => ({ ...map, image: map.image || 'https://picsum.photos/100/100' }))
+        : sampleMaps
+    }
+    catch { return sampleMaps }
+  });
+
+  useEffect(() => {
+    try { localStorage.setItem('mapmaker-maps', JSON.stringify(maps)) }
+    catch { /* Browser storage may be unavailable. */ }
+  }, [maps]);
+
+  function createMap(name) {
+    const map = { number: Date.now(), name: name.trim() || 'Untitled Map', image: 'https://picsum.photos/400/400' };
+    setMaps((existing) => [map, ...existing]);
+    return map;
+  }
+
+  function renameMap(number, name) {
+    setMaps((existing) => existing.map((map) => map.number === number ? { ...map, name } : map));
+  }
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -21,8 +45,7 @@ function App() {
     <EditorProvider>
     <Router>
       <Routes>
-        <Route path="/" element={
-    
+        <Route path="/login" element={
     <div className="page">
       <div className="form-box">
         <h1>MapMaker</h1>
@@ -87,26 +110,35 @@ function App() {
         >
           {isRegister ? "Sign In" : "Register"}
         </button>
-        <div className="demo-entry">
-          <Link to="/MyMaps">Explore the frontend demo &#8594;</Link>
-        </div>
+        <p><Link to="/">Back to Home</Link></p>
       </div>
     </div>
 
      } />
 
-        <Route path="/MyMaps" element={<MyMaps />} />
-        <Route path="/Map-Editor" element={<MapEditor />} />
+        <Route path="/" element={<Home onCreateMap={createMap} />} />
+        <Route path="/home" element={<Home onCreateMap={createMap} />} />
+        <Route path="/menu" element={
+          <main className="menu-page">
+            <header><h2><Link to="/">Logo</Link></h2></header>
+            <h1>Menu</h1>
+            <nav aria-label="Main menu">
+              <p><Link to="/">Home</Link></p>
+              <p><Link to="/MyMaps">My Maps</Link></p>
+              <p><Link to="/login">Sign in / Sign up</Link></p>
+            </nav>
+          </main>
+        } />
+        <Route path="/MyMaps" element={<MyMaps maps={maps} onCreateMap={createMap} />} />
+        <Route path="/Map-Editor" element={<MapEditor onRenameMap={renameMap} />} />
         <Route path="/style" element={<StylePage />} />
-        <Route path="/edit-text" element={<EditTextPage />} />
+        <Route path="/edit-text" element={<EditTextPage onRenameMap={renameMap} />} />
         <Route path="/source" element={<SourcesPage />} />
         <Route path="/sources" element={<SourcesPage />} />
 
       </Routes>
     </Router>
     </EditorProvider>
-
-    
   );
 }
 

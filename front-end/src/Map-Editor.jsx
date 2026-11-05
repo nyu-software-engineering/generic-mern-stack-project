@@ -44,7 +44,7 @@ async function exportPng(svg, map, colors) {
   }
 }
 
-export default function MapEditor() {
+export default function MapEditor({ onRenameMap }) {
   const navigate = useNavigate()
   const location = useLocation()
   const { map, openMap, updateMap } = useEditor()
@@ -69,7 +69,11 @@ export default function MapEditor() {
         : /gray|grey|slate/i.test(command) ? 'slate'
           : /blue|atlas/i.test(command) ? 'atlas' : null
 
-    if (title) updateMap({ title: title[1].trim().slice(0, 80) })
+    if (title) {
+      const newTitle = title[1].trim().slice(0, 80)
+      updateMap({ title: newTitle })
+      onRenameMap?.(Number(map.id), newTitle)
+    }
     else if (color) updateMap({ styleId: color })
     else setMessage('Try "title: My map" or "make it green".')
     setInstruction('')
