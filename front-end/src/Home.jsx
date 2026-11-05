@@ -1,12 +1,12 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-function Home({ onCreateMap }){
+function Home(){
     const navigate=useNavigate()
     const [description, setDescription] = useState("")
 
     function createMap(){
-        navigate("/Map-Editor", { state: { map:onCreateMap(description) } })
+        navigate("/search?q=" + encodeURIComponent(description.trim() || "world map"))
     }
 
     return(

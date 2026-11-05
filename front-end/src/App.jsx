@@ -3,9 +3,10 @@ import './App.css'
 import MyMaps from "./MyMaps";
 import MapEditor from "./Map-Editor";
 import Home from "./Home";
+import MapSearch from './MapSearch'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
-
-const sampleMaps = [1, 2, 3].map((number) => ({ number, name: "Map Title", image: "https://picsum.photos/100/100" }));
+import EditorProvider from './map-editor/EditorProvider'
+import { StylePage, EditTextPage, SourcesPage } from './map-editor/EditorScreens'
 
 function App() {
   const [isRegister, setIsRegister] = useState(false);
@@ -13,19 +14,25 @@ function App() {
     try {
       const saved = JSON.parse(localStorage.getItem('mapmaker-maps'))
       return Array.isArray(saved)
-        ? saved.map((map) => ({ ...map, image: map.image || 'https://picsum.photos/100/100' }))
-        : sampleMaps
+        ? saved.filter((map) => !(map.number <= 3 && map.name === 'Map Title' && !map.asset))
+        : []
     }
-    catch { return sampleMaps }
+    catch { return [] }
   });
 
   useEffect(() => {
     try { localStorage.setItem('mapmaker-maps', JSON.stringify(maps)) }
-    catch {}
+    catch { /* Browser storage may be unavailable. */ }
   }, [maps]);
 
   function createMap(name) {
-    const map = { number: Date.now(), name: name.trim() || 'Untitled Map', image: 'https://picsum.photos/400/400' };
+    const map = { number: Date.now(), name: name.trim() || 'Untitled Map' };
+    setMaps((existing) => [map, ...existing]);
+    return map;
+  }
+
+  function chooseMap(asset) {
+    const map = { number: Date.now(), name: asset.title, image: asset.thumbnail, asset };
     setMaps((existing) => [map, ...existing]);
     return map;
   }
@@ -40,6 +47,7 @@ function App() {
   }
 
   return (
+    <EditorProvider>
     <Router>
       <Routes>
         <Route path="/login" element={
@@ -113,8 +121,9 @@ function App() {
 
      } />
 
-        <Route path="/" element={<Home onCreateMap={createMap} />} />
-        <Route path="/home" element={<Home onCreateMap={createMap} />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/search" element={<MapSearch onChooseMap={chooseMap} onCreateMap={createMap} />} />
         <Route path="/menu" element={
           <main className="menu-page">
             <header><h2><Link to="/">Logo</Link></h2></header>
@@ -128,9 +137,14 @@ function App() {
         } />
         <Route path="/MyMaps" element={<MyMaps maps={maps} onCreateMap={createMap} />} />
         <Route path="/Map-Editor" element={<MapEditor onRenameMap={renameMap} />} />
+        <Route path="/style" element={<StylePage />} />
+        <Route path="/edit-text" element={<EditTextPage onRenameMap={renameMap} />} />
+        <Route path="/source" element={<SourcesPage />} />
+        <Route path="/sources" element={<SourcesPage />} />
 
       </Routes>
     </Router>
+    </EditorProvider>
   );
 }
 
