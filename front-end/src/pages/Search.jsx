@@ -20,11 +20,24 @@ const RATING_OPTIONS = [
   { value: '4.5', label: '4.5 / 5 or higher' },
 ]
 
-const EMPTY_FILTERS = { category: '', minPrice: '', maxPrice: '', minRating: '' }
+const DAY_OPTIONS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+
+const TIME_OPTIONS = [
+  { value: 'morning', label: 'Morning', start: '00:00', end: '12:00' },
+  { value: 'afternoon', label: 'Afternoon', start: '12:00', end: '17:00' },
+  { value: 'evening', label: 'Evening', start: '17:00', end: '24:00' },
+]
+
+const EMPTY_FILTERS = { category: '', minPrice: '', maxPrice: '', minRating: '', day: '', time: '' }
 
 function matchesKeyword(service, keyword) {
   const searchableText = `${service.title} ${service.provider} ${service.category}`.toLowerCase()
   return searchableText.includes(keyword.trim().toLowerCase())
+}
+
+function isAvailableAtTime(service, timeValue) {
+  const { start, end } = TIME_OPTIONS.find(option => option.value === timeValue)
+  return service.availability.startTime < end && service.availability.endTime > start
 }
 
 function matchesFilters(service, filters) {
@@ -32,15 +45,21 @@ function matchesFilters(service, filters) {
   if (filters.minPrice && service.price < Number(filters.minPrice)) return false
   if (filters.maxPrice && service.price > Number(filters.maxPrice)) return false
   if (filters.minRating && (service.rating === null || service.rating < Number(filters.minRating))) return false
+  if (filters.day && !service.availability.days.includes(filters.day)) return false
+  if (filters.time && !isAvailableAtTime(service, filters.time)) return false
   return true
+}
+
+function compareByRating(a, b) {
+  return (b.rating ?? 0) - (a.rating ?? 0)
 }
 
 function compareServices(sort) {
   if (sort === 'price-low') return (a, b) => a.price - b.price
   if (sort === 'price-high') return (a, b) => b.price - a.price
-  if (sort === 'rating') return (a, b) => (b.rating ?? 0) - (a.rating ?? 0)
-  if (sort === 'newest') return (a, b) => b.id - a.id
-  return () => 0
+  if (sort === 'rating') return compareByRating
+  if (sort === 'newest') return (a, b) => b.createdAt.localeCompare(a.createdAt)
+  return (a, b) => b.featured - a.featured || compareByRating(a, b) || b.numReviews - a.numReviews
 }
 
 function describeFilters(filters) {
@@ -49,6 +68,8 @@ function describeFilters(filters) {
   if (filters.minPrice) descriptions.push(`From $${filters.minPrice}`)
   if (filters.maxPrice) descriptions.push(`Up to $${filters.maxPrice}`)
   if (filters.minRating) descriptions.push(`${filters.minRating} / 5`)
+  if (filters.day) descriptions.push(filters.day)
+  if (filters.time) descriptions.push(TIME_OPTIONS.find(option => option.value === filters.time).label)
   return descriptions.join(' · ')
 }
 
@@ -59,12 +80,16 @@ export default function Search({ services }) {
   const [draftSort, setDraftSort] = useState('recommended')
 
   const keyword = searchParams.get('q') ?? ''
-  const sort = searchParams.get('sort') ?? 'recommended'
+  const sortParam = searchParams.get('sort')
+  const sort = SORT_OPTIONS.some(option => option.value === sortParam) ? sortParam : 'recommended'
+  const timeParam = searchParams.get('time')
   const filters = {
     category: searchParams.get('category') ?? '',
     minPrice: searchParams.get('minPrice') ?? '',
     maxPrice: searchParams.get('maxPrice') ?? '',
     minRating: searchParams.get('minRating') ?? '',
+    day: searchParams.get('day') ?? '',
+    time: TIME_OPTIONS.some(option => option.value === timeParam) ? timeParam : '',
   }
 
   const results = services
@@ -223,6 +248,44 @@ export default function Search({ services }) {
                 value={draftFilters.maxPrice}
                 onChange={event => setDraftFilters({ ...draftFilters, maxPrice: event.target.value })}
               />
+            </label>
+
+            <label className='search-field'>
+              <strong>
+                Available day
+              </strong>
+              <select
+                value={draftFilters.day}
+                onChange={event => setDraftFilters({ ...draftFilters, day: event.target.value })}
+              >
+                <option value=''>
+                  Any day
+                </option>
+                {DAY_OPTIONS.map(day => (
+                  <option key={day} value={day}>
+                    {day}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <label className='search-field'>
+              <strong>
+                Available time
+              </strong>
+              <select
+                value={draftFilters.time}
+                onChange={event => setDraftFilters({ ...draftFilters, time: event.target.value })}
+              >
+                <option value=''>
+                  Any time
+                </option>
+                {TIME_OPTIONS.map(option => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
             </label>
 
             <label className='search-field'>
