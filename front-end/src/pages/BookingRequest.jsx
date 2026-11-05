@@ -33,8 +33,7 @@ export default function BookingRequest({ bookings = [], addBooking, updateBookin
     </form>
     {showTimes && <div className="booking-modal-backdrop"><div className="booking-modal">
       <h2>Choose a time</h2>
-      {['14:00', '15:00', '16:00'].map(t => <button key={t} type="button" className={`booking-button ${time === t ? 'selected' : ''}`} onClick={() => { setTime(t); setShowTimes(false) }}>{t}</button>)}
-      <button className="booking-button" onClick={() => setShowTimes(false)}>Close</button>
+        {['09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00'].map(t => <button key={t} type="button" className={`booking-button ${time === t ? 'selected' : ''}`} onClick={() => { setTime(t); setShowTimes(false) }}>{t}</button>)}      <button className="booking-button" onClick={() => setShowTimes(false)}>Close</button>
     </div></div>}
   </div>
 }
