@@ -1,7 +1,13 @@
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-function Home(){
+function Home({ onCreateMap }){
     const navigate=useNavigate()
+    const [description, setDescription] = useState("")
+
+    function createMap(){
+        navigate("/Map-Editor", { state: { map:onCreateMap(description) } })
+    }
 
     return(
         <div className="home">
@@ -11,8 +17,8 @@ function Home(){
             </header>
 
             <h1>Describe a map.</h1>
-            <textarea placeholder="Make me a map of..." />
-            <button onClick={()=>navigate("/Map-Editor")}>Generate map</button>
+            <textarea placeholder="Make me a map of..." value={description} onChange={(event)=>setDescription(event.target.value)} />
+            <button onClick={createMap}>Generate map</button>
             <button onClick={()=>navigate("/MyMaps")}>My maps</button>
         </div>
     )
