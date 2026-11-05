@@ -1,17 +1,33 @@
+
+import { Link } from "react-router-dom";
 import "./HotelDetails.css";
 
-function HotelDetails() {
+function HotelDetails({ hotel }) {
   return (
-    <article className="hotel-details">
-      <img
-        src="https://picsum.photos/340/180"
-        alt="Hotel"
-        className="hotel-details-image"
-      />
+    <article className="result-hotel-card">
+      <Link
+        to={`/hotel/${hotel.id}`}
+        className="result-hotel-image-link"
+        aria-label={`View details for ${hotel.name}`}
+      >
+        <img
+          src={hotel.image}
+          alt={hotel.name}
+          className="result-hotel-image"
+        />
+      </Link>
 
-      <p className="hotel-details-info">
-        brief info
-      </p>
+      <div className="result-hotel-info">
+        <h3>{hotel.name}</h3>
+
+        <p className="result-hotel-location">
+          {hotel.location}
+        </p>
+
+        <p className="result-hotel-rating">
+          ★ {hotel.rating} / 5
+        </p>
+      </div>
     </article>
   );
 }
