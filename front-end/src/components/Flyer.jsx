@@ -4,15 +4,7 @@
  * Mode is what the flyer should function as: a small carousel item (default), or the full flyer details.
  */
 export default function Flyer({ category, mode="carousel" }) {
-  if (mode="full") {
-    return (
-      <article>
-
-      </article>
-    )
-  }
-    
   return (
-    <img src="https://picsum.photos/140/70" alt="Flyer placeholder"/>
+    <img src="https://picsum.photos/306/396" alt="Flyer placeholder"/>
   )
 };

@@ -15,12 +15,13 @@ export default function FlyerCarousel({ category }) {
   const flyers = [];
 
   return (
-    <section>
-      <h1>{CategoryLookup[category]}</h1>
-      <div className="flex gap-4 overflow-x-auto">
-        {flyers.map((flyer => (
-          <Flyer category={category} mode="carousel"/>
-        )))}
+    <section className="flex justify-center items-center flex-col h-fit gap-2">
+      <h1 className="heading w-full text-start">{CategoryLookup[category]}</h1>
+      <div className="flex gap-4 overflow-x-auto w-full">
+        {/* PLACEHOLDER: Would get replaced with flyers from backend. */}
+        <Flyer category={category} mode={"carousel"}/>
+        <Flyer category={category} mode={"carousel"}/>
+        <Flyer category={category} mode={"carousel"}/>
       </div>
     </section>
   );
