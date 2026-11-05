@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react"
-import { Link, useParams } from "react-router-dom"
+import { Link, useParams, useLocation } from "react-router-dom"
 import axios from "axios"
 import "./EventDetail.css"
 
 const EventDetail = () => {
   const { id } = useParams()
+  const location = useLocation()
   const [event, setEvent] = useState(null)
   const [joined, setJoined] = useState(false)
 
@@ -20,7 +21,10 @@ const EventDetail = () => {
 
   return (
     <main className="event-detail">
-      <Link className="event-detail-back" to={`/hobbies/${event.hobbyId}`}>
+      <Link
+        className="event-detail-back"
+        to={location.state?.from || `/hobbies/${event.hobbyId}`}
+      >
         ← Back
       </Link>
       <img

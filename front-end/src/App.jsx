@@ -73,6 +73,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import Discover from "./discover/Discover"
 import HobbyDetail from "./discover/HobbyDetail"
 import EventDetail from "./discover/EventDetail"
+import Map from "./map/Map"
 import './App.css'
 
 const App = () => {
@@ -82,6 +83,7 @@ const App = () => {
         <Route path="/discover" element={<Discover />} />
         <Route path="/hobbies/:id" element={<HobbyDetail />} />
         <Route path="/events/:id" element={<EventDetail />} />
+        <Route path="/map" element={<Map />} />
       </Routes>
     </Router>
   )
