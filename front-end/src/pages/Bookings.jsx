@@ -1,11 +1,16 @@
 import { useState } from 'react'
 import { Link } from 'react-router'
 import services from '../services.json'
+import Header from './Header'
+import './Booking.css'
 
 export default function Bookings({ bookings }) {
   const [period, setPeriod] = useState('upcoming')
   const visible = bookings.filter(b => period === 'upcoming' ? ['requested', 'confirmed'].includes(b.status) : ['completed', 'cancelled'].includes(b.status))
-  return <div className="booking-content">
+  return (
+  <>
+  <Header />
+  <div className="booking-content">
     <h1>Manage bookings</h1><p>As client</p>
     <div className="booking-switch"><button className="booking-button" onClick={() => setPeriod('upcoming')}>Upcoming</button><button className="booking-button" onClick={() => setPeriod('past')}>Past</button></div>
     <h2>{period === 'upcoming' ? 'Upcoming bookings' : 'Past bookings'}</h2>
@@ -19,4 +24,6 @@ export default function Bookings({ bookings }) {
       </div>
     })}
   </div>
+  </>
+  )
 }

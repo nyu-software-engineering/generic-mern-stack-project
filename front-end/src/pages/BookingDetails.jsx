@@ -1,5 +1,6 @@
 import { Link, useNavigate, useParams } from 'react-router'
 import services from '../services.json'
+import './Booking.css'
 
 export default function BookingDetails({ bookings, updateBooking }) {
   const { bookingId } = useParams()
