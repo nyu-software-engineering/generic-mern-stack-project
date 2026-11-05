@@ -1,22 +1,21 @@
 import { Link } from 'react-router-dom'
-import './styles/ArticleCard.css'
 
 const ArticleCard = props => {
 
   const imgSrc = props.details.thumbnailUrl
 
   return (
-    <article className="ArticleCard">
-      <Link to={`/articles/${props.details.id}`} className="card-link"> {/* todo, link to article page */}
-        <img className="thumbnail" alt="" src={imgSrc} />
+    <article className="mb-4 border border-gray-300 rounded-lg p-3">
+      <Link to={`/articles/${props.details.id}`} className="flex gap-4"> {/* todo, link to article page */}
+        <img className="w-24 h-24 shrink-0 rounded-lg object-cover" alt="" src={imgSrc} />
 
         <div className="details">
-          <p className="meta">
+          <p className="text-sm text-gray-500">
             {props.details.topic} | {props.details.publication}
           </p>
-          <h2 className="title">{props.details.title}</h2>
+          <h2 className="font-bold">{props.details.title}</h2>
 
-          <ul className="keywords">
+          <ul className="mt-2 list-disc pl-5 text-sm">
             {props.details.keywords.map((keyword, index) => (
               <li key={index}>{keyword}</li>
             ))}

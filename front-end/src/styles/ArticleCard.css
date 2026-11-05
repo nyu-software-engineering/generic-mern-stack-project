@@ -1,8 +1,0 @@
-@reference "tailwindcss";
-
-.ArticleCard { @apply mb-4 border border-gray-300 rounded-lg p-3; }
-.ArticleCard .card-link { @apply flex gap-4; }
-.ArticleCard .thumbnail { @apply w-24 h-24 shrink-0 rounded-lg object-cover; }
-.ArticleCard .meta { @apply text-sm text-gray-500; }
-.ArticleCard .title { @apply font-bold; }
-.ArticleCard .keywords { @apply mt-2 list-disc pl-5 text-sm; }

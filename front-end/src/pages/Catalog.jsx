@@ -51,52 +51,52 @@ const Catalog = () => {
   }
 
   return (
-    <div className="Catalog">
-      <h1 className="page-title">Article Catalog</h1>
+    <div className="mx-auto max-w-md p-8">
+      <h1 className="text-3xl font-bold text-center">Article Catalog</h1>
 
-      <section className="search">
-        <label htmlFor="search-box" className="search-label">
+      <section className="mt-8">
+        <label htmlFor="search-box" className="block mb-2 font-medium">
           Search articles
         </label>
         <input
           type="text"
           id="search-box"
-          className="search-box"
+          className="w-full border border-gray-300 rounded-lg p-3"
           placeholder="Title, keyword, or jargon term"
           value={searchTerm}
           onChange={handleSearchChange}
         />
       </section>
 
-      <section className="topics">
+      <section className="mt-4 flex flex-wrap gap-2">
         {topics.map(item => (
-          <button key={item} type="button" className={item === topic ? 'topic selected' : 'topic'} onClick={() => handleTopicClick(item)}>{item}</button>
+          <button key={item} type="button" className={item === topic ? 'border border-purple-600 rounded-lg p-3 bg-purple-600 text-white font-semibold' : 'border border-gray-300 rounded-lg p-3'} onClick={() => handleTopicClick(item)}>{item}</button>
         ))}
       </section>
 
-      {message !== '' && <p className="message">{message}</p>}
+      {message !== '' && <p className="mt-6 text-gray-500 text-center">{message}</p>}
 
-      <section className="articles">
+      <section className="mt-6">
         {articlesOnPage.map(article => (
           <ArticleCard key={article.id} details={article} />
         ))}
       </section>
 
-      <section className="pages">
+      <section className="mt-6 flex items-center justify-between">
           <button
             type="button"
-            className="page-button"
+            className="border border-gray-300 rounded-lg p-3 disabled:text-gray-300"
             onClick = {() => handlePageClick(page - 1)}
             disabled = {page <= 1}
           >
             Previous
           </button>
-          <p className="page-number">
+          <p className="text-gray-500">
             Page {page} of {pageCount}
           </p>
           <button
             type="button"
-            className="page-button"
+            className="border border-gray-300 rounded-lg p-3 disabled:text-gray-300"
             onClick = {() => handlePageClick(page + 1)}
             disabled = {page >= pageCount}
           >
