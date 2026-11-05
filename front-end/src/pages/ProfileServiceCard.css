@@ -1,3 +1,17 @@
 .profile-service-card {
-    border: 1px solid black;
+    margin: 16px 0;
+    padding: 18px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+}
+
+.profile-service-card h3{
+    margin: 0 0 8px;
+    font-size: 16px;
+}
+
+.profile-service-card p{
+    margin: 0;
+    font-size: 14px;
 }

@@ -7,7 +7,7 @@ export default function ProfileServiceCard({service}) {
     return (
         <article className="profile-service-card">
             <h3>{title} · ${price} / {priceUnit} </h3>
-            <p>{status} · { rating !== null ? `${rating} / 5` : "No reviews yet"}· {numReviews} reviews</p>
+            <p>{status} · { rating !== null ? `${rating} / 5` : "No reviews yet"} · {numReviews} reviews</p>
         </article>
     )
 }

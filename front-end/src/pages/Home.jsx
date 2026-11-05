@@ -1,12 +1,11 @@
-import { Link } from 'react-router'
 import { useState } from 'react'
 import categories from '../categories.json'
-import services from '../services.json'
+// import services from '../services.json'
 import ServiceCard from './ServiceCard'
 import Header from './Header'
 import './Home.css'
 
-export default function Home() {
+export default function Home({services}) {
   const [showCategories, setShowCategories] = useState(false)
   const [selectedCategories, setSelectedCategories] = useState('All services')
   return (
@@ -19,14 +18,9 @@ export default function Home() {
         <p>
           Discover student talent at NYU
         </p>
-        <Link to='/search' className='home-search'>
-          <strong>
-            Search services
+          <strong className='home-search'>
+            Filter services by category
           </strong>
-          <strong>
-            Look up services...
-          </strong>
-        </Link>
 
         <button type='button' className='home-category-jump' onClick={() =>
           setShowCategories(true)
@@ -52,7 +46,7 @@ export default function Home() {
           Featured services
         </h2>
         {services.map (service => (
-          service.featured && (selectedCategories === 'All services' || selectedCategories === service.category) &&
+         service.status !== 'Paused' && service.featured && (selectedCategories === 'All services' || selectedCategories === service.category) &&
           <ServiceCard key = {service.id} details = {service} />
         ))}
 
@@ -60,7 +54,7 @@ export default function Home() {
           Recently added
         </h2>
         {services.map (service => (
-          service.recent && (selectedCategories === 'All services' || selectedCategories === service.category) && 
+          service.status !== 'Paused' && service.recent && (selectedCategories === 'All services' || selectedCategories === service.category) && 
           <ServiceCard key = {service.id} details = {service} />
         ))}
       </section>
