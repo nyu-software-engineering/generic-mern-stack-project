@@ -2,12 +2,11 @@
 /* Hotel Details Page */
 
 .hotel-details {
-  padding: 18px;
-  height: 100%;
-  overflow-y: auto;
+  padding: 16px;
+  min-height: 100%;
   box-sizing: border-box;
   background-color: #ffffff;
-  color: #222;
+  color: #222222;
   font-family: Arial, sans-serif;
 }
 
@@ -18,16 +17,18 @@
   align-items: center;
   gap: 20px;
   margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e5e5e5;
 }
 
 .hotel-details-header h1 {
+  margin: 0;
   font-size: 20px;
   font-weight: 600;
-  margin: 0;
 }
 
 .hotel-back {
-  color: #333;
+  color: #333333;
   text-decoration: none;
   font-size: 14px;
 }
@@ -36,46 +37,49 @@
   text-decoration: underline;
 }
 
-/* Main Hotel Image */
+/* Hotel Image */
 
 .hotel-main-image {
   display: block;
   width: 100%;
   height: 200px;
   object-fit: cover;
+  border: 1px solid #eeeeee;
   border-radius: 12px;
+  box-sizing: border-box;
 }
 
 /* Hotel Information */
 
 .hotel-information h2 {
   margin: 18px 0 8px;
-  font-size: 24px;
-  font-weight: 700;
+  font-size: 22px;
+  font-weight: 600;
 }
 
 .hotel-information h3 {
-  font-size: 17px;
   margin: 22px 0 10px;
+  font-size: 17px;
+  font-weight: 600;
 }
 
 .hotel-location {
-  color: #666;
-  font-size: 14px;
   margin: 8px 0;
+  color: #666666;
+  font-size: 14px;
 }
 
 .hotel-rating {
-  color: #d18b00;
-  font-size: 15px;
-  font-weight: bold;
   margin: 12px 0;
+  color: #a87516;
+  font-size: 15px;
+  font-weight: 600;
 }
 
 /* Description */
 
 .hotel-description {
-  color: #555;
+  color: #555555;
   line-height: 1.6;
   font-size: 14px;
 }
@@ -86,8 +90,8 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
-  padding-left: 20px;
   margin-top: 12px;
+  padding-left: 20px;
   font-size: 14px;
 }
 
@@ -95,7 +99,7 @@
   line-height: 1.5;
 }
 
-/* Save Hotel Button */
+/* Save Button */
 
 .hotel-save-button {
   display: block;
@@ -105,7 +109,7 @@
   border: none;
   border-radius: 10px;
   background-color: #243a69;
-  color: white;
+  color: #ffffff;
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
@@ -139,3 +143,4 @@
     font-size: 22px;
   }
 }
+
