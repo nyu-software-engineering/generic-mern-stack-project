@@ -1,0 +1,46 @@
+.hobby-card {
+  width: 48%;
+  margin-bottom: 24px;
+}
+
+.hobby-card-link {
+  color: #1f2a44;
+  text-decoration: none;
+}
+
+.hobby-card-photo {
+  width: 100%;
+  border-radius: 12px;
+}
+
+.hobby-card-name {
+  margin: 8px 0 2px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.hobby-card-members {
+  margin: 0 0 10px;
+  color: #666d7d;
+  font-size: 12px;
+}
+
+.hobby-card-button,
+.hobby-card-button-joined {
+  width: 100%;
+  height: 44px;
+  border: 1px solid #1f2a44;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.hobby-card-button {
+  background-color: #1f2a44;
+  color: white;
+}
+
+.hobby-card-button-joined {
+  background-color: white;
+  color: #1f2a44;
+}
