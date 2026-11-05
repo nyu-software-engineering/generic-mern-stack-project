@@ -4,22 +4,31 @@ import { getJobHref, parseJobRoute } from './jobs/routes.js'
 import { DEFAULT_FILTERS } from './jobs/browse.js'
 import BrowseJobs from './pages/BrowseJobs.jsx'
 import JobDetails from './pages/JobDetails.jsx'
-import { useAppState } from './data/AppState.jsx'
+import { useAppState } from './data/useAppState.js'
 import EditProfile from './pages/EditProfile.jsx'
 import MyProfile from './pages/MyProfile.jsx'
 import Tracker from './pages/Tracker.jsx'
+import Welcome from './pages/Welcome.jsx'
+import SignUp from './pages/SignUp.jsx'
+import LogIn from './pages/LogIn.jsx'
+import Menu from './components/Menu.jsx'
+import { useJobMatch } from './jobs/useJobMatch.js'
+import ProfileSetup from './pages/ProfileSetup.jsx'
+import Home from './pages/Home.jsx'
+
 
 function App() {
   const [hash, setHash] = useState(() => window.location.hash)
   const [attempt, setAttempt] = useState(0)
+  const [menuOpen, setMenuOpen] = useState(false)
   const [resources, setResources] = useState({ browse: null, details: null })
   const [browseFilters, setBrowseFilters] = useState(DEFAULT_FILTERS)
   const appState = useAppState()
-  const [matchResource, setMatchResource] = useState({ status: 'loading' })
   const path = hash.replace(/^#/, '') || '/'
   const [browseQuery, setBrowseQuery] = useState('')
   const [browseSort, setBrowseSort] = useState('best-match')
   const route = parseJobRoute(hash)
+  const match = useJobMatch(route.kind === 'details' ? route.id : null, appState)
   const requestKey = `${route.kind}:${route.id ?? ''}`
   const resource = resources[route.kind]
   const current = resource?.key === requestKey ? resource : { status: 'loading', data: null }
@@ -57,28 +66,45 @@ function App() {
     return () => { active = false; controller.abort() }
   }, [requestKey, route.kind, route.id, attempt, browseLoaded])
 
-  useEffect(() => {
-    if (route.kind !== 'details' || !appState.profile) return
-    let active = true
-    appState.matchFor(route.id).then((resource) => {
-      if (active) setMatchResource(resource)
-    })
-    return () => { active = false }
-  }, [route.kind, route.id, appState.profile])
-
   function retry() {
     setResources((previous) => ({ ...previous, [route.kind]: null }))
     setAttempt((value) => value + 1)
+  }
+
+  function logOut() {
+    appState.resetAll()
+    setMenuOpen(false)
+    setResources({ browse: null, details: null })
+    setBrowseFilters(DEFAULT_FILTERS)
+    setBrowseQuery('')
+    setBrowseSort('best-match')
+    setAttempt(0)
+    setHash('#/welcome')
+    window.location.hash = '#/welcome'
+  }
+
+  const signedOutScreens = {
+    '/welcome': <Welcome />,
+    '/login': <LogIn />,
+    '/signup': <SignUp />,
+  }
+  if (signedOutScreens[path]) {
+    return <main className="app">{signedOutScreens[path]}</main>
   }
 
   return (
     <main className="app">
       <header className="app-header">
         <a href="#/jobs" aria-label="CareerHive — Browse Jobs">CareerHive</a>
-        <span>Demo</span>
+        <button type="button" className="ui-button ui-button-secondary" onClick={() => setMenuOpen(true)}>Menu</button>
       </header>
+      {menuOpen && <Menu onClose={() => setMenuOpen(false)} onLogOut={logOut} />}
       <p className="demo-notice">Fictional listings. Application links open example pages.</p>
-      {path === '/profile' ? (
+      {path === '/profile-setup' ? (
+        <ProfileSetup />
+      ) : path === '/home' ? (
+        <Home />
+      ) : path === '/profile' ? (
         <MyProfile />
       ) : path === '/profile/edit' ? (
         <EditProfile />
@@ -90,8 +116,8 @@ function App() {
           query={browseQuery} onQueryChange={setBrowseQuery} sort={browseSort} onSortChange={setBrowseSort} />
       ) : route.kind === 'details' ? (
         <JobDetails job={current.data} status={current.status} onRetry={retry}
-          matchResource={matchResource}
-          onMatchRetry={() => appState.matchFor(route.id).then(setMatchResource)}
+          matchResource={match.resource}
+          onMatchRetry={appState.status === 'ready' ? match.retry : undefined}
           onCompleteProfile={() => { window.location.hash = '#/profile/edit' }} />
       ) : (
         <section className="browse-state"><h1>Page not found</h1><a href="#/jobs">Back to jobs</a></section>

@@ -1,8 +1,8 @@
 # Frontend connections and identity contract
 
-November 2, 2026: implementation inventory and proposed alignment checklist. Only Browse/Job Details and the read-only jobs API are implemented on David's branch. The other routes, callbacks, and entity shapes below are proposals for #44/#46/#49 and the relevant feature owners, not a claim of team agreement or completed integration.
+Historical inventory from November 2, 2026: at that checkpoint only Browse/Job Details and the read-only jobs API were implemented on David's branch. The original proposals below do not claim team agreement. The November 4 match/session contract at the end describes the current integration.
 
-November 3, #78 milestone A: `JobMatch` is a controlled summary/native-popup component, optionally composed by `JobDetails` through `matchResource`, `onMatchRetry`, and `onCompleteProfile`. The current App has no match provider and keeps its disabled analysis action. Shared integration and #78's saved-profile acceptance remain unfinished.
+November 3, #78 milestone A: `JobMatch` is a controlled summary/native-popup component, optionally composed by `JobDetails` through `matchResource`, `onMatchRetry`, and `onCompleteProfile`. At that checkpoint App had no match provider and kept analysis disabled. The shared controller and saved-profile integration are now implemented as described in the November 4 contract below; teammate acceptance remains required.
 
 ## Single demo profile — product direction, November 3
 
@@ -16,7 +16,7 @@ The ready UI resource is `{ status: 'ready', data: { jobId, score, summary, fitE
 
 `JobMatch` accepts `onRetry` and `onCompleteProfile`; `JobDetails` maps `onMatchRetry` to the former and passes the latter through. The caller binds job identity and navigation. Same-job resource changes keep an open dialog visible with current content; changed job identity or unmount closes it and restores the previous overflow/focus when possible. This local state is independent of routes, fetching, and profile ownership. No-resource JobDetails callers retain the legacy `onOpenAnalysis` behavior.
 
-This is an internal presentation boundary for adapting the agreed shared response once, not a new server endpoint or replacement profile schema. Before milestone B, confirm #46/#59's saved snapshot/Save/Cancel behavior, #44's response shape and fixture ownership, and #49's completion navigation/return context. The eventual controller must associate responses with both job and saved-profile request context, cancel or ignore stale requests, and supply real Retry and Complete profile actions. Component prop replacement cannot verify that integration.
+This presentation boundary stays independent of the server endpoint and profile schema. The November 4 controller now binds job and saved-profile request identity, cancels/ignores stale requests and supplies Retry/Complete profile actions. Its mounted integration tests complement the component-only prop tests. The remaining route/screen ownership checklist below still requires teammate acceptance where those features are not implemented.
 
 ## Identity: data IDs are different from HTML IDs
 
@@ -87,3 +87,9 @@ Source proposal: [shared baseline](../docs/superpowers/plans/2026-11-02-frontend
 - [ ] Inspect common shell/styles and long/error/empty/overlay states across all integrated screen families; run tests/lint/build and mobile browser checks after conflict resolution.
 
 This checklist is broader than #61; implementing its filter panel does not complete these owners' tasks.
+
+## November 4 match/session integration contract
+
+`useAppState` is now imported from `src/data/useAppState.js`; the provider remains the default export of `AppState.jsx`. Keep one provider above routes. `matchFor(jobId, { signal })` is bound to the current saved profile and returns a controlled resource; the App controller also rejects obsolete job/profile/retry completions. `getMatch(jobId, profile, { signal })` posts `{ profile }` to `/api/matches/:jobId` and validates job/profile/revision plus all analysis fields. The local Vite host implements that POST with deterministic skill weights from `mocks/matches.json`. Only the existing Brightspace record has match coverage; absent records are errors, not fabricated matches.
+
+Profile Save creates a new revision; Cancel leaves saved state unchanged. Log Out resets the shared profile/applications/posts and App-owned Browse controls/cache, then navigates Welcome. Mock account registration still lasts until server restart. Menu receives `onClose` and `onLogOut`; its native dialog owns modal/scroll/focus cleanup, while App owns the logout reset. Home, Discussions, Save to Tracker and pending teammate PR integrations remain separate work.
