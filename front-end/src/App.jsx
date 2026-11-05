@@ -73,6 +73,8 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import Discover from "./discover/Discover"
 import HobbyDetail from "./discover/HobbyDetail"
 import EventDetail from "./discover/EventDetail"
+import Login from "./login/Login";
+import CreateAccount from "./login/CreateAccount";
 import Feed from "./Feed/Feed"
 import Following from "./Feed/Following"
 import CreatePost from "./Feed/CreatePost"
@@ -86,6 +88,8 @@ const App = () => {
         <Route path="/discover" element={<Discover />} />
         <Route path="/hobbies/:id" element={<HobbyDetail />} />
         <Route path="/events/:id" element={<EventDetail />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/create-account" element={<CreateAccount />} />
         <Route path="/feed" element={<Feed />} />
         <Route path="/following" element={<Following />} />
         <Route path="/create-post" element={<CreatePost />} />
