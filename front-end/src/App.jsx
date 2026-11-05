@@ -73,6 +73,9 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import Discover from "./discover/Discover"
 import HobbyDetail from "./discover/HobbyDetail"
 import EventDetail from "./discover/EventDetail"
+import Feed from "./Feed/Feed"
+import Following from "./Feed/Following"
+import CreatePost from "./Feed/CreatePost"
 import './App.css'
 
 const App = () => {
@@ -82,6 +85,9 @@ const App = () => {
         <Route path="/discover" element={<Discover />} />
         <Route path="/hobbies/:id" element={<HobbyDetail />} />
         <Route path="/events/:id" element={<EventDetail />} />
+        <Route path="/feed" element={<Feed />} />
+        <Route path="/following" element={<Following />} />
+        <Route path="/create-post" element={<CreatePost />} />
       </Routes>
     </Router>
   )
