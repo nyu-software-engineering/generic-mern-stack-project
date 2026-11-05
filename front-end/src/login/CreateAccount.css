@@ -1,0 +1,114 @@
+.create-account-page {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 430px;
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 24px 16px;
+  background-color: white;
+  color: #1f2a44;
+  text-align: left;
+}
+
+.create-account-container {
+  width: 100%;
+  margin: 40px auto 0;
+}
+
+.create-account-header {
+  margin-bottom: 32px;
+}
+
+.create-account-header h1 {
+  margin: 0 0 12px;
+  color: #1f2a44;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.create-account-header p {
+  margin: 0;
+  color: #666d7d;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.create-account-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.create-account-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.create-account-field label {
+  color: #1f2a44;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.create-account-field input {
+  box-sizing: border-box;
+  width: 100%;
+  height: 48px;
+  padding: 0 14px;
+  border: 1px solid #d9dce5;
+  border-radius: 12px;
+  background-color: #f1f2f6;
+  color: #1f2a44;
+  font-size: 16px;
+}
+
+.create-account-field input:focus {
+  outline: 2px solid #1f2a44;
+  outline-offset: 2px;
+}
+
+.create-account-error {
+  margin: 0;
+  color: #b42318;
+  font-size: 13px;
+}
+
+.create-account-button {
+  width: 100%;
+  height: 48px;
+  border: none;
+  border-radius: 12px;
+  background-color: #1f2a44;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.create-account-button:hover {
+  background-color: #344563;
+}
+
+.create-account-login {
+  margin-top: 24px;
+  color: #666d7d;
+  font-size: 14px;
+  text-align: center;
+}
+
+.create-account-login a {
+  color: #1f2a44;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.create-account-login a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+  .create-account-container {
+    margin-top: 24px;
+  }
+}
