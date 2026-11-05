@@ -24,7 +24,7 @@ function SignUp() {
     setSubmitting(true)
     try {
       await signUp({ name: form.name.trim(), email: form.email.trim(), password: form.password })
-      window.location.hash = '#/profile/edit'
+      window.location.hash = '#/profile-setup'
     } catch (problem) {
       setError(problem.message)
       setSubmitting(false)

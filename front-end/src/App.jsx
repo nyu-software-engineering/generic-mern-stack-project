@@ -13,6 +13,8 @@ import SignUp from './pages/SignUp.jsx'
 import LogIn from './pages/LogIn.jsx'
 import Menu from './components/Menu.jsx'
 import { useJobMatch } from './jobs/useJobMatch.js'
+import ProfileSetup from './pages/ProfileSetup.jsx'
+import Home from './pages/Home.jsx'
 
 
 function App() {
@@ -98,7 +100,11 @@ function App() {
       </header>
       {menuOpen && <Menu onClose={() => setMenuOpen(false)} onLogOut={logOut} />}
       <p className="demo-notice">Fictional listings. Application links open example pages.</p>
-      {path === '/profile' ? (
+      {path === '/profile-setup' ? (
+        <ProfileSetup />
+      ) : path === '/home' ? (
+        <Home />
+      ) : path === '/profile' ? (
         <MyProfile />
       ) : path === '/profile/edit' ? (
         <EditProfile />
