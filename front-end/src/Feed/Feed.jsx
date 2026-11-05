@@ -3,6 +3,8 @@ import { posts } from "./mockData";
 import "./Feed.css"
 import { Link } from "react-router-dom"
 
+
+
 function Feed() {
   return (
     <div className="feed-page">
@@ -11,6 +13,10 @@ function Feed() {
         type="text"
         placeholder="Search posts..."
       />
+
+      <Link to="/discover" className="discover-button">
+        Discover
+      </Link>
 
       <Link to="/create-post" className="create-post">
         +

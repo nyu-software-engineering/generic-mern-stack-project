@@ -106,3 +106,19 @@
   border-radius: 6px;
   cursor: pointer;
 }
+
+.discover-button {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 16px;
+  padding: 10px 12px;
+
+  background: #eef0f5;
+  color: #1f2b46;
+
+  border-radius: 8px;
+  text-align: center;
+  text-decoration: none;
+  font-weight: 600;
+}
