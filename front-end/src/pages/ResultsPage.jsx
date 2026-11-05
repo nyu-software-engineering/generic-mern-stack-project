@@ -1,20 +1,27 @@
+
 import HotelDetails from "../components/HotelDetails";
 import { Link } from "react-router-dom";
+import { mockHotels } from "../data/mockHotels";
 import "./Home&ResultsPage.css";
 
 function ResultsPage() {
   return (
     <main className="homepage results-page">
-        <header className="home-header">
-            <img src="https://picsum.photos/340/180" alt="Sample" className="logo" />
+      <header className="home-header">
+        <img
+          src="https://picsum.photos/340/180"
+          alt="Sample"
+          className="logo"
+        />
 
-        <div className="home-header-actions">
-        </div>
+        <div className="home-header-actions"></div>
       </header>
 
-
       <section className="home-search">
-        <label className="home-search-label" htmlFor="home-search-input">
+        <label
+          className="home-search-label"
+          htmlFor="home-search-input"
+        >
           search
         </label>
 
@@ -25,34 +32,26 @@ function ResultsPage() {
           readOnly
         />
 
-       <Link to="/results" className="home-search-button">
-              search
+        <Link to="/results" className="home-search-button">
+          search
         </Link>
       </section>
 
- {/* These are copied form the home page elements for reuse. Always keep them in sync with the home page. */}
+      {/* Reuse the home page search elements. */}
 
+      <section className="results-content">
+        <h2 className="results-title">Results</h2>
 
-
-
-
-
-    <section className="results-content">
-  <h2 className="results-title">results</h2>
-
-  <div className="results-cards">
-    <HotelDetails />
-    <HotelDetails />
-  </div>
-    </section>
-
-
+        <div className="results-cards">
+          {mockHotels.map((hotel) => (
+            <HotelDetails
+              key={hotel.id}
+              hotel={hotel}
+            />
+          ))}
+        </div>
+      </section>
     </main>
-
-
-
-
-   
   );
 }
 
