@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useEffect, useRef, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import { Button, Input, PageHeader } from '../components'
-import { getItem, getWears } from '../services/closetService'
+import { addWearEstimate, getItem, getWears } from '../services/closetService'
 import { costPerWear, formatMoney, withWearStats } from '../utils/itemStats'
 
 export default function BulkLogPage() {
@@ -10,6 +10,10 @@ export default function BulkLogPage() {
 }
 
 function BulkLogForm({ itemId }) {
+  const navigate = useNavigate()
+  const savingRef = useRef(false)
+  const [saving, setSaving] = useState(false)
+  const [saveError, setSaveError] = useState('')
   const [item, setItem] = useState(null)
   const [estimate, setEstimate] = useState('')
   const [error, setError] = useState('')
@@ -33,6 +37,22 @@ function BulkLogForm({ itemId }) {
   const preview = item ? costPerWear(item.price, item.wearCount + (valid ? count : 0)) : null
   const displayCost = (value) => value === null ? 'No wears yet' : formatMoney(value)
 
+  async function saveEstimate(event) {
+    event.preventDefault()
+    if (!item || !valid || savingRef.current) return
+    savingRef.current = true
+    setSaving(true)
+    setSaveError('')
+    try {
+      await addWearEstimate(itemId, { period: 'all-time', count })
+      navigate(`/closet/${itemId}`, { replace: true })
+    } catch {
+      setSaveError('Could not save your estimate. Please try again.')
+      savingRef.current = false
+      setSaving(false)
+    }
+  }
+
   return (
     <main className="pb-10">
       <PageHeader title="Bulk-log wears" backTo={error ? '/closet' : `/closet/${itemId}`} />
@@ -41,7 +61,7 @@ function BulkLogForm({ itemId }) {
       ) : !item ? (
         <p role="status" className="px-4 py-8 text-sm text-stone-500">Loading item…</p>
       ) : (
-        <div className="space-y-6 px-4">
+        <form className="space-y-6 px-4" onSubmit={saveEstimate}>
           <div className="flex items-center gap-4">
             <img src={item.imageUrl} alt="" className="size-16 rounded-xl bg-stone-100 object-cover ring-1 ring-stone-200" />
             <div className="min-w-0">
@@ -62,6 +82,7 @@ function BulkLogForm({ itemId }) {
             inputMode="numeric"
             placeholder="# times"
             value={estimate}
+            disabled={saving}
             onChange={(event) => setEstimate(event.target.value)}
             error={inputError}
           />
@@ -77,12 +98,15 @@ function BulkLogForm({ itemId }) {
           </section>
 
           <div className="space-y-2">
-            <Button fullWidth disabled aria-describedby="save-note">Save estimate</Button>
-            <p id="save-note" className="text-center text-xs text-stone-500">
-              Preview only — saving estimates is coming next.
-            </p>
+            {saveError && <p role="alert" className="text-sm text-red-600">{saveError}</p>}
+            <Button type="submit" fullWidth disabled={!valid || saving}>
+              {saving ? 'Saving…' : 'Save estimate'}
+            </Button>
+            <Button fullWidth variant="ghost" disabled={saving} onClick={() => navigate(`/closet/${itemId}`)}>
+              Cancel
+            </Button>
           </div>
-        </div>
+        </form>
       )}
     </main>
   )

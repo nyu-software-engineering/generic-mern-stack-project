@@ -97,6 +97,12 @@ export function logWear(itemId, date = today()) {
 // period is 'this-year', 'last-year', or 'all-time'
 export function addWearEstimate(itemId, { period, count }) {
   if (!items.some((i) => i.id === itemId)) return fail(`Item ${itemId} not found`)
+  const amount = Number(count)
+  if (!Number.isSafeInteger(amount) || amount <= 0) return fail('Estimated wears must be a positive whole number')
+  if (!['this-year', 'last-year', 'all-time'].includes(period)) return fail('Invalid estimate period')
+  const total = wears.filter((wear) => wear.itemId === itemId)
+    .reduce((sum, wear) => sum + (wear.type === 'estimate' ? wear.count : 1), 0)
+  if (!Number.isSafeInteger(total + amount)) return fail('Wear count is too large')
 
   const estimate = { id: newId('wear'), itemId, type: 'estimate', period, count: Number(count), date: today() }
   wears = [...wears, estimate]
