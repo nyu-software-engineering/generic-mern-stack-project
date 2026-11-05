@@ -1,3 +1,26 @@
-.map-editor {
-    width: 100%;
+.mm-interactive-map { position: relative; }
+.mm-interactive-map svg { touch-action: none; cursor: grab; }
+.mm-country { cursor: pointer; }
+.mm-country:hover, .mm-country:focus-visible { stroke: #444; stroke-width: 2; outline: none; }
+.mm-map-zoom { position: absolute; top: 6px; right: 6px; display: flex; gap: 3px; }
+.mm-map-zoom button { border: 1px solid #888; background: white; padding: 5px 7px; font: 13px Arial, sans-serif; }
+.mm-map-zoom button:disabled { color: #aaa; cursor: default; }
+.mm-map-help { display: flex; justify-content: space-between; gap: 6px; flex-wrap: wrap; padding: 7px; background: #f7f7f7; color: #555; font-size: 11px; }
+.mm-map-help button { border: 0; background: none; padding: 0; color: #2563eb; text-decoration: underline; }
+.mm-editor-legend { max-width: 390px; margin: 0 auto 26px; }
+.mm-editor-legend > div { display: flex; gap: 12px; align-items: center; margin-bottom: 12px; font-size: 14px; }
+.mm-editor-swatch { flex: 0 0 23px; height: 23px; border: 1px solid #666; }
+.mm-editor-tools, .mm-editor-prompt { display: flex; gap: 10px; }
+.mm-editor-tools { margin-bottom: 45px; }
+.mm-editor-tools button, .mm-editor-prompt button { border: 1px solid #777; background: #ddd; padding: 10px; font: 14px Arial, sans-serif; }
+.mm-editor-tools button { flex: 1; white-space: nowrap; }
+.mm-editor-tools .mm-editor-export { background: #222; color: white; border-color: #222; }
+.mm-editor-prompt input { flex: 1; width: 0; border: 1px solid #777; padding: 10px; font: 14px Arial, sans-serif; }
+.mm-editor-prompt button { min-width: 85px; }
+.mm-editor-prompt button:disabled { color: #777; cursor: default; }
+.mm-editor-notice { display: flex; justify-content: space-between; gap: 12px; border: 1px solid #ddd; background: #f2f2f2; padding: 10px; font-size: 13px; }
+.mm-editor-notice button { border: 0; background: none; font-size: 18px; cursor: pointer; }
+@media (max-width: 400px) {
+  .mm-editor-tools { gap: 5px; }
+  .mm-editor-tools button { padding: 9px 5px; font-size: 13px; }
 }

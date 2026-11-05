@@ -41,7 +41,7 @@ function MyMaps(){
                 <h2>
                 Logo
                 </h2>
-                <button onClick={()=>navigate("/menu")}>
+                <button onClick={()=>navigate("/")}>
                 Menu
                 </button>
             </header>

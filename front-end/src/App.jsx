@@ -1,18 +1,16 @@
 import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
 import './App.css'
 import MyMaps from "./MyMaps";
 import MapEditor from "./Map-Editor";
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
+import EditorProvider from './map-editor/EditorProvider'
+import { StylePage, EditTextPage, SourcesPage } from './map-editor/EditorScreens'
 
 
 
 
 function App() {
   const [isRegister, setIsRegister] = useState(false);
-  const [count, setCount] = useState(0)
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -20,6 +18,7 @@ function App() {
   }
 
   return (
+    <EditorProvider>
     <Router>
       <Routes>
         <Route path="/" element={
@@ -88,6 +87,9 @@ function App() {
         >
           {isRegister ? "Sign In" : "Register"}
         </button>
+        <div className="demo-entry">
+          <Link to="/MyMaps">Explore the frontend demo &#8594;</Link>
+        </div>
       </div>
     </div>
 
@@ -95,9 +97,14 @@ function App() {
 
         <Route path="/MyMaps" element={<MyMaps />} />
         <Route path="/Map-Editor" element={<MapEditor />} />
+        <Route path="/style" element={<StylePage />} />
+        <Route path="/edit-text" element={<EditTextPage />} />
+        <Route path="/source" element={<SourcesPage />} />
+        <Route path="/sources" element={<SourcesPage />} />
 
       </Routes>
     </Router>
+    </EditorProvider>
 
     
   );
