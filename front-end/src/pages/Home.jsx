@@ -1,4 +1,3 @@
-import { Link } from 'react-router'
 import { useState } from 'react'
 import categories from '../categories.json'
 // import services from '../services.json'
@@ -19,14 +18,9 @@ export default function Home({services}) {
         <p>
           Discover student talent at NYU
         </p>
-        <Link to='/search' className='home-search'>
-          <strong>
-            Search services
+          <strong className='home-search'>
+            Filter services by category
           </strong>
-          <strong>
-            Look up services...
-          </strong>
-        </Link>
 
         <button type='button' className='home-category-jump' onClick={() =>
           setShowCategories(true)
