@@ -75,6 +75,10 @@ import HobbyDetail from "./discover/HobbyDetail"
 import EventDetail from "./discover/EventDetail"
 import Login from "./login/Login";
 import CreateAccount from "./login/CreateAccount";
+import Feed from "./Feed/Feed"
+import Following from "./Feed/Following"
+import CreatePost from "./Feed/CreatePost"
+import Map from "./map/Map"
 import './App.css'
 
 const App = () => {
@@ -86,6 +90,10 @@ const App = () => {
         <Route path="/events/:id" element={<EventDetail />} />
         <Route path="/login" element={<Login />} />
         <Route path="/create-account" element={<CreateAccount />} />
+        <Route path="/feed" element={<Feed />} />
+        <Route path="/following" element={<Following />} />
+        <Route path="/create-post" element={<CreatePost />} />
+        <Route path="/map" element={<Map />} />
       </Routes>
     </Router>
   )
