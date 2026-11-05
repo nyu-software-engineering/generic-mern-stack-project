@@ -16,7 +16,9 @@ const ServiceCard = props => {
       <img alt={props.details.title} src={imgSrc} />
       <h2>{props.details.title}</h2>
       <p>{props.details.provider} · {props.details.category}</p>
-      <p>${props.details.price} / {props.details.priceUnit}</p>
+      <p>
+        ${props.details.price} / {props.details.priceUnit} · {props.details.rating !== null ? `${props.details.rating} / 5 · ${props.details.numReviews} reviews` : 'No reviews yet'}
+      </p>
       </Link>
     </article>
   )
