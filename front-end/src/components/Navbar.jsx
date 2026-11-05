@@ -13,6 +13,7 @@ function Navbar() {
     { name: 'Requests', path: '/requests-board' },
     { name: 'List', path: '/listings/new' },
     { name: 'Messages', path: '/inbox' },
+    {name: 'Notifications', path: '/notifications' },
     { name: 'Profile', path: '/profile' },
     {
       name: 'Reputation',
