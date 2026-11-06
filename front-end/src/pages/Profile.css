@@ -1,161 +1,215 @@
 .page {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px 16px;
-    font-family: system-ui, -apple-system, sans-serif;
-    color: #222;
-  }
-  
-  .page h2 {
-    font-size: 24px;
-    margin-bottom: 20px;
-  }
-  
-  .card {
-    background-color: #ffffff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 18px;
-    margin-bottom: 20px;
-  }
-  
-  .card h3 {
-    margin: 10px 0 6px;
-    font-size: 18px;
-  }
-  
-  .card p {
-    margin: 6px 0;
-    font-size: 14px;
-    line-height: 1.4;
-  }
-  
-  .photo {
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    background-color: #eee;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    color: #777;
-    margin-bottom: 12px;
-  }
-  
-  .card label {
-    display: block;
-    font-size: 13px;
-    font-weight: 600;
-    margin-bottom: 8px;
-  }
-  
-  .card div > button {
-    padding: 8px 16px;
-    border: 1px solid #ddd;
-    background-color: #fff;
-    border-radius: 6px;
-    font-size: 13px;
-    cursor: pointer;
-    margin-right: 8px;
-    transition: all 0.2s ease;
-  }
-  
-  .card div > button.active {
-    background-color: #202020;
-    color: #ffffff;
-    border-color: #202020;
-  }
-  
-  .section {
-    margin-bottom: 24px;
-  }
-  
-  .section h3 {
-    font-size: 18px;
-    margin-bottom: 12px;
-  }
-  
-  .muted {
-    color: #666;
-    font-size: 12px;
-  }
-  
-  /* Buttons */
-  .primary-btn {
-    background-color: #202020;
-    color: #ffffff;
-    border: 1px solid #202020;
-    padding: 10px 16px;
-    border-radius: 6px;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-  }
-  
-  .logout-btn {
-    width: 100%;
-    margin-top: 16px;
-    padding: 10px;
-    background-color: #fff;
-    color: #d9381e;
-    border: 1px solid #d9381e;
-    border-radius: 6px;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-  }
-  
-  .logout-btn:hover {
-    background-color: #fff5f5;
-  }
-  
-  .listings-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 16px;
-  }
-  
-  .listing-wrapper {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .remove-btn {
-    margin-top: -6px;
-    margin-bottom: 14px;
-    padding: 8px;
-    background-color: #fff;
-    color: #cc0000;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 12px;
-    cursor: pointer;
-  }
-  
-  .remove-btn:hover {
-    background-color: #fff5f5;
-    border-color: #cc0000;
-  }
-  
-  .settings-links {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin: 12px 0;
-  }
-  
-  .link-btn {
-    text-align: left;
-    background: none;
-    border: none;
-    padding: 6px 0;
-    color: #0066cc;
-    font-size: 13px;
-    cursor: pointer;
-  
-  }
-  
-  .link-btn:hover {
-    text-decoration: underline;
-  }
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px 16px;
+  font-family: system-ui, -apple-system, sans-serif;
+  color: #222;
+}
+
+.page h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.card {
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 18px;
+  margin-bottom: 20px;
+}
+
+.card h3 {
+  margin: 10px 0 6px;
+  font-size: 18px;
+}
+
+.card p {
+  margin: 6px 0;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.photo {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background-color: #eee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: #777;
+  margin-bottom: 12px;
+}
+
+.card label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.card div > button {
+  padding: 8px 16px;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  margin-right: 8px;
+  transition: all 0.2s ease;
+}
+
+.card div > button.active {
+  background-color: #202020;
+  color: #ffffff;
+  border-color: #202020;
+}
+
+/* Verifications List */
+.verifications-list {
+  list-style: none;
+  padding: 0;
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.section {
+  margin-bottom: 24px;
+}
+
+.section h3 {
+  font-size: 18px;
+  margin-bottom: 12px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+/* Applications Section */
+.applications-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.application-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid #eee;
+  border-radius: 6px;
+}
+
+.app-title {
+  font-size: 14px;
+}
+
+.app-details {
+  margin: 2px 0 0;
+}
+
+.status-badge {
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.status-badge.approved {
+  color:rgb(43, 141, 76);
+}
+
+.status-badge.pending {
+  color: #b06000;
+}rgb(135, 75, 2)rgb(169, 101, 19)rgb(122, 74, 14)rgb(108, 63, 8)rgb(119, 66, 0)rgb(119, 66, 0)rgb(119, 36, 0)rgb(102, 38, 10)
+
+.muted {
+  color: #666;
+  font-size: 12px;
+}
+
+/* Buttons */
+.primary-btn {
+  background-color: #202020;
+  color: #ffffff;
+  border: 1px solid #202020;
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.logout-btn {
+  width: 100%;
+  margin-top: 16px;
+  padding: 10px;
+  background-color: #fff;
+  color: #d9381e;
+  border: 1px solid #d9381e;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.logout-btn:hover {
+  background-color: #fff5f5;
+}
+
+.listings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.listing-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.remove-btn {
+  margin-top: -6px;
+  margin-bottom: 14px;
+  padding: 8px;
+  background-color: #fff;
+  color: #cc0000;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.remove-btn:hover {
+  background-color: #fff5f5;
+  border-color: #cc0000;
+}
+
+.settings-links {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.link-btn {
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 6px 0;
+  color: #0066cc;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.link-btn:hover {
+  text-decoration: underline;
+}
