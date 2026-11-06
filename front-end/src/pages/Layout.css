@@ -31,3 +31,10 @@
   font-size: 12px;
   cursor: pointer;
 }
+
+.unread-count {
+  margin-left: 4px;
+  padding: 2px 5px;
+  background: black;
+  border-radius: 3px;
+}

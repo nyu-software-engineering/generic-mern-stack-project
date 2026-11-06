@@ -19,7 +19,7 @@ export default function Layout (){
                         Profile
                     </button>
                     <button onClick = {() => navigate("/app/messages")}>
-                        Messages
+                        Messages <span className="unread-count">0</span>
                     </button>
                     <button onClick = {() => navigate("/app/post")}>
                         Post
