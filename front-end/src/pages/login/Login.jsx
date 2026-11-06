@@ -42,8 +42,8 @@ const Login = () => {
       setAuthError('Incorrect email or password. Please try again.')
       return
     }
-    // go to the home page (update this route once the user home page is built)
-    navigate('/')
+  
+    navigate('/home')
   }
 
   return (
