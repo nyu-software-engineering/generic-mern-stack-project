@@ -53,7 +53,7 @@ const MonthlyActivity = () => {
     return { ...m, paid, due: sharePerMember - paid }
   })
 
-  const memberName = id => (members.find(m => m.id === id) || {}).name
+  const activityMemberName = id => (members.find(m => m.id === id) || {}).name
 
   if (loading) {
     return (
@@ -67,13 +67,13 @@ const MonthlyActivity = () => {
     <div className="activityContainer">
       <header className="activityHeader">
         <img src={SplitLeaseLogo} alt="SplitLease logo" className="activityLogo" />
-        <button type="button" className="backButton" onClick={() => navigate(-1)}>
+        <button type="button" className="activityBack" onClick={() => navigate(-1)}>
           Back
         </button>
       </header>
 
       <section className="activityCard">
-        <h2 className="sectionTitle">Choose Month · {year}</h2>
+        <h2 className="activitySectionTitle">Choose Month · {year}</h2>
         <div className="monthGrid">
           {MONTHS.map((label, index) => (
             <button
@@ -108,7 +108,7 @@ const MonthlyActivity = () => {
         </div>
 
         {shownEntries.length === 0 ? (
-          <p className="emptyText">No activity for {FULL_MONTHS[month]}.</p>
+          <p className="activityEmpty">No activity for {FULL_MONTHS[month]}.</p>
         ) : (
           <ul className="entryList">
             {shownEntries.map(a => (
@@ -116,7 +116,7 @@ const MonthlyActivity = () => {
                 <div className="entryInfo">
                   <span className="entryName">{a.name}</span>
                   <span className="entryMeta">
-                    {TYPE_LABELS[a.type]} · {MONTHS[a.month]} {a.day} · paid by {memberName(a.paidBy)}
+                    {TYPE_LABELS[a.type]} · {MONTHS[a.month]} {a.day} · paid by {activityMemberName(a.paidBy)}
                   </span>
                 </div>
                 <span className="entryAmount">{formatMoney(a.amount)}</span>
@@ -127,14 +127,14 @@ const MonthlyActivity = () => {
       </section>
 
       <section className="activityCard">
-        <h2 className="sectionTitle">Who Paid What</h2>
-        <div className="memberGrid">
+        <h2 className="activitySectionTitle">Who Paid What</h2>
+        <div className="activityMemberGrid">
           {memberSummaries.map(m => (
-            <div key={m.id} className="memberCard">
-              <img src={m.avatar} alt={m.name} className="memberAvatar" />
-              <span className="memberName">{m.name}</span>
-              <span className="memberStat">Paid {formatMoney(m.paid)}</span>
-              <span className={m.due > 0 ? 'memberDue owes' : 'memberDue owed'}>
+            <div key={m.id} className="activityMemberCard">
+              <img src={m.avatar} alt={m.name} className="activityMemberAvatar" />
+              <span className="activityMemberName">{m.name}</span>
+              <span className="activityMemberStat">Paid {formatMoney(m.paid)}</span>
+              <span className={m.due > 0 ? 'activityMemberDue owes' : 'activityMemberDue owed'}>
                 {m.due > 0 ? `Owes ${formatMoney(m.due)}` : `Is owed ${formatMoney(m.due)}`}
               </span>
             </div>
