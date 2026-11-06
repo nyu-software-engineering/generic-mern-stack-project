@@ -1,0 +1,256 @@
+/* Main page layout */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background-color: #f7f9fc;
+    color: #1d2939;
+    font-family: Monospace;
+    font-size: 1.125rem;
+    line-height: 1.5;
+}
+
+.screen {
+    min-height: 100vh;
+    min-height: 100dvh;
+    width: 100%;
+    padding: 24px 20px;
+}
+
+.content {
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto;
+}
+
+/* Page headings */
+.page-title {}
+
+.profile-title {}
+
+/* Loading message */
+.loading {}
+
+/* Form fields */
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.field-label {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.form-input {
+    width: 100%;
+    min-height: 45px;
+    padding: 12px 16px;
+    border-radius: 0px;
+    color: #1d2939;
+    font: inherit;
+}
+
+.form-hint {}
+
+.field-row {}
+
+/* Buttons */
+.link-btn {}
+
+.btn {
+    display: block;
+    width: 100%;
+    min-height: 45px;
+    padding: 14px 18px;
+    border-radius: 0px;
+    font: inherit;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background-color: #123264;
+    color: white;
+    border: 2px solid #123264;
+}
+
+/* Sign in and Log in */
+
+.auth-content {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+}
+
+.auth-header {
+    text-align: center;
+    padding: 32px 0 12px;
+}
+
+.auth-logo {
+    margin: 0;
+    font-size: 2.5rem;
+    color: #123264;
+}
+
+.auth-tagline {
+    margin: 8px 0 0;
+    font-size: 1rem;
+    color: #7b839c;
+}
+
+.auth-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.auth-title {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #123264
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px
+}
+
+.auth-form .btn {
+    margin-top: 8px;
+}
+
+.auth-link {
+    color: #7b839c;
+    font-weight: 600;
+}
+
+/* Menu */
+.menu-button {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    display: block;
+    width: 90vw;
+    max-width: 440px;
+    min-height: 60px;
+
+    padding: 14px 20px;
+    background-color: #123264;
+    color: white;
+    border: 2px solid #123264;
+    border-radius: 0;
+
+    font: inherit;
+    font-weight: 600;
+    text-align: center;
+    cursor: pointer;
+    z-index: 100;
+}
+
+.home-screen,
+.settings-screen,
+.accessibility-screen {
+    padding-bottom: 110px;
+}
+
+/* accessibility page */
+.accessibility-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.page-title {
+    margin: 0;
+    font-size: 1.75rem;
+    color: #123264
+}
+
+/* accessibilities page modifications */
+
+body.dark-mode {
+    background-color: #222;
+    color: white;
+}
+
+body.dark-mode .screen {
+    background-color: #222;
+    color: white;
+}
+
+body.dark-mode input,
+body.dark-mode select {
+    background-color: #333;
+    color: white;
+    border: 1px solid white;
+}
+
+body.dark-mode button {
+    background-color: #333;
+    color: white;
+}
+
+/* low contrast */
+body.low-contrast {
+    background-color: #eeeeee;
+    color: #666666;
+}
+
+body.low-contrast .screen {
+    background-color: #eeeeee;
+    color: #666666
+}
+
+body.low-contrast input,
+body.low-contrast select {
+    background-color: #f5f5f5;
+    color: #666666;
+    border: 1px solid #aaaaaa;
+}
+
+body.low-contrast button {
+    background-color: #dddddd;
+    color: #555555;
+    border: 1px solid #aaaaaa;
+}
+
+/* is user toggles both low contrast and dark mode */
+body.dark-mode.low-contrast .screen {
+    background-color: #333;
+    color: #bbbbbb;
+}
+
+body.dark-mode.low-contrast {
+    background-color: #333;
+    color: #bbbbbb;
+}
+
+body.dark-mode.low-contrast input,
+body.dark-mode.low-contrast select,
+body.dark-mode.low-contrast button {
+    background-color: #444;
+    color: #cccccc;
+    border: 1px solid #888;
+}
+
+/* to handle larger screens */
+
+@media (min-width: 760px) {
+    .auth-screen {
+        padding-top: 48px;
+    }
+
+    .auth.content {
+        max-width: 520px;
+    }
+}
