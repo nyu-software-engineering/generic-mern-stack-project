@@ -6,7 +6,7 @@ import SplitLeaseLogo from "../../assets/splitlease-blank-background-logo.png";
 const IndividualProtocol = (props) => {
   const navigate = useNavigate();
   return (
-    <>
+    <div className="protocolContainer">
       <header className="protocolHeader">
         <div className="protocolHeaderTop">
           <img
@@ -133,7 +133,7 @@ const IndividualProtocol = (props) => {
           </button>
         </section>
       </main>
-    </>
+    </div>
   );
 };
 

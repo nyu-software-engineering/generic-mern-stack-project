@@ -49,13 +49,12 @@ const Protocols = () => {
   return (
     <div className="protocolsContainer">
       <header className="protocolsHeader">
-        <Link to="/home">
-          <img
-            src={SplitLeaseLogo}
-            alt="SplitLease logo"
-            className="protocolsLogo"
-          />
-        </Link>
+        <img
+          src={SplitLeaseLogo}
+          alt="SplitLease logo"
+          className="protocolsLogo"
+          onClick={() => navigate("/home")}
+        />
         <button
           type="button"
           className="protocolsBack"
