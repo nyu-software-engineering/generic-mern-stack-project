@@ -53,6 +53,7 @@ const Protocols = () => {
           src={SplitLeaseLogo}
           alt="SplitLease logo"
           className="protocolsLogo"
+          onClick={() => navigate("/home")}
         />
         <button
           type="button"

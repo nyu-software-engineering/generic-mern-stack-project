@@ -42,16 +42,16 @@ const Login = () => {
       setAuthError("Incorrect email or password. Please try again.");
       return;
     }
-  
-    navigate('/home')
-  }
+
+    navigate("/home");
+  };
 
   return (
     <div className="loginContainer">
       <img src={SplitLeaseLogo} alt="SplitLease logo" className="loginLogo" />
 
       <form className="loginCard" onSubmit={handleSubmit} noValidate>
-        <h1 className="loginTitle">Welcome back</h1>
+        <h1 className="loginTitle">Welcome Back</h1>
         <p className="loginSubtitle">Log in to see your households</p>
 
         {authError && (
@@ -80,13 +80,17 @@ const Login = () => {
         <input
           id="loginPassword"
           type="password"
-          className={errors.password ? "loginInput loginInputError" : "loginInput"}
+          className={
+            errors.password ? "loginInput loginInputError" : "loginInput"
+          }
           placeholder="Enter your password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           autoComplete="current-password"
         />
-        {errors.password && <p className="loginFieldError">{errors.password}</p>}
+        {errors.password && (
+          <p className="loginFieldError">{errors.password}</p>
+        )}
 
         <button className="loginButton" type="submit" disabled={loading}>
           {loading ? "Logging in..." : "Log in"}
