@@ -35,6 +35,7 @@ export default function LogIn() {
           value={form.email}
           onChange={updateField}
           autoComplete="email"
+          required
         />
         <TextField
           label="Password"
@@ -44,6 +45,7 @@ export default function LogIn() {
           value={form.password}
           onChange={updateField}
           autoComplete="current-password"
+          required
         />
         <div className="pt-2">
           <Button type="submit">Log in</Button>
