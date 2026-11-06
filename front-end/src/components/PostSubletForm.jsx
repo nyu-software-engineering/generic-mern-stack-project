@@ -136,17 +136,18 @@ const PostSublet = () => {
             </div>
 
             <div className="photos">
-                <label htmlFor="photos">Photos</label>
-                <br />
+                <label htmlFor="photos" className="PostSublet-photoButton">
+                    Add photos
+                </label>
                 <input
                     type="file"
                     accept="image/*"
                     id="photos"
                     onChange={handlePhotoSelect}
                     multiple
-                    required
+                    hidden
                 />
-                <br />
+                <p>{photos.length === 0 ? 'No photos added yet' : `${photos.length} photo(s) added`}</p>
 
                 <ul className="PostSubletPhoto-list">
                     {photos.map((photo, index) => (

@@ -1,33 +1,86 @@
 form {
-    border: none;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 24px;
     margin-bottom: 20px;
-    flex-direction: column;
 }
 
 form > div {
-    margin-top: 16px;
-    margin-bottom: 16px;
+    margin: 0 0 20px;
 }
 
-form input,
+form label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #222;
+}
+
+form input[type="text"],
+form input[type="number"],
+form input[type="date"],
 form textarea {
+    display: block;
     width: 100%;
-    max-width: 500px;
-    padding: 8px;
-    font-size: 1em;
+    padding: 10px 12px;
+    font-size: 14px;
+    font-family: inherit;
+    border: 1px solid #ddd;
+    border-radius: 5px;
     box-sizing: border-box;
-    align-items: center;
 }
 
-form input {
-    margin-top: 16px;
+form textarea {
+    resize: vertical;
+}
+
+form input:focus,
+form textarea:focus {
+    outline: none;
+    border-color: #202020;
+}
+
+.PostSublet-photoButton {
+    display: inline-block;
+    margin-bottom: 0;
     padding: 8px 16px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-weight: normal;
     cursor: pointer;
-    align-items: center;
+}
+
+.PostSublet-photoButton:hover {
+    background-color: #f5f5f5;
+}
+
+.photos p {
+    margin: 8px 0 0;
+    font-size: 13px;
+    color: #666;
+}
+
+form input[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    font-size: 14px;
+    color: white;
+    background-color: #202020;
+    border: 1px solid #202020;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+form input[type="submit"]:hover {
+    background-color: #000;
 }
 
 .PostSublet-Feedback {
-    color: red;
-    background-color: white;
-    padding: 16px;
+    color: #c0392b;
+    background-color: #fdf0ee;
+    border-radius: 5px;
+    padding: 12px 16px;
+    font-size: 14px;
 }
