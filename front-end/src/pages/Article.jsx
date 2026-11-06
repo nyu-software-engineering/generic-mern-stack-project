@@ -1,11 +1,20 @@
 import { Link, useNavigate } from "react-router-dom";
 
-// Placeholder page for stakeholder demos
+// 
 const Article = () => {
     const navigate = useNavigate();
     return(
-        <div className = "m-10">
-            <button onClick = {() => navigate("/De-Jargoned")}
+        <div className="min-h-screen bg-white">
+            <header className="flex items-center justify-between border-b border-gray-200 px-6 py-4">
+            <h2 className="text-xl font-bold text-purple-600">Jargonot</h2>
+            <a
+            className="font-semibold text-purple-600 hover:underline"
+            href="/dashboard"
+            >
+            My Dashboard
+            </a>
+            </header>
+            <button onClick = {() => navigate("/dejargoned/beginner")}
                 className="w-full mt-4 bg-gray-600 text-white py-3 rounded-lg font-semibold p-3 hover:bg-gray-700">
                 De-Jargoned
             </button>
@@ -15,10 +24,12 @@ const Article = () => {
             <h1 className = "text-3xl font-bold mb-2">
                 Lorem Ipsum
             </h1>
-            <p className = "text-base mb-4">
+            <p className = "text-base mb-6">
                 AUTORED BY PETER MOJANG
             </p>
-            <p>
+            <hr className="w-48 h-1 mx-auto my-4 bg-neutral-quaternary border-0 rounded-sm md:my-10"></hr>
+            <p className = "text-left">
+                
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas mi diam, accumsan commodo urna a, posuere blandit dolor. Fusce bibendum dapibus nisi, vitae accumsan nisi aliquet ut. Quisque venenatis ex libero, vel vehicula lorem molestie in. Nullam dapibus rhoncus nibh, eget lacinia ante fermentum nec. Integer porta, massa id suscipit ullamcorper, metus massa luctus purus, at laoreet est tellus nec augue. Phasellus eu nulla laoreet, ornare nibh et, viverra velit. Aliquam lacus arcu, sollicitudin id aliquet a, mattis sed ipsum. Quisque eget mi non mauris condimentum lacinia vel ut arcu. Praesent scelerisque leo et ex malesuada gravida. Pellentesque vel urna sem. Duis porta dui felis, porttitor efficitur magna convallis cursus. Aliquam erat velit, blandit id sagittis nec, ultricies vel augue. Sed non viverra magna, sit amet euismod ligula. Ut lacinia volutpat velit vel mollis. Suspendisse sodales ligula neque, sed faucibus lectus volutpat ac. Mauris suscipit enim ipsum, sed condimentum lectus convallis eget.
 
                 Maecenas porta, arcu at congue pretium, magna tortor imperdiet velit, vitae posuere nulla est ullamcorper lorem. Donec felis erat, condimentum in odio non, eleifend fringilla eros. Integer pharetra commodo turpis, vitae venenatis felis pretium quis. Mauris sed risus nisi. Suspendisse aliquet placerat velit vel auctor. Nulla non elit non tortor finibus sagittis in at augue. Donec lorem sapien, ultricies a consequat quis, dignissim sed orci. Vivamus et sapien erat. Aliquam placerat accumsan arcu, nec vulputate justo placerat sit amet. Nam odio nisi, maximus eget ornare nec, gravida non risus. Fusce ante leo, varius nec sapien auctor, gravida pulvinar diam. Morbi efficitur, nunc a venenatis malesuada, magna tortor tempor diam, sit amet varius tellus magna in sapien. Suspendisse vestibulum leo eu tempus lacinia.

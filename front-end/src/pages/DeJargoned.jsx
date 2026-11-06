@@ -4,7 +4,16 @@ import { Link, useNavigate } from "react-router-dom";
 const DeJargoned = () => {
     const navigate = useNavigate();
     return(
-        <div className = "m-10">
+        <div className="min-h-screen bg-white">
+            <header className="flex items-center justify-between border-b border-gray-200 px-6 py-4">
+            <h2 className="text-xl font-bold text-purple-600">Jargonot</h2>
+            <a
+            className="font-semibold text-purple-600 hover:underline"
+            href="/dashboard"
+            >
+            My Dashboard
+            </a>
+            </header>
             <button onClick = {() => navigate("/article")}
                 className="w-full mt-4 bg-gray-600 text-white py-3 rounded-lg font-semibold p-3 hover:bg-gray-700">
                 Original
