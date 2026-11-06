@@ -398,6 +398,11 @@ export function getCityById(cityId) {
   return cities.find((c) => c.id === cityId) ?? null
 }
 
+/** Shared category choices for list and map filters. */
+export function getPlaceCategories() {
+  return categories.map(({ id, label }) => ({ id, label }))
+}
+
 /**
  * List the current user saves into for this city.
  */
@@ -748,3 +753,4 @@ export function castVote(savedPlaceId, value, userId = currentUserId) {
 
   return { ok: true, ...getPlaceVotes(savedPlaceId, userId) }
 }
+

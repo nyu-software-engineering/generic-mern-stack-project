@@ -10,7 +10,7 @@
 
 .city-page-message-title {
   margin-bottom: 12px;
-  color: #111827;
+  color: var(--color-ink);
   font-size: 24px;
   font-weight: 600;
 }
@@ -25,7 +25,7 @@
   margin-top: 20px;
   padding: 10px 16px;
   border-radius: 8px;
-  background: #111827;
+  background: var(--color-ink);
   color: #fff;
   cursor: pointer;
 }
@@ -41,17 +41,5 @@
 }
 
 .city-page-view--map {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 320px;
-  border: 1px dashed #d1d5db;
-  border-radius: 16px;
-  background: var(--color-subtle);
-}
-
-.city-page-view-title {
-  color: var(--color-muted);
-  font-size: 16px;
-  font-weight: 400;
+  min-width: 0;
 }

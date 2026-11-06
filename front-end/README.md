@@ -9,11 +9,11 @@ npm install
 npm run dev
 ```
 
-Open the local URL printed by Vite. The scaffold currently contains placeholder
-pages; the city header can be tried directly at `/city/c_nyc` or `/city/c_paris`.
+Open the local URL printed by Vite. Try the saved places at `/city/c_paris`,
+the city map at `/city/c_paris?view=map`, or the combined map at `/map`.
 
 ```sh
-npm test       # City header interactions/routing and mock-data ranking tests
+npm test       # City header, map/filter routing and mock-data ranking tests
 npm run lint
 npm run build
 ```
@@ -24,17 +24,17 @@ npm run build
   `src/data/mockDataLayer.js`, which derives header data from `demoData.js`. No
   backend is required.
 - Clicking the avatars opens `/city/:cityId/members`, the existing route for the
-  members screen. That screen is still a placeholder on `master`.
+  members screen.
 - List/Map buttons update the `view` query parameter, keeping the city and other
   parameters intact. Reloads and browser Back/Forward preserve the selection.
-- The map/list content containers are placeholders for #88 (map pins) and #90
-  (ranked places). This change implements the header and switching only.
+- Map and List render the same saved places and retain the selected category
+  when switching views.
 - `CityHeader` takes a `city` object with `id`, `name`,
   `placeCount`, and `members` (`id`, `name`, optional `photoUrl`), plus controlled
   `view` and `onViewChange` props. The UI does not own the mock records.
 - Unknown city IDs show a not-found message; failed requests provide a retry.
 
-## Ranked city data (#90, first slice)
+## Ranked city data (#90)
 
 `getRankedCityPlaces(cityId)` in `src/data/mockDataLayer.js` joins the shared
 saved places, places, and votes. It returns each saved place with `savedPlaceId`
@@ -43,8 +43,36 @@ members. Results sort by descending must-go count, then alphabetically by name.
 Places without votes remain in the list; missing/empty lists return `[]`.
 Like city headers, this selector assumes one demo list per city.
 
-This is the data foundation only. The ranked cards and CityPage integration are
-still pending, so #90 remains open.
+`RankedCityList` renders these results in CityPage. Category filtering preserves
+their ranking order.
+
+## Maps and category filters (#88, #89, #91, #92)
+
+- `PlaceMap` uses Leaflet 1.9.4 to show the shared saved-place coordinates,
+  fitting the visible pins into view. Category colors match the filter chips.
+  Click a pin (or focus it and press Enter) to open a preview with votes and a
+  link to the existing place detail route.
+- CityPage uses `view=map` and `category=food` query parameters. MapTab uses
+  `city=c_paris` and the same category parameter. Reload and browser navigation
+  preserve those choices; invalid categories fall back to All.
+- MapTab includes joined city lists only. The default demo user starts with
+  Paris. Accept the New York invitation at `/invites`, then use the Map tab to
+  try All cities and the city switcher. Demo changes reset on page reload.
+- All place, city, category and vote records come through `mockDataLayer.js`;
+  no backend, API key, geocoding or separate place fixtures are required.
+- Empty filters can be reset. Places without valid coordinates keep a detail
+  link, and tile failures show a retry while pins remain interactive.
+
+The map background downloads public OpenStreetMap raster tiles, so it needs an
+internet connection. Attribution remains visible on the map. This is for the
+course demo; review the [tile usage policy](https://operations.osmfoundation.org/policies/tiles/)
+and choose an appropriate provider before a wider deployment. A provider can
+be configured with Vite's `VITE_MAP_TILE_URL` and `VITE_MAP_ATTRIBUTION` variables
+(both are public browser configuration, not secrets).
+
+`Maps.test.jsx` covers marker previews and detail navigation, shared map/list
+filters, city switching, pending invitations, missing coordinates, empty states
+and retry behavior using real Leaflet DOM in JSDOM. Tests do not download tiles.
 
 ## Vite template notes
 
