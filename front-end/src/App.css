@@ -1,4 +1,6 @@
-.counter {
+/* commented code below is vite default style. May be removed later
+
+/* .counter {
   font-size: 16px;
   padding: 5px 10px;
   border-radius: 5px;
@@ -181,4 +183,10 @@
     right: 0;
     border-right-color: var(--border);
   }
+} */
+
+.app-message{
+  padding: 40px;
+  text-align: center;
+  font-family: Arial, sans-serif;
 }
