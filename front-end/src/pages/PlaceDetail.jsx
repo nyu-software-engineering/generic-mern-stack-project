@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router'
-import { getPlaceDetail } from '../data/mockDataLayer'
+import VoteChips from '../components/VoteChips'
+import { castVote, getPlaceDetail, getPlaceVotes } from '../data/mockDataLayer'
 
 // Just the first name, so "Samantha Chen" reads as "Samantha"
 function firstName(fullName) {
@@ -18,6 +19,9 @@ export default function PlaceDetail() {
   const place = useMemo(() => getPlaceDetail(placeId), [placeId])
   // If the photo link is broken we fall back to the plain peach block behind it
   const [photoFailed, setPhotoFailed] = useState(false)
+  // Latest result from castVote. Only used while it still belongs to this place.
+  const [voteResult, setVoteResult] = useState(null)
+  const [voteError, setVoteError] = useState('')
 
   // The link in the URL doesn't match any place we know about
   if (!place) {
@@ -32,12 +36,33 @@ export default function PlaceDetail() {
     )
   }
 
+  // Read the tally fresh on every render, unless we just voted on this place
+  const voteState = voteResult?.savedPlaceId === place.savedPlaceId
+    ? voteResult
+    : getPlaceVotes(place.savedPlaceId)
+
+  function handleVote(value) {
+    const result = castVote(place.savedPlaceId, value)
+    if (result.ok) {
+      setVoteResult(result)
+      setVoteError('')
+    } else {
+      setVoteError(result.error)
+    }
+  }
+
+  const voteHint = !voteState?.canVote
+    ? 'Join this list to vote.'
+    : voteState.myVote
+      ? 'Tap another option to change your vote.'
+      : 'Tap a vote to let the group know.'
+
   // "Food · East Village · saved by Siyona from TikTok". Parts we don't have are left out.
   const details = [
     place.categoryLabel,
     place.neighborhood,
     place.savedBy &&
-      `saved by ${firstName(place.savedBy.name)}${place.sourcePlatform ? ` from ${place.sourcePlatform}` : ''}`,
+    `saved by ${firstName(place.savedBy.name)}${place.sourcePlatform ? ` from ${place.sourcePlatform}` : ''}`,
   ].filter(Boolean)
 
   const buttonClass =
@@ -79,6 +104,20 @@ export default function PlaceDetail() {
           </a>
         </div>
 
+        {/* Places that aren't saved to a list yet have nothing to vote on */}
+        {voteState && (
+          <section className="mt-8" aria-label="Votes">
+            <VoteChips
+              value={voteState.myVote}
+              counts={voteState.counts}
+              disabled={!voteState.canVote}
+              onChange={handleVote}
+            />
+            <p className="mt-2 text-sm text-muted" role="status">
+              {voteError || voteHint}
+            </p>
+          </section>
+        )}
         <Link
           to={`/place/${place.id}/edit`}
           className="mt-6 inline-block text-sm font-semibold text-brand hover:text-brand-dark"
