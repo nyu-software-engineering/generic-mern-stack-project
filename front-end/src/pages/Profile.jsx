@@ -8,7 +8,6 @@ import './Header.css'
 export default function Profile(props) {
   const profile1 = props.profile
   const userServices = props.services.filter(service => profile1.services.includes(service.id))
-  console.log(userServices)
   const numListings = userServices.length
 
   return (
@@ -30,7 +29,10 @@ export default function Profile(props) {
       <Link className="profile-button" to="/profile/services">Manage my services · {numListings} listings</Link>
       <h2>Past Requested Services</h2>
       <h2>Manage Bookings</h2>
-      
+      <div className="profile-button-row">
+        <button className="profile-button" type="button">As client · 1 upcoming</button>
+        <button className="profile-button" type="button">As provider · 2 requests</button>
+      </div>
     </>
   )
 
