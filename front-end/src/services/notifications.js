@@ -62,6 +62,7 @@ function rentalNotification(rental, userId, titles, reviews) {
   const otherName = getUser(otherId)?.name ?? 'Another student'
   const item = titles.get(rental.listingId) ?? 'an item'
   const bookingLink = `/bookings/${rental.id}`
+  const overdue = rental.status === 'active' && isOverdue(rental)
 
   let title
   let message
@@ -90,7 +91,7 @@ function rentalNotification(rental, userId, titles, reviews) {
       break
 
     case 'active':
-      if (isOverdue(rental)) {
+      if (overdue) {
         title = 'Return overdue'
         message = `${item} was due on ${formatDate(rental.endDate)}. Coordinate the return.`
         priority = 6
@@ -142,7 +143,7 @@ function rentalNotification(rental, userId, titles, reviews) {
   }
 
   return {
-    id: `rental-${rental.id}-${rental.status}`,
+    id: `rental-${rental.id}-${overdue ? 'overdue' : rental.status}`,
     title,
     message,
     to,
@@ -152,15 +153,48 @@ function rentalNotification(rental, userId, titles, reviews) {
   }
 }
 
+
+function extensionOutcomeNotification(rental, userId, titles) {
+  const status = rental.extensionRequest?.status
+
+  if (
+    rental.status !== 'active' ||
+    !sameId(rental.borrowerId, userId) ||
+    !['approved', 'declined'].includes(status)
+  ) {
+    return null
+  }
+
+  const item = titles.get(rental.listingId) ?? 'an item'
+  const newEndDate = rental.extensionRequest.newEndDate
+  const approved = status === 'approved'
+
+  return {
+    id: `rental-${rental.id}-extension-${status}-${newEndDate}`,
+    title: approved ? 'Extension approved' : 'Extension declined',
+    message: approved
+      ? `Your extension for ${item} was approved. New return date: ${formatDate(newEndDate)}.`
+      : `Your extension request for ${item} was declined.`,
+    to: `/bookings/${rental.id}/extension`,
+    category: 'Rental',
+    priority: 5,
+    order: Number(rental.id),
+  }
+}
+
+
 function generateNotifications(userId) {
   const titles = new Map(
     getListings().map((listing) => [listing.id, listing.title])
   )
   const reviews = getReviews()
 
-  const rentals = getRentals()
-    .map((rental) => rentalNotification(rental, userId, titles, reviews))
-    .filter(Boolean)
+  const rentals = getRentals().flatMap((rental) =>
+    [
+      rentalNotification(rental, userId, titles, reviews),
+      extensionOutcomeNotification(rental, userId, titles),
+    ] .filter(Boolean)
+  )
 
   const messages = getConversations().flatMap((conversation) => {
     const participates = conversation.participantIds.some(
