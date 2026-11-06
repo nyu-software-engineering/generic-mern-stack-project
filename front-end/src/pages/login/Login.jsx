@@ -1,50 +1,50 @@
-import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import SplitLeaseLogo from '../../assets/splitlease-blank-background-logo.png'
-import { mockLogin } from './mockAuth'
-import './Login.css'
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import SplitLeaseLogo from "../../assets/splitlease-blank-background-logo.png";
+import { mockLogin } from "./mockAuth";
+import "./Login.css";
 
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const Login = () => {
-  const navigate = useNavigate()
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [errors, setErrors] = useState({})
-  const [authError, setAuthError] = useState('')
-  const [loading, setLoading] = useState(false)
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [errors, setErrors] = useState({});
+  const [authError, setAuthError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const validate = () => {
-    const newErrors = {}
+    const newErrors = {};
     if (!email.trim()) {
-      newErrors.email = 'Email is required'
+      newErrors.email = "Email is required";
     } else if (!EMAIL_PATTERN.test(email.trim())) {
-      newErrors.email = 'Enter a valid email address'
+      newErrors.email = "Enter a valid email address";
     }
     if (!password) {
-      newErrors.password = 'Password is required'
+      newErrors.password = "Password is required";
     }
-    return newErrors
-  }
+    return newErrors;
+  };
 
-  const handleSubmit = async e => {
-    e.preventDefault()
-    setAuthError('')
-    const newErrors = validate()
-    setErrors(newErrors)
-    if (Object.keys(newErrors).length > 0) return
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setAuthError("");
+    const newErrors = validate();
+    setErrors(newErrors);
+    if (Object.keys(newErrors).length > 0) return;
 
-    setLoading(true)
-    const user = await mockLogin(email, password)
-    setLoading(false)
+    setLoading(true);
+    const user = await mockLogin(email, password);
+    setLoading(false);
 
     if (!user) {
-      setAuthError('Incorrect email or password. Please try again.')
-      return
+      setAuthError("Incorrect email or password. Please try again.");
+      return;
     }
     // go to the home page (update this route once the user home page is built)
-    navigate('/')
-  }
+    navigate("/home");
+  };
 
   return (
     <div className="loginContainer">
@@ -66,10 +66,10 @@ const Login = () => {
         <input
           id="loginEmail"
           type="email"
-          className={errors.email ? 'textInput inputError' : 'textInput'}
+          className={errors.email ? "textInput inputError" : "textInput"}
           placeholder="you@example.com"
           value={email}
-          onChange={e => setEmail(e.target.value)}
+          onChange={(e) => setEmail(e.target.value)}
           autoComplete="email"
         />
         {errors.email && <p className="fieldError">{errors.email}</p>}
@@ -80,27 +80,27 @@ const Login = () => {
         <input
           id="loginPassword"
           type="password"
-          className={errors.password ? 'textInput inputError' : 'textInput'}
+          className={errors.password ? "textInput inputError" : "textInput"}
           placeholder="Enter your password"
           value={password}
-          onChange={e => setPassword(e.target.value)}
+          onChange={(e) => setPassword(e.target.value)}
           autoComplete="current-password"
         />
         {errors.password && <p className="fieldError">{errors.password}</p>}
 
         <button className="loginButton" type="submit" disabled={loading}>
-          {loading ? 'Logging in...' : 'Log in'}
+          {loading ? "Logging in..." : "Log in"}
         </button>
 
         <p className="registerPrompt">
-          Don&apos;t have an account?{' '}
+          Don&apos;t have an account?{" "}
           <Link to="/register" className="registerLink">
             Register
           </Link>
         </p>
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;
