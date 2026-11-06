@@ -5,6 +5,7 @@ import "./LeaseMessaging.css";
 export default function LeaseMessaging({sublessor, subletName, initialMessages = [], onBack}) {
     const [message, setMessage] = useState("");
     const [messages, setMessages] = useState(initialMessages);
+    const [selectedMessage, setSelectedMessage] = useState(null);
     const [fileName, setFileName] = useState("");
     const [signerName, setSignerName] = useState("");
     const [signed, setSigned] = useState(false);
@@ -21,6 +22,13 @@ export default function LeaseMessaging({sublessor, subletName, initialMessages =
             { text: message.trim(), sentByMe: true }
         ]);
         setMessage("");
+    }
+
+    function handleDelete(index) {
+        setMessages((currentMessages) =>
+            currentMessages.filter((_, messageIndex) => messageIndex !== index)
+        );
+        setSelectedMessage(null);
     }
 
     function handleFileChange(e) {
@@ -58,8 +66,21 @@ export default function LeaseMessaging({sublessor, subletName, initialMessages =
             <p
                 key={index}
                 className={`message ${msg.sentByMe ? "sent-by-me" : "sent-by-other"}`}
+                onClick={() => setSelectedMessage(index)}
             >
                 {msg.text}
+                {selectedMessage === index && (
+                    <button
+                        type="button"
+                        className="delete-message"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            handleDelete(index);
+                        }}
+                    >
+                        Delete
+                    </button>
+                )}
             </p>
             ))}
         </div>
