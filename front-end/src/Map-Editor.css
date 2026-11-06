@@ -1,3 +1,121 @@
 .map-editor {
     width: 100%;
 }
+
+.map-editor {
+  min-height: 100vh;
+  width: 100%;
+  max_width: 650px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: white;
+  padding: 20px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+
+.map-editor header{
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+
+}
+.map-editor h1 {
+  color: #333;
+  font-size: 28px;
+  text-align: center;
+  margin-bottom: 25px;
+}
+.map-editor header h2 {
+  color: #2563eb;
+  font-size: 24px;
+  margin: 0;
+}
+
+.map-editor .map-preview {
+  display: flex;
+  justify-content: center;
+  
+}
+
+.map-editor .map-preview img{
+  width: 300px;
+  height: 300px;
+   max-width: 100%;
+  object-fit: cover;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+}
+.map-editor .map-key {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.map-editor .map-category {
+  display: flex;
+  align-items: center;
+  color: #333;
+  font-size: 14px;
+}
+
+
+.map-editor .category-color-1 {
+  width: 14px;
+  height: 14px;
+  border: 1px solid #999;
+  background-color: #333;
+}
+
+.map-editor .category-color-2 {
+  width: 14px;
+  height: 14px;
+  border: 1px solid #999;
+  background-color: white;
+}
+
+.map-editor .map-editing-tools {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 25px;
+}
+
+.map-editor .change-map {
+  display: flex;
+  width:100%;
+  gap: 10px;
+  margin-top: auto;
+
+}
+.map-editor .change-map input {
+  flex: 1;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.map-editor .change-map input:focus {
+  outline: none;
+  border-color: #2563eb;
+}
+
+.map-editor button {
+  padding: 12px;
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.map-editor button:hover {
+  background-color: #1d4ed8;
+}

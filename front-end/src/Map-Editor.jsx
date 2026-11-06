@@ -1,6 +1,7 @@
 import { useState} from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useLocation } from 'react-router-dom'
+import "./Map-Editor.css"
 
 
 function Map_Editor(){
@@ -31,14 +32,12 @@ function Map_Editor(){
 
         <div className="map-key">
             <div className="map-category">
-                <div className="category-color">
+                <div className="category-color-1"></div>
                 <p>Category 1</p>
-                </div>
             </div>
             <div className="map-category">
-                <div className="category-color">
+                <div className="category-color-2"></div>
                 <p>Category 2</p>
-                </div>
             </div>
         </div>
 
@@ -62,7 +61,7 @@ function Map_Editor(){
 
 
 
-        <div className="change map">
+        <div className="change-map">
             <input type="text" placeholder="Tell MapMaker what to change..." 
             value={instruction}
             onChange={(event) => setInstruction(event.target.value)} 
