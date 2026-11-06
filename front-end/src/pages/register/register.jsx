@@ -6,20 +6,15 @@ import SplitLeaseLogo from "../../assets/splitlease-blank-background-logo.png";
 const Register = (props) => {
   return (
     <div className="registerContainer">
-      <h1>
+      <div className="registerLogoContainer">
         <img
           src={SplitLeaseLogo}
-          alt="SplitLeaseLogo"
-          style={{
-            width: "300px",
-            height: "auto",
-            display: "block",
-            margin: "0 auto",
-          }}
+          alt="SplitLease Logo"
+          className="registerLogo"
         />
-      </h1>
+      </div>
 
-      <h1>Register</h1>
+      <h1 className="registerTitle">Register</h1>
 
       <div className="inputFieldContainer">
         <p className="fieldText">Enter Name</p>
