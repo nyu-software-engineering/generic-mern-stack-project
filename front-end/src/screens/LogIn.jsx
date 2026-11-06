@@ -47,6 +47,13 @@ export default function LogIn() {
           autoComplete="current-password"
           required
         />
+        <div className="text-right">
+          <Link
+            to="/forgot-password"
+            className="text-sm font-semibold text-accent hover:underline">
+            Forgot password?
+          </Link>
+        </div>
         <div className="pt-2">
           <Button type="submit">Log in</Button>
         </div>
