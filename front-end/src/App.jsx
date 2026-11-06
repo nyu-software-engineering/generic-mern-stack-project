@@ -20,8 +20,7 @@ function App() {
     <Router>
       <Routes>
         {/* <Route basename={import.meta.env.BASE_URL} /> */}
-        <Route path="/" element={<Temphome />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="//" element={<Login />} />
         <Route path="/home" element={<UserHomePage />} />
         <Route path="/create" element={<CreateHousehold />} />
         <Route path="/protocols" element={<Protocols />} />
