@@ -7,6 +7,7 @@ import ComparableApartments from './screens/ComparableApartments.jsx'
 import ConnectBank from './screens/ConnectBank.jsx'
 import ExploreAreas from './screens/ExploreAreas.jsx'
 import FollowedAreas from './screens/FollowedAreas.jsx'
+import ForgotPassword from './screens/ForgotPassword.jsx'
 import Home from './screens/Home.jsx'
 import LandlordHome from './screens/LandlordHome.jsx'
 import LandlordReportView from './screens/LandlordReportView.jsx'
@@ -20,6 +21,7 @@ import ReceivedReports from './screens/ReceivedReports.jsx'
 import RecordOutcome from './screens/RecordOutcome.jsx'
 import ReliabilityReport from './screens/ReliabilityReport.jsx'
 import RentTrends from './screens/RentTrends.jsx'
+import ResetPassword from './screens/ResetPassword.jsx'
 import SignUp from './screens/SignUp.jsx'
 
 export default function App() {
@@ -28,6 +30,8 @@ export default function App() {
       <Routes>
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<LogIn />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/r/:linkId" element={<LandlordReportView />} />
 
         <Route element={<AppLayout role="renter" />}>
