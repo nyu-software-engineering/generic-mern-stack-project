@@ -17,11 +17,11 @@ export default function Beginner() {
 
             <main className="mx-auto w-full max-w-4xl px-6 py-10">
                 <div className="flex-1 mb-4 grid grid-cols-2">
-                    <button onClick = {() => navigate("/dejargoned/beginner")}
+                    <button onClick = {() => navigate("/article")}
                         className="bg-purple-600 text-white py-3 font-semibold hover:bg-purple-700">
                         Original
                     </button>
-                    <button onClick = {() => navigate("/dejargoned/intermediate")}
+                    <button onClick = {() => navigate("/dejargoned/beginner")}
                         className="bg-gray-600 text-white py-3 font-semibold">
                         De-Jargoned
                     </button>
