@@ -34,6 +34,7 @@ export default function SignUp() {
           value={form.name}
           onChange={updateField}
           autoComplete="name"
+          required
         />
         <TextField
           label="Email"
@@ -43,6 +44,7 @@ export default function SignUp() {
           value={form.email}
           onChange={updateField}
           autoComplete="email"
+          required
         />
         <TextField
           label="Password"
@@ -52,6 +54,8 @@ export default function SignUp() {
           value={form.password}
           onChange={updateField}
           autoComplete="new-password"
+          required
+          minLength={8}
         />
         <div className="pt-2">
           <Button type="submit">Create account</Button>
