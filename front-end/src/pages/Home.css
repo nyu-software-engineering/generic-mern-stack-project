@@ -1,0 +1,50 @@
+.home-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem 1rem 1rem;
+}
+
+.home-header__logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-ink);
+}
+
+.home-header__bell {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  color: var(--color-ink);
+}
+
+.home-header__dot {
+  position: absolute;
+  top: 0.4rem;
+  right: 0.4rem;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: var(--radius-pill);
+  background-color: var(--color-brand);
+}
+
+.home-invite-error {
+  margin: 0 1rem 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-card);
+  background-color: var(--color-peach);
+  font-size: 0.875rem;
+}
+
+.home-invite-more {
+  display: block;
+  margin: -0.5rem 1rem 1rem;
+  color: var(--color-brand);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
