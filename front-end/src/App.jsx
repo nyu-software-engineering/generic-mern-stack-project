@@ -37,6 +37,7 @@ import CommunityRules from './pages/reporting/CommunityRules'
 
 import Reputation from './pages/reviews/Reputation'
 import ReviewParticipant from './pages/reviews/ReviewParticipant'
+import Notifications from './pages/notifications/Notifications'
 
 function App() {
   return (
@@ -86,6 +87,9 @@ function App() {
           {/* Reviews */}
           <Route path="/users/:userId/reputation" element={<Reputation />} />
           <Route path="/bookings/:bookingId/review" element={<ReviewParticipant />} />
+
+          {/* Notifications */}
+          <Route path="/notifications" element={<Notifications />} />
 
           {/* Requests */}
           <Route path="/requests" element={<ItemRequests />} />
