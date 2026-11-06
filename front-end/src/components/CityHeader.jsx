@@ -1,6 +1,7 @@
 import { Link } from 'react-router'
 import AvatarStack from './AvatarStack'
 import './CityHeader.css'
+import BackLink from './BackLink'
 
 export default function CityHeader({ city, view, onViewChange }) {
   const members = city.members ?? []
@@ -8,9 +9,7 @@ export default function CityHeader({ city, view, onViewChange }) {
   return (
     <header className="city-header">
       <div className="city-header-toolbar">
-        <Link className="city-header-back" to="/">
-          <span aria-hidden="true">←</span> Your lists
-        </Link>
+        <BackLink to="/" label="Your lists" />
         <div className="city-header-toggle" role="group" aria-label="City view">
           {['list', 'map'].map((option) => (
             <button

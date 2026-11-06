@@ -1,7 +1,8 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router'
+import { useNavigate } from 'react-router'
 import { lookupLinkByUrl } from '../data/mockDataLayer'
 import './Create.css'
+import BackLink from '../components/BackLink'
 
 export default function Create() {
   const navigate = useNavigate()
@@ -54,9 +55,7 @@ export default function Create() {
   return (
     <section className="add-place">
       {/* Back: goes to Home */}
-      <Link className="add-place-back" to="/" aria-label="Back to home">
-        ←
-      </Link>
+      <BackLink to="/" label="Back to home" className="mb-6" />
 
       <h1 className="add-place-title">
         Saw a place?

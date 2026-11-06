@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from 'react-router'
 import TextField from '../components/TextField'
 import { categories } from '../data/demoData'
 import { getPlaceDetail, updatePlaceDetails } from '../data/mockDataLayer'
+import BackLink from '../components/BackLink'
 
 // Each check returns an error message, or '' when the value is fine
 function validateName(name) {
@@ -40,9 +41,7 @@ export default function EditPlace() {
       <section className="px-5 py-10 text-center">
         <h1 className="text-2xl font-semibold">Place not found</h1>
         <p className="mt-2 text-sm text-muted">There is nothing to edit here.</p>
-        <Link to="/" className="mt-4 inline-block font-semibold text-brand hover:text-brand-dark">
-          Back to your lists
-        </Link>
+        <BackLink to={`/place/${place.id}`} label={`Back to ${place.name}`} className="mb-6" />
       </section>
     )
   }
