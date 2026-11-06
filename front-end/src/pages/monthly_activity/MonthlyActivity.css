@@ -1,67 +1,66 @@
-/* Colors taken from the SplitLease logo, same palette as the login page */
+/* SplitLease team palette (color_palette_1) */
 .activityContainer {
-  --navy: #5b6b9a;
-  --navy-dark: #4a5884;
-  --periwinkle: #8ca5d6;
-  --lavender: #e4e2fa;
+  --lavender-gray: #c9cad9;
+  --periwinkle: #d1d2f9;
+  --sky: #a3bcf9;
+  --steel-blue: #7796cb;
+  --slate: #576490;
 
+  width: 100%;
   min-height: 100vh;
-  max-width: 560px;
+  max-width: 900px;
   margin: 0 auto;
   padding: 16px;
   box-sizing: border-box;
-  background: #f8fafc;
-  color: #334155;
-  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  background: #ffffff;
+  color: var(--slate);
   text-align: left;
 }
 
 .activityLoading {
   margin-top: 40vh;
   text-align: center;
-  color: #64748b;
 }
 
 .activityHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 6px solid var(--slate);
+  margin-bottom: 20px;
 }
 
 .activityLogo {
-  width: 140px;
+  width: 200px;
   height: auto;
 }
 
-.backButton {
-  padding: 8px 14px;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--navy);
-  background: #ffffff;
-  border: 1px solid #cbd5e1;
-  border-radius: 10px;
+.activityBack {
+  padding: 8px 28px;
+  font-size: 16px;
+  background: var(--slate);
+  color: var(--periwinkle);
+  border: none;
   cursor: pointer;
 }
 
-.backButton:hover {
-  border-color: var(--periwinkle);
+.activityBack:hover {
+  background: var(--steel-blue);
 }
 
 .activityCard {
-  background: #ffffff;
-  border-radius: 16px;
+  margin-bottom: 20px;
   padding: 20px;
-  margin-bottom: 16px;
-  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+  background: var(--lavender-gray);
+  border: 4px solid var(--slate);
 }
 
-.sectionTitle {
-  margin: 0 0 12px;
-  font-size: 18px;
-  font-weight: 700;
-  color: #0f172a;
+.activitySectionTitle {
+  margin: 0 0 16px;
+  font-size: 24px;
+  text-align: center;
+  color: var(--slate);
 }
 
 .monthGrid {
@@ -72,74 +71,76 @@
 
 .monthButton {
   padding: 10px 0;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
-  color: #334155;
-  background: #f1f5f9;
-  border: 1px solid transparent;
-  border-radius: 8px;
+  background: #ffffff;
+  color: var(--slate);
+  border: 2px solid var(--slate);
   cursor: pointer;
 }
 
 .monthButton:hover {
-  border-color: var(--periwinkle);
+  background: var(--periwinkle);
 }
 
 .monthSelected,
 .monthSelected:hover {
-  color: #ffffff;
-  background: var(--navy);
-  border-color: var(--navy);
+  background: var(--slate);
+  color: var(--periwinkle);
 }
 
 .summaryTitle {
   margin: 0;
-  font-size: 22px;
-  font-weight: 700;
-  line-height: 1.3;
+  font-size: 40px;
+  font-weight: 500;
+  line-height: 1.2;
   letter-spacing: normal;
-  color: var(--navy);
+  text-align: center;
+  color: var(--slate);
 }
 
 .summaryTotal {
-  margin: 6px 0 16px;
-  font-size: 14px;
-  color: #64748b;
+  margin: 8px 0 16px;
+  font-size: 16px;
+  text-align: center;
 }
 
 .filterRow {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 8px;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
 }
 
 .filterChip {
-  padding: 6px 12px;
-  font-size: 13px;
+  padding: 6px 14px;
+  font-size: 14px;
   font-weight: 600;
-  color: var(--navy);
   background: #ffffff;
-  border: 1px solid #cbd5e1;
-  border-radius: 999px;
+  color: var(--slate);
+  border: 2px solid var(--slate);
   cursor: pointer;
 }
 
 .filterSelected {
-  background: var(--lavender);
-  border-color: var(--lavender);
+  background: var(--slate);
+  color: var(--periwinkle);
 }
 
-.emptyText {
+.activityEmpty {
   margin: 8px 0 0;
-  font-size: 14px;
-  color: #64748b;
+  font-size: 15px;
+  text-align: center;
 }
 
 .entryList {
   list-style: none;
   margin: 0;
   padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .entryRow {
@@ -147,12 +148,9 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 12px 0;
-  border-top: 1px solid #e2e8f0;
-}
-
-.entryRow:first-child {
-  border-top: none;
+  padding: 12px;
+  background: var(--sky);
+  border: 2px solid var(--slate);
 }
 
 .entryInfo {
@@ -162,71 +160,72 @@
 }
 
 .entryName {
-  font-size: 15px;
-  font-weight: 600;
-  color: #0f172a;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--slate);
 }
 
 .entryMeta {
   margin-top: 2px;
-  font-size: 13px;
-  color: #64748b;
+  font-size: 14px;
+  color: var(--slate);
 }
 
 .entryAmount {
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--slate);
   white-space: nowrap;
 }
 
-.memberGrid {
+.activityMemberGrid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 12px;
 }
 
-.memberCard {
+.activityMemberCard {
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 16px 8px;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
   text-align: center;
+  background: var(--periwinkle);
+  border: 2px solid var(--slate);
 }
 
-.memberAvatar {
+.activityMemberAvatar {
   width: 64px;
   height: 64px;
   border-radius: 50%;
   object-fit: cover;
-  background: var(--lavender);
   margin-bottom: 8px;
+  background: var(--sky);
+  border: 2px solid var(--slate);
 }
 
-.memberName {
-  font-size: 15px;
-  font-weight: 600;
-  color: #0f172a;
+.activityMemberName {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--slate);
 }
 
-.memberStat {
+.activityMemberStat {
   margin-top: 4px;
-  font-size: 13px;
-  color: #64748b;
+  font-size: 14px;
+  color: var(--slate);
 }
 
-.memberDue {
+.activityMemberDue {
   margin-top: 4px;
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 700;
 }
 
-.owes {
-  color: #dc2626;
+.activityMemberDue.owes {
+  color: #b42318;
 }
 
-.owed {
-  color: #16a34a;
+.activityMemberDue.owed {
+  color: #1e7b34;
 }
