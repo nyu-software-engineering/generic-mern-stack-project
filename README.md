@@ -146,7 +146,7 @@ Useful pages to start from:
 
 ### Code style
 
-We use ESLint to check for problems and Prettier to format the code. The team's style is defined in `front-end/.prettierrc` (single quotes, no semicolons, 120 character lines), and ESLint's rules are in `front-end/eslint.config.js`.
+We use ESLint to check for problems and Prettier to format the code. The team's style is defined in `front-end/.prettierrc` (single quotes, no semicolons, 2-space indentation), and ESLint's rules are in `front-end/eslint.config.js`.
 
 To set up Visual Studio Code:
 
