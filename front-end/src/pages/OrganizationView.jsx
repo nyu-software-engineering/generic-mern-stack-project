@@ -1,50 +1,6 @@
 import { useState } from "react";
-
-// Stand-in for the club directory until it comes from the API.
-const clubs = [
-  {
-    id: "ballroom",
-    name: "Ballroom Dance",
-    description: "Social dance every Thursday",
-    logo: "https://picsum.photos/seed/flier-ballroom/96/96",
-  },
-  {
-    id: "code-lab",
-    name: "Code Lab",
-    description: "Weekly project nights",
-    logo: "https://picsum.photos/seed/flier-code/96/96",
-  },
-  {
-    id: "film",
-    name: "Film Society",
-    description: "Screenings and short films",
-    logo: "https://picsum.photos/seed/flier-film/96/96",
-  },
-  {
-    id: "hiking",
-    name: "Hiking Club",
-    description: "Day trips outside the city",
-    logo: "https://picsum.photos/seed/flier-hike/96/96",
-  },
-  {
-    id: "jazz",
-    name: "Jazz Ensemble",
-    description: "Open rehearsals on campus",
-    logo: "https://picsum.photos/seed/flier-jazz/96/96",
-  },
-  {
-    id: "photo",
-    name: "Photography Club",
-    description: "Walks and photo critiques",
-    logo: "https://picsum.photos/seed/flier-photo/96/96",
-  },
-  {
-    id: "volunteer",
-    name: "Volunteer Network",
-    description: "Local service projects",
-    logo: "https://picsum.photos/seed/flier-volunteer/96/96",
-  },
-];
+import { Link } from "react-router-dom";
+import { clubs } from "../data/clubs";
 
 function SearchIcon() {
   return (
@@ -56,19 +12,26 @@ function SearchIcon() {
 }
 
 function ClubCard({ club }) {
+  const className = "flex w-full items-center gap-4 rounded-2xl bg-white px-4 py-4 text-left shadow-sm ring-1 ring-black/5";
+  const content = (
+    <>
+      <img
+        src={club.logo}
+        alt=""
+        className="size-14 shrink-0 rounded-full bg-(--paper) object-cover"
+      />
+      <span>
+        <span className="block text-lg font-bold [font-family:var(--font-petrona)]">{club.name}</span>
+        <span className="body-copy block">{club.description}</span>
+      </span>
+    </>
+  );
+
   return (
     <li>
-      <button type="button" className="flex w-full items-center gap-4 rounded-2xl bg-white px-4 py-4 text-left shadow-sm ring-1 ring-black/5">
-        <img
-          src={club.logo}
-          alt=""
-          className="size-14 shrink-0 rounded-full bg-(--paper) object-cover"
-        />
-        <span>
-          <span className="block text-lg font-bold [font-family:var(--font-petrona)]">{club.name}</span>
-          <span className="body-copy block">{club.description}</span>
-        </span>
-      </button>
+      <Link to={`/organizations/${club.id}`} className={className}>
+        {content}
+      </Link>
     </li>
   );
 }

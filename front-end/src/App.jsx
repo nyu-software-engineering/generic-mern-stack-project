@@ -6,6 +6,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Home from './pages/Home';
 import OrganizationView from './pages/OrganizationView';
+import ClubDetails from './pages/ClubDetails';
 import CalendarView from './pages/CalendarView';
 import AddFlyer from './pages/AddFlyer';
 import MapView from './pages/MapView';
@@ -28,6 +29,7 @@ export default function App() {
         <Route element={<Layout />}>
           <Route path="/home" element={<Home />} />
           <Route path="/organizations" element={<OrganizationView />} />
+          <Route path="/organizations/:clubId" element={<ClubDetails />} />
           <Route path="/calendar" element={<CalendarView />} />
           <Route path="/add-flyer" element={<AddFlyer />} />
           <Route path="/map" element={<MapView />} />
