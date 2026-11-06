@@ -2,9 +2,9 @@
 import { useState } from "react";
 import "./LeaseMessaging.css";
 
-export default function LeaseMessaging({sublessor, subletName, onBack}) {
+export default function LeaseMessaging({sublessor, subletName, initialMessages = [], onBack}) {
     const [message, setMessage] = useState("");
-    const [messages, setMessages] = useState([]);
+    const [messages, setMessages] = useState(initialMessages);
     const [fileName, setFileName] = useState("");
     const [signerName, setSignerName] = useState("");
     const [signed, setSigned] = useState(false);
@@ -16,7 +16,10 @@ export default function LeaseMessaging({sublessor, subletName, onBack}) {
             return;
         }
 
-        setMessages((currentMessages) => [...currentMessages, message.trim()]);
+        setMessages((currentMessages) => [
+            ...currentMessages,
+            { text: message.trim(), sentByMe: true }
+        ]);
         setMessage("");
     }
 
@@ -41,7 +44,10 @@ export default function LeaseMessaging({sublessor, subletName, onBack}) {
     return (
         <div className="lease-messaging">
         <button type="button" onClick={onBack}>Back to leases</button>
-        <h2>{sublessor}</h2>
+        <div className="message-header">
+            <h2>{sublessor}</h2>
+            <button type="button">Block</button>
+        </div>
         <h3>{subletName}</h3>
         <p>Discuss lease details with the other user.</p>
 
@@ -49,8 +55,11 @@ export default function LeaseMessaging({sublessor, subletName, onBack}) {
             {messages.length === 0 && <p>No messages yet.</p>}
 
             {messages.map((msg, index) => (
-            <p key={index} className="message">
-                {msg}
+            <p
+                key={index}
+                className={`message ${msg.sentByMe ? "sent-by-me" : "sent-by-other"}`}
+            >
+                {msg.text}
             </p>
             ))}
         </div>
