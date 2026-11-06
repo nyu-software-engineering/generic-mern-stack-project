@@ -72,13 +72,21 @@ const Profile = ({user}) => {
             </section>
 
             <nav className="profile-navigation" aria-label="Main navigation">
-                <span className="profile-nav-item">Feed</span>
-                <span className="profile-nav-item">Discover</span>
-                <span className="profile-nav-item">Following</span>
-                <span className="profile-nav-item">Map</span>
-                <span className="profile-nav-item profile-nav-active">
-                    Profile
-                </span>
+                <Link to="/feed" className="profile-nav-item">
+                        Feed
+                </Link>
+                <Link to="/discover" className="profile-nav-item">
+                        Discover
+                </Link>
+                <Link to="/following" className="profile-nav-item">
+                        Following
+                </Link>
+                <Link to="/map" className="profile-nav-item">
+                        Map
+                </Link>
+                <Link to="/profile" className="profile-nav-item-active">
+                        Profile
+                </Link>
             </nav>
         </main>
     )

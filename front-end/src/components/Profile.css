@@ -131,6 +131,7 @@
 .profile-nav-item{
     font-size: 12px;
     color: #777777;
+    text-decoration: none;
 }
 
 .profile-nav-active{

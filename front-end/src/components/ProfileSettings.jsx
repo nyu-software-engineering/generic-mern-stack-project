@@ -41,7 +41,7 @@ const ProfileSettings = ({user, onUpdateUser}) => {
     const addHobby = event => {
         event.preventDefault()
         const newHobby = hobby.trim()
-        if(!newHobby||hobbies.include(newHobby)){
+        if(!newHobby||hobbies.includes(newHobby)){
                 return
             }
             onUpdateUser(previousUser => ({
@@ -250,12 +250,20 @@ const ProfileSettings = ({user, onUpdateUser}) => {
             </div>
 
             <nav className="settings-navigation" aria-label="Main navigation">
-                <span>Feed</span>
-                <span>Discover</span>
-                <span>Following</span>
-                <span>Map</span>
-                <Link to="=/profile" className="settings-active-nav">
-                    Profile
+                <Link to="/feed" className="settings-nav-item">
+                        Feed
+                </Link>
+                <Link to="discover" className="settings-nav-item">
+                        Discover
+                </Link>
+                <Link to="following" className="settings-nav-item">
+                        Following
+                </Link>
+                <Link to="map" className="settings-nav-item">
+                        Map
+                </Link>
+                <Link to="profile" className="settings-active-nav">
+                        Profile
                 </Link>
             </nav>
         </main>
