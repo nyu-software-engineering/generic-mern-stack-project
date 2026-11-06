@@ -12,7 +12,7 @@ export default function Dashboard() {
       title: "Browse Papers",
       description: "Explore papers in the catalog",
       linkText: "View papers",
-      href: "/papers",
+      href: "/articles",
     },
     {
       title: "Settings",
@@ -26,9 +26,11 @@ export default function Dashboard() {
     <div className="min-h-screen bg-white">
       <header className="flex items-center justify-between border-b border-gray-200 px-6 py-4">
         <h2 className="text-xl font-bold text-purple-600">Jargonot</h2>
-        <button className="font-semibold text-purple-600 hover:underline">
+        <a className="font-semibold text-purple-600 hover:underline"
+          href="/login"
+        >
           Log Out
-        </button>
+        </a>
       </header>
 
       <main className="mx-auto w-full max-w-4xl px-6 py-10">
