@@ -18,7 +18,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<TempHome />} />
+        <Route path="/" element={<Login />} />
         <Route path="/home" element={<UserHomePage />} />
         <Route path="/create" element={<CreateHousehold />} />
         <Route path="/protocols" element={<Protocols />} />
