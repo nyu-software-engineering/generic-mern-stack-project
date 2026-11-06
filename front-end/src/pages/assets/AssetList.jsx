@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import SplitLeaseLogo from "../../assets/splitlease-blank-background-logo.png";
 import './AssetList.css';
@@ -8,9 +9,10 @@ import './AssetList.css';
 const AssetList = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [assets, setAssets] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
-        axios('https://my.api.mockaroo.com/assets.json?key=40e88b10')    
+        axios('https://my.api.mockaroo.com/assets.json?key=29824db0')    
             .then(response => {
                 console.log("API Response:", response.data);
                 setAssets(response.data);
@@ -26,15 +28,19 @@ const AssetList = () => {
 
     return (
         <div className="asset-page-container">
-
-            { /* Navigation header */ }
-            <img src={SplitLeaseLogo} alt="SplitLeaseLogo" className="logo" />
-            <h1 className="page-title">Household Assets</h1>
+            <div className="asset-header">
+                <button type="button" className="logoButton" onClick={() => navigate('/home')}>
+                    <img src={SplitLeaseLogo} alt="SplitLease Logo" className="headerLogo"/>
+                </button>
+                <button className="backButton" onClick={() => navigate('/household')}>
+                    Back
+                </button>
+            </div>
 
             <main className="main-container">
-                
                 { /* Outer box */ }
                 <div className="assets-outer-container">
+                    <h1 className="asset-page-title">Assets</h1>
 
                     <div className="action-container">
                         <div className="create-container">

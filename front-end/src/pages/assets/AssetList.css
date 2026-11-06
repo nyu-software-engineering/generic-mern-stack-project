@@ -5,7 +5,32 @@
     padding: 20px;
     color: #000000;
 }
+.asset-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
 
+.logoButton {
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-size: 18px;
+  margin: 0;
+  line-height: 1.2;
+  align-items: left;
+  display: flex;
+}
+
+.backButton {
+    font-size: 12px;
+    padding: 6px 10px;
+    display: flex;
+    justify-content: right;
+    align-items: right;
+}
 .logo {
     width: 300px;
     height: auto;
@@ -81,7 +106,7 @@
 }
 
 .asset-inner-container {
-    background-color: white;
+    background-color: #a3bcf9;
     border: 2px solid #576490;
     border-radius: 10px;
     padding: 20px;
@@ -107,7 +132,7 @@
     align-items: center;
     flex-direction: column;
     padding: 15px;
-    background-color: #f4f4f4;
+    background-color: #d1d2f9;
     box-sizing: border-box;
 }
 
