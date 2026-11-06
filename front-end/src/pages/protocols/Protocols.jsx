@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import SplitLeaseLogo from "../../assets/splitlease-blank-background-logo.png";
 import { getHouseholdProtocols } from "./mockProtocols";
 import "./Protocols.css";

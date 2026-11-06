@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import SplitLeaseLogo from '../../assets/splitlease-blank-background-logo.png'
 import { getMonthlyActivity } from './mockActivity'
 import './MonthlyActivity.css'
@@ -66,7 +66,9 @@ const MonthlyActivity = () => {
   return (
     <div className="activityContainer">
       <header className="activityHeader">
-        <img src={SplitLeaseLogo} alt="SplitLease logo" className="activityLogo" />
+        <Link to="/home">
+          <img src={SplitLeaseLogo} alt="SplitLease logo" className="activityLogo" />
+        </Link>
         <button type="button" className="activityBack" onClick={() => navigate(-1)}>
           Back
         </button>
