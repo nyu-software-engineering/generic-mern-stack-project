@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react"
 import { fetchArticles, searchArticles } from './mock_data'
 import ArticleCard from './ArticleCard'
-import './styles/Catalog.css'
 
 const topics = ['All', 'AI/ML', 'Cybersecurity', 'Algorithms', 'Computer Vision']
 const numArticles = 10
