@@ -144,6 +144,18 @@ Useful pages to start from:
 - `npm run lint` checks the code for problems
 - `npm run build` makes a production build in `front-end/dist/`
 
+### Code style
+
+We use ESLint to check for problems and Prettier to format the code. The team's style is defined in `front-end/.prettierrc` (single quotes, no semicolons, 2-space indentation), and ESLint's rules are in `front-end/eslint.config.js`.
+
+To set up Visual Studio Code:
+
+1. Install the **ESLint** and **Prettier - Code formatter** extensions.
+2. Open Settings, search for **Format on Save** and turn it on.
+3. Set **Prettier - Code formatter** as the default formatter (search Settings for **Default Formatter**).
+
+Before opening a pull request, run `npm run lint` inside `front-end/` and fix any problems it reports.
+
 ### Data
 
 During Sprint 1 the app uses mock data from `front-end/public/mock/`, loaded through `front-end/src/data/api.js`. No `.env` file or account is needed to run it. The back-end in `back-end/` will replace the mock data in Sprint 2.
