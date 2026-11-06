@@ -1,4 +1,5 @@
 import React from 'react';
+import SplitLeaseLogo from "../../assets/splitlease-blank-background-logo.png";
 import { useNavigate } from 'react-router-dom';
 import './UserHomePage.css';
 
@@ -14,7 +15,9 @@ function UserHomePage() {
     return(
         <div className = "createUserHomePageContainer">
             <header className="header">
-                <h1 className="header-logo">SplitLease</h1>
+                <button type="button" className="logoButton" onClick={() => navigate('/home')}>
+                    <img src={SplitLeaseLogo} alt="SplitLease Logo" className="headerLogo"/>
+                </button>
                 <button className="profileButton">User Profile</button>
             </header>
             <h1>Welcome Back, {userName}!</h1>
