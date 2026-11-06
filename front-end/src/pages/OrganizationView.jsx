@@ -1,50 +1,8 @@
 import { useState } from "react";
-
-// Stand-in for the club directory until it comes from the API.
-const clubs = [
-  {
-    id: "ballroom",
-    name: "Ballroom Dance",
-    description: "Social dance every Thursday",
-    logo: "https://picsum.photos/seed/flier-ballroom/96/96",
-  },
-  {
-    id: "code-lab",
-    name: "Code Lab",
-    description: "Weekly project nights",
-    logo: "https://picsum.photos/seed/flier-code/96/96",
-  },
-  {
-    id: "film",
-    name: "Film Society",
-    description: "Screenings and short films",
-    logo: "https://picsum.photos/seed/flier-film/96/96",
-  },
-  {
-    id: "hiking",
-    name: "Hiking Club",
-    description: "Day trips outside the city",
-    logo: "https://picsum.photos/seed/flier-hike/96/96",
-  },
-  {
-    id: "jazz",
-    name: "Jazz Ensemble",
-    description: "Open rehearsals on campus",
-    logo: "https://picsum.photos/seed/flier-jazz/96/96",
-  },
-  {
-    id: "photo",
-    name: "Photography Club",
-    description: "Walks and photo critiques",
-    logo: "https://picsum.photos/seed/flier-photo/96/96",
-  },
-  {
-    id: "volunteer",
-    name: "Volunteer Network",
-    description: "Local service projects",
-    logo: "https://picsum.photos/seed/flier-volunteer/96/96",
-  },
-];
+import { Link } from "react-router-dom";
+import ClubCard from "../components/ClubCard";
+import { useFavorites } from "../context/FavoritesContext";
+import { clubs } from "../data/clubs";
 
 function SearchIcon() {
   return (
@@ -55,25 +13,16 @@ function SearchIcon() {
   );
 }
 
-function ClubCard({ club }) {
+function HeaderStar({ filled }) {
   return (
-    <li>
-      <button type="button" className="flex w-full items-center gap-4 rounded-2xl bg-white px-4 py-4 text-left shadow-sm ring-1 ring-black/5">
-        <img
-          src={club.logo}
-          alt=""
-          className="size-14 shrink-0 rounded-full bg-(--paper) object-cover"
-        />
-        <span>
-          <span className="block text-lg font-bold [font-family:var(--font-petrona)]">{club.name}</span>
-          <span className="body-copy block">{club.description}</span>
-        </span>
-      </button>
-    </li>
+    <svg viewBox="0 0 24 24" aria-hidden="true" className="size-7" fill={filled ? "currentColor" : "none"} stroke="currentColor" strokeWidth={filled ? 0 : 1.8}>
+      <path strokeLinejoin="round" d="M12 2.6l2.05 6.32h6.64l-5.37 3.9 2.05 6.32L12 15.24l-5.37 3.9 2.05-6.32-5.37-3.9h6.64L12 2.6z" />
+    </svg>
   );
 }
 
 export default function OrganizationView() {
+  const { ids } = useFavorites();
   const [query, setQuery] = useState("");
   const [searchOpen, setSearchOpen] = useState(false);
   const needle = query.trim().toLowerCase();
@@ -93,16 +42,32 @@ export default function OrganizationView() {
       <div className="mx-auto flex w-full max-w-md flex-col">
         <div className="flex items-center justify-between gap-3">
           <h1 className="heading">Organization List</h1>
-          <button
-            type="button"
-            aria-label={searchOpen ? "Close search" : "Search clubs"}
-            aria-expanded={searchOpen}
-            aria-controls="club-search"
-            onClick={toggleSearch}
-            className="flex size-10 shrink-0 items-center justify-center rounded-full focus-visible:outline-2 focus-visible:outline-(--nyu-indigo)"
-          >
-            <SearchIcon />
-          </button>
+          <div className="flex items-center gap-1">
+            <Link
+              to="/favorites"
+              aria-label={ids.length > 0 ? `View ${ids.length} favorite clubs` : "View favorite clubs"}
+              className={`relative flex size-10 shrink-0 items-center justify-center rounded-full focus-visible:outline-2 focus-visible:outline-(--nyu-indigo) ${
+                ids.length > 0 ? "text-(--nyu-indigo)" : "text-(--soft-black)"
+              }`}
+            >
+              <HeaderStar filled={ids.length > 0} />
+              {ids.length > 0 ? (
+                <span className="absolute top-0 right-0 flex min-w-4 items-center justify-center rounded-full bg-(--nyu-indigo) px-1 text-[10px] leading-4 font-bold text-white">
+                  {ids.length}
+                </span>
+              ) : null}
+            </Link>
+            <button
+              type="button"
+              aria-label={searchOpen ? "Close search" : "Search clubs"}
+              aria-expanded={searchOpen}
+              aria-controls="club-search"
+              onClick={toggleSearch}
+              className="flex size-10 shrink-0 items-center justify-center rounded-full focus-visible:outline-2 focus-visible:outline-(--nyu-indigo)"
+            >
+              <SearchIcon />
+            </button>
+          </div>
         </div>
 
         {searchOpen ? (
