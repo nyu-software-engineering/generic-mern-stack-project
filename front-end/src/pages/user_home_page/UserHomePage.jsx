@@ -24,7 +24,7 @@ function UserHomePage() {
                 <input type="text" className="textInput" placeholder="search households"/>
                 <div className="householdList">
                     {households.map((household, index) => (
-                        <button key={index} type="button" className="householdItem" onCClick={() => console.log("Selected:", household)}>
+                        <button key={index} type="button" className="householdItem" onClick={() => navigate('/household')}>
                             {household}
                         </button>
                     ))}

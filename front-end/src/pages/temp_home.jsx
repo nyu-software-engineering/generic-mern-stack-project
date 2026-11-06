@@ -30,6 +30,6 @@ const Temphome = (props) => {
       <br />
       <Link to="/monthly-activity"> See Monthly Activity</Link>
     </div>
-  );
-};
+  )
+}
 export default Temphome;
