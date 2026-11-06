@@ -5,6 +5,7 @@ import notificationsIcon from "../assets/notifications-40px-white.svg";
 import settingsIcon from "../assets/settings-40px.svg";
 import logoutIcon from "../assets/logout-40px.svg";
 import supportIcon from "../assets/support-40px.svg";
+import starIcon from "../assets/star-40px.svg";
 
 const mockUser = {
   username: "John Doe",
@@ -15,6 +16,7 @@ const mockUser = {
 const accountItems = [
   { label: "Edit Profile Information", icon: editIcon, to: "/edit-profile" },
   { label: "My Organizations", icon: groupIcon, to: "/organizations" },
+  { label: "Favorites", icon: starIcon, to: "/favorites" },
   { label: "Notifications", icon: notificationsIcon, to: "/notifications" },
 ];
 

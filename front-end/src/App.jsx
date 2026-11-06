@@ -6,6 +6,9 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Home from './pages/Home';
 import OrganizationView from './pages/OrganizationView';
+import ClubDetails from './pages/ClubDetails';
+import Favorites from './pages/Favorites';
+import { FavoritesProvider } from './context/FavoritesContext';
 import CalendarView from './pages/CalendarView';
 import AddFlyer from './pages/AddFlyer';
 import MapView from './pages/MapView';
@@ -18,6 +21,7 @@ import Support from './pages/Support';
 export default function App() {
   return (
     <BrowserRouter>
+      <FavoritesProvider>
       <Routes>
         {/* No Header or NavBar */}
         <Route path="/" element={<Landing />} />
@@ -28,12 +32,15 @@ export default function App() {
         <Route element={<Layout />}>
           <Route path="/home" element={<Home />} />
           <Route path="/organizations" element={<OrganizationView />} />
+          <Route path="/organizations/:clubId" element={<ClubDetails />} />
+          <Route path="/favorites" element={<Favorites />} />
           <Route path="/calendar" element={<CalendarView />} />
           <Route path="/add-flyer" element={<AddFlyer />} />
           <Route path="/map" element={<MapView />} />
           <Route path="/profile" element={<Profile />} />
         </Route>
       </Routes>
+      </FavoritesProvider>
     </BrowserRouter>
   );
 }
