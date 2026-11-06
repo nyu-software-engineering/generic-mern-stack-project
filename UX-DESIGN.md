@@ -81,4 +81,4 @@ Allows new users to create an account with their name, email, and password.
 The prototype below provides basic flows for the login and register auth flows, and basic usage of the sublet apps for both desktop and mobile. It includes basic implementation of the main page, posting a listing, a profile page, and message features.
 
 
-https://www.figma.com/design/YxLAE4LDtG6rfZcYQcRrMQ/Sublet-Search-%E2%80%93-Wireframes?node-id=0-1&t=uzraE1vmSBLad6cO-1
+[Sublet Search prototype](https://www.figma.com/design/YxLAE4LDtG6rfZcYQcRrMQ/Sublet-Search-%E2%80%93-Wireframes?node-id=0-1&t=uzraE1vmSBLad6cO-1)
