@@ -6,8 +6,8 @@ import Chat from "./components/Chat"
 import Discover from "./discover/Discover"
 import HobbyDetail from "./discover/HobbyDetail"
 import EventDetail from "./discover/EventDetail"
-import Login from "./login/Login";
-import CreateAccount from "./login/CreateAccount";
+import Login from "./login/Login"
+import CreateAccount from "./login/CreateAccount"
 import Feed from "./Feed/Feed"
 import Following from "./Feed/Following"
 import CreatePost from "./Feed/CreatePost"
@@ -31,7 +31,7 @@ const App = () => {
     <Router>
       <Routes>
           <Route path="/" element={<Navigate to="/profile" replace />} />
-          <Route path="/profile" 
+          <Route path="/profile"
             element={user ? <Profile user={user} /> : <p> Loading profile...</p>}
           />
           <Route path="/chat" element={<Chat />} />
