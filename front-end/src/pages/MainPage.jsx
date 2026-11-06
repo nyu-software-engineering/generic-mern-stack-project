@@ -92,9 +92,12 @@ export default function MainPage() {
           </article>
         </section>
 
-        <button className="rounded-lg bg-purple-600 px-5 py-3 font-semibold text-white hover:bg-purple-700">
+        <a 
+          className="rounded-lg bg-purple-600 px-5 py-3 font-semibold text-white hover:bg-purple-700"
+          href = "/articles"
+        >
           Browse All Articles
-        </button>
+        </a>
       </main>
     </div>
   );
