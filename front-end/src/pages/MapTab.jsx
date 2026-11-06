@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, useSearchParams } from 'react-router'
+import Button from '../components/Button'
 import PlaceMap from '../components/PlaceMap'
 import CategoryFilter from '../components/CategoryFilter'
 import { filterPlacesByCategory } from '../components/mapPresentation'
@@ -33,18 +34,23 @@ export default function MapTab() {
 
   if (!currentResult) return <p className="map-tab-content" role="status">Loading your map…</p>
   if (currentResult.error) return (
-    <section className="map-tab-content">
-      <h1>We couldn’t load your cities</h1>
-      <button type="button" onClick={() => setAttempt(attempt + 1)}>Try again</button>
+    <section className="px-5 py-10 text-center">
+      <h1 className="text-2xl font-semibold">We couldn’t load your cities</h1>
+      <p className="mt-2 text-sm text-muted">Please try again in a moment.</p>
+      <Button className="mt-4" onClick={() => setAttempt(attempt + 1)}>Try again</Button>
     </section>
   )
 
   const { cities } = currentResult
   if (cities.length === 0) return (
-    <section className="map-tab-content">
-      <h1>No city lists yet</h1>
-      <p>Save a place or accept an invitation to start your map.</p>
-      <Link to="/create">Add a place</Link>{' · '}<Link to="/invites">View invitations</Link>
+    <section className="px-5 py-10 text-center">
+      <h1 className="text-2xl font-semibold">No city lists yet</h1>
+      <p className="mt-2 text-sm text-muted">Save a place or accept an invitation to start your map.</p>
+      <p className="mt-4 text-sm">
+        <Link to="/create" className="font-semibold text-brand hover:text-brand-dark">Add a place</Link>
+        {' · '}
+        <Link to="/invites" className="font-semibold text-brand hover:text-brand-dark">View invitations</Link>
+      </p>
     </section>
   )
 
