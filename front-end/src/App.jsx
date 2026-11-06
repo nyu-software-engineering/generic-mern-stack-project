@@ -21,7 +21,7 @@ function App() {
         <Route path="/settings" element={<Settings />} />
         <Route path="/articles" element={<Catalog />} />
         <Route path="/article" element={<Article />} />
-        <Route path="/" element={<MainPage />} />
+        <Route path="/mainpage" element={<MainPage />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/favorites" element={<Favorite />} />
         <Route path="/dejargoned/beginner" element={<Beginner />} />
