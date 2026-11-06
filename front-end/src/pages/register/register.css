@@ -1,4 +1,4 @@
-.createHouseholdContainer {
+.registerContainer {
   background-color: #c9cad9;
   width: 50%;
   aspect-ratio: 1/1;
@@ -8,11 +8,7 @@
   border-radius: 15px;
   border: 10px solid #576490;
 }
-.textInput {
-  width: 90%;
-  aspect-ratio: 15/1;
-  border-radius: 5px;
-}
+
 .inputFieldContainer {
   justify-items: center;
   align-items: center;
@@ -23,7 +19,52 @@
 .createButton:hover {
   background-color: #7796cb;
 }
+
+.registerLogoContainer {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.registerLogo {
+  width: 200px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+.registerTitle {
+  text-align: center;
+  font-size: 40px;
+  margin: 0 0 16px;
+  color: var(--slate);
+}
+
 .fieldText {
   justify-self: start;
   padding: 10px;
+  color: var(--slate);
+}
+
+.textInput {
+  width: 90%;
+  aspect-ratio: 15/1;
+  border: 2px solid var(--slate);
+  background-color: #ffffff;
+  color: var(--slate);
+  padding: 0 8px;
+}
+
+.registerButton {
+  display: block;
+  margin: 24px auto 0;
+  width: 50%;
+  background-color: var(--slate);
+  color: var(--periwinkle);
+  border: none;
+  padding: 8px 24px;
+  cursor: pointer;
+}
+
+.registerButton:hover {
+  background-color: var(--steel-blue);
 }
