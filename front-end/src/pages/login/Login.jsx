@@ -60,41 +60,41 @@ const Login = () => {
           </div>
         )}
 
-        <label className="fieldLabel" htmlFor="loginEmail">
+        <label className="loginLabel" htmlFor="loginEmail">
           Email
         </label>
         <input
           id="loginEmail"
           type="email"
-          className={errors.email ? "textInput inputError" : "textInput"}
+          className={errors.email ? "loginInput loginInputError" : "loginInput"}
           placeholder="you@example.com"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           autoComplete="email"
         />
-        {errors.email && <p className="fieldError">{errors.email}</p>}
+        {errors.email && <p className="loginFieldError">{errors.email}</p>}
 
-        <label className="fieldLabel" htmlFor="loginPassword">
+        <label className="loginLabel" htmlFor="loginPassword">
           Password
         </label>
         <input
           id="loginPassword"
           type="password"
-          className={errors.password ? "textInput inputError" : "textInput"}
+          className={errors.password ? "loginInput loginInputError" : "loginInput"}
           placeholder="Enter your password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           autoComplete="current-password"
         />
-        {errors.password && <p className="fieldError">{errors.password}</p>}
+        {errors.password && <p className="loginFieldError">{errors.password}</p>}
 
         <button className="loginButton" type="submit" disabled={loading}>
           {loading ? "Logging in..." : "Log in"}
         </button>
 
-        <p className="registerPrompt">
+        <p className="loginRegisterPrompt">
           Don&apos;t have an account?{" "}
-          <Link to="/register" className="registerLink">
+          <Link to="/register" className="loginRegisterLink">
             Register
           </Link>
         </p>

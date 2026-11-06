@@ -56,7 +56,7 @@ const Protocols = () => {
         />
         <button
           type="button"
-          className="backButton"
+          className="protocolsBack"
           onClick={() => navigate(-1)}
         >
           Back
@@ -71,7 +71,7 @@ const Protocols = () => {
         </p>
         <button
           type="button"
-          className="primaryButton"
+          className="protocolsPrimary"
           onClick={() => navigate("/protocols/new")}
         >
           Propose New Protocol
@@ -79,33 +79,33 @@ const Protocols = () => {
       </section>
 
       <section className="protocolsCard">
-        <h2 className="sectionTitle">Pending Protocols</h2>
+        <h2 className="protocolsSectionTitle">Pending Protocols</h2>
         {pending.length === 0 && (
-          <p className="emptyText">No protocols waiting for approval.</p>
+          <p className="protocolsEmpty">No protocols waiting for approval.</p>
         )}
-        <ul className="protocolList">
+        <ul className="protocolsList">
           {pending.map((p) => {
             const alreadyApproved = approvedByMe.includes(p.id);
             return (
-              <li key={p.id} className="protocolRow">
-                <div className="protocolInfo">
-                  <span className="protocolName">{p.name}</span>
-                  <span className="protocolMeta">
+              <li key={p.id} className="protocolsRow">
+                <div className="protocolsInfo">
+                  <span className="protocolsName">{p.name}</span>
+                  <span className="protocolsMeta">
                     Proposed by {p.proposedBy} · {p.approvals}/
                     {household.memberCount} approved
                   </span>
                 </div>
-                <div className="protocolActions">
+                <div className="protocolsActions">
                   <button
                     type="button"
-                    className="secondaryButton"
+                    className="protocolsSecondary"
                     onClick={() => viewProtocol(p.id)}
                   >
                     View
                   </button>
                   <button
                     type="button"
-                    className="approveButton"
+                    className="protocolsApprove"
                     onClick={() => handleApprove(p.id)}
                     disabled={alreadyApproved}
                   >
@@ -119,23 +119,23 @@ const Protocols = () => {
       </section>
 
       <section className="protocolsCard">
-        <h2 className="sectionTitle">Household Protocols</h2>
+        <h2 className="protocolsSectionTitle">Household Protocols</h2>
         {approved.length === 0 && (
-          <p className="emptyText">No approved protocols yet.</p>
+          <p className="protocolsEmpty">No approved protocols yet.</p>
         )}
-        <ul className="protocolList">
+        <ul className="protocolsList">
           {approved.map((p) => (
-            <li key={p.id} className="protocolRow">
-              <div className="protocolInfo">
-                <span className="protocolName">{p.name}</span>
-                <span className="protocolMeta">
+            <li key={p.id} className="protocolsRow">
+              <div className="protocolsInfo">
+                <span className="protocolsName">{p.name}</span>
+                <span className="protocolsMeta">
                   Proposed by {p.proposedBy} · Approved by everyone
                 </span>
               </div>
-              <div className="protocolActions">
+              <div className="protocolsActions">
                 <button
                   type="button"
-                  className="secondaryButton"
+                  className="protocolsSecondary"
                   onClick={() => viewProtocol(p.id)}
                 >
                   View
