@@ -1,0 +1,145 @@
+.logoButton {
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+html, body, #root {
+    margin: 0;
+    width: auto;
+    min-height: auto;
+    height: auto;
+}
+
+.household-dashboard-container{
+  background-color: #C9CAD9;
+  width: 100%;
+  min-height: 750px;
+  /* align-items: center; */
+  margin: auto;
+  box-sizing: border-box;
+  border-color: #576490;
+  border-radius: 0px;
+  border: 10px solid #576490;
+}
+
+.household-dashboard-container h1{
+  margin: 50px 0 100px;
+}
+
+.headerLogo {
+  width: 120px;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.headerLogo:hover {
+  transform: scale(1.03);
+}
+
+.header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: left;
+    font-size: 10px;
+    font-weight: normal;
+}
+
+.logoButton {
+    font-size: 18px;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.backButton {
+    font-size: 12px;
+    padding: 6px 10px;
+}
+
+.membersListContainer{
+    background-color: #A3BCF9;
+    width:70%;
+    min-height: 500px;
+    margin-top: 30px;
+    margin: auto;
+    border-color: #576490;
+    border-radius: 15px;
+    border: 10px solid #576490;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 12px;
+}
+
+.sectionHeader .fieldText {
+  margin: 0;
+  text-align: left;
+  flex: 1;
+}
+
+.manageMembersButton {
+  margin-left: auto;
+}
+
+.fieldText{
+    text-align: center;
+    padding: 10px;
+    color: #2b2b2b;
+    margin: 0;
+}
+
+.textInput{
+    width: 90%;
+    aspect-ratio: 15/1;
+    border-radius: 5px;
+}
+
+.membersList {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.membersItem {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #576490;
+    background-color: #C9CAD9;
+    text-align: left;
+    cursor: pointer;
+}
+
+.assetsContainer{
+    background-color: #A3BCF9;
+    width:70%;
+    min-height: 500px;
+    margin: auto;
+    border-color: #576490;
+    border-radius: 15px;
+    border: 10px solid #576490;
+}
+
+.assetsList {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.viewsAssetsButton{
+    /* background-color: #7796CB; */
+    width: 50%;
+}
+.viewsAssetsButton:hover{
+    background-color: #7796CB;
+}

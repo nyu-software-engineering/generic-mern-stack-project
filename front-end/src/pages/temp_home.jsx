@@ -14,12 +14,7 @@ const Temphome = (props) => {
           margin: "0 auto",
         }}
       />
-      <Link to="/create"> See create_household</Link>
-      <br />
-      <Link to="/register"> See register</Link>
-      <br />
-      <Link to="/assets"> See assets</Link>
     </div>
-  );
-};
+  )
+}
 export default Temphome;
