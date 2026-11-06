@@ -40,4 +40,10 @@ item_requests = request_items.each_with_index.map { |(item_name, area, details),
   {"id" => i + 1, "requesterId" => (i == 4 ? "owner-1" : "student-#{3 + i}"), "itemName" => item_name, "neededBy" => needed_by.strftime("%Y-%m-%d"), "neededUntil" => (needed_by + 2).strftime("%Y-%m-%d"), "approximateArea" => area, "targetPrice" => (i == 1 ? nil : random(5, 30)), "details" => details, "status" => "open", "responses" => [], "createdAt" => "#{(today - i - 1).strftime("%Y-%m-%d")}T12:00:00Z"}
 };
 
-{"users" => users, "listings" => listings, "rentals" => rentals, "conversations" => conversations, "reviews" => reviews, "itemRequests" => item_requests}
+# Quick Borrow requests for the shared requests board: two from other students, one from owner-1.
+quick_borrow_specs = [["USB-C phone charger", "Third North", "1 day", "18:00", "Mine broke and I have an early class."], ["Scientific calculator", "Library", "2 days", "09:30", "Need it for a midterm."], ["Folding table", "Weinstein lobby", "3 days", "14:00", "Hosting a study group."]];
+quick_borrow_requests = quick_borrow_specs.each_with_index.map { |(item_name, area, duration, time, details), i|
+  {"id" => i + 1, "requesterId" => (i == 2 ? "owner-1" : "student-#{3 + i}"), "itemName" => item_name, "neededBy" => (today + 1 + i).strftime("%Y-%m-%d"), "neededTime" => time, "borrowDuration" => duration, "approximateArea" => area, "details" => details, "status" => "open", "createdAt" => "#{(today - i - 1).strftime("%Y-%m-%d")}T09:00:00Z"}
+};
+
+{"users" => users, "listings" => listings, "rentals" => rentals, "conversations" => conversations, "reviews" => reviews, "itemRequests" => item_requests, "quickBorrowRequests" => quick_borrow_requests}

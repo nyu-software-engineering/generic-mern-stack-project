@@ -115,6 +115,21 @@ export function mockResponse() {
       },
     ],
 
+    quickBorrowRequests: [
+      {
+        id: 1,
+        requesterId: 'student-2',
+        itemName: 'USB-C phone charger',
+        neededBy: '2026-11-10',
+        neededTime: '18:00',
+        borrowDuration: '1 day',
+        approximateArea: 'Third North',
+        details: 'Mine broke.',
+        status: 'open',
+        createdAt: '2026-11-02T09:00:00Z',
+      },
+    ],
+
     itemRequests: [
       {
         id: 1,

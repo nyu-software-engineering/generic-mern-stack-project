@@ -10,13 +10,15 @@ let rentals = []
 let conversations = []
 let reviews = []
 let itemRequests = []
+let quickBorrowRequests = []
 let loading
 
 const sameId = (first, second) => String(first) === String(second)
 
 function validateData(data) {
-  const { users, listings, rentals, conversations, reviews, itemRequests } = data ?? {}
-  if (![users, listings, rentals, conversations, reviews, itemRequests].every(Array.isArray)) {
+  // TODO: make quickBorrowRequests required once the live Mockaroo schema includes it.
+  const { users, listings, rentals, conversations, reviews, itemRequests, quickBorrowRequests = [] } = data ?? {}
+  if (![users, listings, rentals, conversations, reviews, itemRequests, quickBorrowRequests].every(Array.isArray)) {
     throw new Error('Mockaroo returned invalid data.')
   }
 
@@ -107,12 +109,20 @@ function validateData(data) {
     }),
   )
 
+  const validQuickBorrowRequests = quickBorrowRequests.every((request) =>
+    Number.isSafeInteger(request?.id) && request.id > 0 && userIds.has(request.requesterId) &&
+    [request.itemName, request.approximateArea, request.details].every((value) => typeof value === 'string' && value.trim()) &&
+    typeof request.neededBy === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(request.neededBy) &&
+    typeof request.createdAt === 'string',
+  )
+
   if (!validUsers || !validListings || !validRentals || !validConversations || !validReviews ||
-    !validItemRequests ||
+    !validItemRequests || !validQuickBorrowRequests ||
     userIds.size !== users.length || listingIds.size !== listings.length ||
     rentalIds.size !== rentals.length ||
     new Set(reviews.map((review) => review?.id)).size !== reviews.length ||
-    new Set(itemRequests.map((request) => request?.id)).size !== itemRequests.length) {
+    new Set(itemRequests.map((request) => request?.id)).size !== itemRequests.length ||
+    new Set(quickBorrowRequests.map((request) => request?.id)).size !== quickBorrowRequests.length) {
     throw new Error('Mockaroo returned invalid data.')
   }
 }
@@ -132,6 +142,7 @@ export function loadMockData() {
         conversations = data.conversations
         reviews = data.reviews
         itemRequests = data.itemRequests
+        quickBorrowRequests = data.quickBorrowRequests ?? []
       })
       .catch((error) => {
         loading = undefined
@@ -245,6 +256,11 @@ export function createConversation(details) {
 
   conversations = [...conversations, conversation]
   return structuredClone(conversation)
+}
+
+// Quick Borrow requests from the shared Mockaroo data (not the ones saved in localStorage).
+export function getSharedQuickBorrowRequests() {
+  return structuredClone(quickBorrowRequests)
 }
 
 export function getItemRequests() {

@@ -1,7 +1,7 @@
 // Quick Borrow service. Pages call these functions instead of touching storage
 // directly, so they can later be swapped for backend requests.
 // Requests are kept in localStorage so they survive a page refresh.
-import { CURRENT_USER_ID } from './mockDataService.js'
+import { CURRENT_USER_ID, getSharedQuickBorrowRequests } from './mockDataService.js'
 
 // TODO: replace with the signed-in user from Context once #49 lands.
 const STORAGE_KEY = 'dormshare.quickBorrowRequests'
@@ -15,10 +15,11 @@ function readAll() {
   }
 }
 
-const getQuickBorrowRequests = () => readAll()
+// Requests from the shared Mockaroo data, then the ones saved in this browser.
+const getQuickBorrowRequests = () => [...getSharedQuickBorrowRequests(), ...readAll()]
 
 const getQuickBorrowRequestsForUser = (requesterId = CURRENT_USER_ID) =>
-  readAll().filter((request) => request.requesterId === requesterId)
+  getQuickBorrowRequests().filter((request) => request.requesterId === requesterId)
 
 // Returns the saved request, or null if a required field is blank after trimming.
 const createQuickBorrowRequest = ({
