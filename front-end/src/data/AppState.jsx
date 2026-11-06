@@ -1,6 +1,21 @@
-import { useCallback, useEffect, useState } from 'react'
-import { AppStateContext } from './useAppState.js'
-import { getApplications, getDiscussions, getMatch, getProfile } from './api.js'
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from 'react'
+import {
+  getApplications,
+  getDiscussions,
+  getMatch,
+  getProfile,
+} from './api.js'
+
+const AppStateContext = createContext(null)
+
+export function useAppState() {
+  return useContext(AppStateContext)
+}
 
 function AppState(props) {
   const [status, setStatus] = useState('loading')
@@ -11,68 +26,141 @@ function AppState(props) {
   const [posts, setPosts] = useState([])
 
   useEffect(() => {
-    let active = true
-    Promise.all([getProfile(), getApplications(), getDiscussions()])
-      .then(([profile, applications, posts]) => {
-        if (!active) return
-        if (!profile || !Array.isArray(applications) || !Array.isArray(posts)) {
-          throw new Error('Required CareerHive data is missing')
-        }
-        const firstCopy = { profile, applications, posts }
-        setOriginal(structuredClone(firstCopy))
-        setProfile(profile)
-        setApplications(applications)
-        setPosts(posts)
-        setStatus('ready')
+    getProfile()
+      .then((profileData) => {
+        return getApplications().then((applicationData) => {
+          return getDiscussions().then((postData) => {
+            const firstCopy = {
+              profile: profileData,
+              applications: applicationData,
+              posts: postData,
+            }
+
+            setOriginal(
+              JSON.parse(JSON.stringify(firstCopy))
+            )
+
+            setProfile(firstCopy.profile)
+            setApplications(firstCopy.applications)
+            setPosts(firstCopy.posts)
+            setStatus('ready')
+          })
+        })
       })
       .catch(() => {
-        if (!active) return
         setStatus('error')
-        setMessage('Could not load CareerHive data. Reload the page to try again.')
+        setMessage(
+          'Could not load CareerHive data. Reload the page to try again.'
+        )
       })
-    return () => { active = false }
   }, [])
 
   function saveProfile(nextProfile) {
-    setProfile((previous) => ({ ...nextProfile, id: previous.id, revision: previous.revision + 1 }))
+    setProfile({
+      ...nextProfile,
+      revision: profile.revision + 1,
+    })
   }
 
   function updateApplication(applicationId, change) {
     const at = new Date().toISOString()
-    setApplications((previous) => previous.map((application) => {
-      if (application.id !== applicationId) return application
-      const history = change.stage && change.stage !== application.stage
-        ? application.history.concat({ stage: change.stage, at })
-        : application.history
-      return {
-        ...application,
-        stage: change.stage || application.stage,
-        note: change.note ?? application.note,
-        updatedAt: at,
-        history,
-      }
-    }))
+
+    setApplications((currentApplications) =>
+      currentApplications.map((application) => {
+        if (application.id !== applicationId) {
+          return application
+        }
+
+        const history =
+          change.stage &&
+          change.stage !== application.stage
+            ? application.history.concat({
+                stage: change.stage,
+                at,
+              })
+            : application.history
+
+        return {
+          ...application,
+          stage:
+            change.stage || application.stage,
+          note:
+            change.note ?? application.note,
+          updatedAt: at,
+          history,
+        }
+      })
+    )
+  }
+
+  function addApplication(jobId, stage, note) {
+    const alreadySaved = applications.some(
+      (application) =>
+        application.jobId === jobId
+    )
+
+    if (alreadySaved) {
+      return false
+    }
+
+    const at = new Date().toISOString()
+
+    const newApplication = {
+      id: `application-${jobId}`,
+      jobId,
+      stage,
+      note,
+      updatedAt: at,
+      history: [
+        {
+          stage,
+          at,
+        },
+      ],
+    }
+
+    setApplications((currentApplications) => [
+      newApplication,
+      ...currentApplications,
+    ])
+
+    return true
   }
 
   function removeApplication(applicationId) {
-    setApplications((previous) => previous.filter((application) => application.id !== applicationId))
+    setApplications((currentApplications) =>
+      currentApplications.filter(
+        (application) =>
+          application.id !== applicationId
+      )
+    )
   }
 
   function addPost(jobId, post) {
     const nextPost = {
-      id: 'post-' + crypto.randomUUID(),
-      jobId: jobId,
+      id: 'post-' + Date.now(),
+      jobId,
       topic: post.topic,
       body: post.body,
       anonymous: Boolean(post.anonymous),
       createdAt: new Date().toISOString(),
     }
-    setPosts((previous) => [nextPost, ...previous])
+
+    setPosts((currentPosts) => [
+      nextPost,
+      ...currentPosts,
+    ])
   }
 
   function resetAll() {
-    if (!original) return
-    const copy = structuredClone(original)
+    if (!original) {
+      return
+    }
+
+    const copy = JSON.parse(
+      JSON.stringify(original)
+    )
+
     setProfile(copy.profile)
     setApplications(copy.applications)
     setPosts(copy.posts)
@@ -80,14 +168,32 @@ function AppState(props) {
     setMessage('')
   }
 
-  const matchFor = useCallback(async (jobId, options) => {
-    if (!profile || !profile.major?.trim() || !profile.graduationDate?.trim()
-      || !profile.workAuthorization?.trim() || !profile.skills?.some((skill) => skill.trim())) {
-      return { status: 'incomplete-profile' }
-    }
-    const match = await getMatch(jobId, profile, options)
-    return { status: 'ready', data: match }
-  }, [profile])
+  function matchFor(jobId) {
+    return getMatch(jobId).then((match) => {
+      if (match === null) {
+        return {
+          status: 'error',
+          message: 'Match not found',
+        }
+      }
+
+      return {
+        status: 'ready',
+        data: {
+          jobId,
+          score: match.score,
+          summary:
+            'Using saved skills: ' +
+            profile.skills.join(', '),
+          fitExplanation: profile.skills,
+          missingSkills: match.missingSkills,
+          keyQualifications: [
+            profile.workAuthorization,
+          ],
+        },
+      }
+    })
+  }
 
   const value = {
     status,
@@ -97,10 +203,11 @@ function AppState(props) {
     posts,
     saveProfile,
     updateApplication,
+    addApplication,
+    removeApplication,
     addPost,
     resetAll,
     matchFor,
-    removeApplication,
   }
 
   return (
