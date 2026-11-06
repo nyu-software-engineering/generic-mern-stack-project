@@ -49,7 +49,7 @@ function MenuCard({ items }) {
 
 export default function Profile() {
   return (
-    <section className="flex flex-1 flex-col items-center bg-(--parchment) px-5 pt-8 pb-10 text-(--soft-black)">
+    <section className="flex flex-1 flex-col items-center bg-(--parchment) px-5 pt-8 pb-10 text-(--soft-black) rounded-4xl inset-shadow-sm">
       <div className="flex w-full max-w-md flex-col items-center">
         <img
           src={mockUser.photoUrl}

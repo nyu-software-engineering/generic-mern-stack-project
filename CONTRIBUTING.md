@@ -1,6 +1,6 @@
 # Contribution Guidelines
 
-The following includes our team norms, Git workflow, rules & considerations of contributing, instructions to setup the local development environment, and instructions for building and testing the project (WIP).
+The following includes our team norms, Git workflow, rules & considerations of contributing, instructions to set up the local development environment, and instructions for building and testing the project (WIP).
 
 # Team Norms
 

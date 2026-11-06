@@ -9,10 +9,29 @@
  * - "full" means that we're looking at the flyer's full details. Provide every relevant piece of info.
  */
 export default function Flyer({ flyer, mode }) {
+  /* Format the date and time to be easily human readable */
+  const formattedStart = new Intl.DateTimeFormat(undefined, {
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(new Date(flyer.starts_at));
+
   /* Full Details Mode */
+  if (mode === "full") {
+    return (
+      <article>
+        <img src={flyer.image} alt={`A flyer uploaded by ${flyer.owner}`}/>
+        <h1>{flyer.title}</h1>
+        <h2>{formattedStart}</h2>
+        <p>{flyer.location}</p>
+        <p>{flyer.owner}</p>
+      </article>
+    )
+  }
 
   /* Carousel Mode */
-  return (
-    <img src={flyer.image} alt={`A flyer uploaded by ${flyer.owner}`}/>
-  )
+  if (mode === "carousel") {
+    return (
+      <img src={flyer.image} alt={`A flyer uploaded by ${flyer.owner}`}/>
+    )
+  }
 };

@@ -38,7 +38,7 @@ export default function OrganizationView() {
   }
 
   return (
-    <section className="flex flex-1 flex-col bg-(--parchment) px-5 pt-6 pb-24 text-(--soft-black)">
+    <section className="flex flex-1 flex-col bg-(--parchment) px-5 pt-6 pb-24 text-(--soft-black) rounded-4xl inset-shadow-sm">
       <div className="mx-auto flex w-full max-w-md flex-col">
         <div className="flex items-center justify-between gap-3">
           <h1 className="heading">Organization List</h1>
