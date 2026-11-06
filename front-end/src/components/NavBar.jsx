@@ -2,7 +2,7 @@ import list from "../assets/list-view-40px-black.svg";
 import calendar from "../assets/calendar-view-40px-black.svg";
 import add from "../assets/add-box-40px-black.svg";
 import map from "../assets/map-view-40px-black.svg";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import "./NavBar.css";
 
 export default function NavBar() {
