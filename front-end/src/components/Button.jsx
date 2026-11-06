@@ -1,7 +1,7 @@
 // The app's standard button. Uses the btn-primary / btn-secondary styles from index.css.
 const VARIANT_CLASSES = {
   primary: 'btn-primary hover:btn-primary-hover',
-  secondary: 'btn-secondary hover:bg-background',
+  secondary: 'btn-secondary hover:bg-subtle',
 }
 
 export default function Button({ variant = 'primary', type = 'button', className = '', children, ...rest }) {

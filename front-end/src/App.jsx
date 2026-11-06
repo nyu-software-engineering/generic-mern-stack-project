@@ -32,6 +32,7 @@ export default function App() {
       <Route path="/signup" element={<Signup />} />
       <Route path="/username" element={<ChooseUsername />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password" element={<ChangePassword />} />
 
       {/* with tab bar */}
       <Route element={<Layout />}>
@@ -47,7 +48,7 @@ export default function App() {
         <Route path="/invites" element={<Invites />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/profile/edit" element={<EditProfile />} />
-        <Route path="/profile/password" element={<ChangePassword />} />
+      
         <Route path="/city/:cityId" element={<CityPage />} />
         <Route path="/city/:cityId/members" element={<Members />} />
         <Route path="/city/:cityId/invite" element={<InviteToList />} />

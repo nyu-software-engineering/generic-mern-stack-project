@@ -10,6 +10,7 @@ import {
   searchPlacesInCity,
 } from '../data/mockDataLayer'
 import './SuggestedMatches.css'
+import BackLink from '../components/BackLink'
 
 /**
  * Did you mean?
@@ -72,9 +73,7 @@ export default function SuggestedMatches() {
 
   return (
     <section className="flow-page">
-      <Link className="flow-back" to="/create" aria-label="Back">
-        ←
-      </Link>
+      <BackLink to="/create" className="mb-6" />
 
       <h1 className="flow-title">Close. Which one is it?</h1>
 

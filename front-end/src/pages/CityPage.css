@@ -1,16 +1,16 @@
 .city-page {
-  color: #111827;
+  color: var(--color-ink);
 }
 
 .city-page-message {
   padding: 32px 20px;
-  color: #4b5563;
+  color: var(--color-muted);
   line-height: 1.6;
 }
 
 .city-page-message-title {
   margin-bottom: 12px;
-  color: #111827;
+  color: var(--color-ink);
   font-size: 24px;
   font-weight: 600;
 }
@@ -25,14 +25,14 @@
   margin-top: 20px;
   padding: 10px 16px;
   border-radius: 8px;
-  background: #111827;
+  background: var(--color-ink);
   color: #fff;
   cursor: pointer;
 }
 
 .city-page-retry:focus-visible,
 .city-page-home:focus-visible {
-  outline: 3px solid #2563eb;
+  outline: 3px solid var(--color-brand);
   outline-offset: 3px;
 }
 

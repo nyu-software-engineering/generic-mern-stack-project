@@ -6,7 +6,7 @@
  * in one place until a real back-end replaces these functions.
  */
 
-import { categories, cities, lists, places, savedPlaces, users, visits, votes, friendships, listInvites, currentUserId, linkLookups } from './demoData.js'
+import { categories, cities, lists, places, savedPlaces, users, visits, votes, friendships, listInvites, currentUserId, linkLookups, VOTE_OPTIONS } from './demoData.js'
 
 function createAbortError() {
   return new DOMException('The operation was aborted.', 'AbortError')
@@ -274,6 +274,7 @@ export function getPlaceDetail(placeId) {
     sourcePlatform: saved?.sourcePlatform ?? null,
     sourceUrl: saved?.sourceUrl ?? null,
     savedBy: toPublicUser(users.find((user) => user.id === saved?.savedBy)),
+    savedPlaceId: saved?.id ?? null,
   }
 }
 
@@ -697,3 +698,59 @@ export function getFriendProfile(viewerId, friendId, recentLimit = 5) {
     invitableLists,
   }
 }
+
+/*
+ * Voting (#94). Sprint-1 mock: castVote edits the votes array in place,
+ * so the city list re-ranks when you go back. A refresh resets everything.
+ */
+
+const VOTE_VALUES = VOTE_OPTIONS.map((option) => option.value)
+
+/**
+ * Vote state for one saved place, as seen by `userId`.
+ * Shape: { savedPlaceId, canVote, myVote, counts: { 'must-go', down, pass } }
+ * Only list members' votes are counted (same rule as getRankedCityPlaces).
+ * Returns null if the saved place or its list doesn't exist.
+ */
+export function getPlaceVotes(savedPlaceId, userId = currentUserId) {
+  const saved = savedPlaces.find((item) => item.id === savedPlaceId)
+  const list = lists.find((item) => item.id === saved?.listId)
+  if (!saved || !list) return null
+
+  const counts = { 'must-go': 0, down: 0, pass: 0 }
+  votes
+    .filter((vote) => vote.savedPlaceId === savedPlaceId && list.memberIds.includes(vote.userId))
+    .forEach((vote) => {
+      if (Object.hasOwn(counts, vote.value)) counts[vote.value] += 1
+    })
+
+  const canVote = list.memberIds.includes(userId)
+  const myVote = canVote
+    ? votes.find((vote) => vote.savedPlaceId === savedPlaceId && vote.userId === userId)?.value ?? null
+    : null
+
+  return { savedPlaceId, canVote, myVote, counts }
+}
+
+/**
+ * Pick or change a vote. One vote per person per place, so changing your
+ * mind replaces the old vote instead of adding a second one.
+ * Returns { ok: true, ...getPlaceVotes() } or { ok: false, error }.
+ */
+export function castVote(savedPlaceId, value, userId = currentUserId) {
+  if (!VOTE_VALUES.includes(value)) return { ok: false, error: 'Unknown vote.' }
+
+  const current = getPlaceVotes(savedPlaceId, userId)
+  if (!current) return { ok: false, error: 'This place is no longer on the list.' }
+  if (!current.canVote) return { ok: false, error: 'Only list members can vote.' }
+
+  const existing = votes.find((vote) => vote.savedPlaceId === savedPlaceId && vote.userId === userId)
+  if (existing) {
+    existing.value = value
+  } else {
+    votes.push({ id: `v_${Date.now()}`, savedPlaceId, userId, value })
+  }
+
+  return { ok: true, ...getPlaceVotes(savedPlaceId, userId) }
+}
+

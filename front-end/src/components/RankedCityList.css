@@ -13,7 +13,7 @@
 .ranked-city-intro p,
 .ranked-city-empty p {
   margin-top: 6px;
-  color: #62625f;
+  color: var(--color-muted);
   font-size: 14px;
   line-height: 1.5;
 }
@@ -87,7 +87,7 @@
 .ranked-place-neighborhood,
 .ranked-place-no-votes {
   margin: 5px 0 0;
-  color: #62625f;
+  color: var(--color-muted);
   font-size: 12px;
   line-height: 1.5;
 }
@@ -107,7 +107,7 @@
 }
 
 .ranked-place-votes dt {
-  color: #62625f;
+  color: var(--color-muted);
 }
 
 .ranked-place-votes dd {
@@ -128,7 +128,7 @@
   position: absolute;
   top: 12px;
   right: 12px;
-  color: #62625f;
+  color: var(--color-muted);
   font-size: 12px;
   font-variant-numeric: tabular-nums;
 }

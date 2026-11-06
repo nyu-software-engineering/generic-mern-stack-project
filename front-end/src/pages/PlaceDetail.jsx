@@ -1,6 +1,8 @@
 import { useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router'
-import { getPlaceDetail } from '../data/mockDataLayer'
+import VoteChips from '../components/VoteChips'
+import BackLink from '../components/BackLink'
+import { castVote, getPlaceDetail, getPlaceVotes } from '../data/mockDataLayer'
 
 // Just the first name, so "Samantha Chen" reads as "Samantha"
 function firstName(fullName) {
@@ -18,6 +20,9 @@ export default function PlaceDetail() {
   const place = useMemo(() => getPlaceDetail(placeId), [placeId])
   // If the photo link is broken we fall back to the plain peach block behind it
   const [photoFailed, setPhotoFailed] = useState(false)
+  // Latest result from castVote. Only used while it still belongs to this place.
+  const [voteResult, setVoteResult] = useState(null)
+  const [voteError, setVoteError] = useState('')
 
   // The link in the URL doesn't match any place we know about
   if (!place) {
@@ -32,12 +37,33 @@ export default function PlaceDetail() {
     )
   }
 
+  // Read the tally fresh on every render, unless we just voted on this place
+  const voteState = voteResult?.savedPlaceId === place.savedPlaceId
+    ? voteResult
+    : getPlaceVotes(place.savedPlaceId)
+
+  function handleVote(value) {
+    const result = castVote(place.savedPlaceId, value)
+    if (result.ok) {
+      setVoteResult(result)
+      setVoteError('')
+    } else {
+      setVoteError(result.error)
+    }
+  }
+
+  const voteHint = !voteState?.canVote
+    ? 'Join this list to vote.'
+    : voteState.myVote
+      ? 'Tap another option to change your vote.'
+      : 'Tap a vote to let the group know.'
+
   // "Food · East Village · saved by Siyona from TikTok". Parts we don't have are left out.
   const details = [
     place.categoryLabel,
     place.neighborhood,
     place.savedBy &&
-      `saved by ${firstName(place.savedBy.name)}${place.sourcePlatform ? ` from ${place.sourcePlatform}` : ''}`,
+    `saved by ${firstName(place.savedBy.name)}${place.sourcePlatform ? ` from ${place.sourcePlatform}` : ''}`,
   ].filter(Boolean)
 
   const buttonClass =
@@ -45,7 +71,11 @@ export default function PlaceDetail() {
 
   return (
     <article>
-      <div className="relative h-56 bg-peach">
+      <div className="px-5 pt-6">
+        <BackLink to={`/city/${place.cityId}`} label={`Back to ${place.cityName}`} className="mb-6" />
+      </div>
+
+      <div className="relative mx-5 h-56 overflow-hidden rounded-card bg-peach">
         {place.photoUrl && !photoFailed && (
           <img
             className="size-full object-cover"
@@ -54,13 +84,6 @@ export default function PlaceDetail() {
             onError={() => setPhotoFailed(true)}
           />
         )}
-        <Link
-          to={`/city/${place.cityId}`}
-          aria-label={`Back to ${place.cityName}`}
-          className="absolute left-4 top-4 flex size-10 items-center justify-center rounded-pill bg-surface text-lg shadow-button"
-        >
-          <span aria-hidden="true">←</span>
-        </Link>
       </div>
 
       <div className="px-5 py-5">
@@ -79,6 +102,20 @@ export default function PlaceDetail() {
           </a>
         </div>
 
+        {/* Places that aren't saved to a list yet have nothing to vote on */}
+        {voteState && (
+          <section className="mt-8" aria-label="Votes">
+            <VoteChips
+              value={voteState.myVote}
+              counts={voteState.counts}
+              disabled={!voteState.canVote}
+              onChange={handleVote}
+            />
+            <p className="mt-2 text-sm text-muted" role="status">
+              {voteError || voteHint}
+            </p>
+          </section>
+        )}
         <Link
           to={`/place/${place.id}/edit`}
           className="mt-6 inline-block text-sm font-semibold text-brand hover:text-brand-dark"

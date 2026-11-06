@@ -3,6 +3,8 @@ import { Link, Navigate, useParams } from 'react-router'
 import Avatar from '../components/Avatar'
 import { currentUserId, VOTE_OPTIONS } from '../data/demoData'
 import { getFriendProfile, sendListInvites } from '../data/mockDataLayer'
+import BackLink from '../components/BackLink'
+import Button from '../components/Button'
 
 // "2025-03-01" -> "Mar 2025". timeZone UTC so the month doesn't shift a day back in New York.
 function formatMonthYear(isoDate) {
@@ -33,8 +35,7 @@ export default function FriendProfile() {
         <h1 className="text-2xl font-semibold">We couldn’t find this friend</h1>
         <Link to="/friends" className="mt-4 inline-block font-semibold text-brand hover:text-brand-dark">
           Back to friends
-        </Link>
-      </section>
+        </Link></section>
     )
   }
 
@@ -59,11 +60,9 @@ export default function FriendProfile() {
 
   return (
     <section className="px-5 py-6">
-      <Link to="/friends" aria-label="Back to friends" className="text-2xl">
-        ←
-      </Link>
+      <BackLink to="/friends" label="Back to friends" className="mb-6" />
 
-      <div className="mt-4 flex items-center gap-4">
+      <div className="flex items-center gap-4">
         <Avatar user={friend} size="lg" />
         <div className="min-w-0 flex-1">
           <h1 className="truncate text-2xl font-semibold tracking-tight">{friend.name}</h1>
@@ -75,7 +74,7 @@ export default function FriendProfile() {
 
       <dl className="mt-6 grid grid-cols-3 gap-3">
         {statTiles.map((stat) => (
-          <div key={stat.label} className="rounded-card bg-background p-3">
+          <div key={stat.label} className="rounded-card bg-subtle p-3">
             <dd className="text-2xl font-semibold">{stat.value}</dd>
             <dt className="text-xs text-muted">{stat.label}</dt>
           </div>
@@ -91,7 +90,7 @@ export default function FriendProfile() {
             <li key={city.id}>
               <Link
                 to={`/city/${city.id}`}
-                className="inline-block rounded-button border border-border px-4 py-2 font-semibold"
+                className="inline-block rounded-button border border-border px-4 py-2 font-semibold hover:border-brand focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-brand"
               >
                 {city.name}
               </Link>
@@ -107,7 +106,7 @@ export default function FriendProfile() {
         <ul aria-label="Recently saved" className="mt-2 divide-y divide-border">
           {recentlySaved.map((item) => (
             <li key={item.savedPlaceId}>
-              <Link to={`/place/${item.placeId}`} className="flex items-center gap-3 py-3">
+              <Link to={`/place/${item.placeId}`} className="-mx-2 flex items-center gap-3 rounded-input px-2 py-3 hover:bg-subtle focus-visible:outline-3 focus-visible:outline-brand">
                 <img src={item.thumbnailUrl} alt="" className="size-12 shrink-0 rounded-input bg-peach object-cover" />
                 <div className="min-w-0 flex-1">
                   <p className="truncate font-semibold">{item.name}</p>
@@ -135,15 +134,14 @@ export default function FriendProfile() {
           <p className="text-center text-sm text-muted">{name} is already on all your lists.</p>
         ) : (
           <>
-            <button
-              type="button"
+            <Button
               onClick={() => setPickerOpen((open) => !open)}
               disabled={!canInviteSomewhere}
               aria-expanded={pickerOpen}
-              className="btn-primary min-h-12 w-full font-semibold disabled:opacity-50"
+              className="w-full"
             >
               Invite to list
-            </button>
+            </Button>
 
             {pickerOpen && (
               <ul aria-label="Choose a list" className="mt-3 flex flex-col gap-2">
@@ -155,7 +153,7 @@ export default function FriendProfile() {
                         type="button"
                         onClick={() => invite(list)}
                         disabled={invited}
-                        className="flex w-full items-center justify-between rounded-button border border-border px-4 py-3 text-left disabled:opacity-50"
+                        className="flex w-full items-center justify-between rounded-button border border-border px-4 py-3 text-left hover:border-brand focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-brand disabled:opacity-50 disabled:hover:border-border"
                       >
                         <span className="font-semibold">{list.cityName}</span>
                         <span className="text-sm text-muted">{invited ? 'Invite sent' : 'Invite'}</span>
