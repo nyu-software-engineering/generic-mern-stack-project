@@ -2,13 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import ScreenTitle from "../components/ui/ScreenTitle.jsx";
 import { getNotifications } from "../data/api.js";
-
-function formatDate(isoDate) {
-  return new Date(isoDate).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-  });
-}
+import { formatDate } from "../data/format.js";
 
 export default function Notifications() {
   const navigate = useNavigate();
@@ -74,7 +68,7 @@ export default function Notifications() {
                 </p>
               </div>
               <span className="shrink-0 pr-2 text-xs text-muted">
-                {formatDate(notification.createdAt)}
+                {formatDate(notification.createdAt.slice(0, 10))}
               </span>
             </button>
           </li>
