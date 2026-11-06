@@ -40,7 +40,7 @@ export default function FlyerCarousel({ category }) {
       <h1 className="heading w-full text-start">{CategoryLookup[category]}</h1>
       <div className="flex gap-4 overflow-x-auto w-full">
         {flyers.map((flyer) => (
-          <Flyer key={flyer.id} flyer={flyer}/>
+          <Flyer key={flyer.id} flyer={flyer} mode="carousel"/>
         ))}
       </div>
     </section>
