@@ -15,6 +15,12 @@
     margin-top: 0;
 }
 
+.message-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
 .lease-messaging h3 {
     font-size: 18px;
     margin-top: 25px;
@@ -27,6 +33,8 @@
 }
 
 .message-box {
+    display: flex;
+    flex-direction: column;
     min-height: 180px;
     max-height: 300px;
     overflow-y: auto;
@@ -38,11 +46,24 @@
 }
 
 .message-box .message {
+    max-width: 75%;
     background-color: #e5e7eb;
     padding: 10px;
     margin: 8px 0;
     border-radius: 8px;
     overflow-wrap: anywhere;
+}
+
+.sent-by-me {
+    align-self: flex-end;
+}
+
+.sent-by-other {
+    align-self: flex-start;
+}
+
+.delete-message {
+    margin-left: 8px;
 }
 
 .message-form {

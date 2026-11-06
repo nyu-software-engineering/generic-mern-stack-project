@@ -25,8 +25,10 @@
 }
 
 .chat-dashboard-element {
+  position: relative;
   width: 100%;
   padding: 10px;
+  padding-right: 85px;
   text-align: left;
   background-color: white;
   border: 1px solid #ddd;
@@ -41,6 +43,14 @@
 
 .chat-dashboard-element p {
   margin: 0;
+  color: #666;
+  font-size: 12px;
+}
+
+.last-active {
+  position: absolute;
+  top: 10px;
+  right: 10px;
   color: #666;
   font-size: 12px;
 }
