@@ -40,3 +40,10 @@ test('open item requests appear once the shared mock data loads', async (t) => {
   assert.ok(items.every((item) => item.type === 'item'))
   assert.deepEqual(getBoardRequests('mine').map((item) => item.itemName), ['HDMI cable'])
 })
+
+test('quick borrow requests from the shared mock data appear on the Quick borrow tab', () => {
+  // Fixtures: "USB-C phone charger" is from student-2, so it is someone else's request.
+  assert.deepEqual(getBoardRequests('quick').map((item) => item.itemName), ['USB-C phone charger'])
+  assert.ok(getBoardRequests('all').some((item) => item.itemName === 'USB-C phone charger'))
+})
+

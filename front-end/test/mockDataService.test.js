@@ -85,6 +85,8 @@ for (const [name, corrupt] of [
   ['review by nonparticipant', (data) => { data.reviews[0].reviewerId = 'outsider' }],
   ['duplicate reviews for a booking', (data) => { data.reviews.push({ ...data.reviews[0], id: 3 }) }],
   ['unknown item requester', (data) => { data.itemRequests[0].requesterId = 'missing' }],
+  ['unknown quick borrow requester', (data) => { data.quickBorrowRequests[0].requesterId = 'missing' }],
+  ['quick borrow request with a bad date', (data) => { data.quickBorrowRequests[0].neededBy = 'soon' }],
   ['invalid item request status', (data) => { data.itemRequests[0].status = 'pending' }],
   ['response to a missing conversation', (data) => {
     data.itemRequests[0].responses = [{ responderId: 'owner-1', conversationId: 99, messageIds: [] }]
