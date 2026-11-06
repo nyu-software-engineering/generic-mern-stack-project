@@ -26,6 +26,7 @@ const Profile = ({user}) => {
                         className="profile-settings-link"
                         aria-label="Profile settings"
                         >    
+                             ⚙
                         </Link>
                 </div>
                 <h1 className="profile-name">{fullName}</h1>
@@ -33,9 +34,19 @@ const Profile = ({user}) => {
 
                 <section className="profile-hobbies">
                     <h2 className="profile-section-title">Hobbies</h2>
-                    <p className="profile-empty-hobbies">
+                    {user.hobbies && user.hobbies.length > 0 ?(
+                        <ul className="profile-hobby-list">
+                            {user.hobbies.map(hobby =>(
+                                <li className="profile-hobbby-item" key={hobby}>
+                                    {hobby}
+                                </li>
+                            ))}
+                        </ul>
+                    ):(
+                      <p className="profile-empty-hobbies">
                         No hobbies added yet. Please add the hobbies your intrested in on the settings page.
-                    </p>
+                    </p>   
+                    )}
                 </section>
 
                 <Link 
@@ -52,7 +63,7 @@ const Profile = ({user}) => {
                             <img
                               key={id}
                               className="profile-post-image"
-                              src={`https://picsum.photos.seed/hobbyhub-${id}/300/300`}
+                              src={`https://picsum.photos/seed/hobbyhub-${id}/300/300`}
                               alt={`Mock post ${id}`}
                             />
                         ))}

@@ -61,7 +61,12 @@ const App = () => {
           <Route path="/chat" element={<Chat />} />
           <Route 
             path="/profile/settings"
-            element={<ProfileSettings />}
+            element={
+              <ProfileSettings 
+                user={user}
+                onUpdateUser={setUser}
+              />
+            }
           />
         </Routes>
       </Router>

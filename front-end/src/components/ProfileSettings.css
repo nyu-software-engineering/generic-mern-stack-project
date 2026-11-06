@@ -1,0 +1,195 @@
+.settings-page{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 420px;
+    min-height: 0vh;
+    margin: 0 auto;
+    background-color: #ffffff;
+    color: #222222;
+    font-family: Arial, sans-serif;
+}
+
+.settings-header{
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 24px 20px;
+    border-bottom: 1px solid #eeeeee;
+}
+
+.settings-back{
+    color: #222222;
+    font-size: 14px;
+    text-decoration: none;
+}
+
+.settings-title{
+    margin: 0;
+    font-size: 18px;
+}
+
+.settings-content{
+    flex: 1;
+    padding: 36px 20px;
+}
+
+.settings-privacy{
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+
+.settings-section-title{
+    margin-bottom: 20px;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.settings-privacy-option{
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+    border: 1px solid #333333;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.settings-privacy-option input{
+    width: 18px;
+    height: 18px;
+    accent-color: #7164c7;
+}
+
+.settings-privacy-text{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-size: 14px;
+}
+
+.settings-menu-button{
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    padding: 14px 0;
+    background-color: transparent;
+    border: none;
+    border-bottom: 1px solid #eeeeee;
+    font: inherit;
+    font-size: 14px;
+    text-align: left;
+    cursor: pointer;
+}
+
+.settings.menu-icon{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background-color: #eeeeee;
+    color: #7164c7;
+    font-size: 18px;
+}
+
+.settings-menu-arrow{
+    margin-left: auto;
+    font-size: 22px;
+}
+
+.settings-panel{
+    margin-top: 28px;
+    padding: 20px;
+    background-color: #f7f6fb;
+    border-radius: 8px;
+}
+
+.settings-panel-title{
+    margin: 0 0 20px;
+    font-size: 18px;
+}
+
+.settings-label{
+    display: block;
+    margin: 16px 0 8px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.settings-input{
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #cccccc;
+    border-radius: 6px;
+    font: inherit;
+}
+
+.settings-save-button{
+    width: 100%;
+    margin-top: 20px;
+    padding: 12px;
+    background-color: #7164c7;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font: inherit;
+    cursor: pointer;
+}
+
+.settings-save-button:disabled{
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.settings-hobby-list{
+    padding: 0;
+    list-style: none;
+}
+
+.settings-hobby-item{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 12px;
+    padding: 8px;
+    background-color: white;
+    border-radius: 6px;
+}
+
+.settings-remove-button{
+    border: none;
+    background-color: transparent;
+    color: #7164c7;
+    cursor: pointer;
+}
+
+.settings-profile-picture{
+    display: block;
+    width: 100px;
+    height: 100px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.settings-error{
+    color: #b00020;
+    font-size: 14px;
+}
+
+.settings-navigation{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 20px 4px;
+    border-top: 1px solid #eeeeee
+}
+
+.settings-active-nav{
+    color: #7164c7;
+    text-decoration: none;
+    font-weight: bold;
+}

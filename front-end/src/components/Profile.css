@@ -143,3 +143,19 @@
         border:none;
     }
 }
+
+.profile-hobby-list{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 0;
+    list-style: none;
+}
+
+.profile-hobby-item{
+    padding: 10px 16px;
+    background-color: #f1effa;
+    color: #7164c7;
+    border-radius: 8px;
+    font-size: 14px;
+}
