@@ -10,6 +10,7 @@ import {
   savePlaceToList,
 } from '../data/mockDataLayer'
 import './Identifying.css'
+import BackLink from '../components/BackLink'
 
 /**
  * Place Found screen
@@ -70,9 +71,7 @@ export default function Identifying() {
 
   return (
     <section className="flow-page">
-      <Link className="flow-back" to="/create" aria-label="Back">
-        ←
-      </Link>
+      <BackLink to="/create" className="mb-6" />
 
       <p className="flow-eyebrow">Found it</p>
       <h1 className="flow-title">Is this the place?</h1>

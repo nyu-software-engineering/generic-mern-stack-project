@@ -49,21 +49,21 @@ export default function Friends() {
         ) : (
           <ul aria-label="Your friends" className="divide-y divide-border">
             {visibleFriends.map((friend) => (
-                <li key={friend.id}>
-                    <Link to={`/friends/${friend.id}`} className="flex items-center gap-3 py-3">
-                        <Avatar user={friend} size="md" />
-                        <div className="flex min-w-0 flex-1 flex-col">
-                            <span className="truncate font-semibold">{friend.name}</span>
-                            <span className="truncate text-sm text-muted">
-                                @{friend.username} · {sharedCitiesLabel(friend.sharedCities)}
-                            </span>
-                        </div>
-                        <span aria-hidden="true" className="text-muted">›</span>
-                    </Link>
-                </li>
+              <li key={friend.id}>
+                <Link to={`/friends/${friend.id}`} className="-mx-2 flex items-center gap-3 rounded-input px-2 py-3 hover:bg-subtle focus-visible:outline-3 focus-visible:outline-brand">
+                  <Avatar user={friend} size="md" />
+                  <div className="flex min-w-0 flex-1 flex-col">
+                    <span className="truncate font-semibold">{friend.name}</span>
+                    <span className="truncate text-sm text-muted">
+                      @{friend.username} · {sharedCitiesLabel(friend.sharedCities)}
+                    </span>
+                  </div>
+                  <span aria-hidden="true" className="text-muted">›</span>
+                </Link>
+              </li>
             ))}
-                  </ul>
-              )}
+          </ul>
+        )}
 
         {isSearching && visibleFriends.length > 0 && (
           <p role="status" className="sr-only">

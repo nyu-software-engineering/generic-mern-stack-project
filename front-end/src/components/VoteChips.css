@@ -49,7 +49,7 @@
 }
 
 .vote-chips__button--pass {
-  background-color: var(--color-background);
+  background-color: var(--color-subtle);
   color: var(--color-ink);
 }
 

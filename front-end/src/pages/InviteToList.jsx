@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from 'react-router'
 import { currentUserId } from '../data/demoData'
 import { getInviteToListData, sendListInvites } from '../data/mockDataLayer'
 import './InviteToList.css'
+import BackLink from '../components/BackLink'
 
 /** Small avatar. */
 function UserPhoto({ user }) {
@@ -95,10 +96,8 @@ export default function InviteToList() {
   return (
     <section className="invite-page">
       <header className="invite-header">
-        <Link className="invite-back" to={`/city/${cityId}`} aria-label="Back to city list">
-          ←
-        </Link>
-        <h1 className="invite-title">Who's coming to Paris?</h1>
+        <BackLink to={`/city/${cityId}`} label={`Back to ${data.cityName}`} className="mb-6" />
+        <h1 className="invite-title">Who's coming to {data.cityName}?</h1>
         <p className="invite-subtitle">Invited friends can add places and vote</p>
       </header>
       <section aria-labelledby="invite-choose-heading">
@@ -148,16 +147,11 @@ export default function InviteToList() {
         </div>
       </section>
       <div className="invite-actions">
-        <button type="button" className="invite-copy" onClick={copyInviteLink}>
+        <button type="button" className="invite-copy btn-secondary hover:bg-subtle" onClick={copyInviteLink}>
           Copy invite link
         </button>
         {copyMessage && <p className="invite-feedback">{copyMessage}</p>}
-        <button
-          type="button"
-          className="invite-primary"
-          disabled={selectedIds.size === 0}
-          onClick={handleInvite}
-        >
+        <button type="button" className="invite-copy btn-secondary hover:bg-subtle" onClick={copyInviteLink}>
           Invite friends
         </button>
         {submitMessage && <p className="invite-feedback">{submitMessage}</p>}

@@ -4,6 +4,7 @@ import Avatar from '../components/Avatar'
 import TextField from '../components/TextField'
 import { currentUserId } from '../data/demoData'
 import { getUserProfile, isUsernameTaken, updateUserProfile } from '../data/mockDataLayer'
+import BackLink from '../components/BackLink'
 
 const MAX_PHOTO_BYTES = 5 * 1024 * 1024
 
@@ -93,9 +94,7 @@ export default function EditProfile() {
 
   return (
     <section className="px-5 py-6">
-      <Link to="/profile" className="text-sm font-semibold text-muted hover:text-ink">
-        <span aria-hidden="true">←</span> Back
-      </Link>
+      <BackLink to="/profile" label="Back to profile" className="mb-6" />
 
       <h1 className="mt-4 text-3xl font-semibold tracking-tight">Edit profile</h1>
 

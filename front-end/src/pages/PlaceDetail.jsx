@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router'
 import VoteChips from '../components/VoteChips'
+import BackLink from '../components/BackLink'
 import { castVote, getPlaceDetail, getPlaceVotes } from '../data/mockDataLayer'
 
 // Just the first name, so "Samantha Chen" reads as "Samantha"
@@ -70,7 +71,11 @@ export default function PlaceDetail() {
 
   return (
     <article>
-      <div className="relative h-56 bg-peach">
+      <div className="px-5 pt-6">
+        <BackLink to={`/city/${place.cityId}`} label={`Back to ${place.cityName}`} className="mb-6" />
+      </div>
+
+      <div className="relative mx-5 h-56 overflow-hidden rounded-card bg-peach">
         {place.photoUrl && !photoFailed && (
           <img
             className="size-full object-cover"
@@ -79,13 +84,6 @@ export default function PlaceDetail() {
             onError={() => setPhotoFailed(true)}
           />
         )}
-        <Link
-          to={`/city/${place.cityId}`}
-          aria-label={`Back to ${place.cityName}`}
-          className="absolute left-4 top-4 flex size-10 items-center justify-center rounded-pill bg-surface text-lg shadow-button"
-        >
-          <span aria-hidden="true">←</span>
-        </Link>
       </div>
 
       <div className="px-5 py-5">

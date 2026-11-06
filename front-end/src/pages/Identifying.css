@@ -3,15 +3,6 @@
   padding-bottom: 5rem;
 }
 
-.flow-back {
-  display: inline-block;
-  margin-bottom: 1rem;
-  padding: 0.25rem 0.5rem;
-  border: 1px solid #000;
-  text-decoration: none;
-  color: inherit;
-}
-
 .flow-eyebrow {
   margin: 0 0 0.25rem;
   color: #666;

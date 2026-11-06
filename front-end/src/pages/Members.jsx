@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router'
 import Avatar from '../components/Avatar'
 import { currentUserId } from '../data/demoData'
 import { getInviteToListData, getListByCityId } from '../data/mockDataLayer'
+import BackLink from '../components/BackLink'
 
 export default function Members() {
   const { cityId } = useParams()
@@ -15,9 +16,7 @@ export default function Members() {
     return (
       <section className="px-5 py-10 text-center">
         <h1 className="text-2xl font-semibold">City list not found</h1>
-        <Link to="/" className="mt-4 inline-block font-semibold text-brand hover:text-brand-dark">
-          Back to your lists
-        </Link>
+        <BackLink to={`/city/${data.cityId}`} label={`Back to ${data.cityName}`} className="mb-6" />
       </section>
     )
   }

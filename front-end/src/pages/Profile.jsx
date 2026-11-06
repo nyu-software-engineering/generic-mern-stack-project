@@ -52,7 +52,7 @@ export default function Profile() {
 
       <dl className="mt-6 grid grid-cols-3 gap-3">
         {stats.map((stat) => (
-          <div key={stat.label} className="rounded-card bg-background p-3">
+          <div key={stat.label} className="rounded-card bg-subtle p-3">
             <dd className="text-2xl font-semibold">{stat.value}</dd>
             <dt className="text-xs text-muted">{stat.label}</dt>
           </div>
@@ -87,7 +87,7 @@ export default function Profile() {
         <ul className="mt-2 flex flex-col">
           {profile.cities.map((city) => (
             <li key={city.id} className="border-b border-border">
-              <Link to={`/city/${city.id}`} className="flex items-center justify-between py-3">
+              <Link to={`/city/${city.id}`} className="-mx-2 flex items-center justify-between rounded-input px-2 py-3 hover:bg-subtle focus-visible:outline-3 focus-visible:outline-brand">
                 <span className="font-semibold">{city.name}</span>
                 <span className="text-sm text-muted">
                   {city.placeCount} {city.placeCount === 1 ? 'place' : 'places'} <span aria-hidden="true">›</span>

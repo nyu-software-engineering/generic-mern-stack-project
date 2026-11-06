@@ -59,10 +59,9 @@ export default function MostSavedByFriends() {
             <li key={place.id}>
               <Link
                 to={`/place/${place.id}`}
-                className="flex h-full flex-col overflow-hidden rounded-card bg-surface text-ink no-underline shadow-card focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-brand"
+                className="flex h-full flex-col rounded-card border border-border bg-surface text-ink no-underline shadow-card hover:border-brand focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-brand"
               >
-                <img src={place.photoUrl} alt="" loading="lazy" className="aspect-[4/3] w-full bg-peach object-cover" />
-                <div className="flex flex-1 flex-col items-start gap-1 p-3">
+                <div className="flex flex-1 flex-col items-start gap-2 p-4">
                   <CategoryTag categoryId={place.categoryId} label={place.categoryLabel} />
                   <span className="font-semibold leading-tight">{place.name}</span>
                   <span className="text-xs text-muted">{place.cityName} · {place.savedByLabel}</span>
