@@ -1,25 +1,9 @@
 import { useState } from "react"
 
-
-const stages = [
-  "Saved",
-  "Preparing",
-  "Applied",
-  "Interview",
-  "Rejected",
-  "Offer",
-]
-
-function formatDate(date) 
-
-{
-  if (!date) 
-  
-  {
-    
+function formatDate(date) {
+  if (!date) {
     return "None"
   }
-  
 
   return new Date(date).toLocaleDateString("en-US", {
     month: "short",
@@ -32,76 +16,31 @@ function ApplicationDetails({
   application,
   job,
   onBack,
-  onStageChange,
   onNoteSave,
   onRemove,
 }) {
-  const [draftStage, setDraftStage] = useState(
-    
-    
-    application.stage
-  )
-
   const [draftNote, setDraftNote] = useState(
-    
-    
     application.note ?? ""
   )
 
-  const stageChanged =
-        
-    draftStage !== application.stage
-
-  const savedNote =
-        
-    application.note ?? ""
-
-  const noteChanged =
-        
-    draftNote !== savedNote
-
-  function handleUpdateStage() 
-  
-  {
-    if (!stageChanged) 
-    
-    {
-      return
-    }
-
-    onStageChange(draftStage)
-  }
-
-  function handleCancelStage() 
-  
-  {
-    setDraftStage(application.stage)
-  }
+  const savedNote = application.note ?? ""
+  const noteChanged = draftNote !== savedNote
 
   function handleSaveNote() {
     onNoteSave(draftNote)
   }
 
-  function handleClearNote() 
-  
-  {
+  function handleClearNote() {
     setDraftNote("")
-    
     onNoteSave("")
   }
 
-  function handleRemove() 
-  
-  {
+  function handleRemove() {
     const confirmed = window.confirm(
-      
-      
       "Are you sure you want to remove this application from your Tracker?"
     )
 
-    if (!confirmed) 
-    
-    {
+    if (!confirmed) {
       return
     }
 
@@ -109,7 +48,6 @@ function ApplicationDetails({
   }
 
   return (
-    
     <main className="app">
       <button onClick={onBack}>
         Back to Tracker
@@ -118,136 +56,63 @@ function ApplicationDetails({
       <h1>Application Details</h1>
 
       <h2>{job?.title || "Unknown job"}</h2>
-
       <p>{job?.company || "Unknown company"}</p>
 
       <section>
-        
         <h3>Current Stage</h3>
-
-        <select
-
-          value={draftStage}
-
-          onChange={(event) =>
-          
-            setDraftStage(event.target.value)
-
-          }
-        >
-          {stages.map((stage) => (
-            
-            <option
-            
-              key={stage}
-          
-              value={stage}
-            >
-              {stage}
-
-            </option>
-
-          ))}
-          
-        </select>
-
-        <button
-
-          onClick={handleUpdateStage}
-
-          disabled={!stageChanged}
-        >
-          Update
-
-        </button>
-
-        <button
-
-          onClick={handleCancelStage}
-
-          disabled={!stageChanged}
-        >
-          Cancel
-        </button>
-
+        <p>{application.stage}</p>
       </section>
 
       <section>
-            
         <h3>Deadline</h3>
-
         <p>{formatDate(job?.deadline)}</p>
-            
       </section>
 
       <section>
-            
         <h3>Last Updated</h3>
-            
         <p>{formatDate(application.updatedAt)}</p>
-
       </section>
 
       <section>
         <h3>Stage History</h3>
 
         {application.history.map((item, index) => (
-          
           <div
             key={`${item.stage}-${item.at}-${index}`}
-            
           >
             <strong>{item.stage}</strong>
-            
             <p>{formatDate(item.at)}</p>
-            
           </div>
-          
         ))}
-        
       </section>
 
       <section>
-      
         <h3>Notes</h3>
 
         <textarea
-        
           value={draftNote}
-          
           onChange={(event) =>
             setDraftNote(event.target.value)
-            
           }
-          
           rows="5"
-          
           placeholder="Add notes about this application"
         />
 
         <div>
-        
           <button
             onClick={handleSaveNote}
-            
             disabled={!noteChanged}
           >
             Save Note
-            
           </button>
 
           <button
-          
             onClick={handleClearNote}
-            
             disabled={
-            
-              draftNote === "" &&
-              savedNote === ""
+              draftNote === "" && savedNote === ""
             }
           >
             Clear Note
-            
           </button>
         </div>
       </section>
@@ -260,9 +125,7 @@ function ApplicationDetails({
         </p>
 
         <button onClick={handleRemove}>
-        
           Remove Application
-          
         </button>
       </section>
     </main>
