@@ -15,15 +15,14 @@ body,
 }
 
 .household-dashboard-container {
-  background-color: #c9cad9;
-  width: 100%;
-  min-height: 750px;
-  /* align-items: center; */
-  margin: auto;
-  box-sizing: border-box;
-  border-color: #576490;
-  border-radius: 0px;
-  border: 10px solid #576490;
+  background-color: #C9CAD9;
+    width: 50%;
+    min-height: 750px;
+    /* align-items: center; */
+    margin: auto;
+    border-color: #576490;
+    border-radius: 15px;
+    border: 10px solid #576490;
 }
 
 .household-dashboard-container h1 {
