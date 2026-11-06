@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import SplitLeaseLogo from "../../assets/splitlease-blank-background-logo.png";
 import { getHouseholdProtocols } from "./mockProtocols";
 import "./Protocols.css";
@@ -49,11 +49,13 @@ const Protocols = () => {
   return (
     <div className="protocolsContainer">
       <header className="protocolsHeader">
-        <img
-          src={SplitLeaseLogo}
-          alt="SplitLease logo"
-          className="protocolsLogo"
-        />
+        <Link to="/home">
+          <img
+            src={SplitLeaseLogo}
+            alt="SplitLease logo"
+            className="protocolsLogo"
+          />
+        </Link>
         <button
           type="button"
           className="protocolsBack"
