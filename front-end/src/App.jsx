@@ -3,6 +3,7 @@ import './App.css'
 import MyMaps from "./MyMaps";
 import MapEditor from "./Map-Editor";
 import Home from "./Home";
+import Menu from "./Menu";
 import MapSearch from './MapSearch'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import EditorProvider from './map-editor/EditorProvider'
@@ -124,17 +125,7 @@ function App() {
         <Route path="/" element={<Home onCreateMap={createMap} />} />
         <Route path="/home" element={<Home onCreateMap={createMap} />} />
         <Route path="/search" element={<MapSearch onChooseMap={chooseMap} onCreateMap={createMap} />} />
-        <Route path="/menu" element={
-          <main className="menu-page">
-            <header><h2><Link to="/">Logo</Link></h2></header>
-            <h1>Menu</h1>
-            <nav aria-label="Main menu">
-              <p><Link to="/">Home</Link></p>
-              <p><Link to="/MyMaps">My Maps</Link></p>
-              <p><Link to="/login">Sign in / Sign up</Link></p>
-            </nav>
-          </main>
-        } />
+        <Route path="/menu" element={<Menu />} />
         <Route path="/MyMaps" element={<MyMaps maps={maps} onCreateMap={createMap} />} />
         <Route path="/Map-Editor" element={<MapEditor onRenameMap={renameMap} />} />
         <Route path="/style" element={<StylePage />} />
