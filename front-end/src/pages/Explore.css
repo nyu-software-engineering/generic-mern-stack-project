@@ -4,6 +4,7 @@
   max-width: 420px;
   margin: 0 auto;
   text-align: left;
+  box-sizing: border-box;
 }
 
 .explore-page h2 {
@@ -27,17 +28,18 @@
 
 .explore-search {
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
   margin-bottom: 18px;
 }
 
 .explore-search input {
-  flex: 1;
-  min-width: 0;
+  width: 100%;
   padding: 14px;
   border: 1px solid #dddddd;
   border-radius: 30px;
   font-size: 14px;
+  box-sizing: border-box;
   background-color: white;
 }
 
@@ -46,14 +48,34 @@
   border-color: #333333;
 }
 
+.search-button {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  border-radius: 30px;
+  background-color: #222222;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.search-button:hover {
+  background-color: #444444;
+}
+
 .filter-open {
-  padding: 12px 16px;
+  flex: 1;
+  padding: 12px;
   border: 1px solid #dddddd;
   border-radius: 30px;
   background-color: white;
   color: #222222;
-  font-size: 13px;
+  font-size: 14px;
   cursor: pointer;
+}
+
+.filter-open:hover {
+  background-color: #f5f5f5;
 }
 
 /* Filter popup */
@@ -154,16 +176,16 @@
 }
 
 @media (max-width: 500px) {
-    .explore-page {
-      padding: 0 5px;
-    }
+  .explore-page {
+    padding: 0 5px;
+  }
 
-    .explore-page h2 {
-      font-size: 21px;
-    }
+  .explore-page h2 {
+    font-size: 21px;
+  }
 
-    .filter-panel {
-      width: 92%;
-      padding: 18px;
-    }
+  .filter-panel {
+    width: 92%;
+    padding: 18px;
+  }
 }
