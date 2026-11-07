@@ -2,10 +2,17 @@
 .mm-content { max-width: 540px; margin: auto; padding: 12px 20px 35px; }
 .mm-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
 .mm-shell button { cursor: pointer; font: inherit; }
-.mm-header button, .mm-actions button, .mm-style-grid button {
+.mm-header button, .mm-actions button{
+  background:#2563eb;
+  color: white;
+  border: none;
+  border-radius:0;
+  padding:9px 15px
+} 
+.mm-style-grid button {
   background: #ddd; border: 1px solid #888; border-radius: 0; padding: 9px 15px;
 }
-.mm-header .mm-logo { background: none; border: 0; font-size: 18px; font-weight: bold; padding-left: 0; }
+.mm-header .mm-logo { background: none; border: 0; color: #2563eb; font-size: 18px; font-weight: bold; padding-left: 0; }
 .mm-map-title { margin: 0 0 20px; font-size: 20px; text-align: center; overflow-wrap: anywhere; }
 .mm-map-image, .mm-editor-map-art { max-width: 390px; margin: 0 auto 22px; }
 .mm-world-map { display: block; width: 100%; height: auto; }
