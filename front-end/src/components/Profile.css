@@ -72,7 +72,7 @@
     margin-top: 36px;
 }
 
-.profile-section title{
+.profile-section-title{
     margin: 0 0 16px;
     font-size: 18px;
 }
@@ -89,7 +89,7 @@
     display: block;
     margin: 24px 0 40px;
     padding: 13px;
-    border: 1px;
+    border: 1px solid #7164c7;
     border-radius: 8px;
     color: #7164c7;
     font-size: 15px;

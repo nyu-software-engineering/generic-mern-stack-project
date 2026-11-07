@@ -159,7 +159,8 @@ const ProfileSettings = ({user, onUpdateUser}) => {
                         </label>
                         <input
                             className="settings-input"
-                            id={firstName}
+                            id="first-name"
+                            value={firstName}
                             onChange={event => setFirstName(event.target.value)}
                             required
                         />
@@ -253,16 +254,16 @@ const ProfileSettings = ({user, onUpdateUser}) => {
                 <Link to="/feed" className="settings-nav-item">
                         Feed
                 </Link>
-                <Link to="discover" className="settings-nav-item">
+                <Link to="/discover" className="settings-nav-item">
                         Discover
                 </Link>
-                <Link to="following" className="settings-nav-item">
+                <Link to="/following" className="settings-nav-item">
                         Following
                 </Link>
-                <Link to="map" className="settings-nav-item">
+                <Link to="/map" className="settings-nav-item">
                         Map
                 </Link>
-                <Link to="profile" className="settings-active-nav">
+                <Link to="/profile" className="settings-active-nav">
                         Profile
                 </Link>
             </nav>
