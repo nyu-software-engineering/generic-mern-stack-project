@@ -11,6 +11,8 @@ import Favorites from './pages/Favorites';
 import { FavoritesProvider } from './context/FavoritesContext';
 import CalendarView from './pages/CalendarView';
 import AddFlyer from './pages/AddFlyer';
+import EditFlyer from './pages/EditFlyer';
+import { FlyersProvider } from './context/FlyersContext';
 import MapView from './pages/MapView';
 import Profile from './pages/Profile';
 import EditProfile from './pages/EditProfile';
@@ -22,6 +24,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <FavoritesProvider>
+      <FlyersProvider>
       <Routes>
         {/* No Header or NavBar */}
         <Route path="/" element={<Landing />} />
@@ -36,10 +39,12 @@ export default function App() {
           <Route path="/favorites" element={<Favorites />} />
           <Route path="/calendar" element={<CalendarView />} />
           <Route path="/add-flyer" element={<AddFlyer />} />
+          <Route path="/flyers/:flyerId/edit" element={<EditFlyer />} />
           <Route path="/map" element={<MapView />} />
           <Route path="/profile" element={<Profile />} />
         </Route>
       </Routes>
+      </FlyersProvider>
       </FavoritesProvider>
     </BrowserRouter>
   );
