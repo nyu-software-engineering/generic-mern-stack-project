@@ -1,43 +1,37 @@
-/* Styles for the Add Application screen */
+/* Styles for the application form shared by Add Application and Edit Application */
 
-.add-application__hint {
+.application-form__hint {
   color: var(--color-text-muted);
   font-size: var(--font-size-xs);
 }
 
-
 /* One recruiter contact (name, email, phone) */
-.add-application__contact {
+.application-form__contact {
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
 }
 
 /* A line between contacts when there is more than one */
-.add-application__contact + .add-application__contact {
+.application-form__contact + .application-form__contact {
   padding-top: var(--space-4);
   border-top: var(--border-width) solid var(--color-border);
 }
 
-.add-application__add-contact {
-  align-self: flex-start;
-}
-
-
 /* "Contact 2" label with the Remove button next to it */
-.add-application__contact-header {
+.application-form__contact-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-.add-application__contact-title {
+.application-form__contact-title {
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-semibold);
   color: var(--color-text-muted);
 }
 
-
-.add-application__remove-resume {
+.application-form__add-contact,
+.application-form__remove-resume {
   align-self: flex-start;
 }

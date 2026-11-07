@@ -5,6 +5,7 @@ import {Avatar, Button, Card,ConfirmDialog, ErrorState, EventCard, ListRow, Load
 import { APPLICATION_STATUSES, getLabel, getStatus, JOB_TYPES } from '../../constants'
 import { useApi } from '../../hooks/useApi'
 import { formatDate, todayString } from '../../utils/format'
+import DeleteApplicationButton from './DeleteApplicationButton'
 import './ApplicationDetails.css'
 
 // Load the application and its events at the same time
@@ -231,6 +232,9 @@ export default function ApplicationDetails() {
       <Button variant="secondary" fullWidth onClick={() => setArchiveOpen(true)}>
         {application.archived ? 'Unarchive application' : 'Archive application'}
       </Button>
+
+      {/* Delete application button */}
+      <DeleteApplicationButton applicationId={id} />
 
       {/* Update status pop-up with every status to pick from */}
       <OptionSheet

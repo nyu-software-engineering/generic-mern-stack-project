@@ -1,16 +1,110 @@
-import { Page, PagePlaceholder } from '../../components'
+import { useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import { api } from '../../api'
+import { Button, ErrorState, LoadingState, Page, SuccessDialog } from '../../components'
+import { useApi } from '../../hooks/useApi'
+import ApplicationForm from './ApplicationForm'
+import {
+  emptyRecruiter,
+  getApplicationErrors,
+  isApplicationValid,
+  removeEmptyRecruiters,
+} from './applicationFormHelpers'
 
 /**
  * Edit Application screen.
- * Owner: Bertin · Issues: #43, #49, #54
- * Wireframe: ux-design/prototype/edit-application.png · Pop-ups: changes-saved.png
- *
- * Get the id with useParams(), load with api.getApplication(id), save with api.updateApplication(id, changes).
+ * Written By Bertin · Issues
  */
 export default function EditApplication() {
+  const { id } = useParams() // the :id from the URL, e.g. "app-1"
+  const { data: application, loading, error, reload } = useApi(() => api.getApplication(id), [id])
+
+  // While loading or if loading failed, show that instead of the form
+  if (loading && !application) {
+    return (
+      <Page title="Edit Application" back>
+        <LoadingState />
+      </Page>
+    )
+  }
+  if (error) {
+    return (
+      <Page title="Edit Application" back>
+        <ErrorState message={error.message} onRetry={reload} />
+      </Page>
+    )
+  }
+
+  // The form starts from the loaded application, so it's only shown once the data is here
+  return <EditApplicationForm application={application} />
+}
+
+function EditApplicationForm({ application }) {
+  const navigate = useNavigate()
+
+  // The form starts filled in with the saved application
+  const [form, setForm] = useState({
+    company: application.company,
+    position: application.position,
+    dateApplied: application.dateApplied,
+    status: application.status,
+    jobType: application.jobType,
+    location: application.location,
+    jobPostingUrl: application.jobPostingUrl,
+    notes: application.notes,
+    // Show one empty contact if the application doesn't have a recruiter yet
+    recruiters: application.recruiters.length > 0 ? application.recruiters : [emptyRecruiter()],
+    resume: application.resume,
+  })
+  const [submitted, setSubmitted] = useState(false) // true after the first tap on Save
+  const [saving, setSaving] = useState(false) // true while the changes are being saved
+  const [saved, setSaved] = useState(false) // true when the "Changes saved" pop-up should show
+  const [saveError, setSaveError] = useState('') // message shown if saving fails
+
+  const errors = getApplicationErrors(form)
+  // Only show errors after the user has tried to save once
+  const shownErrors = submitted ? errors : {}
+
+  async function handleSave() {
+    setSubmitted(true)
+    if (!isApplicationValid(errors)) return
+
+    setSaving(true)
+    setSaveError('')
+    try {
+      await api.updateApplication(application.id, { ...form, recruiters: removeEmptyRecruiters(form.recruiters) })
+      setSaved(true)
+    } catch (err) {
+      setSaveError(err.message)
+    } finally {
+      setSaving(false)
+    }
+  }
+
   return (
-    <Page title="Edit Application" back>
-      <PagePlaceholder owner="Bertin" issues={[43, 49, 54]} wireframe="edit-application.png" />
+    <Page
+      title="Edit Application"
+      back
+      footer={
+        <Button fullWidth loading={saving} onClick={handleSave}>
+          Save changes
+        </Button>
+      }
+    >
+      <ApplicationForm form={form} onChange={setForm} errors={shownErrors} />
+
+      {saveError && (
+        <p className="field__error" role="alert">
+          {saveError}
+        </p>
+      )}
+
+      <SuccessDialog
+        open={saved}
+        title="Changes saved"
+        message="Your application has been updated."
+        onDone={() => navigate(`/applications/${application.id}`)}
+      />
     </Page>
   )
 }
