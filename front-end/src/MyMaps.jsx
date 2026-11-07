@@ -1,32 +1,14 @@
 import { useState} from 'react'
 import { useNavigate } from 'react-router-dom'
-import "./MyMaps.css";
+import './MyMaps.css'
 
 
-function MyMaps(){
-    const [maps, setMaps] = useState([
-        { number: 1,
-          name: "Map Title",
-          image: "https://picsum.photos/100/100"
-        },
-        { number: 2,
-          name: "Map Title",
-          image: "https://picsum.photos/100/100"
-        },
-        { number: 3,
-          name: "Map Title",
-          image: "https://picsum.photos/100/100"
-        }
-    ])
-    const [newMap,setNewMap]=useState(" ")
-    function createNewMap(){
+function MyMaps({ maps, onCreateMap }){
+    const [newMap,setNewMap]=useState("")
+    function createNewMap(event){
+        event.preventDefault()
         if (newMap.trim()==="") return
-        const map = {
-               number: maps.length+1,
-               name: newMap, 
-               image: "https://picsum.photos/100/100" 
-        }
-        setMaps([...maps, map])
+        const map = onCreateMap(newMap)
         setNewMap("")
         navigate("/Map-Editor", { state: { map:map } })
         
@@ -50,37 +32,35 @@ function MyMaps(){
         <h1>My Maps</h1>
          <div className="map-list">
             {maps.map((map)=>(
-            <div
+            <button type="button"
                 className="map-card"
                 key={map.number}
                 onClick={() => navigate("/Map-Editor", { state: {  map:map } })}
             > 
                 <div className="map-picture">
-                <img
-                src={map.image}
-                alt="Map Preview"
-                />
+                {map.asset ? <img src={map.image} alt="Map Preview" /> : <span>World map</span>}
                 </div>
                 <div className="map-name">
                     <p>{map.name}</p>
 
                 </div>
                 
-                </div>
+                </button>
             ))}
             
         </div>
 
-        <div className="create-new-map">
+        <form className="create-new-map" onSubmit={createNewMap}>
             <input type="text" 
             placeholder="Create a New Map" 
             value={newMap}
             onChange={(event) => setNewMap(event.target.value)} /> 
             
-            <button onClick={createNewMap}>
+            <button type="submit">
             Send
             </button>
-        </div>
+        </form>
+        <button onClick={() => navigate('/search')}>Browse historical maps</button>
       
 
         </div>
