@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import mockListings from '../mockListings'
 import './ViewDetails.css'
 
-const ListingDetailsPage = () => {
+const ViewDetails = () => {
     const { id } = useParams() 
     const navigate = useNavigate()
     const [photoIndex, setPhotoIndex] = useState(0) 
@@ -72,4 +72,4 @@ const ListingDetailsPage = () => {
     )
  }
 
-export default ListingDetailsPage
+export default ViewDetails
