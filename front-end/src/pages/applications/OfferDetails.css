@@ -25,3 +25,10 @@
   font-size: var(--font-size-sm);
   color: var(--color-text-muted);
 }
+
+/* Error message if saving fails */
+.offer-details__error {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-danger);
+}

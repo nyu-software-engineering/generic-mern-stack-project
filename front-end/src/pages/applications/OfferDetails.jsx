@@ -1,17 +1,7 @@
-import { useParams } from 'react-router-dom'
+import { useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import { api } from '../../api'
-import {
-  Avatar,
-  Card,
-  ErrorState,
-  FormSection,
-  LoadingState,
-  Page,
-  SegmentedControl,
-  SelectField,
-  TextArea,
-  TextField,
-} from '../../components'
+import { Avatar, Button, Card, ErrorState, FormSection, LoadingState, Page, SegmentedControl, SelectField, SuccessDialog, TextArea, TextField } from '../../components'
 import { OFFER_DECISIONS, REMINDER_OPTIONS } from '../../constants'
 import { useApi } from '../../hooks/useApi'
 import './OfferDetails.css'
@@ -32,8 +22,14 @@ const EMPTY_OFFER = {
 export default function OfferDetails() {
   // Read the application id from the URL
   const { id } = useParams()
+  // Used to go back to the application after saving
+  const navigate = useNavigate()
   // Load the application and track loading/error state
   const { data: application, setData, loading, error, reload } = useApi(() => api.getApplication(id), [id])
+  // Whether it's saving, whether it saved, and any error from saving
+  const [saving, setSaving] = useState(false)
+  const [saved, setSaved] = useState(false)
+  const [saveError, setSaveError] = useState('')
 
   // Show a spinner while the data is loading
   if (loading && !application) {
@@ -61,8 +57,29 @@ export default function OfferDetails() {
     setData({ ...application, offer: { ...offer, [field]: value } })
   }
 
+  // Save the offer, then show the "Offer saved" pop-up
+  async function save() {
+    setSaving(true)
+    setSaveError('')
+    try {
+      await api.saveOffer(id, offer)
+      setSaved(true)
+    } catch (err) {
+      setSaveError(err.message)
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  // "Save offer" button fixed at the bottom of the screen
+  const saveButton = (
+    <Button fullWidth loading={saving} onClick={save}>
+      Save offer
+    </Button>
+  )
+
   return (
-    <Page title="Offer Details" back>
+    <Page title="Offer Details" back footer={saveButton}>
       {/* Which application this offer is for */}
       <Card>
         <div className="offer-details__job">
@@ -137,6 +154,21 @@ export default function OfferDetails() {
           onChange={(value) => update('notes', value)}
         />
       </FormSection>
+
+      {/* Error message if saving fails */}
+      {saveError && (
+        <p className="offer-details__error" role="alert">
+          {saveError}
+        </p>
+      )}
+
+      {/* "Offer saved" pop-up, then back to the application */}
+      <SuccessDialog
+        open={saved}
+        title="Offer saved"
+        message="Your offer details were saved to this application."
+        onDone={() => navigate(`/applications/${id}`)}
+      />
     </Page>
   )
 }
