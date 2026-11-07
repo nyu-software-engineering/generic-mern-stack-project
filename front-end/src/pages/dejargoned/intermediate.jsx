@@ -1,8 +1,15 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 
 // Placeholder page for stakeholder demos
 export default function Intermediate() {
     const navigate = useNavigate();
+    const { state } = useLocation();
+    const article = state?.article;
+
+    if (!article) {
+        return <p>Loading Article...</p>;
+    }
+
     return(
         <div className="min-h-screen bg-white">
             <header className="flex items-center justify-between border-b border-gray-200 px-6 py-4">
@@ -17,11 +24,15 @@ export default function Intermediate() {
 
             <main className="mx-auto w-full max-w-4xl px-6 py-10">
                 <div className="flex-1 mb-4 grid grid-cols-2">
-                    <button onClick = {() => navigate("/article")}
+                    <button onClick = {() => navigate(`/articles/${article.id}/`,
+                        { state: { article } }
+                    )}
                         className="bg-purple-600 text-white py-3 font-semibold hover:bg-purple-700">
                         Original
                     </button>
-                    <button onClick = {() => navigate("/dejargoned/intermediate")}
+                    <button onClick = {() => navigate(`/articles/${article.id}/dejargoned/i`,
+                        { state: { article } }
+                    )}
                         className="bg-gray-600 text-white py-3 font-semibold">
                         De-Jargoned
                     </button>
@@ -40,11 +51,15 @@ export default function Intermediate() {
                     </p>
 
                     <div className="flex-1 grid grid-cols-2">
-                        <button onClick = {() => navigate("/dejargoned/beginner")}
+                        <button onClick = {() => navigate(`/articles/${article.id}/dejargoned/b`,
+                            { state: { article } }
+                        )}
                             className="bg-purple-600 text-white px-5 font-semibold hover:bg-purple-700">
                             Beginner
                         </button>
-                        <button onClick = {() => navigate("/dejargoned/intermediate")}
+                        <button onClick = {() => navigate(`/articles/${article.id}/dejargoned/i`,
+                            { state: { article } }
+                        )}
                             className="bg-gray-600 text-white px-5 font-semibold">
                             Intermediate
                         </button>

@@ -1,8 +1,16 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+
 
 // 
-const Article = () => {
+export default function Article() {
     const navigate = useNavigate();
+    const { state } = useLocation();
+    const article = state?.article;
+
+    if (!article) {
+        return <p>Loading Article...</p>;
+    }
+
     return(
         <div className="min-h-screen bg-white">
             <header className="flex items-center justify-between border-b border-gray-200 px-6 py-4">
@@ -16,26 +24,30 @@ const Article = () => {
             </header>
 
             <main className="mx-auto w-full max-w-4xl px-6 py-10">
-                <div className="flex-1 mb-4 grid grid-cols-2">
-                    <button onClick = {() => navigate("/dejargoned/beginner")}
-                        className="bg-purple-600 text-white py-3 font-semibold hover:bg-purple-700">
+                <div className="mb-4 grid grid-cols-2">
+                    <button onClick = {() => navigate(`/articles/${article.id}/dejargoned/b`,
+                        { state: { article } }
+                    )}
+                        className="bg-gray-600 text-white py-3 font-semibold">
                         Original
                     </button>
-                    <button onClick = {() => navigate("/dejargoned/intermediate")}
-                        className="bg-gray-600 text-white py-3 font-semibold">
+                    <button onClick = {() => navigate(`/articles/${article.id}/dejargoned/b`,
+                        { state: { article } }
+                    )}
+                        className="bg-purple-600 text-white py-3 font-semibold hover:bg-purple-700">
                         De-Jargoned
                     </button>
                 </div>
 
                 <div className = "text-left">
                     <p className = "text-base mt-4">
-                        TOPIC | PUBLICATION
+                        topic | pub
                     </p>
                     <p className = "text-3xl font-bold mb-2">
-                        Lorem Ipsum
+                        title
                     </p>
-                    <p className = "text-base mb-6">
-                        AUTORED BY PETER MOJANG
+                    <p className = "text-base mb-6 uppercase">
+                        Authored by author
                     </p>
                     <p>
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas mi diam, accumsan commodo urna a, posuere blandit dolor. Fusce bibendum dapibus nisi, vitae accumsan nisi aliquet ut. Quisque venenatis ex libero, vel vehicula lorem molestie in. Nullam dapibus rhoncus nibh, eget lacinia ante fermentum nec. Integer porta, massa id suscipit ullamcorper, metus massa luctus purus, at laoreet est tellus nec augue. Phasellus eu nulla laoreet, ornare nibh et, viverra velit. Aliquam lacus arcu, sollicitudin id aliquet a, mattis sed ipsum. Quisque eget mi non mauris condimentum lacinia vel ut arcu. Praesent scelerisque leo et ex malesuada gravida. Pellentesque vel urna sem. Duis porta dui felis, porttitor efficitur magna convallis cursus. Aliquam erat velit, blandit id sagittis nec, ultricies vel augue. Sed non viverra magna, sit amet euismod ligula. Ut lacinia volutpat velit vel mollis. Suspendisse sodales ligula neque, sed faucibus lectus volutpat ac. Mauris suscipit enim ipsum, sed condimentum lectus convallis eget.<br></br>
@@ -52,6 +64,4 @@ const Article = () => {
             </main>
         </div>
     )
-}
-
-export default Article;
+} 
