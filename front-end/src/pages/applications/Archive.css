@@ -1,0 +1,6 @@
+/* "2 archived" */
+.archive__count {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
