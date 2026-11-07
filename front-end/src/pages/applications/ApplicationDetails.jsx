@@ -6,6 +6,7 @@ import {Avatar, Button, Card, ErrorState, EventCard, ListRow, LoadingState, Opti
 import { APPLICATION_STATUSES, getLabel, getStatus, JOB_TYPES } from '../../constants'
 import { useApi } from '../../hooks/useApi'
 import { formatDate, todayString } from '../../utils/format'
+import DeleteApplicationButton from './DeleteApplicationButton'
 import './ApplicationDetails.css'
 
 // Load the application and its events at the same time
@@ -211,6 +212,9 @@ export default function ApplicationDetails() {
           </Card>
         </section>
       )}
+
+      {/* Delete application button */}
+      <DeleteApplicationButton applicationId={id} />
 
       {/* Update status pop-up with every status to pick from */}
       <OptionSheet
