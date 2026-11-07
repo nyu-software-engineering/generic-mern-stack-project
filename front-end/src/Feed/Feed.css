@@ -29,33 +29,31 @@
   margin-bottom: 16px;
   font-size: 22px;
 }
-
-.create-post {
+.feed-actions {
   position: fixed;
-  bottom: 22px;
+  bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
 
-  width: 68px;
-  height: 68px;
+  width: 350px;
+  display: flex;
+  gap: 10px;
 
-  border: none;
-  border-radius: 50%;
+  z-index: 1000;
+}
+
+.feed-action-button {
+  flex: 1;
+  padding: 12px;
 
   background: #1f2b46;
   color: white;
 
-  font-size: 50px;
-  font-weight: 300;
-  line-height: 1;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
+  border-radius: 8px;
+  text-align: center;
   text-decoration: none;
-  cursor: pointer;
-  z-index: 1000;
+  font-size: 14px;
+  font-weight: 600;
 }
 
 .post-user {
