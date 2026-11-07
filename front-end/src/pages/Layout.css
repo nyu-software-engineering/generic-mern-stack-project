@@ -1,0 +1,40 @@
+.layout {
+  min-height: 100vh;
+}
+
+.layout-nav {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 16px 24px;
+  background-color: #2563eb;
+  color: white;
+}
+
+.layout-nav p {
+  margin: 0;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.layout-buttons {
+  display: flex;
+  gap: 6px;
+}
+
+.layout-buttons button {
+  padding: 10px;
+  border: 1px solid #202020;
+  border-radius: 5px;
+  background-color: #202020;
+  color: white;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.unread-count {
+  margin-left: 4px;
+  padding: 2px 5px;
+  background: black;
+  border-radius: 3px;
+}
