@@ -1,6 +1,9 @@
 import "./ListingCard.css";
+import { useNavigate } from "react-router-dom"
 
 function ListingCard({ listing, saved, onToggleSave }) {
+    const navigate = useNavigate();
+
     return (
         <div className="listing-card">
             <img src={listing.image} alt={listing.title} />
@@ -22,7 +25,11 @@ function ListingCard({ listing, saved, onToggleSave }) {
                     </button>
                 )}
 
-                <button className="details-button">
+                <button
+                    type="button"
+                    className="details-button"
+                    onClick={() => navigate(`/app/listings/${listing.id}`)}
+                >
                     View Details
                 </button>
             </div>

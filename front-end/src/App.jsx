@@ -9,6 +9,7 @@ import PostSubletPage from "./pages/PostSubletPage";
 import Profile from "./pages/Profile"
 import MyListings from "./pages/MyListings"
 import SavedListings from "./pages/SavedListings";
+import ViewDetails from "./pages/ViewDetails";
 
 import {BrowserRouter, Routes, Route} from "react-router-dom";
 import "./App.css";
@@ -38,6 +39,7 @@ function App() {
           <Route path = "messages" element = {<Messages />} />
           <Route path = "post" element = {<PostSubletPage />} />
           <Route path = "profile" element = {<Profile />} />
+          <Route path="listings/:id" element={<ViewDetails />} />
           <Route
             path="saved"
             element={<SavedListings savedIds={savedIds} onToggleSave={toggleSave} />}
