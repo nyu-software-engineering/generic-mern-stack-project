@@ -1,16 +1,18 @@
 import { useState } from 'react'
 import { api } from '../../api'
-import { ApplicationCard, Button, ConfirmDialog, EmptyState, ErrorState, LoadingState, Page } from '../../components'
+import { ApplicationCard, Button, ConfirmDialog, EmptyState, ErrorState, LoadingState, Page, SelectField } from '../../components'
 import { useApi } from '../../hooks/useApi'
 import './Archive.css'
 
 // Archive screen: lists applications from past recruiting seasons
 export default function Archive() {
   // Load the archived applications and track loading/error state
-   const { data: applications, setData, loading, error, reload } = useApi(() => api.getArchivedApplications(), [])
-   // The application waiting for "Unarchive?" confirmation, and whether it's saving
+  const { data: applications, setData, loading, error, reload } = useApi(() => api.getArchivedApplications(), [])
+  // The application waiting for "Unarchive?" confirmation, and whether it's saving
   const [unarchiving, setUnarchiving] = useState(null)
   const [saving, setSaving] = useState(false)
+  // Which year is selected in the Year dropdown
+  const [year, setYear] = useState('all')
 
   // Show a spinner while the data is loading
   if (loading && !applications) {
@@ -41,14 +43,25 @@ export default function Archive() {
     }
   }
 
+    // Every year that has an archived application, newest first
+  const years = [...new Set(applications.map((application) => application.dateApplied.slice(0, 4)))].sort().reverse()
+  // Dropdown options: "All years" plus one per year
+  const yearOptions = [{ value: 'all', label: 'All years' }, ...years.map((value) => ({ value, label: value }))]
+  // Only the applications from the selected year
+  const visibleApplications =
+    year === 'all' ? applications : applications.filter((application) => application.dateApplied.startsWith(year))
+
   return (
     <Page title="Archived" back>
-      {/* How many applications are archived */}
-      <p className="archive__count">{applications.length} archived</p>
+            {/* Pick a recruiting season */}
+      <SelectField label="Year" options={yearOptions} value={year} onChange={setYear} />
 
-      {/* One card per archived application, or a message if there are none */}
-      {applications.length > 0 ? (
-                applications.map((application) => (
+      {/* How many archived applications are shown */}
+      <p className="archive__count">{visibleApplications.length} archived</p>
+
+            {/* One card per archived application, or a message if there are none */}
+      {visibleApplications.length > 0 ? (
+        visibleApplications.map((application) => (
           <ApplicationCard
             key={application.id}
             application={application}
