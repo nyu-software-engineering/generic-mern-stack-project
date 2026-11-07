@@ -1,0 +1,87 @@
+.home header {
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 12px;
+}
+
+.home .logo {
+  width: 45px;
+  height: 45px;
+}
+
+.home h1 {
+  color: #333;
+  font-size: 24px;
+  text-align: center;
+}
+
+.home button {
+  padding: 12px;
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.home button:hover {
+  background-color: #1d4ed8;
+}
+
+.home .prompt-box {
+  position: relative;
+}
+
+.home textarea {
+  min-height: 130px;
+  padding-bottom: 50px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.home textarea:focus {
+  outline: none;
+  border-color: #2563eb;
+}
+
+.home .generate-button {
+  position: absolute;
+  right: 10px;
+  bottom: 20px;
+  padding: 8px 14px;
+  font-size: 14px;
+}
+
+.home .blank-button {
+  display: block;
+  width: 100%;
+  background-color: white;
+  color: #2563eb;
+  border: 1px solid #2563eb;
+}
+
+.home .blank-button:hover {
+  background-color: #eaf1ff;
+}
+
+.home h3 {
+  margin-top: 30px;
+  color: #777;
+  font-size: 14px;
+}
+
+.home .example {
+  display: block;
+  width: 100%;
+  margin-bottom: 10px;
+  text-align: left;
+  background-color: white;
+  color: #333;
+  border: 1px solid #ddd;
+  font-size: 14px;
+}
+
+.home .example:hover {
+  background-color: #f2f2f2;
+}

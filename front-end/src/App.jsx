@@ -121,8 +121,8 @@ function App() {
 
      } />
 
-        <Route path="/" element={<Home />} />
-        <Route path="/home" element={<Home />} />
+        <Route path="/" element={<Home onCreateMap={createMap} />} />
+        <Route path="/home" element={<Home onCreateMap={createMap} />} />
         <Route path="/search" element={<MapSearch onChooseMap={chooseMap} onCreateMap={createMap} />} />
         <Route path="/menu" element={
           <main className="menu-page">
