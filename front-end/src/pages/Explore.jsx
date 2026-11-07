@@ -6,23 +6,28 @@ import mockListings from "../mockListings";
 
 function Explore({ savedIds, onToggleSave }) {
     const [location, setLocation] = useState("");
+    const [searchedLocation, setSearchedLocation] = useState("");
     const [maxPrice, setMaxPrice] = useState("");
     const [availableDate, setAvailableDate] = useState("");
+    const [showFilters, setShowFilters] = useState(false);
 
     const filteredListings = mockListings.filter((listing) => {
-        const matchesLocation = listing.location.toLowerCase().includes(location.toLowerCase());
-
+        const matchesLocation = listing.location.toLowerCase().includes(searchedLocation.toLowerCase());
         const price = Number(listing.price.replace(/[$,]/g, ""));
-
         const matchesPrice = maxPrice === "" || price <= Number(maxPrice);
-
-        const matchesDate = availableDate === "" || (listing.startDate <= availableDate &&listing.endDate >= availableDate);
+        const matchesDate = availableDate === "" || (listing.startDate <= availableDate && listing.endDate >= availableDate);
 
         return matchesLocation && matchesPrice && matchesDate;
     });
 
+    function searchListings(e) {
+        e.preventDefault();
+        setSearchedLocation(location.trim());
+    }
+
     function clearFilters() {
         setLocation("");
+        setSearchedLocation("");
         setMaxPrice("");
         setAvailableDate("");
     }
@@ -31,36 +36,26 @@ function Explore({ savedIds, onToggleSave }) {
         <div className="explore-page">
             <h2>Find Your Next Sublet</h2>
 
-            <div className="explore-filters">
+            <form className="explore-search" onSubmit={searchListings}>
                 <input
                     type="text"
-                    placeholder="City, neighborhood, or address"
+                    placeholder="Search by location"
                     value={location}
                     onChange={(e) => setLocation(e.target.value)}
                 />
 
-                <input
-                    type="number"
-                    placeholder="Maximum monthly rent"
-                    min="0"
-                    value={maxPrice}
-                    onChange={(e) => setMaxPrice(e.target.value)}
-                />
-
-                <label htmlFor="available-date">
-                    Available on
-                </label>
-                <input
-                    id="available-date"
-                    type="date"
-                    value={availableDate}
-                    onChange={(e) => setAvailableDate(e.target.value)}
-                />
-
-                <button type="button" onClick={clearFilters}>
-                    Clear filters
+                <button type="submit" className="search-button">
+                    Search
                 </button>
-            </div>
+
+                <button
+                    type="button"
+                    className="filter-open"
+                    onClick={() => setShowFilters(true)}
+                >
+                    Filters
+                </button>
+            </form>
 
             <p>{filteredListings.length} listings</p>
 
@@ -77,6 +72,45 @@ function Explore({ savedIds, onToggleSave }) {
 
             {filteredListings.length === 0 && (
                 <p>No listings match your filters.</p>
+            )}
+
+            {showFilters && (
+                <div className="filter-overlay">
+                    <div className="filter-panel">
+                        <div className="filter-header">
+                            <h3>Filters</h3>
+                            <button type="button" onClick={() => setShowFilters(false)}>✕</button>
+                        </div>
+
+                        <label htmlFor="max-price">Maximum monthly rent</label>
+                        <input
+                            id="max-price"
+                            type="number"
+                            placeholder="Enter maximum budget"
+                            min="0"
+                            value={maxPrice}
+                            onChange={(e) => setMaxPrice(e.target.value)}
+                        />
+
+                        <label htmlFor="available-date">Available on</label>
+                        <input
+                            id="available-date"
+                            type="date"
+                            value={availableDate}
+                            onChange={(e) => setAvailableDate(e.target.value)}
+                        />
+
+                        <div className="filter-actions">
+                            <button type="button" className="clear-button" onClick={clearFilters}>
+                                Clear all
+                            </button>
+
+                            <button type="button" className="apply-button" onClick={() => setShowFilters(false)}>
+                                Show {filteredListings.length} listings
+                            </button>
+                        </div>
+                    </div>
+                </div>
             )}
         </div>
     );

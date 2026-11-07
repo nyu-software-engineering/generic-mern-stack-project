@@ -8,7 +8,7 @@
 
 .explore-page h2 {
   font-size: 24px;
-  margin-bottom: 10px;
+  margin-bottom: 18px;
 }
 
 .explore-page p {
@@ -23,12 +23,147 @@
   margin-top: 20px;
 }
 
-@media (max-width: 500px) {
-  .explore-page {
-    padding: 0 5px;
-  }
+/* Search bar */
 
-  .explore-page h2 {
-    font-size: 21px;
-  }
+.explore-search {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.explore-search input {
+  flex: 1;
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid #dddddd;
+  border-radius: 30px;
+  font-size: 14px;
+  background-color: white;
+}
+
+.explore-search input:focus {
+  outline: none;
+  border-color: #333333;
+}
+
+.filter-open {
+  padding: 12px 16px;
+  border: 1px solid #dddddd;
+  border-radius: 30px;
+  background-color: white;
+  color: #222222;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+/* Filter popup */
+
+.filter-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.filter-panel {
+  width: 90%;
+  max-width: 400px;
+  background-color: white;
+  border-radius: 18px;
+  padding: 22px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.filter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.filter-header h3 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.filter-header button {
+  border: none;
+  background: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.filter-panel label {
+  font-size: 14px;
+  font-weight: bold;
+  color: #333333;
+}
+
+.filter-panel input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #dddddd;
+  border-radius: 10px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.filter-panel input:focus {
+  outline: none;
+  border-color: #333333;
+}
+
+.filter-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.clear-button {
+  background: none;
+  border: none;
+  text-decoration: underline;
+  font-size: 14px;
+  cursor: pointer;
+  color: #333333;
+}
+
+.apply-button {
+  background-color: #222222;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 14px 18px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.apply-button:hover {
+  background-color: #444444;
+}
+
+@media (max-width: 500px) {
+    .explore-page {
+      padding: 0 5px;
+    }
+
+    .explore-page h2 {
+      font-size: 21px;
+    }
+
+    .filter-panel {
+      width: 92%;
+      padding: 18px;
+    }
 }
