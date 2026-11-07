@@ -6,13 +6,12 @@ import mockListings from "../mockListings";
 
 function Explore({ savedIds, onToggleSave }) {
     const [location, setLocation] = useState("");
-    const [searchedLocation, setSearchedLocation] = useState("");
     const [maxPrice, setMaxPrice] = useState("");
     const [availableDate, setAvailableDate] = useState("");
     const [showFilters, setShowFilters] = useState(false);
 
     const filteredListings = mockListings.filter((listing) => {
-        const matchesLocation = listing.location.toLowerCase().includes(searchedLocation.toLowerCase());
+        const matchesLocation = listing.location.toLowerCase().includes(location.toLowerCase().trim());
         const price = Number(listing.price.replace(/[$,]/g, ""));
         const matchesPrice = maxPrice === "" || price <= Number(maxPrice);
         const matchesDate = availableDate === "" || (listing.startDate <= availableDate && listing.endDate >= availableDate);
@@ -20,14 +19,8 @@ function Explore({ savedIds, onToggleSave }) {
         return matchesLocation && matchesPrice && matchesDate;
     });
 
-    function searchListings(e) {
-        e.preventDefault();
-        setSearchedLocation(location.trim());
-    }
-
     function clearFilters() {
         setLocation("");
-        setSearchedLocation("");
         setMaxPrice("");
         setAvailableDate("");
     }
@@ -36,26 +29,46 @@ function Explore({ savedIds, onToggleSave }) {
         <div className="explore-page">
             <h2>Find Your Next Sublet</h2>
 
-            <form className="explore-search" onSubmit={searchListings}>
-                <input
-                    type="text"
-                    placeholder="Search by location"
-                    value={location}
-                    onChange={(e) => setLocation(e.target.value)}
-                />
+            <div className="explore-search">
+                <div className="location-search">
+                    <input
+                        type="text"
+                        placeholder="Search by location"
+                        value={location}
+                        onChange={(e) => setLocation(e.target.value)}
+                    />
 
-                <button type="submit" className="search-button">
-                    Search
-                </button>
+                    {location !== "" && (
+                        <button type="button" onClick={() => setLocation("")}>
+                            ✕
+                        </button>
+                    )}
+                </div>
 
                 <button
                     type="button"
                     className="filter-open"
                     onClick={() => setShowFilters(true)}
                 >
-                    Filters
+                    ☷ Filters
                 </button>
-            </form>
+            </div>
+
+            {(maxPrice !== "" || availableDate !== "") && (
+                <div className="active-filters">
+                    {maxPrice !== "" && (
+                        <button type="button" onClick={() => setMaxPrice("")}>
+                            Under ${maxPrice} ✕
+                        </button>
+                    )}
+
+                    {availableDate !== "" && (
+                        <button type="button" onClick={() => setAvailableDate("")}>
+                            Available {availableDate} ✕
+                        </button>
+                    )}
+                </div>
+            )}
 
             <p>{filteredListings.length} listings</p>
 
@@ -71,7 +84,7 @@ function Explore({ savedIds, onToggleSave }) {
             </div>
 
             {filteredListings.length === 0 && (
-                <p>No listings match your filters.</p>
+                <p>No listings match your search or filters.</p>
             )}
 
             {showFilters && (

@@ -1,191 +1,217 @@
 
 .explore-page {
-  width: 100%;
-  max-width: 420px;
-  margin: 0 auto;
-  text-align: left;
-  box-sizing: border-box;
+    width: 100%;
+    max-width: 420px;
+    margin: 0 auto;
+    text-align: left;
+    box-sizing: border-box;
 }
 
 .explore-page h2 {
-  font-size: 24px;
-  margin-bottom: 18px;
+    font-size: 24px;
+    margin-bottom: 18px;
 }
 
 .explore-page p {
-  font-size: 14px;
-  color: #666;
+    font-size: 14px;
+    color: #666;
 }
 
 .listings {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 20px;
 }
 
-/* Search bar */
+/* Search */
 
 .explore-search {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 18px;
+    display: flex;
+    gap: 10px;
+    margin-bottom: 14px;
 }
 
-.explore-search input {
-  width: 100%;
-  padding: 14px;
-  border: 1px solid #dddddd;
-  border-radius: 30px;
-  font-size: 14px;
-  box-sizing: border-box;
-  background-color: white;
+.location-search {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    min-width: 0;
+    border: 1px solid #dddddd;
+    border-radius: 30px;
+    background-color: white;
+    padding-right: 10px;
 }
 
-.explore-search input:focus {
-  outline: none;
-  border-color: #333333;
+.location-search:focus-within {
+    border-color: #333333;
 }
 
-.search-button {
-  flex: 1;
-  padding: 12px;
-  border: none;
-  border-radius: 30px;
-  background-color: #222222;
-  color: white;
-  font-size: 14px;
-  cursor: pointer;
+.location-search input {
+    flex: 1;
+    min-width: 0;
+    padding: 14px;
+    border: none;
+    outline: none;
+    border-radius: 30px;
+    font-size: 14px;
+    background: transparent;
 }
 
-.search-button:hover {
-  background-color: #444444;
+.location-search button {
+    border: none;
+    background: none;
+    color: #666666;
+    font-size: 16px;
+    cursor: pointer;
 }
 
 .filter-open {
-  flex: 1;
-  padding: 12px;
-  border: 1px solid #dddddd;
-  border-radius: 30px;
-  background-color: white;
-  color: #222222;
-  font-size: 14px;
-  cursor: pointer;
+    padding: 12px 14px;
+    border: 1px solid #dddddd;
+    border-radius: 30px;
+    background-color: white;
+    color: #222222;
+    font-size: 13px;
+    white-space: nowrap;
+    cursor: pointer;
 }
 
 .filter-open:hover {
-  background-color: #f5f5f5;
+    background-color: #f5f5f5;
+}
+
+/* Active filters */
+
+.active-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 14px;
+}
+
+.active-filters button {
+    padding: 8px 12px;
+    border: 1px solid #dddddd;
+    border-radius: 20px;
+    background-color: #f5f5f5;
+    color: #333333;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.active-filters button:hover {
+    background-color: #eaeaea;
 }
 
 /* Filter popup */
 
 .filter-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.4);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
 }
 
 .filter-panel {
-  width: 90%;
-  max-width: 400px;
-  background-color: white;
-  border-radius: 18px;
-  padding: 22px;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
+    width: 90%;
+    max-width: 400px;
+    background-color: white;
+    border-radius: 18px;
+    padding: 22px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
 }
 
 .filter-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
 }
 
 .filter-header h3 {
-  margin: 0;
-  font-size: 20px;
+    margin: 0;
+    font-size: 20px;
 }
 
 .filter-header button {
-  border: none;
-  background: none;
-  font-size: 20px;
-  cursor: pointer;
+    border: none;
+    background: none;
+    font-size: 20px;
+    cursor: pointer;
 }
 
 .filter-panel label {
-  font-size: 14px;
-  font-weight: bold;
-  color: #333333;
+    font-size: 14px;
+    font-weight: bold;
+    color: #333333;
 }
 
 .filter-panel input {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #dddddd;
-  border-radius: 10px;
-  font-size: 14px;
-  box-sizing: border-box;
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #dddddd;
+    border-radius: 10px;
+    font-size: 14px;
+    box-sizing: border-box;
 }
 
 .filter-panel input:focus {
-  outline: none;
-  border-color: #333333;
+    outline: none;
+    border-color: #333333;
 }
 
 .filter-actions {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  margin-top: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-top: 16px;
 }
 
 .clear-button {
-  background: none;
-  border: none;
-  text-decoration: underline;
-  font-size: 14px;
-  cursor: pointer;
-  color: #333333;
+    background: none;
+    border: none;
+    text-decoration: underline;
+    font-size: 14px;
+    cursor: pointer;
+    color: #333333;
 }
 
 .apply-button {
-  background-color: #222222;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  padding: 14px 18px;
-  font-size: 14px;
-  cursor: pointer;
+    background-color: #222222;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 14px 18px;
+    font-size: 14px;
+    cursor: pointer;
 }
 
 .apply-button:hover {
-  background-color: #444444;
+    background-color: #444444;
 }
 
 @media (max-width: 500px) {
-  .explore-page {
-    padding: 0 5px;
-  }
+    .explore-page {
+        padding: 0 5px;
+    }
 
-  .explore-page h2 {
-    font-size: 21px;
-  }
+    .explore-page h2 {
+        font-size: 21px;
+    }
 
-  .filter-panel {
-    width: 92%;
-    padding: 18px;
-  }
+    .filter-panel {
+        width: 92%;
+        padding: 18px;
+    }
 }
