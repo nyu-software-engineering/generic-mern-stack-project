@@ -6,7 +6,10 @@ const ArticleCard = props => {
 
   return (
     <article className="mb-4 border border-gray-300 rounded-lg p-3">
-      <Link to={`/articles/${props.details.id}`} className="flex gap-4"> {/* todo, link to article page */}
+      <Link 
+        to={`/articles/${props.details.id}`} 
+        state={{ article: props.details }}
+        className="flex gap-4"> {/* todo, link to article page */}
         <img className="w-24 h-24 shrink-0 rounded-lg object-cover" alt="" src={imgSrc} />
 
         <div className="details">

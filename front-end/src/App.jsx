@@ -20,12 +20,12 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/articles" element={<Catalog />} />
-        <Route path="/article" element={<Article />} />
+        <Route path="/articles/:id" element={<Article />} />
         <Route path="/mainpage" element={<MainPage />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/favorites" element={<Favorite />} />
-        <Route path="/dejargoned/beginner" element={<Beginner />} />
-        <Route path="/dejargoned/intermediate" element={<Intermediate />} />
+        <Route path="/articles/:id/dejargoned/b" element={<Beginner />} />
+        <Route path="/articles/:id/dejargoned/i" element={<Intermediate />} />
       </Routes>
     </BrowserRouter>
   );

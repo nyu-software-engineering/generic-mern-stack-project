@@ -1,8 +1,20 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 
 // Placeholder page for stakeholder demos
 export default function Beginner() {
     const navigate = useNavigate();
+    const { state } = useLocation();
+    const article = state?.article;
+    let dj = article.dejargoned?.beginner;
+    let jargon = article.jargon;
+
+
+    if (!article) {
+        return <p>Loading Article...</p>;
+    }
+
+    
+
     return(
         <div className="min-h-screen bg-white">
             <header className="flex items-center justify-between border-b border-gray-200 px-6 py-4">
@@ -17,63 +29,86 @@ export default function Beginner() {
 
             <main className="mx-auto w-full max-w-4xl px-6 py-10">
                 <div className="flex-1 mb-4 grid grid-cols-2">
-                    <button onClick = {() => navigate("/article")}
+                    <button onClick = {() => navigate(`/articles/${article.id}/`,
+                        { state: { article } }
+                    )}
                         className="bg-purple-600 text-white py-3 font-semibold hover:bg-purple-700">
                         Original
                     </button>
-                    <button onClick = {() => navigate("/dejargoned/beginner")}
-                        className="bg-gray-600 text-white py-3 font-semibold">
+                    <div className="bg-gray-600 text-white py-3 font-semibold">
                         De-Jargoned
-                    </button>
+                    </div>
                 </div>
 
-                <p className = "text-left text-sm font-medium mt-6 uppercase text-gray-600">
-                TOPIC | PUBLICATION
-                </p>
-                <p className="text-left text-3xl font-bold mb-4">
-                    Lorem Ipsum
-                </p>
+                <div className="m-4">
+                    <p className = "text-lg text-zinc-600 text-left font-semibold uppercase">
+                        { article.topic} | { article.publication }
+                    </p>
+                </div>
+                
+                <div className="mb-2">
+                    <p className = "mb-2 text-3xl text-left font-bold">
+                        { article.title }
+                    </p>
+                </div>
 
-                <div className="mt-4 flex items-center gap-4">
-                    <p className="flex-1 text-md font-medium">
+                <div className="m-4 flex items-center gap-4">
+                    <p className="text-md font-medium whitespace-nowrap">
                         Explanation Level
                     </p>
 
-                    <div className="flex-1 grid grid-cols-2">
-                        <button onClick = {() => navigate("/dejargoned/beginner")}
-                            className="bg-gray-600 text-white px-5 font-semibold">
+                    <div className="grid flex-1 grid-cols-3">
+                        <div className="bg-white px-5"></div>
+                        <div className="bg-gray-600 text-white px-5 font-semibold">
                             Beginner
-                        </button>
-                        <button onClick = {() => navigate("/dejargoned/intermediate")}
+                        </div>
+                        <button onClick = {() => navigate(`/articles/${article.id}/dejargoned/i`,
+                            { state: { article } }
+                        )}
                             className="bg-purple-600 text-white px-5 font-semibold hover:bg-purple-700">
                             Intermediate
                         </button>
                     </div>
                 </div>
 
-                <section className="grid grid-rows-3 gap-4 border border-gray-300 m-4 text-black">
-                    <div>
+                <section className = "gap-4 m-4 text-black">
+                    <div className = "text-left p-2 border border-gray-300 ">
                         <p className = "text-2xl font-bold m-6">
                             1. What happened?
                         </p>
                         <p className = "text-base font-normal m-2">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas mi diam, accumsan commodo urna a, posuere blandit dolor. Fusce bibendum dapibus nisi, vitae accumsan nisi aliquet ut. Quisque venenatis ex libero, vel vehicula lorem molestie in. Nullam dapibus rhoncus nibh, eget lacinia ante fermentum nec. Integer porta, massa id suscipit ullamcorper, metus massa luctus purus, at laoreet est tellus nec augue. Phasellus eu nulla laoreet, ornare nibh et, viverra velit. Aliquam lacus arcu, sollicitudin id aliquet a, mattis sed ipsum. Quisque eget mi non mauris condimentum lacinia vel ut arcu. Praesent scelerisque leo et ex malesuada gravida. Pellentesque vel urna sem. Duis porta dui felis, porttitor efficitur magna convallis cursus. Aliquam erat velit, blandit id sagittis nec, ultricies vel augue. Sed non viverra magna, sit amet euismod ligula. Ut lacinia volutpat velit vel mollis. Suspendisse sodales ligula neque, sed faucibus lectus volutpat ac. Mauris suscipit enim ipsum, sed condimentum lectus convallis eget.
+                            { dj.whatHappened }
                         </p>
                     </div>
-                    <div>
+                    <div className = "text-left p-2 border border-gray-300">
                         <p className = "text-2xl font-bold m-6">
                             2. Why does it matter?
                         </p>
                         <p className = "text-base font-normal m-2">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas mi diam, accumsan commodo urna a, posuere blandit dolor. Fusce bibendum dapibus nisi, vitae accumsan nisi aliquet ut. Quisque venenatis ex libero, vel vehicula lorem molestie in. Nullam dapibus rhoncus nibh, eget lacinia ante fermentum nec. Integer porta, massa id suscipit ullamcorper, metus massa luctus purus, at laoreet est tellus nec augue. Phasellus eu nulla laoreet, ornare nibh et, viverra velit. Aliquam lacus arcu, sollicitudin id aliquet a, mattis sed ipsum. Quisque eget mi non mauris condimentum lacinia vel ut arcu. Praesent scelerisque leo et ex malesuada gravida. Pellentesque vel urna sem. Duis porta dui felis, porttitor efficitur magna convallis cursus. Aliquam erat velit, blandit id sagittis nec, ultricies vel augue. Sed non viverra magna, sit amet euismod ligula. Ut lacinia volutpat velit vel mollis. Suspendisse sodales ligula neque, sed faucibus lectus volutpat ac. Mauris suscipit enim ipsum, sed condimentum lectus convallis eget.
+                            { dj.whyItMatters }
                         </p>
                     </div>
-                    <div>
+                    <div className = "text-left p-2 border border-gray-300">
                         <p className = "text-2xl font-bold m-6">
                             3. What terms should I know? 
                         </p>
                         <p className = "text-base font-normal m-2">
-                            Ipsum - sit amet consectetur adipiscing elit.
+                            <div className="space-y-3">
+                                {jargon.map(({ term, explanation }) => (
+                                    <div key={term} className="border border-black p-3">
+                                        <h3 className="text-sm font-bold">{term}</h3>
+                                        <p className="mt-1 text-sm">{explanation}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </p>
+                    </div>
+                    <div className = "text-left p-2 border border-gray-300">
+                        <p className = "text-2xl font-bold m-6">
+                            4. Go Deeper
+                        </p>
+                        <p className = "text-base font-normal m-2">
+                            { dj.goDeeper }
                         </p>
                     </div>
                 </section>
