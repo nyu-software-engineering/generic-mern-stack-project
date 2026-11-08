@@ -115,17 +115,19 @@ export default function ApplicationDetails() {
         )}
       </Card>
 
-      {/* Job posting link, only shown if one was saved */}
-      {application.jobPostingUrl && (
-        <Card padding="none">
+      {/* Job posting link, or a message if none was saved */}
+            <Card padding="none">
+        {application.jobPostingUrl ? (
           <ListRow
             icon="link"
             title="View job posting"
             subtitle={application.jobPostingUrl}
             href={application.jobPostingUrl}
           />
-        </Card>
-      )}
+        ) : (
+          <ListRow icon="link" title="No job posting link saved" subtitle="Add one with Edit" />
+        )}
+      </Card>
 
       {/* Status history list, current status highlighted */}
       <section className="application-details__section">
