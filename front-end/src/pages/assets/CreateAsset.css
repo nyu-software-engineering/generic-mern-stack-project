@@ -1,0 +1,99 @@
+.create-page-container {
+    font-family: sans-serif;
+    width: dynamic;
+    margin: 0 auto;
+    padding: 20px;
+    color: #000000;
+}
+
+.asset-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.logoButton {
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-size: 18px;
+  margin: 0;
+  line-height: 1.2;
+  align-items: left;
+  display: flex;
+}
+
+.backButton {
+    font-size: 12px;
+    padding: 6px 10px;
+    display: flex;
+    justify-content: right;
+    align-items: right;
+}
+
+
+.page-title {
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+    margin: 15px 0 25px 0;
+    color: #576490;
+}
+
+.asset-form {
+    width: 100%;
+    max-width: 500px;
+    background-color: #C9CAD9;
+    border: 10px solid #576490;
+    border-radius: 15px;
+    padding: 30px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    background-color: #a3bcf9;
+    padding: 15px;
+    border-radius: 10px;
+    border: 2px solid #576490;
+}
+
+.form-group label {
+    font-size: 14px;
+    font-weight: bold;
+    color: #576490;
+    margin-bottom: 8px;
+}
+
+.form-group input {
+    border: 1px solid #576490;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 14px;
+    font-family: inherit;
+    transition: border-color 0.2s ease;
+}
+
+.submit-button {
+    background-color: white;
+    color: #000000;
+    border: 2px solid #576490;
+    border-radius: 5px;
+    padding: 15px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: all 0.2s ease;
+}
+
+.submit-button:hover {
+    background-color: #576490;
+    color: white;
+}

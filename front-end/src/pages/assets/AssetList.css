@@ -1,10 +1,11 @@
 .asset-page-container {
     font-family: sans-serif;
-    width: 50%;
+    width: dynamic;
     margin: auto;
     padding: 20px;
     color: #000000;
 }
+
 .asset-header {
   display: flex;
   justify-content: space-between;
@@ -30,12 +31,6 @@
     display: flex;
     justify-content: right;
     align-items: right;
-}
-.logo {
-    width: 300px;
-    height: auto;
-    display: block;
-    margin: 0 auto;
 }
 
 .page-title {

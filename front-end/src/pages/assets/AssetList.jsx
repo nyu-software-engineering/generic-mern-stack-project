@@ -44,9 +44,9 @@ const AssetList = () => {
 
                     <div className="action-container">
                         <div className="create-container">
-                            <Link to ="/create-asset" className="create-asset-button">
+                            <button className="create-asset-button" onClick={() => navigate('/assets/create')}>
                                 Create Asset
-                            </Link>
+                            </button>
                         </div>
 
                         { /* Search bar */ }
