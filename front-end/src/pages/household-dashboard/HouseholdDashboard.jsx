@@ -68,7 +68,11 @@ const HouseholdDashboard = () => {
               View Assets Page
             </button>
             <p className="assetQuickInfo"># of Assets: 5</p>
-            <button className="fieldText">Quick Create Asset</button>
+            <button 
+              className="fieldText"
+              onClick={() => navigate("/assets/create")}>
+              Quick Create Asset
+            </button>
           </div>
         </div>
 
