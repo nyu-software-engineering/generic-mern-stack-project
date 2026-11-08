@@ -37,7 +37,7 @@ const Profile = ({user}) => {
                     {user.hobbies && user.hobbies.length > 0 ?(
                         <ul className="profile-hobby-list">
                             {user.hobbies.map(hobby =>(
-                                <li className="profile-hobbby-item" key={hobby}>
+                                <li className="profile-hobby-item" key={hobby}>
                                     {hobby}
                                 </li>
                             ))}
@@ -84,7 +84,7 @@ const Profile = ({user}) => {
                 <Link to="/map" className="profile-nav-item">
                         Map
                 </Link>
-                <Link to="/profile" className="profile-nav-item-active">
+                <Link to="/profile" className="profile-nav-item profile-nav-active">
                         Profile
                 </Link>
             </nav>
