@@ -13,6 +13,7 @@ import ItemRankingsPage from './pages/ItemRankingsPage'
 import LogInPage from './pages/LogInPage'
 import NotFoundPage from './pages/NotFoundPage'
 import ProfilePage from './pages/ProfilePage'
+import ResetPasswordPage from './pages/ResetPasswordPage'
 import SignUpPage from './pages/SignUpPage'
 import SpendByCategoryPage from './pages/SpendByCategoryPage'
 import WelcomePage from './pages/WelcomePage'
@@ -27,7 +28,8 @@ export default function App() {
         <Route path="/welcome" element={<WelcomePage />} />
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/login" element={<LogInPage />} />
-
+        <Route path="/profile/reset-password" element={<ResetPasswordPage />} />
+        
         <Route element={<AppLayout />}>
           <Route path="/closet" element={<ClosetPage />} />
           <Route path="/closet/new" element={<AddItemPage />} />
