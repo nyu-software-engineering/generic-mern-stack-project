@@ -1,15 +1,25 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
 
 
-// 
 export default function Article() {
     const navigate = useNavigate();
     const { state } = useLocation();
     const article = state.article;
-    const authorList = article.authors.toString()
 
     if (!article) {
         return <p>Loading Article...</p>;
+    }
+
+    // format the list of authors to be readable
+    let authorList = "";
+    if (article.authors.length === 1) {
+        authorList = article.authors[0];
+    }
+    else if (article.authors.length === 2) {
+        authorList = `${article.authors[0]} and ${article.authors[1]}`;
+    }
+    else{
+        authorList = article.authors.slice(0, -1).join(', ').concat(', and ', article.authors.slice(-1));
     }
 
     return(
