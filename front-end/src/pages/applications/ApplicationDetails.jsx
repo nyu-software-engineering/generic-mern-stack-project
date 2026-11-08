@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { api } from '../../api'
 import {Avatar, Button, Card,ConfirmDialog, ErrorState, EventCard, ListRow, LoadingState, OptionSheet, Page, SectionHeader, StatusBadge,} from '../../components'
-import { APPLICATION_STATUSES, getLabel, getStatus, JOB_TYPES } from '../../constants'
+import { APPLICATION_STATUSES, getLabel, getStatus, JOB_TYPES, OFFER_DECISIONS } from '../../constants'
 import { useApi } from '../../hooks/useApi'
 import { formatDate, todayString } from '../../utils/format'
 import DeleteApplicationButton from './DeleteApplicationButton'
@@ -115,17 +115,19 @@ export default function ApplicationDetails() {
         )}
       </Card>
 
-      {/* Job posting link, only shown if one was saved */}
-      {application.jobPostingUrl && (
-        <Card padding="none">
+      {/* Job posting link, or a message if none was saved */}
+            <Card padding="none">
+        {application.jobPostingUrl ? (
           <ListRow
             icon="link"
             title="View job posting"
             subtitle={application.jobPostingUrl}
             href={application.jobPostingUrl}
           />
-        </Card>
-      )}
+        ) : (
+          <ListRow icon="link" title="No job posting link saved" subtitle="Add one with Edit" />
+        )}
+      </Card>
 
       {/* Status history list, current status highlighted */}
       <section className="application-details__section">
@@ -183,6 +185,31 @@ export default function ApplicationDetails() {
         )}
       </section>
 
+            {/* Offer summary, or a link to add the offer */}
+      <section className="application-details__section">
+        <SectionHeader title="Offer" />
+        <Card padding="none">
+          {application.offer ? (
+            <ListRow
+              title={application.offer.baseSalary || 'Offer details'}
+              subtitle={[
+                application.offer.respondBy && `Respond by ${formatDate(application.offer.respondBy)}`,
+                getLabel(OFFER_DECISIONS, application.offer.decision),
+              ]
+                .filter(Boolean)
+                .join(' · ')}
+              to={`/applications/${id}/offer`}
+            />
+          ) : (
+            <ListRow
+              title="Add offer details"
+              subtitle="Salary, start date, deadline to respond"
+              to={`/applications/${id}/offer`}
+            />
+          )}
+        </Card>
+      </section>
+      
       {/* Recruiter contact, email and phone open the mail and phone apps */}
       <section className="application-details__section">
         <SectionHeader title="Recruiter" />
