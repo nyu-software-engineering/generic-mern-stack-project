@@ -58,7 +58,7 @@ const Protocols = () => {
         <button
           type="button"
           className="protocolsBack"
-          onClick={() => navigate(-1)}
+          onClick={() => navigate("/household")}
         >
           Back
         </button>
@@ -73,7 +73,7 @@ const Protocols = () => {
         <button
           type="button"
           className="protocolsPrimary"
-          onClick={() => navigate("/protocols/new")}
+          onClick={() => navigate("/new_protocol")}
         >
           Propose New Protocol
         </button>
