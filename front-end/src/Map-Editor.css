@@ -45,7 +45,7 @@
 .mm-content {
   min-height: 100vh;
   width: 100%;
-  max_width: 650px;
+  max-width: 650px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -148,4 +148,102 @@
 
 .map-editor button:hover {
   background-color: #1d4ed8;
+}
+
+.mm-editor-title-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.mm-editor-title-row .mm-map-title {
+  margin: 0;
+}
+
+.mm-editor-title-row button {
+  padding: 8px 15px;
+  background: #dddddd;
+  color: #222222;
+  border: 1px solid #888888;
+  cursor: pointer;
+}
+
+.mm-export-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  z-index: 100;
+}
+
+.mm-export-dialog {
+  background: white;
+  color: #222222;
+  padding: 25px;
+  width: 100%;
+  max-width: 430px;
+  min-height: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.mm-export-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mm-export-heading h2 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.mm-export-heading button {
+  background: #dddddd;
+  color: black;
+  border: 1px solid #777777;
+  padding: 8px 15px;
+  cursor: pointer;
+}
+
+.mm-export-dialog label {
+  font-size: 16px;
+}
+
+.mm-export-dialog select {
+  width: 220px;
+  padding: 10px;
+  background: white;
+  color: black;
+  border: 1px solid #777777;
+}
+
+.mm-export-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: auto;
+}
+
+.mm-export-actions button {
+  padding: 10px 20px;
+  background: #dddddd;
+  color: black;
+  border: 1px solid #777777;
+  cursor: pointer;
+}
+
+.mm-export-actions button:last-child {
+  background: #2563eb;
+  color: white;
+  border-color: #2563eb;
 }

@@ -1,5 +1,5 @@
 import { useState} from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import './MyMaps.css'
 
 
@@ -18,13 +18,16 @@ function MyMaps({ maps, onCreateMap }){
 
 
     const navigate=useNavigate()
+    const location = useLocation()
     return(
         <div className="my-maps">
             <header>
                 <h2>
                 Logo
                 </h2>
-                <button onClick={()=>navigate("/menu")}>
+                <button onClick={() => navigate('/menu', {
+                state: { backgroundLocation: location }
+                })}>
                 Menu
                 </button>
             </header>

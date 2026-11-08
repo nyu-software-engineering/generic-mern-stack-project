@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { cleanMapQuery, getDisplayImage, searchMaps } from './map-editor/mapCatalog'
 import './MapSearch.css'
 
@@ -7,6 +7,7 @@ const EXAMPLES = ['Roman Empire 117', 'Europe 1914', 'Japan Edo period', 'New Yo
 
 export default function MapSearch({ onChooseMap, onCreateMap }) {
   const navigate = useNavigate()
+  const location = useLocation()
   const [params, setParams] = useSearchParams()
   const query = params.get('q') || ''
   const [input, setInput] = useState(query)
@@ -74,7 +75,11 @@ export default function MapSearch({ onChooseMap, onCreateMap }) {
 
   return (
     <main className="map-search">
-      <header><h2>Logo</h2><button onClick={() => navigate('/menu')}>Menu</button></header>
+      <button onClick={() => navigate('/menu', {
+        state: { backgroundLocation: location }
+      })}>
+        Menu
+      </button>
       <h1>Find a map</h1>
       <form className="map-search-form" onSubmit={submit}>
         <input aria-label="Search maps" value={input} placeholder="e.g. Europe in 1914" onChange={(event) => setInput(event.target.value)} required />

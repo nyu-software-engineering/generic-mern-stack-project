@@ -70,6 +70,7 @@ export default function MapEditor({ onRenameMap }) {
   const { map, openMap, updateMap } = useEditor()
   const [instruction, setInstruction] = useState('')
   const [message, setMessage] = useState('')
+  const [exportOpen, setExportOpen] = useState(false)
   const mapRef = useRef(null)
   const imageRef = useRef(null)
   const colors = STYLES.find(({ id }) => id === map.styleId) || STYLES[0]
@@ -111,42 +112,133 @@ export default function MapEditor({ onRenameMap }) {
   async function download() {
     try {
       await exportPng(mapRef.current, map, colors, imageRef.current)
+      setExportOpen(false)
       setMessage('Map downloaded as PNG.')
     } catch {
       setMessage('Export failed. Please try again.')
     }
   }
 
+
   return (
     <div className="mm-shell">
       <main className="mm-content">
         <EditorHeader />
-        <h1 className="mm-map-title">{map.title}</h1>
-        <div className="mm-editor-map-art">
-          {map.asset ? <MapImage asset={map.asset} imgRef={imageRef} interactive
-            filter={IMAGE_STYLES.find((style) => style.id === map.imageStyle)?.filter} />
-            : <MapPreview svgRef={mapRef} interactive styleId={map.styleId} selectedCountries={map.selectedCountries}
-              onToggleCountry={toggleCountry} onClearSelection={() => updateMap({ selectedCountries: [] })} />}
+
+        <div className="mm-editor-title-row">
+          <h1 className="mm-map-title">{map.title}</h1>
+          <button type="button" onClick={() => navigate('/edit-text')}>
+            Edit
+          </button>
         </div>
-        {!map.asset && <div className="mm-editor-legend">
-          {map.legendLabels.map((label, i) => (
-            <div key={i}><span className="mm-editor-swatch" style={{ background: i ? colors.land : colors.highlight }} />{label}</div>
-          ))}
-        </div>}
+
+        <div className="mm-editor-map-art">
+          {map.asset ? (
+            <MapImage
+              asset={map.asset}
+              imgRef={imageRef}
+              interactive
+              filter={IMAGE_STYLES.find(
+                (style) => style.id === map.imageStyle
+              )?.filter}
+            />
+          ) : (
+            <MapPreview
+              svgRef={mapRef}
+              interactive
+              styleId={map.styleId}
+              selectedCountries={map.selectedCountries}
+              onToggleCountry={toggleCountry}
+              onClearSelection={() => updateMap({ selectedCountries: [] })}
+            />
+          )}
+        </div>
+
+        {!map.asset && (
+          <div className="mm-editor-legend">
+            {map.legendLabels.map((label, i) => (
+              <div key={i}>
+                <span
+                  className="mm-editor-swatch"
+                  style={{ background: i ? colors.land : colors.highlight }}
+                />
+                {label}
+              </div>
+            ))}
+          </div>
+        )}
+
         <div className="mm-editor-tools">
           <button onClick={() => navigate('/style')}>Style</button>
           <button onClick={() => navigate('/source')}>Source</button>
-          <button onClick={() => navigate('/edit-text')}>Edit text</button>
-          <button className="mm-editor-export" onClick={download}>Export</button>
+          <button onClick={() => navigate('/edit-text')}>Edit Text</button>
+          <button
+            className="mm-editor-export"
+            onClick={() => setExportOpen(true)}
+          >
+            Export
+          </button>
         </div>
+
         <form className="mm-editor-prompt" onSubmit={submitInstruction}>
-          <label className="mm-visually-hidden" htmlFor="mm-instruction">Map change instruction</label>
-          <input id="mm-instruction" placeholder="Tell MapMaker what to change..." value={instruction}
-            onChange={(event) => setInstruction(event.target.value)} maxLength={180} />
+          <label className="mm-visually-hidden" htmlFor="mm-instruction">
+            Map change instruction
+          </label>
+          <input
+            id="mm-instruction"
+            placeholder="Tell MapMaker what to change..."
+            value={instruction}
+            onChange={(event) => setInstruction(event.target.value)}
+            maxLength={180}
+          />
           <button disabled={!instruction.trim()}>Send</button>
         </form>
-        {message && <p className="mm-editor-notice" role="status">{message} <button aria-label="Dismiss message" onClick={() => setMessage('')}>×</button></p>}
+
+        {message && (
+          <p className="mm-editor-notice" role="status">
+            {message}
+            <button onClick={() => setMessage('')}>×</button>
+          </p>
+        )}
       </main>
+
+      {exportOpen && (
+        <div className="mm-export-backdrop">
+          <div
+            className="mm-export-dialog"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="export-title"
+          >
+            <div className="mm-export-heading">
+              <h2 id="export-title">Export Map</h2>
+              <button
+                type="button"
+                onClick={() => setExportOpen(false)}
+                aria-label="Close export"
+              >
+                X
+              </button>
+            </div>
+
+            <label htmlFor="file-type">File Type:</label>
+
+            <select id="file-type" defaultValue="png">
+              <option value="png">PNG</option>
+            </select>
+
+            <div className="mm-export-actions">
+              <button onClick={() => setExportOpen(false)}>
+                Cancel
+              </button>
+              <button onClick={download}>
+                Download
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
+
 }

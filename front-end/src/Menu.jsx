@@ -1,24 +1,33 @@
+
 import { useNavigate } from 'react-router-dom'
-import Home from './Home'
 import './Menu.css'
 
-function Menu(){
-    const navigate=useNavigate()
-    const user = { name: "Maria Lopez" }
+function Menu() {
+    const navigate = useNavigate()
 
-    return(
-        <div>
-            <Home />
-            <div className="menu-overlay">
-                <div className="menu-panel">
-                    <button className="close-button" onClick={()=>navigate(-1)}>Close</button>
-                    <p className="menu-user">{user.name}</p>
-                    <button className="menu-link" onClick={()=>navigate("/")}>New map</button>
-                    <button className="menu-link" onClick={()=>navigate("/MyMaps")}>My maps</button>
-                    <button className="menu-link" onClick={()=>navigate("/login")}>Sign out</button>
-                </div>
+    return (
+        <div className="menu-overlay">
+            <div className="menu-panel">
+                <button className="close-button" onClick={() => navigate(-1)}>
+                    Close
+                </button>
+
+                <p className="menu-user">Guest</p>
+
+                <button className="menu-link" onClick={() => navigate("/home")}>
+                    New Map
+                </button>
+
+                <button className="menu-link" onClick={() => navigate("/MyMaps")}>
+                    My Maps
+                </button>
+
+                <button className="menu-link" onClick={() => navigate("/login")}>
+                    Sign Out
+                </button>
             </div>
         </div>
     )
 }
+
 export default Menu

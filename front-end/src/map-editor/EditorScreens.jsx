@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import MapPreview from './MapPreview'
 import MapImage from './MapImage'
 import { STYLES, IMAGE_STYLES } from './editorData'
@@ -8,10 +8,15 @@ import './EditorScreens.css'
 
 export function EditorHeader() {
   const navigate = useNavigate()
+  const location = useLocation()
   return (
     <header className="mm-header">
-      <button className="mm-logo" onClick={() => navigate('/')}>Logo</button>
-      <button onClick={() => navigate('/menu')}>Menu</button>
+      <button className="mm-logo" onClick={() => navigate('/home')}>Logo</button>
+      <button onClick={() => navigate('/menu', {
+        state: { backgroundLocation: location }
+      })}>
+        Menu
+      </button>
     </header>
   )
 }
