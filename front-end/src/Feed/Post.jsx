@@ -21,7 +21,10 @@ function Post({ post }) {
       <p className="post-caption">{post.caption}</p>
 
       <div className="post-actions">
-        <button onClick={() => setLiked(!liked)}>
+        <button
+          className={liked ? "like-button liked" : "like-button"}
+          onClick={() => setLiked(!liked)}
+        >
           {liked ? "Liked" : "Like"}
         </button>
       </div>

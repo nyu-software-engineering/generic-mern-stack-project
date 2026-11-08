@@ -1,46 +1,38 @@
-import { useState } from "react";
-import { hobbies, creators } from "./mockData";
+import Post from "./Post"
+import { posts } from "./mockData"
+import "./Feed.css"
 
 function Following() {
-  const [tab, setTab] = useState("hobbies");
-
   return (
-    <div className="page">
-      <h2>Following</h2>
+    <div className="feed-page">
+      <input
+        className="feed-search"
+        type="text"
+        placeholder="Search following..."
+      />
 
-      <button onClick={() => setTab("hobbies")}>
-        Hobbies
-      </button>
+      <div className="updates-banner">
+        <div className="update-card">
+          <strong>Myapyke</strong>
+          <span>New pottery class posted</span>
+        </div>
 
-      <button onClick={() => setTab("creators")}>
-        Creators
-      </button>
+        <div className="update-card">
+          <strong>Alyshoe</strong>
+          <span>Added a new Pilates event</span>
+        </div>
 
-      {tab === "hobbies" &&
-        hobbies.map((hobby) => (
-          <div className="follow-item" key={hobby.id}>
-            <img src={hobby.image} alt="" />
-            <div>
-              <strong>{hobby.name}</strong>
-              <p>{hobby.update}</p>
-            </div>
-            <button>Unfollow</button>
-          </div>
-        ))}
+        <div className="update-card">
+          <strong>JordanLee</strong>
+          <span>Climbing meetup tonight</span>
+        </div>
+      </div>
 
-      {tab === "creators" &&
-        creators.map((creator) => (
-          <div className="follow-item" key={creator.id}>
-            <img src={creator.image} alt="" />
-            <div>
-              <strong>{creator.name}</strong>
-              <p>{creator.update}</p>
-            </div>
-            <button>Unfollow</button>
-          </div>
-        ))}
+      {posts.map((post) => (
+        <Post key={post.id} post={post} />
+      ))}
     </div>
-  );
+  )
 }
 
-export default Following;
+export default Following
