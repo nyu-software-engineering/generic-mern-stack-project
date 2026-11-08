@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react"
+import { Link } from 'react-router-dom'
 import { fetchArticles, searchArticles } from './mock_data'
 import ArticleCard from './ArticleCard'
 
@@ -50,7 +51,12 @@ const Catalog = () => {
   }
 
   return (
-    <div className="mx-auto max-w-md p-8">
+    <div className="min-h-screen bg-white">
+      <header className="flex items-center justify-between border-b border-gray-200 px-6 py-4">
+        <h2 className="text-xl font-bold text-purple-600"><Link to="/mainpage">Jargonot</Link></h2>
+        <Link to="/dashboard" className="font-semibold text-purple-600 hover:underline">My Dashboard</Link>
+      </header>
+    <div className="w-full p-8">
       <h1 className="text-3xl font-bold text-center">Article Catalog</h1>
 
       <section className="mt-8">
@@ -102,6 +108,7 @@ const Catalog = () => {
             Next
           </button>
         </section>
+    </div>
     </div>
   )
 }

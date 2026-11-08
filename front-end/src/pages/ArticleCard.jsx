@@ -5,11 +5,11 @@ const ArticleCard = props => {
   const imgSrc = props.details.thumbnailUrl
 
   return (
-    <article className="mb-4 border border-gray-300 rounded-lg p-3">
+    <article className="mb-4 border border-gray-300 rounded-lg p-3 text-left">
       <Link 
         to={`/articles/${props.details.id}`} 
         state={{ article: props.details }}
-        className="flex gap-4"> {/* todo, link to article page */}
+        className="flex gap-4 items-center">
         <img className="w-24 h-24 shrink-0 rounded-lg object-cover" alt="" src={imgSrc} />
 
         <div className="details">
