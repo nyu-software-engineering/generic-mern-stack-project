@@ -11,7 +11,7 @@ function ClubDetailPanel({ club }) {
   const favorite = isFavorite(club.id);
 
   return (
-    <section className="flex flex-1 flex-col bg-(--parchment) px-5 pt-8 pb-8 text-(--soft-black)">
+    <section className="flex flex-1 flex-col bg-(--parchment) px-5 pt-8 pb-26 text-(--soft-black) rounded-4xl inset-shadow-sm">
       <div className="mx-auto flex w-full max-w-md flex-1 flex-col items-center">
         <div className="relative flex w-full items-center justify-center">
           <img

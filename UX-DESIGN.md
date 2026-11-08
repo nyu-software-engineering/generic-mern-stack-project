@@ -115,7 +115,7 @@ A month calendar for finding events by date. The calendar icon in the bottom bar
   <img src="ux-design/CalendarView.png" alt="Calendar wireframe for October 2026 with the 19th circled and a Today's Events row of flyer cards underneath." width="320">
 </p>
 
-## Add Flier (Non-Organization Affliate)
+## Add Flier (Non-Organization Affiliate)
 
 If a user isn't an admin of any organization, they will see a redirect screen containing the following options:
 
