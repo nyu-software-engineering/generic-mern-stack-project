@@ -1,0 +1,96 @@
+
+
+.my-maps {
+  min-height: 100vh;
+  width: 650px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: white;
+  padding: 20px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.my-maps header{
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+
+}
+.my-maps header h2 {
+  color: #2563eb;
+  font-size: 24px;
+  margin: 0;
+}
+.my-maps .map-list {
+  width: 100%;
+  display: grid; 
+  grid-template-columns: repeat(auto-fill, minmax(145px, 1fr)); 
+  gap: 12px;
+}
+
+.my-maps .map-card {
+  display: flex;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  display: block; 
+  text-align: left; 
+  min-width: 0; 
+  overflow-wrap: anywhere;
+}
+
+
+
+.map-name p { 
+   margin: 8px 0 0;
+ }
+
+
+
+.my-maps .map-name {
+  color: white;
+  font-size: 14px;
+}
+
+
+.my-maps .create-new-map {
+  display: flex;
+  width:100%;
+  gap: 10px;
+  margin-top:auto;
+
+}
+.my-maps .create-new-map input {
+  flex: 1;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.my-maps .create-new-map input:focus {
+  outline: none;
+  border-color: #2563eb;
+}
+
+.my-maps button {
+  padding: 12px;
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.my-maps button:hover {
+  background-color: #1d4ed8;
+}
+
+.map-picture img { display: block; width: 100%; height: 110px; object-fit: cover; background: #e1e8f1; }
+
+

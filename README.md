@@ -1,19 +1,35 @@
 # Project Repository
+## Project Description 
+MapMaker is a website where users can describe a map they want in plain English and instantly generate a clean & editable graphic. Our MVP will accomplish six things which consist of creating an interactive map, creating a robust design/template system, ensuring accuracy through AI research & country matching, allowing for editing & overrides, creating accounts & community maps, and finally exporting/sharing maps as pngs. 
 
-This repository will be used for team projects.
+## Core Team Members
+[Georgi](https://github.com/gp2479)
 
-Several sets of instructions are included in this repository. They should each be treated as separate assignments with their own due dates and sets of requirements.
+[Bhavya](https://github.com/bhavya20051)
 
-1. See the [App Map & Wireframes](instructions-0a-app-map-wireframes.md) and [Prototyping](./instructions-0b-prototyping.md) instructions for the requirements of the initial user experience design of the app.
+[Sean](https://github.com/seankimh)
 
-1. Delete the contents of this file and replace with the contents of a proper README.md, as described in the [project setup instructions](./instructions-0c-project-setup.md)
+[Vincent](https://github.com/vincentcamp)
 
-1. See the [Sprint Planning instructions](instructions-0d-sprint-planning.md) for the requirements of Sprint Planning for each Sprint.
 
-1. See the [Front-End Development instructions](./instructions-1-front-end.md) for the requirements of the initial Front-End Development.
+## History
 
-1. See the [Back-End Development instructions](./instructions-2-back-end.md) for the requirements of the initial Back-End Development.
+[Initial_Project_Proposal](https://github.com/gp2479/project-proposal)
 
-1. See the [Database Integration instructions](./instructions-3-database.md) for the requirements of integrating a database into the back-end.
 
-1. See the [Deployment instructions](./instructions-4-deployment.md) for the requirements of deploying an app.
+## Other Important Documents
+[UX_Design](https://github.com/agile-students-fall2026/generic-mern-stack-project-MapMaker/blob/master/UX-DESIGN.md) 
+
+Link to conceptual wireframes and sitemap visuals of app
+
+[Contributing](https://github.com/agile-students-fall2026/generic-mern-stack-project-MapMaker/blob/master/CONTRIBUTING.md)
+
+Directions for how to contribute to this project
+
+
+
+## Setup and Testing
+
+ These instructions will be updated as initial app development progresses. 
+
+

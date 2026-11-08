@@ -1,0 +1,38 @@
+.mm-shell { min-height: 100vh; background: white; color: #222; font-family: Arial, sans-serif; }
+.mm-content { max-width: 540px; margin: auto; padding: 12px 20px 35px; }
+.mm-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+.mm-shell button { cursor: pointer; font: inherit; }
+.mm-header button, .mm-actions button{
+  background:#2563eb;
+  color: white;
+  border: none;
+  border-radius:0;
+  padding:9px 15px
+} 
+.mm-style-grid button {
+  background: #ddd; border: 1px solid #888; border-radius: 0; padding: 9px 15px;
+}
+.mm-header .mm-logo { background: none; border: 0; color: #2563eb; font-size: 18px; font-weight: bold; padding-left: 0; }
+.mm-map-title { margin: 0 0 20px; font-size: 20px; text-align: center; overflow-wrap: anywhere; }
+.mm-map-image, .mm-editor-map-art { max-width: 390px; margin: 0 auto 22px; }
+.mm-world-map { display: block; width: 100%; height: auto; }
+.mm-panel { border-top: 1px solid #888; padding-top: 15px; }
+.mm-panel h2 { margin: 0 0 20px; font-size: 19px; }
+.mm-panel h3 { margin: 0 0 8px; font-size: 16px; }
+.mm-panel p { font-size: 14px; line-height: 1.5; }
+.mm-panel a { color: #2563eb; font-size: 14px; }
+.mm-style-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.mm-style-grid button { min-width: 0; padding: 8px; background: #f2f2f2; font-size: 13px; }
+.mm-style-grid button.selected { outline: 2px solid #2563eb; background: #eaf1ff; }
+.mm-style-grid svg { margin-bottom: 7px; }
+.mm-edit-form label { display: block; margin-bottom: 5px; font-size: 14px; }
+.mm-edit-form input { display: block; width: 100%; margin-bottom: 18px; padding: 9px; border: 1px solid #888; border-radius: 0; font: 14px Arial, sans-serif; }
+.mm-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 25px; }
+.mm-actions button { min-width: 110px; font-size: 14px; }
+.mm-error { color: #b91c1c; }
+.mm-visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; }
+.mm-shell :focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+@media (max-width: 450px) {
+  .mm-content { padding: 12px 15px 30px; }
+  .mm-actions button { flex: 1; }
+}

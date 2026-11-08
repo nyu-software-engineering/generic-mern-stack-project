@@ -1,0 +1,17 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+.home, .my-maps, .map-editor, .menu-page { max-width: 540px; margin: auto; padding: 20px; }
+.home header, .my-maps header, .map-editor header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; }
+.home header h2, .my-maps header h2, .map-editor header h2 { font-size: 20px; margin: 0; }
+.home h1, .my-maps h1, .map-editor h1, .menu-page h1 { font-size: 25px; margin: 0 0 24px; }
+.home button, .my-maps button, .map-editor button { background: #eee; border: 1px solid #999; padding: 8px 12px; cursor: pointer; }
+.home button:hover, .my-maps button:hover, .map-editor button:hover { background: #e0e0e0; }
+.home textarea { display: block; width: 100%; min-height: 95px; padding: 10px; margin-bottom: 10px; font: inherit; }
+.menu-page a { color: #222; }
