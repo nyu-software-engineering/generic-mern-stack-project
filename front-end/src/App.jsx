@@ -10,6 +10,7 @@ import MonthlyActivity from "./pages/monthly_activity/MonthlyActivity";
 import UserHomePage from "./pages/user_home_page/UserHomePage";
 import HouseholdDashboard from "./pages/household-dashboard/HouseholdDashboard";
 import ProtocolProposal from "./pages/protocol_proposal/protocol_proposal";
+import Profile from "./pages/profile/profile";
 import CreateAsset from "./pages/assets/CreateAsset";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 //import { Link } from "react-router-dom"
@@ -30,6 +31,7 @@ function App() {
         <Route path="/monthly-activity" element={<MonthlyActivity />} />
         <Route path="/household" element={<HouseholdDashboard />} />
         <Route path="/new_protocol" element={<ProtocolProposal />} />
+        <Route path="/profile" element={<Profile />} />
       </Routes>
     </Router>
   );
