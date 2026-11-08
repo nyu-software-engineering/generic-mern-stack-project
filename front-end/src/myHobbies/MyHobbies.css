@@ -1,0 +1,250 @@
+.my-activities {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 430px;
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 16px;
+  background-color: white;
+  color: #1f2a44;
+  text-align: left;
+}
+
+.my-activities h1 {
+  color: #1f2a44;
+  font-family: Georgia, serif;
+  font-size: 28px;
+  font-weight: bold;
+  margin: 16px 0 8px;
+}
+
+.my-activities > p {
+  color: #666d7d;
+  font-size: 13px;
+  margin-bottom: 24px;
+}
+
+.activities-counters {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 24px 0;
+}
+
+.activities-counter {
+  flex: 1;
+  background-color: #f1f2f6;
+  border-radius: 12px;
+  padding: 16px 6px;
+  text-align: center;
+}
+
+.activities-counter h2 {
+  color: #1f2a44;
+  font-family: Georgia, serif;
+  font-size: 24px;
+  margin: 0 0 6px;
+}
+
+.activities-counter p {
+  color: #666d7d;
+  font-size: 11px;
+  margin: 0;
+}
+
+.activities-tabs {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+  margin-bottom: 24px;
+}
+
+.activities-tab {
+  flex: 1;
+  min-width: 0;
+  height: 40px;
+  padding: 0 4px;
+  border: none;
+  border-radius: 10px;
+  background-color: #f1f2f6;
+  color: #1f2a44;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.activities-tab-active {
+  background-color: #1f2a44;
+  color: white;
+}
+
+.activities-section {
+  margin-bottom: 28px;
+}
+
+.activities-section h2 {
+  color: #1f2a44;
+  font-family: Georgia, serif;
+  font-size: 20px;
+  font-weight: bold;
+  margin: 24px 0 12px;
+}
+
+.activity-card {
+  background-color: #f1f2f6;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+.activity-card h3 {
+  color: #1f2a44;
+  font-size: 16px;
+  font-weight: bold;
+  margin: 0 0 8px;
+}
+
+.activity-card p {
+  color: #666d7d;
+  font-size: 13px;
+  margin: 4px 0;
+}
+
+.activity-leave-button {
+  margin-top: 12px;
+  padding: 10px 16px;
+  background-color: white;
+  color: #1f2a44;
+  border: 1px solid #1f2a44;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.activity-leave-button:hover {
+  background-color: #1f2a44;
+  color: white;
+}
+
+/* Manage Event menu */
+
+.activities-manage-menu {
+  margin-top: 8px;
+  padding: 6px;
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+}
+
+.activities-manage-menu button {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  background-color: white;
+  color: #1f2a44;
+  text-align: left;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.activities-manage-menu button:hover {
+  background-color: #f1f2f6;
+}
+
+.activities-manage-menu .activities-delete-option {
+  color: #b42318;
+}
+
+/* Confirmation and edit popups */
+
+.activities-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.activities-popup {
+  width: 85%;
+  max-width: 340px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-sizing: border-box;
+  padding: 24px;
+  border-radius: 14px;
+  background-color: white;
+  text-align: center;
+}
+
+.activities-popup h2 {
+  color: #1f2a44;
+  font-family: Georgia, serif;
+  font-size: 22px;
+  margin: 0 0 12px;
+}
+
+.activities-popup p {
+  color: #666d7d;
+  font-size: 14px;
+  margin: 0 0 24px;
+}
+
+.activities-popup-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.activities-cancel-button,
+.activities-confirm-button {
+  flex: 1;
+  height: 44px;
+  border: 1px solid #1f2a44;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.activities-cancel-button {
+  background-color: white;
+  color: #1f2a44;
+}
+
+.activities-confirm-button {
+  background-color: #1f2a44;
+  color: white;
+}
+
+/* Edit Event form */
+
+.activities-popup form {
+  text-align: left;
+}
+
+.activities-popup label {
+  display: block;
+  margin: 12px 0 6px;
+  color: #1f2a44;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.activities-popup input {
+  box-sizing: border-box;
+  width: 100%;
+  height: 42px;
+  padding: 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  background-color: white;
+  color: #1f2a44;
+  font-size: 14px;
+}
