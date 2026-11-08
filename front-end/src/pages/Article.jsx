@@ -36,7 +36,7 @@ export default function Article() {
 
             <main className="mx-auto w-full max-w-4xl px-6 py-10">
                 <div className="mb-2 grid grid-cols-2">
-                    <button onClick = {() => navigate(`/articles/${article.id}/dejargoned/b`,
+                    <button onClick = {() => navigate(`/articles/${article.id}`,
                         {state: { article }}
                     )}
                         className="bg-gray-600 text-white py-3 font-semibold">
