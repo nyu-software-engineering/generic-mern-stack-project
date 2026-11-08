@@ -18,9 +18,15 @@ function Feed() {
         Discover
       </Link>
 
-      <Link to="/create-post" className="create-post">
-        +
-      </Link>
+      <div className="feed-actions">
+        <Link to="/create-post" className="feed-action-button">
+          Create Post
+        </Link>
+
+        <Link to="/create-event" className="feed-action-button">
+          Create Event
+        </Link>
+      </div>
 
       {posts.map((post) => (
         <Post key={post.id} post={post} />

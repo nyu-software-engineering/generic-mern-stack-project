@@ -11,6 +11,7 @@ import CreateAccount from "./login/CreateAccount"
 import Feed from "./Feed/Feed"
 import Following from "./Feed/Following"
 import CreatePost from "./Feed/CreatePost"
+import CreateEvent from "./Feed/CreateEvent"
 import Map from "./map/Map"
 import './App.css'
 
@@ -53,6 +54,7 @@ const App = () => {
         <Route path="/feed" element={<Feed />} />
         <Route path="/following" element={<Following />} />
         <Route path="/create-post" element={<CreatePost />} />
+        <Route path="/create-event" element={<CreateEvent />} />
         <Route path="/map" element={<Map />} />
       </Routes>
     </Router>
