@@ -18,7 +18,7 @@ function UserHomePage() {
                 <button type="button" className="logoButton" onClick={() => navigate('/home')}>
                     <img src={SplitLeaseLogo} alt="SplitLease Logo" className="headerLogo"/>
                 </button>
-                <button className="profileButton">User Profile</button>
+                <button className="profileButton" onClick={() => navigate('/profile')}>User Profile</button>
             </header>
             <h1>Welcome Back, {userName}!</h1>
 

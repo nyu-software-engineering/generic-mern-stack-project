@@ -9,6 +9,7 @@ import AssetList from "./pages/assets/AssetList";
 import MonthlyActivity from "./pages/monthly_activity/MonthlyActivity";
 import UserHomePage from "./pages/user_home_page/UserHomePage";
 import HouseholdDashboard from "./pages/household-dashboard/HouseholdDashboard";
+import Profile from "./pages/profile/profile";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 //import { Link } from "react-router-dom"
 import "./App.css";
@@ -26,6 +27,7 @@ function App() {
         <Route path="/assets" element={<AssetList />} />
         <Route path="/monthly-activity" element={<MonthlyActivity />} />
         <Route path="/household" element={<HouseholdDashboard />} />
+        <Route path="/profile" element={<Profile />} />
       </Routes>
     </Router>
   );
