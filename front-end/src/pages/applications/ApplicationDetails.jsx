@@ -1,8 +1,7 @@
 import { useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { api } from '../../api'
-import {Avatar, Button, Card, ErrorState, EventCard, ListRow, LoadingState, OptionSheet, Page, SectionHeader, StatusBadge,
-} from '../../components'
+import {Avatar, Button, Card,ConfirmDialog, ErrorState, EventCard, ListRow, LoadingState, OptionSheet, Page, SectionHeader, StatusBadge,} from '../../components'
 import { APPLICATION_STATUSES, getLabel, getStatus, JOB_TYPES } from '../../constants'
 import { useApi } from '../../hooks/useApi'
 import { formatDate, todayString } from '../../utils/format'
@@ -25,7 +24,11 @@ export default function ApplicationDetails() {
   const [statusOpen, setStatusOpen] = useState(false)
   // Error message if saving a new status fails
   const [statusError, setStatusError] = useState('')
-
+    // Used to go back to the dashboard after archiving
+  const navigate = useNavigate()
+  // Whether the archive pop-up is open, and whether it's saving
+  const [archiveOpen, setArchiveOpen] = useState(false)
+  const [archiving, setArchiving] = useState(false)
   // "Edit" link in the top right of the header
   const editButton = (
     <Button variant="ghost" size="sm" to={`/applications/${id}/edit`}>
@@ -70,6 +73,19 @@ export default function ApplicationDetails() {
       setData((current) => ({ ...current, application: updated }))
     } catch (err) {
       setStatusError(err.message)
+    }
+  }
+
+
+  // Archive or unarchive the application, then go back to the dashboard
+  async function toggleArchive() {
+    setArchiving(true)
+    try {
+      if (application.archived) await api.unarchiveApplication(id)
+      else await api.archiveApplication(id)
+      navigate('/applications')
+    } finally {
+      setArchiving(false)
     }
   }
 
@@ -212,6 +228,10 @@ export default function ApplicationDetails() {
           </Card>
         </section>
       )}
+            {/* Archive or unarchive this application */}
+      <Button variant="secondary" fullWidth onClick={() => setArchiveOpen(true)}>
+        {application.archived ? 'Unarchive application' : 'Archive application'}
+      </Button>
 
       {/* Delete application button */}
       <DeleteApplicationButton applicationId={id} />
@@ -224,6 +244,21 @@ export default function ApplicationDetails() {
         value={application.status}
         onSelect={changeStatus}
         onCancel={() => setStatusOpen(false)}
+      />
+
+      {/* "Are you sure?" pop-up for archiving or unarchiving */}
+      <ConfirmDialog
+        open={archiveOpen}
+        title={application.archived ? 'Unarchive application?' : 'Archive application?'}
+        message={
+          application.archived
+            ? 'It will move back to your dashboard.'
+            : 'It will be hidden from your dashboard. You can unarchive it anytime from Archive.'
+        }
+        confirmLabel={application.archived ? 'Unarchive' : 'Archive'}
+        loading={archiving}
+        onConfirm={toggleArchive}
+        onCancel={() => setArchiveOpen(false)}
       />
     </Page>
   )
