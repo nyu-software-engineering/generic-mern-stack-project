@@ -1,7 +1,10 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import './Home.css'
 
-function Home(){
+const EXAMPLES = ["Countries That Drive On The Left", "Members of the EU in 1995"]
+
+function Home({ onCreateMap }){
     const navigate=useNavigate()
     const [description, setDescription] = useState("")
 
@@ -9,17 +12,29 @@ function Home(){
         navigate("/search?q=" + encodeURIComponent(description.trim() || "world map"))
     }
 
+    function blankMap(){
+        const map = onCreateMap("Untitled Map")
+        navigate("/Map-Editor", { state: { map: map } })
+    }
+
     return(
         <div className="home">
             <header>
-                <h2>Logo</h2>
+                <img className="logo" src="https://cdn-icons-png.flaticon.com/512/4746/4746231.png" alt="MapMaker logo" />
                 <button onClick={()=>navigate("/menu")}>Menu</button>
             </header>
 
-            <h1>Describe a map.</h1>
-            <textarea placeholder="Make me a map of..." value={description} onChange={(event)=>setDescription(event.target.value)} />
-            <button onClick={createMap}>Generate map</button>
-            <button onClick={()=>navigate("/MyMaps")}>My maps</button>
+            <h1>Describe Your Map</h1>
+            <div className="prompt-box">
+                <textarea placeholder="Make me a map of..." value={description} onChange={(event)=>setDescription(event.target.value)} />
+                <button className="generate-button" onClick={createMap}>Generate</button>
+            </div>
+            <button className="blank-button" onClick={blankMap}>Start From A Blank Map</button>
+
+            <h3>Examples</h3>
+            {EXAMPLES.map((example)=>(
+                <button className="example" key={example} onClick={()=>setDescription(example)}>{example}</button>
+            ))}
         </div>
     )
 }

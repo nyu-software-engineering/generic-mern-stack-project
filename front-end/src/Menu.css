@@ -1,0 +1,70 @@
+.menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.menu-panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 70%;
+  max-width: 320px;
+  height: 100%;
+  background: white;
+  padding: 20px;
+  animation: slide-in 0.3s;
+}
+
+@keyframes slide-in {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.menu-panel .close-button {
+  display: block;
+  margin-left: auto;
+  padding: 10px 16px;
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.menu-panel .close-button:hover {
+  background-color: #1d4ed8;
+}
+
+.menu-user {
+  color: #333;
+  font-size: 18px;
+  font-weight: bold;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #ddd;
+}
+
+.menu-panel .menu-link {
+  display: block;
+  width: 100%;
+  padding: 14px 0;
+  background: none;
+  border: none;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+  font-size: 18px;
+  color: #333;
+  cursor: pointer;
+}
+
+.menu-panel .menu-link:hover {
+  color: #2563eb;
+}
