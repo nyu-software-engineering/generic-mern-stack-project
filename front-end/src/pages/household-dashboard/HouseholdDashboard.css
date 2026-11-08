@@ -16,7 +16,7 @@ body,
 
 .household-dashboard-container {
   background-color: #C9CAD9;
-    width: 50%;
+    width: dynamic;
     min-height: 750px;
     /* align-items: center; */
     margin: auto;
