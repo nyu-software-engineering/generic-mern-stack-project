@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from 'react'
 import { getJob, getJobs } from './jobs/api.js'
 import { getJobHref, parseJobRoute } from './jobs/routes.js'
@@ -72,6 +73,39 @@ function App() {
     setAttempt((value) => value + 1)
   }
 
+  // Issue #66: Save a job from Job Details to Tracker
+  function saveCurrentJobToTracker({ stage, note }) {
+    if (appState.status !== 'ready' || !appState.addApplication) {
+      return {
+        ok: false,
+        message: 'Tracker is currently unavailable.',
+      }
+    }
+
+    if (route.kind !== 'details' || current.status !== 'ready' || !current.data?.id) {
+      return {
+        ok: false,
+        message: 'Job information is unavailable.',
+      }
+    }
+
+    const saved = appState.addApplication(
+      current.data.id,
+      stage,
+      note
+    )
+
+    return saved
+      ? {
+          ok: true,
+          message: 'Job saved to Tracker.',
+        }
+      : {
+          ok: false,
+          message: 'This job is already in your Tracker.',
+        }
+  }
+
   function logOut() {
     appState.resetAll()
     setMenuOpen(false)
@@ -118,7 +152,12 @@ function App() {
           filters={browseFilters} onFiltersChange={setBrowseFilters} profile={appState.profile}
           query={browseQuery} onQueryChange={setBrowseQuery} sort={browseSort} onSortChange={setBrowseSort} />
       ) : route.kind === 'details' ? (
-        <JobDetails job={current.data} status={current.status} onRetry={retry}
+        <JobDetails key={route.id} job={current.data} status={current.status} onRetry={retry}
+          onSaveToTracker={
+            appState.status === 'ready' && current.status === 'ready'
+              ? saveCurrentJobToTracker
+              : undefined
+          }
           matchResource={match.resource}
           onMatchRetry={appState.status === 'ready' ? match.retry : undefined}
           onCompleteProfile={() => { window.location.hash = '#/profile/edit' }} />
