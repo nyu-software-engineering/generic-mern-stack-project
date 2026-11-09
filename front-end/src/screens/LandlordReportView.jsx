@@ -39,7 +39,16 @@ export default function LandlordReportView() {
     return <p className="px-5 py-6 text-sm text-muted">Loading…</p>
   }
 
-  if (report === null || !report.linkActive) {
+  if (report === null) {
+    return (
+      <div className={openedFromShareLink ? 'px-5 py-6' : ''}>
+        {header}
+        <ScreenTitle title="This link isn't valid" subtitle="Check the link the renter sent you." />
+      </div>
+    )
+  }
+
+    if (!report.linkActive) {
     return (
       <div className={openedFromShareLink ? 'px-5 py-6' : ''}>
         {header}
