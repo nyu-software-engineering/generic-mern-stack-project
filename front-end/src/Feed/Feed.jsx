@@ -14,10 +14,6 @@ function Feed() {
         placeholder="Search posts..."
       />
 
-      <Link to="/discover" className="discover-button">
-        Discover
-      </Link>
-
       <div className="feed-actions">
         <Link to="/create-post" className="feed-action-button">
           Create Post
