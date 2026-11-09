@@ -3,10 +3,11 @@ import { useState } from 'react'
 import { formatJobDate, formatSponsorship, getApplicationHref } from '../jobs/formatters.js'
 import JobMatch from './JobMatch.jsx'
 import './JobDetails.css'
+import { PostItem } from './Discussion.jsx'
 
 export default function JobDetails({
   job, status = 'ready', onRetry, onSaveToTracker, onOpenAnalysis, onOpenDiscussion,
-  matchResource, onMatchRetry, onCompleteProfile,
+  matchResource, onMatchRetry, onCompleteProfile, recentPosts = [],
 }) {
   // Issue #66: Save to Tracker form state
   const [showSaveForm, setShowSaveForm] = useState(false)
@@ -210,6 +211,9 @@ export default function JobDetails({
       <section className="job-content" aria-labelledby="job-discussion-title">
         <h2 id="job-discussion-title">Discussion</h2>
         <p>Compare interview timelines and application experiences with other applicants.</p>
+        {recentPosts.length > 0
+          ? <ul className="discussion-list">{recentPosts.map((post) => <PostItem key={post.id} post={post} />)}</ul>
+          : <p>No posts yet.</p>}
 
         <button
           type="button"

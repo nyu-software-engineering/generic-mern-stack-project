@@ -17,6 +17,7 @@ import { useJobMatch } from './jobs/useJobMatch.js'
 import ProfileSetup from './pages/ProfileSetup.jsx'
 import Home from './pages/Home.jsx'
 import Deadlines from './pages/Deadlines.jsx'
+import Discussion from './pages/Discussion.jsx'
 
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
   const [browseQuery, setBrowseQuery] = useState('')
   const [browseSort, setBrowseSort] = useState('best-match')
   const route = parseJobRoute(hash)
+  const discussionMatch = path.match(/^\/jobs\/([^/]+)\/discussion$/)
   const match = useJobMatch(route.kind === 'details' ? route.id : null, appState)
   const requestKey = `${route.kind}:${route.id ?? ''}`
   const resource = resources[route.kind]
@@ -147,6 +149,8 @@ function App() {
         <Tracker initialStage={new URLSearchParams(path.split('?')[1] || '').get('stage')} />
       ) : path === '/deadlines' ? (
         <Deadlines />
+      ) : discussionMatch ? (
+        <Discussion jobId={discussionMatch[1]} />
       ) : route.kind === 'browse' ? (
         <BrowseJobs jobs={current.data ?? []} status={current.status} onRetry={retry} getJobHref={getJobHref}
           filters={browseFilters} onFiltersChange={setBrowseFilters} profile={appState.profile}
@@ -160,7 +164,9 @@ function App() {
           }
           matchResource={match.resource}
           onMatchRetry={appState.status === 'ready' ? match.retry : undefined}
-          onCompleteProfile={() => { window.location.hash = '#/profile/edit' }} />
+          onCompleteProfile={() => { window.location.hash = '#/profile/edit' }}
+          recentPosts={appState.posts.filter((post) => post.jobId === route.id).slice(0, 2)}
+          onOpenDiscussion={() => { window.location.hash = `#/jobs/${route.id}/discussion` }} />
       ) : (
         <section className="browse-state"><h1>Page not found</h1><a href="#/jobs">Back to jobs</a></section>
       )}

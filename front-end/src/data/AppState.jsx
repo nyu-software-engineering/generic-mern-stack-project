@@ -107,6 +107,7 @@ function AppState(props) {
       topic: post.topic,
       body: post.body,
       anonymous: Boolean(post.anonymous),
+      author: post.author,
       createdAt: new Date().toISOString(),
     }
     setPosts((previous) => [nextPost, ...previous])
