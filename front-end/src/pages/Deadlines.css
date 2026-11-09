@@ -1,0 +1,24 @@
+.deadline-tabs {
+    display: flex;
+    gap: 8px;
+    margin: 16px 0;
+}
+
+.deadline-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.deadline-row {
+    display: grid;
+    gap: 4px;
+    width: 100%;
+    margin-bottom: 12px;
+    padding: 12px;
+    border: 1px solid #d4d7db;
+    background: #ffffff;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+}
