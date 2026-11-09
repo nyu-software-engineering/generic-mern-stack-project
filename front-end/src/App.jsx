@@ -152,7 +152,7 @@ function App() {
           filters={browseFilters} onFiltersChange={setBrowseFilters} profile={appState.profile}
           query={browseQuery} onQueryChange={setBrowseQuery} sort={browseSort} onSortChange={setBrowseSort} />
       ) : route.kind === 'details' ? (
-        <JobDetails job={current.data} status={current.status} onRetry={retry}
+        <JobDetails key={route.id} job={current.data} status={current.status} onRetry={retry}
           onSaveToTracker={
             appState.status === 'ready' && current.status === 'ready'
               ? saveCurrentJobToTracker

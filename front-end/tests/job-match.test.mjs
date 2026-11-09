@@ -378,12 +378,23 @@ test('JobDetails composes the supplied match and binds recovery while preserving
   let discussions = 0
   const props = { matchResource: ready, onMatchRetry: () => retries++,
     onCompleteProfile: () => profiles++,
-    onSaveToTracker: () => saves++, onOpenDiscussion: () => discussions++ }
+    onSaveToTracker: ({ stage, note }) => {
+      saves++
+      assert.equal(stage, 'Saved')
+      assert.equal(note, '')
+      return { ok: true, message: 'Job saved to Tracker.' }
+    }, 
+    onOpenDiscussion: () => discussions++ }
   await mount(ready, props, JobDetails)
   assert.doesNotMatch(document.body.textContent, /Some actions aren’t available|Legacy result|99%/)
+  
   await click(button('Save to Tracker'))
-  await click(button('View discussion'))
+  assert.equal(saves, 0)
+
+  await click(button('Save'))
   assert.equal(saves, 1)
+
+  await click(button('View discussion'))
   assert.equal(discussions, 1)
   const dialog = await open()
   await mount(ready, { ...props, matchResource: { status: 'error' } }, JobDetails)
