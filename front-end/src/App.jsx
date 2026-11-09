@@ -96,7 +96,7 @@ function App() {
   return (
     <main className="app">
       <header className="app-header">
-        <a href="#/jobs" aria-label="CareerHive — Browse Jobs">CareerHive</a>
+        <a href="#/home" aria-label="CareerHive — Home">CareerHive</a>
         <button type="button" className="ui-button ui-button-secondary" onClick={() => setMenuOpen(true)}>Menu</button>
       </header>
       {menuOpen && <Menu onClose={() => setMenuOpen(false)} onLogOut={logOut} />}
@@ -109,8 +109,8 @@ function App() {
         <MyProfile />
       ) : path === '/profile/edit' ? (
         <EditProfile />
-      ) : path === '/tracker' ? (
-        <Tracker />
+      ) : path === '/tracker' || path.startsWith('/tracker?') ? (
+        <Tracker initialStage={new URLSearchParams(path.split('?')[1] || '').get('stage')} />
       ) : path === '/deadlines' ? (
         <Deadlines />
       ) : route.kind === 'browse' ? (
