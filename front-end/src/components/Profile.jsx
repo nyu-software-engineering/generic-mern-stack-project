@@ -7,12 +7,6 @@ const Profile = ({user}) => {
     
     return (
         <main className = "profile-page">
-            <header className = "profile-header">
-                <span className="profile-brand">HobbyHub</span>
-                <Link to="/chat" className="profile-chat">
-                    Chat
-                </Link>
-            </header>
 
             <section className="profile-content">
                 <div className ="profile-top">
@@ -71,23 +65,6 @@ const Profile = ({user}) => {
                   </section>
             </section>
 
-            <nav className="profile-navigation" aria-label="Main navigation">
-                <Link to="/feed" className="profile-nav-item">
-                        Feed
-                </Link>
-                <Link to="/discover" className="profile-nav-item">
-                        Discover
-                </Link>
-                <Link to="/following" className="profile-nav-item">
-                        Following
-                </Link>
-                <Link to="/map" className="profile-nav-item">
-                        Map
-                </Link>
-                <Link to="/profile" className="profile-nav-item profile-nav-active">
-                        Profile
-                </Link>
-            </nav>
         </main>
     )
 }
