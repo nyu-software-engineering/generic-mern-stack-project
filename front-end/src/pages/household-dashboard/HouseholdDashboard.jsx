@@ -1,12 +1,25 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import SplitLeaseLogo from "../../assets/splitlease-blank-background-logo.png";
 import "./HouseholdDashboard.css";
+import axios from "axios";
 
 const HouseholdDashboard = () => {
   const navigate = useNavigate();
+  const [members, setMembers] = useState([]);
 
-  const members = ["member1", "member2", "member3"];
+  useEffect(() => {
+    const fetchMembers = async () => {
+      try {
+        const response = await axios.get(import.meta.env.VITE_MEMBERS_API_URL);
+        setMembers(response.data);
+      } catch (error) {
+        console.error("Error fetching members:", error);
+      }
+    };
+
+    fetchMembers();
+  }, []);
 
   return (
     <div className="household-dashboard-container">
@@ -45,16 +58,20 @@ const HouseholdDashboard = () => {
             placeholder="search members"
           />
           <div className="membersList">
-            {members.map((member, index) => (
-              <button
-                key={index}
-                type="button"
-                className="memebersItem"
-                onClick={() => console.log("Selected:", member)}
-              >
-                {member}
-              </button>
-            ))}
+            {members.length === 0 ? (
+              <p className="fieldText">No members available.</p>
+            ) : (
+              members.map((member, index) => (
+                <button
+                  key={member.id || index}
+                  type="button"
+                  className="memebersItem"
+                  onClick={() => console.log("Selected:", member.first_name || member)}
+                >
+                  {member.first_name || member}
+                </button>
+              ))
+            )}
           </div>
         </div>
 
@@ -68,9 +85,10 @@ const HouseholdDashboard = () => {
               View Assets Page
             </button>
             <p className="assetQuickInfo"># of Assets: 5</p>
-            <button 
+            <button
               className="fieldText"
-              onClick={() => navigate("/assets/create")}>
+              onClick={() => navigate("/assets/create")}
+            >
               Quick Create Asset
             </button>
           </div>

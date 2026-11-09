@@ -12,6 +12,7 @@ import HouseholdDashboard from "./pages/household-dashboard/HouseholdDashboard";
 import ProtocolProposal from "./pages/protocol_proposal/protocol_proposal";
 import Profile from "./pages/profile/profile";
 import CreateAsset from "./pages/assets/CreateAsset";
+import ExpenseList from "./pages/expense_list/ExpenseList";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 //import { Link } from "react-router-dom"
 import "./App.css";
@@ -28,6 +29,7 @@ function App() {
         <Route path="/individual-protocol" element={<IndividualProtocol />} />
         <Route path="/assets" element={<AssetList />} />
         <Route path="/assets/create" element={<CreateAsset />} />
+        <Route path="/expenses" element={<ExpenseList />} />
         <Route path="/monthly-activity" element={<MonthlyActivity />} />
         <Route path="/household" element={<HouseholdDashboard />} />
         <Route path="/new_protocol" element={<ProtocolProposal />} />
