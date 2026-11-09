@@ -55,7 +55,49 @@ function AppState(props) {
   }
 
   function removeApplication(applicationId) {
-    setApplications((previous) => previous.filter((application) => application.id !== applicationId))
+    setApplications((previous) =>previous.filter((application) => application.id !== applicationId)
+    )
+  }
+
+  // Issue #66: Save a job to the Tracker
+  function addApplication(jobId, stage = 'Saved', note = '') {
+    if (status !== 'ready' || !jobId) {
+      return false
+    }
+
+    const alreadySaved = applications.some(
+      (application) => application.jobId === jobId
+    )
+
+    if (alreadySaved) {
+      return false
+    }
+
+    const at = new Date().toISOString()
+
+    const newApplication = {
+      id: 'application-' + crypto.randomUUID(),
+      jobId,
+      stage,
+      note: note.trim(),
+      updatedAt: at,
+      history: [
+        {
+          stage,
+          at,
+        },
+      ],
+    }
+
+    setApplications((previous) => {
+      if (previous.some((application) => application.jobId === jobId)) {
+        return previous
+      }
+
+      return [newApplication, ...previous]
+    })
+
+    return true
   }
 
   function addPost(jobId, post) {
@@ -97,6 +139,7 @@ function AppState(props) {
     posts,
     saveProfile,
     updateApplication,
+    addApplication,
     addPost,
     resetAll,
     matchFor,

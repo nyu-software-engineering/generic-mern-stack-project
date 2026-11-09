@@ -1,3 +1,5 @@
+
+import { useState } from 'react'
 import { formatJobDate, formatSponsorship, getApplicationHref } from '../jobs/formatters.js'
 import JobMatch from './JobMatch.jsx'
 import './JobDetails.css'
@@ -6,10 +8,45 @@ export default function JobDetails({
   job, status = 'ready', onRetry, onSaveToTracker, onOpenAnalysis, onOpenDiscussion,
   matchResource, onMatchRetry, onCompleteProfile,
 }) {
+  // Issue #66: Save to Tracker form state
+  const [showSaveForm, setShowSaveForm] = useState(false)
+  const [saveStage, setSaveStage] = useState('Saved')
+  const [saveNote, setSaveNote] = useState('')
+  const [saveResult, setSaveResult] = useState(null)
+
+  function handleSave() {
+    if (!onSaveToTracker) return
+
+    const result = onSaveToTracker({
+      stage: saveStage,
+      note: saveNote,
+    })
+
+    setSaveResult(result ?? {
+      ok: false,
+      message: 'Unable to save this job.',
+    })
+
+    if (result?.ok) {
+      setShowSaveForm(false)
+      setSaveStage('Saved')
+      setSaveNote('')
+    }
+  }
+
+  function handleCancelSave() {
+    setShowSaveForm(false)
+    setSaveStage('Saved')
+    setSaveNote('')
+    setSaveResult(null)
+  }
+
   const backLink = <a className="job-back" href="#/jobs">Back to jobs</a>
+
   if (status === 'loading') {
     return <section className="job-details">{backLink}<p role="status">Loading job…</p></section>
   }
+
   if (status === 'error') {
     return (
       <section className="job-details">
@@ -23,7 +60,6 @@ export default function JobDetails({
     )
   }
 
-
   if (!job) {
     return <section className="job-details">{backLink}<h1>Job not found</h1><p>This listing is no longer available.</p></section>
   }
@@ -34,6 +70,7 @@ export default function JobDetails({
   return (
     <section className="job-details" aria-labelledby="job-title">
       {backLink}
+
       <header className="job-detail-heading">
         {job.logoUrl && <img src={job.logoUrl} alt="" width="56" height="56" />}
         <div>
@@ -51,24 +88,110 @@ export default function JobDetails({
       </dl>
 
       <div className="job-actions">
-        <button type="button" onClick={onSaveToTracker} disabled={!onSaveToTracker}
-          aria-describedby={actionsUnavailable ? 'job-action-availability' : undefined}>Save to Tracker</button>
+        <button
+          type="button"
+          onClick={() => {
+            setShowSaveForm(true)
+            setSaveResult(null)
+          }}
+          disabled={!onSaveToTracker}
+          aria-describedby={actionsUnavailable ? 'job-action-availability' : undefined}
+        >
+          Save to Tracker
+        </button>
+
         {applicationHref ? (
-          <a href={applicationHref} target="_blank" rel="noopener noreferrer">Apply on Company Site</a>
+          <a href={applicationHref} target="_blank" rel="noopener noreferrer">
+            Apply on Company Site
+          </a>
         ) : <p>Application link unavailable</p>}
       </div>
-      {actionsUnavailable && <p className="job-action-note" id="job-action-availability">Some actions aren’t available yet. Unavailable actions are disabled.</p>}
+
+      {/* Issue #66: Choose stage and note before saving */}
+      {showSaveForm && (
+        <section className="job-content" aria-labelledby="save-tracker-title">
+          <h2 id="save-tracker-title">Save to Tracker</h2>
+
+          <label htmlFor="save-tracker-stage">Application Stage</label>
+          <select
+            id="save-tracker-stage"
+            value={saveStage}
+            onChange={(event) => setSaveStage(event.target.value)}
+          >
+            <option value="Saved">Saved</option>
+            <option value="Preparing">Preparing</option>
+            <option value="Applied">Applied</option>
+            <option value="Interview">Interview</option>
+            <option value="Rejected">Rejected</option>
+            <option value="Offer">Offer</option>
+          </select>
+
+          <label htmlFor="save-tracker-note">Optional Note</label>
+          <textarea
+            id="save-tracker-note"
+            value={saveNote}
+            onChange={(event) => setSaveNote(event.target.value)}
+            placeholder="Add a note about this application"
+            rows={4}
+          />
+
+          <div className="job-actions">
+            <button type="button" onClick={handleSave}>
+              Save
+            </button>
+
+            <button type="button" onClick={handleCancelSave}>
+              Cancel
+            </button>
+          </div>
+        </section>
+      )}
+
+      {/* Issue #66: Save result and Tracker navigation */}
+      {saveResult && (
+        <div role="status">
+          <p>{saveResult.message}</p>
+
+          {saveResult.ok && (
+            <a href="#/tracker">View Tracker</a>
+          )}
+        </div>
+      )}
+
+      {actionsUnavailable && (
+        <p className="job-action-note" id="job-action-availability">
+          Some actions aren’t available yet. Unavailable actions are disabled.
+        </p>
+      )}
 
       {matchResource ? (
-        <JobMatch job={job} resource={matchResource} onRetry={onMatchRetry} onCompleteProfile={onCompleteProfile} />
-      ) : <section className="job-match-section" aria-labelledby="job-match-title">
-        <div className="job-section-heading">
-          <h2 id="job-match-title">AI Match</h2>
-          <span className="job-match">{job.matchScore == null ? 'Match not available' : `${job.matchScore}% match`}</span>
-        </div>
-        <p>{job.matchSummary || 'A match summary is not available for this listing.'}</p>
-        <button type="button" className="job-text-action" onClick={onOpenAnalysis} disabled={!onOpenAnalysis}>See full analysis</button>
-      </section>}
+        <JobMatch
+          job={job}
+          resource={matchResource}
+          onRetry={onMatchRetry}
+          onCompleteProfile={onCompleteProfile}
+        />
+      ) : (
+        <section className="job-match-section" aria-labelledby="job-match-title">
+          <div className="job-section-heading">
+            <h2 id="job-match-title">AI Match</h2>
+            <span className="job-match">
+              {job.matchScore == null ? 'Match not available' : `${job.matchScore}% match`}
+            </span>
+          </div>
+
+          <p>{job.matchSummary || 'A match summary is not available for this listing.'}</p>
+
+          <button
+            type="button"
+            className="job-text-action"
+            onClick={onOpenAnalysis}
+            disabled={!onOpenAnalysis}
+          >
+            See full analysis
+          </button>
+        </section>
+      )}
 
       <section className="job-content" aria-labelledby="job-description-title">
         <h2 id="job-description-title">About the Role</h2>
@@ -76,16 +199,26 @@ export default function JobDetails({
           ? job.description.map((paragraph, index) => <p key={index}>{paragraph}</p>)
           : <p>A description is not available for this listing.</p>}
       </section>
+
       <section className="job-content" aria-labelledby="job-requirements-title">
         <h2 id="job-requirements-title">Requirements</h2>
         {job.requirements?.length
           ? <ul>{job.requirements.map((requirement, index) => <li key={index}>{requirement}</li>)}</ul>
           : <p>Requirements are not listed.</p>}
       </section>
+
       <section className="job-content" aria-labelledby="job-discussion-title">
         <h2 id="job-discussion-title">Discussion</h2>
         <p>Compare interview timelines and application experiences with other applicants.</p>
-        <button type="button" className="job-text-action" onClick={onOpenDiscussion} disabled={!onOpenDiscussion}>View discussion</button>
+
+        <button
+          type="button"
+          className="job-text-action"
+          onClick={onOpenDiscussion}
+          disabled={!onOpenDiscussion}
+        >
+          View discussion
+        </button>
       </section>
     </section>
   )
