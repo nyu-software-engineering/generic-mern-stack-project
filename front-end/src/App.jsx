@@ -15,6 +15,7 @@ import Menu from './components/Menu.jsx'
 import { useJobMatch } from './jobs/useJobMatch.js'
 import ProfileSetup from './pages/ProfileSetup.jsx'
 import Home from './pages/Home.jsx'
+import Deadlines from './pages/Deadlines.jsx'
 
 
 function App() {
@@ -110,6 +111,8 @@ function App() {
         <EditProfile />
       ) : path === '/tracker' ? (
         <Tracker />
+      ) : path === '/deadlines' ? (
+        <Deadlines />
       ) : route.kind === 'browse' ? (
         <BrowseJobs jobs={current.data ?? []} status={current.status} onRetry={retry} getJobHref={getJobHref}
           filters={browseFilters} onFiltersChange={setBrowseFilters} profile={appState.profile}

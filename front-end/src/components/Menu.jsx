@@ -5,6 +5,7 @@ import './Menu.css'
 const LINKS = [
   { href: '#/jobs', label: 'Browse Jobs' },
   { href: '#/tracker', label: 'My Tracker' },
+  { href: '#/deadlines', label: 'Deadlines' },
   { href: '#/profile', label: 'My Profile' },
 ]
 
