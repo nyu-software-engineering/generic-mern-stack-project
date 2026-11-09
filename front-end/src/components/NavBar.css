@@ -1,0 +1,13 @@
+.navlink {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    padding: 1em;
+}
+
+.navlink:hover, .navlink.active {
+  background-color: var(--paper);
+  box-shadow: inset 0 0.2em var(--nyu-indigo);
+}
