@@ -22,7 +22,7 @@ const AssetList = () => {
   }, []);
 
   const filteredAssets = assets.filter((asset) =>
-    asset.name?.toLowerCase().includes(searchTerm.toLowerCase()),
+    asset.expense_name?.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   return (
@@ -79,14 +79,14 @@ const AssetList = () => {
                 filteredAssets.map((asset) => (
                   <div key={asset.id} className="asset-card">
                     <div className="asset-square">
-                      <div className="asset-name">{asset.name}</div>
+                      <div className="asset-name">{asset.expense_name}</div>
                       <img
                         src={
                           "https://picsum.photos/id/" +
                           asset.id * 20 +
                           "/100/100"
                         }
-                        alt={asset.name}
+                        alt={asset.expense_name}
                         className="asset-image"
                       />
                       <div className="asset-description">
