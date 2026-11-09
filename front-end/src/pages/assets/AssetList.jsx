@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom"; 
 import axios from 'axios';
 import SplitLeaseLogo from "../../assets/splitlease-blank-background-logo.png";
 import './AssetList.css';
@@ -12,7 +12,7 @@ const AssetList = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        axios('https://my.api.mockaroo.com/assets.json?key=29824db0')    
+        axios(import.meta.env.VITE_ASSETS_API_URL)
             .then(response => {
                 console.log("API Response:", response.data);
                 setAssets(response.data);

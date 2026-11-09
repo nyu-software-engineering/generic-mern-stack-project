@@ -1,16 +1,39 @@
-import React, { useState } from 'react';
 import SplitLeaseLogo from "../../assets/splitlease-blank-background-logo.png";
 import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import './Profile.css';
 
 const Profile = () => {
     const navigate = useNavigate();
     const [user, setUser] = useState({
-        firstName: '[user.firstName]',
-        lastName: '[user.lastName]',
-        email: '[user.email]',
+        firstName: '',
+        lastName: '',
+        email: '',
         profilePic: 'https://picsum.photos/150/150'
     });
+
+    useEffect(() => {
+        axios.get(import.meta.env.VITE_MEMBERS_API_URL)
+            .then(({ data }) => {
+                const first = data[0];
+
+            if (!first){
+                console.error('No members');
+                return;
+            }
+
+            setUser(currentUser => ({
+                ...currentUser,
+                firstName: first.first_name,
+                lastName: first.last_name,
+                email: first.email
+            }));
+        })
+        .catch(error => {
+            console.error('Error fetching member: ', error);
+            });
+    }, []);
 
     return (
         <div className="profile-page-container">
