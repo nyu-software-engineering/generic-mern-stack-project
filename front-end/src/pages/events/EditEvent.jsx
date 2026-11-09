@@ -16,25 +16,28 @@ import EventForm from './EventForm'
 import './EditEvent.css'
 
 async function loadEventWithApplication(id) {
-  const event = await api.getEvent(id)
-  const application = event.applicationId
-    ? await api.getApplication(event.applicationId)
-    : null
+  const [event, applications] = await Promise.all([
+    api.getEvent(id),
+    api.getApplications({ includeArchived: true }),
+  ])
+  const application = applications.find(
+    (item) => item.id === event.applicationId
+  ) || null
 
-  return { ...event, application }
+  return { event, application, applications }
 }
 
 export default function EditEvent() {
   const { id } = useParams()
 
   const {
-    data: event,
+    data,
     loading,
     error,
     reload,
   } = useApi(() => loadEventWithApplication(id), [id])
 
-  if (loading && !event) {
+  if (loading && !data) {
     return (
       <Page title="Edit Event" back>
         <LoadingState />
@@ -53,16 +56,28 @@ export default function EditEvent() {
     )
   }
 
-  return event ? <EditEventForm event={event} /> : null
+  return data ? (
+    <EditEventForm
+      event={data.event}
+      currentApplication={data.application}
+      applications={data.applications}
+    />
+  ) : null
 }
 
-function EditEventForm({ event }) {
+function EditEventForm({
+  event,
+  currentApplication,
+  applications,
+}) {
   const navigate = useNavigate()
 
   const initialApplicationId =
-    event.applicationId ??
-    event.application?.id ??
-    ''
+    applications.some(
+      (application) => application.id === event.applicationId
+    )
+      ? event.applicationId
+      : ''
 
   const [form, setForm] = useState({
     applicationId: String(initialApplicationId),
@@ -87,13 +102,7 @@ function EditEventForm({ event }) {
   const [deleting, setDeleting] = useState(false)
   const [deleteError, setDeleteError] = useState('')
 
-  // Supports an event-linked application or a list of applications
-  // supplied in the event response.
-  const applicationOptions = Array.isArray(event.applications)
-    ? event.applications
-    : event.application
-      ? [event.application]
-      : []
+  const applicationOptions = applications
 
   const errors = {
     title: validateRequired(form.title, 'Title'),
@@ -140,11 +149,7 @@ function EditEventForm({ event }) {
         notes: form.notes.trim(),
       }
 
-      // Only send applicationId when the event is already
-      // associated with an application or the user selected one.
-      if (form.applicationId !== '') {
-        payload.applicationId = form.applicationId
-      }
+      payload.applicationId = form.applicationId || null
 
       await api.updateEvent(event.id, payload)
 
@@ -197,7 +202,7 @@ function EditEventForm({ event }) {
           onChange={handleFormChange}
           errors={shownErrors}
           applications={applicationOptions}
-          currentApplication={event.application}
+          currentApplication={currentApplication}
         />
 
         {saveError && (

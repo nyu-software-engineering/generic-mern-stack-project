@@ -13,7 +13,6 @@ import {
 } from '../../components'
 import { EVENT_TYPES, REMINDER_OPTIONS } from '../../constants'
 
-
 export default function EventForm({
   form,
   onChange,
@@ -48,6 +47,14 @@ export default function EventForm({
     }
   })
 
+  const applicationOptions = [
+    { value: '', label: 'No linked application' },
+    ...applications.map((application) => ({
+      value: String(application.id),
+      label: `${application.company} · ${application.position}`,
+    })),
+  ]
+
   function getApplicationDetails(application) {
     const company =
       application.company?.name ||
@@ -66,12 +73,18 @@ export default function EventForm({
     return { company, position }
   }
 
-  const relatedApplication =
-    currentApplication ||
-    applications.find(
-      (application) => String(application.id) === String(form.applicationId)
-    ) ||
-    null
+  const selectedApplication = applications.find(
+    (application) => String(application.id) === String(form.applicationId)
+  )
+
+  const currentMatchesSelection =
+    currentApplication &&
+    String(currentApplication.id) === String(form.applicationId)
+
+  const relatedApplication = form.applicationId
+    ? selectedApplication || (currentMatchesSelection ? currentApplication : null)
+    : null
+  const applicationLinkId = relatedApplication?.id
 
   const applicationDetails = relatedApplication
     ? getApplicationDetails(relatedApplication)
@@ -80,44 +93,50 @@ export default function EventForm({
   return (
     <div className="edit-event">
       <FormSection title="Event">
-        <div className="field">
-          <label className="field__label">Application</label>
-          <Card padding="none">
-            {relatedApplication ? (
-              <div className="event-details__application">
-                <Avatar
-                  src={relatedApplication.logoUrl || relatedApplication.logo}
-                  alt={`${applicationDetails.company} logo`}
-                  size={44}
-                />
+        <SelectField
+          label="Application"
+          options={applicationOptions}
+          value={String(form.applicationId ?? '')}
+          onChange={(value) => update('applicationId', value)}
+        />
 
-                <div className="event-details__application-info">
-                  <p className="event-details__application-name">
-                    {applicationDetails.company}
-                  </p>
+        <Card padding="none">
+          {relatedApplication ? (
+            <div className="event-details__application">
+              <Avatar
+                src={relatedApplication.logoUrl || relatedApplication.logo}
+                alt={`${applicationDetails.company} logo`}
+                size={44}
+              />
 
-                  <p className="event-details__application-role">
-                    {applicationDetails.position}
-                  </p>
-                </div>
+              <div className="event-details__application-info">
+                <p className="event-details__application-name">
+                  {applicationDetails.company}
+                </p>
 
+                <p className="event-details__application-role">
+                  {applicationDetails.position}
+                </p>
+              </div>
+
+              {applicationLinkId ? (
                 <Button
                   variant="ghost"
                   size="sm"
-                  to={`/applications/${relatedApplication.id}`}
+                  to={`/applications/${applicationLinkId}`}
                 >
                   View
                 </Button>
-              </div>
-            ) : (
-              <ListRow
-                icon="briefcase"
-                title="No linked application"
-                subtitle="This event is not linked to an application"
-              />
-            )}
-          </Card>
-        </div>
+              ) : null}
+            </div>
+          ) : (
+            <ListRow
+              icon="briefcase"
+              title="No linked application"
+              subtitle="This event is not linked to an application"
+            />
+          )}
+        </Card>
 
         <SegmentedControl
           label="Type"
