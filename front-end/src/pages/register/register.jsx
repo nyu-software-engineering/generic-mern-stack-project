@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import "./Register.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import SplitLeaseLogo from "../../assets/splitlease-blank-background-logo.png";
 
 const Register = (props) => {
+  const navigate = useNavigate();
   return (
     <div className="registerContainer">
       <div className="registerLogoContainer">
@@ -52,7 +53,11 @@ const Register = (props) => {
         />
       </div>
 
-      <button className="registerButton" type="button">
+      <button
+        className="registerButton"
+        type="button"
+        onClick={() => navigate("/")}
+      >
         Register
       </button>
     </div>

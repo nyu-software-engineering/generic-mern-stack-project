@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import SplitLeaseLogo from "../../assets/splitlease-blank-background-logo.png";
 import { getHouseholdProtocols } from "./mockProtocols";
 import "./Protocols.css";
@@ -53,11 +53,12 @@ const Protocols = () => {
           src={SplitLeaseLogo}
           alt="SplitLease logo"
           className="protocolsLogo"
+          onClick={() => navigate("/home")}
         />
         <button
           type="button"
-          className="backButton"
-          onClick={() => navigate(-1)}
+          className="protocolsBack"
+          onClick={() => navigate("/household")}
         >
           Back
         </button>
@@ -71,41 +72,41 @@ const Protocols = () => {
         </p>
         <button
           type="button"
-          className="primaryButton"
-          onClick={() => navigate("/protocols/new")}
+          className="protocolsPrimary"
+          onClick={() => navigate("/new_protocol")}
         >
           Propose New Protocol
         </button>
       </section>
 
       <section className="protocolsCard">
-        <h2 className="sectionTitle">Pending Protocols</h2>
+        <h2 className="protocolsSectionTitle">Pending Protocols</h2>
         {pending.length === 0 && (
-          <p className="emptyText">No protocols waiting for approval.</p>
+          <p className="protocolsEmpty">No protocols waiting for approval.</p>
         )}
-        <ul className="protocolList">
+        <ul className="protocolsList">
           {pending.map((p) => {
             const alreadyApproved = approvedByMe.includes(p.id);
             return (
-              <li key={p.id} className="protocolRow">
-                <div className="protocolInfo">
-                  <span className="protocolName">{p.name}</span>
-                  <span className="protocolMeta">
+              <li key={p.id} className="protocolsRow">
+                <div className="protocolsInfo">
+                  <span className="protocolsName">{p.name}</span>
+                  <span className="protocolsMeta">
                     Proposed by {p.proposedBy} · {p.approvals}/
                     {household.memberCount} approved
                   </span>
                 </div>
-                <div className="protocolActions">
+                <div className="protocolsActions">
                   <button
                     type="button"
-                    className="secondaryButton"
+                    className="protocolsSecondary"
                     onClick={() => viewProtocol(p.id)}
                   >
                     View
                   </button>
                   <button
                     type="button"
-                    className="approveButton"
+                    className="protocolsApprove"
                     onClick={() => handleApprove(p.id)}
                     disabled={alreadyApproved}
                   >
@@ -119,23 +120,23 @@ const Protocols = () => {
       </section>
 
       <section className="protocolsCard">
-        <h2 className="sectionTitle">Household Protocols</h2>
+        <h2 className="protocolsSectionTitle">Household Protocols</h2>
         {approved.length === 0 && (
-          <p className="emptyText">No approved protocols yet.</p>
+          <p className="protocolsEmpty">No approved protocols yet.</p>
         )}
-        <ul className="protocolList">
+        <ul className="protocolsList">
           {approved.map((p) => (
-            <li key={p.id} className="protocolRow">
-              <div className="protocolInfo">
-                <span className="protocolName">{p.name}</span>
-                <span className="protocolMeta">
+            <li key={p.id} className="protocolsRow">
+              <div className="protocolsInfo">
+                <span className="protocolsName">{p.name}</span>
+                <span className="protocolsMeta">
                   Proposed by {p.proposedBy} · Approved by everyone
                 </span>
               </div>
-              <div className="protocolActions">
+              <div className="protocolsActions">
                 <button
                   type="button"
-                  className="secondaryButton"
+                  className="protocolsSecondary"
                   onClick={() => viewProtocol(p.id)}
                 >
                   View

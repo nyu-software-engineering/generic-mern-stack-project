@@ -1,9 +1,10 @@
-/* Colors taken from the SplitLease logo */
+/* SplitLease team palette (color_palette_1) */
 .loginContainer {
-  --navy: #5b6b9a;
-  --navy-dark: #4a5884;
-  --periwinkle: #8ca5d6;
-  --lavender: #e4e2fa;
+  --lavender-gray: #c9cad9;
+  --periwinkle: #d1d2f9;
+  --sky: #a3bcf9;
+  --steel-blue: #7796cb;
+  --slate: #576490;
 
   min-height: 100vh;
   display: flex;
@@ -12,127 +13,122 @@
   justify-content: center;
   padding: 24px 16px;
   box-sizing: border-box;
-  background: linear-gradient(160deg, var(--lavender) 0%, #f8fafc 65%);
-  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  background: #ffffff;
+  color: var(--slate);
   text-align: left;
 }
 
 .loginLogo {
-  width: 240px;
+  width: 200px;
   max-width: 80%;
   height: auto;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .loginCard {
   width: 100%;
-  max-width: 380px;
-  background: #ffffff;
-  border-radius: 16px;
-  padding: 28px 24px;
+  max-width: 420px;
   box-sizing: border-box;
-  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  padding: 28px 24px;
   display: flex;
   flex-direction: column;
-  text-align: left;
+  background: var(--lavender-gray);
+  border: 10px solid var(--slate);
+  border-radius: 15px;
 }
 
 .loginTitle {
   margin: 0;
-  font-size: 22px;
-  font-weight: 700;
+  font-size: 40px;
+  font-weight: 500;
   letter-spacing: normal;
-  color: var(--navy);
+  text-align: center;
+  color: var(--slate);
 }
 
 .loginSubtitle {
-  margin: 6px 0 20px;
-  font-size: 14px;
-  color: #64748b;
+  margin: 8px 0 20px;
+  font-size: 16px;
+  text-align: center;
+  color: var(--slate);
 }
 
 .loginAlert {
-  background: #fef2f2;
-  border: 1px solid #fecaca;
-  color: #b91c1c;
-  border-radius: 10px;
+  margin-bottom: 16px;
   padding: 10px 12px;
   font-size: 14px;
-  margin-bottom: 16px;
+  background: #ffffff;
+  border: 2px solid #b42318;
+  color: #b42318;
 }
 
-.fieldLabel {
-  font-size: 14px;
-  font-weight: 600;
-  color: #334155;
+.loginLabel {
   margin: 12px 0 6px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--slate);
 }
 
-.textInput {
+.loginInput {
   width: 100%;
   box-sizing: border-box;
-  padding: 12px 14px;
+  padding: 10px 12px;
   font-size: 16px;
-  border: 1px solid #cbd5e1;
-  border-radius: 10px;
-  background: #f8fafc;
-  color: #0f172a;
-  outline: none;
-  transition: border-color 0.15s, box-shadow 0.15s;
-}
-
-.textInput:focus {
-  border-color: var(--periwinkle);
   background: #ffffff;
-  box-shadow: 0 0 0 3px rgba(140, 165, 214, 0.25);
+  color: var(--slate);
+  border: 2px solid var(--slate);
+  outline: none;
 }
 
-.inputError {
-  border-color: #ef4444;
+.loginInput:focus {
+  border-color: var(--steel-blue);
+  box-shadow: 0 0 0 3px var(--sky);
 }
 
-.fieldError {
+.loginInputError {
+  border-color: #b42318;
+}
+
+.loginFieldError {
   margin: 6px 0 0;
   font-size: 13px;
-  color: #dc2626;
+  color: #b42318;
 }
 
 .loginButton {
   margin-top: 24px;
   width: 100%;
-  padding: 13px;
+  padding: 12px;
   font-size: 16px;
   font-weight: 600;
-  color: #ffffff;
-  background: var(--navy);
+  background: var(--slate);
+  color: var(--periwinkle);
   border: none;
-  border-radius: 10px;
   cursor: pointer;
-  transition: background 0.15s;
 }
 
 .loginButton:hover {
-  background: var(--navy-dark);
+  background: var(--steel-blue);
 }
 
 .loginButton:disabled {
-  background: var(--periwinkle);
+  background: var(--steel-blue);
   cursor: not-allowed;
 }
 
-.registerPrompt {
+.loginRegisterPrompt {
   margin: 18px 0 0;
-  text-align: center;
   font-size: 14px;
-  color: #64748b;
+  text-align: center;
+  color: var(--slate);
 }
 
-.registerLink {
-  font-weight: 600;
-  color: var(--navy);
-  text-decoration: none;
-}
-
-.registerLink:hover {
+.loginRegisterLink {
+  font-weight: 700;
+  color: var(--slate);
   text-decoration: underline;
+}
+
+.loginRegisterLink:hover {
+  color: var(--steel-blue);
 }

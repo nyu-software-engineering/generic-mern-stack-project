@@ -1,4 +1,5 @@
 import React from 'react';
+import SplitLeaseLogo from "../../assets/splitlease-blank-background-logo.png";
 import { useNavigate } from 'react-router-dom';
 import './UserHomePage.css';
 
@@ -14,8 +15,10 @@ function UserHomePage() {
     return(
         <div className = "createUserHomePageContainer">
             <header className="header">
-                <h1 className="header-logo">SplitLease</h1>
-                <button className="profileButton">User Profile</button>
+                <button type="button" className="logoButton" onClick={() => navigate('/home')}>
+                    <img src={SplitLeaseLogo} alt="SplitLease Logo" className="headerLogo"/>
+                </button>
+                <button className="profileButton" onClick={() => navigate('/profile')}>User Profile</button>
             </header>
             <h1>Welcome Back, {userName}!</h1>
 
@@ -24,7 +27,7 @@ function UserHomePage() {
                 <input type="text" className="textInput" placeholder="search households"/>
                 <div className="householdList">
                     {households.map((household, index) => (
-                        <button key={index} type="button" className="householdItem" onCClick={() => console.log("Selected:", household)}>
+                        <button key={index} type="button" className="householdItem" onClick={() => navigate('/household')}>
                             {household}
                         </button>
                     ))}

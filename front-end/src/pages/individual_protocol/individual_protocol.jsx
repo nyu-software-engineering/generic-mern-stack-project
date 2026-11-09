@@ -6,18 +6,19 @@ import SplitLeaseLogo from "../../assets/splitlease-blank-background-logo.png";
 const IndividualProtocol = (props) => {
   const navigate = useNavigate();
   return (
-    <>
+    <div className="protocolContainer">
       <header className="protocolHeader">
         <div className="protocolHeaderTop">
           <img
             src={SplitLeaseLogo}
             alt="SplitLease Logo"
             className="protocolLogo"
+            onClick={() => navigate("/home")}
           />
           <button
             type="button"
             className="backButton"
-            onClick={() => navigate(-1)}
+            onClick={() => navigate("/protocols")}
           >
             Back
           </button>
@@ -123,12 +124,16 @@ const IndividualProtocol = (props) => {
             className="statusInput"
             placeholder="Agree, or explain your concerns (e.g. Term #4)"
           />
-          <button type="button" className="submitButton">
+          <button
+            type="button"
+            className="submitButton"
+            onClick={() => navigate("/protocols")}
+          >
             Submit Response
           </button>
         </section>
       </main>
-    </>
+    </div>
   );
 };
 
