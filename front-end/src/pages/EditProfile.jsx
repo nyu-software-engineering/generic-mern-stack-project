@@ -144,6 +144,16 @@ function EditProfileForm({ profile, onSave }) {
         ))}
     </ul>
 
+    <fieldset>
+        <legend>Looking for</legend>
+        {roleChoices.map((role) => (
+            <label key={role}>
+                <input type="checkbox" checked={draft.lookingFor.includes(role)} onChange={() => toggleRole(role)} />
+                {role}
+            </label>
+        ))}
+    </fieldset>
+
     <button type="button" className="ui-button ui-button-secondary" onClick={cancelEdit}>Cancel</button>
     <button type="button" className="ui-button" onClick={saveEdit}>Save Changes</button>
     {photoOpen && (
