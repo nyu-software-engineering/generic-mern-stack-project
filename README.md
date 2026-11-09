@@ -138,6 +138,7 @@ Useful pages to start from:
 - Renter flow: http://localhost:5173/signup or http://localhost:5173/
 - Landlord flow: http://localhost:5173/landlord
 - A shared report opened from a link, without an account: http://localhost:5173/r/rpt-104
+- Forgot password: http://localhost:5173/forgot-password
 
 ### Other commands (run inside `front-end/`)
 
@@ -146,7 +147,7 @@ Useful pages to start from:
 
 ### Code style
 
-We use ESLint to check for problems and Prettier to format the code. The team's style is defined in `front-end/.prettierrc` (single quotes, no semicolons, 2-space indentation), and ESLint's rules are in `front-end/eslint.config.js`.
+The team's style is defined in `.prettierrc` at the root of the repository (single quotes, no semicolons, 2-space indentation), and ESLint's rules are in `front-end/eslint.config.js`.
 
 To set up Visual Studio Code:
 
@@ -159,6 +160,8 @@ Before opening a pull request, run `npm run lint` inside `front-end/` and fix an
 ### Data
 
 During Sprint 1 the app uses mock data from `front-end/public/mock/`, loaded through `front-end/src/data/api.js`. No `.env` file or account is needed to run it. The back-end in `back-end/` will replace the mock data in Sprint 2.
+
+Share links, followed areas, negotiation outcomes and the bank connection are saved in your browser. To start fresh, clear the site's local storage (DevTools → Application → Local storage).
 
 ## Additional documents
 
