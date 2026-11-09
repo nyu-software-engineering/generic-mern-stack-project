@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import SplitLeaseLogo from "../../assets/splitlease-blank-background-logo.png";
-import { mockLogin } from "./mockAuth";
+import { login, saveCurrentUser } from "./authApi";
 import "./Login.css";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -35,7 +35,14 @@ const Login = () => {
     if (Object.keys(newErrors).length > 0) return;
 
     setLoading(true);
-    const user = await mockLogin(email, password);
+    let user = null;
+    try {
+      user = await login(email, password);
+    } catch {
+      setLoading(false);
+      setAuthError("Could not reach the server. Please try again.");
+      return;
+    }
     setLoading(false);
 
     if (!user) {
@@ -43,6 +50,7 @@ const Login = () => {
       return;
     }
 
+    saveCurrentUser(user);
     navigate("/home");
   };
 
