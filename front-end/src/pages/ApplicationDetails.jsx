@@ -1,6 +1,18 @@
+
 import { useState } from "react"
 
-function formatDate(date) {
+const stages = [
+  "Saved",
+  "Preparing",
+  "Applied",
+  "Interview",
+  "Rejected",
+  "Offer",
+]
+
+function formatDate(date) 
+
+{
   if (!date) {
     return "None"
   }
@@ -16,26 +28,60 @@ function ApplicationDetails({
   application,
   job,
   onBack,
+  onStageChange,
   onNoteSave,
   onRemove,
 }) {
+  const [draftStage, setDraftStage] = useState(
+    application.stage
+  )
+
+  const stageChanged = draftStage !== application.stage
+
   const [draftNote, setDraftNote] = useState(
     application.note ?? ""
   )
 
   const savedNote = application.note ?? ""
+
   const noteChanged = draftNote !== savedNote
 
-  function handleSaveNote() {
+  function handleUpdateStage() 
+  
+  {
+    if (!stageChanged) 
+      
+      {
+      return
+    }
+
+    onStageChange(draftStage)
+  }
+
+  function handleCancelStage() 
+  
+  {
+    setDraftStage(application.stage)
+  }
+
+  function handleSaveNote() 
+  
+  {
     onNoteSave(draftNote)
   }
 
-  function handleClearNote() {
+  function handleClearNote() 
+  
+  {
     setDraftNote("")
+
+
     onNoteSave("")
   }
 
-  function handleRemove() {
+  function handleRemove() 
+  
+  {
     const confirmed = window.confirm(
       "Are you sure you want to remove this application from your Tracker?"
     )
@@ -60,7 +106,45 @@ function ApplicationDetails({
 
       <section>
         <h3>Current Stage</h3>
-        <p>{application.stage}</p>
+
+        <label htmlFor="application-stage">
+          Application Stage
+        </label>
+
+        <select
+          id="application-stage"
+          value={draftStage}
+          onChange={(event) =>
+            setDraftStage(event.target.value)
+          }
+        >
+          {stages.map((stage) => (
+            <option
+              key={stage}
+              value={stage}
+            >
+              {stage}
+            </option>
+          ))}
+        </select>
+
+        <div>
+          <button
+            type="button"
+            onClick={handleUpdateStage}
+            disabled={!stageChanged}
+          >
+            Update
+          </button>
+
+          <button
+            type="button"
+            onClick={handleCancelStage}
+            disabled={!stageChanged}
+          >
+            Cancel
+          </button>
+        </div>
       </section>
 
       <section>

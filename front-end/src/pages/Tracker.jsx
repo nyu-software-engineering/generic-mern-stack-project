@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react"
 import { useAppState } from "../data/useAppState.js"
 import { getJobs } from "../jobs/api.js"
@@ -267,6 +268,12 @@ function Tracker({ initialStage }) {
         job={selectedJob}
         onBack={() =>
           setSelectedApplicationId(null)
+        }
+        onStageChange={(newStage) =>
+          appState.updateApplication(
+            selectedApplication.id,
+            { stage: newStage }
+          )
         }
         onNoteSave={(note) =>
           appState.updateApplication(
