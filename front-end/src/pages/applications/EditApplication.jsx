@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { api } from '../../api'
-import { Button, ErrorState, LoadingState, Page, SuccessDialog } from '../../components'
+import { Button, ConfirmDialog, ErrorState, LoadingState, Page, SuccessDialog } from '../../components'
 import { useApi } from '../../hooks/useApi'
 import ApplicationForm from './ApplicationForm'
 import {
@@ -60,6 +60,9 @@ function EditApplicationForm({ application }) {
   const [saving, setSaving] = useState(false) // true while the changes are being saved
   const [saved, setSaved] = useState(false) // true when the "Changes saved" pop-up should show
   const [saveError, setSaveError] = useState('') // message shown if saving fails
+  const [deleteOpen, setDeleteOpen] = useState(false)
+  const [deleting, setDeleting] = useState(false)
+  const [deleteError, setDeleteError] = useState('')
 
   const errors = getApplicationErrors(form)
   // Only show errors after the user has tried to save once
@@ -81,6 +84,19 @@ function EditApplicationForm({ application }) {
     }
   }
 
+  async function handleDelete() {
+    setDeleting(true)
+    setDeleteError('')
+    try {
+      await api.deleteApplication(application.id)
+      navigate('/applications', { replace: true })
+    } catch (err) {
+      setDeleteError(err.message)
+      setDeleteOpen(false)
+      setDeleting(false)
+    }
+  }
+
   return (
     <Page
       title="Edit Application"
@@ -99,11 +115,33 @@ function EditApplicationForm({ application }) {
         </p>
       )}
 
+      <div className="edit-application__delete">
+        <Button variant="secondary" fullWidth icon="trash" onClick={() => setDeleteOpen(true)}>
+          Delete application
+        </Button>
+      </div>
+
+      {deleteError && (
+        <p className="field__error" role="alert">
+          {deleteError}
+        </p>
+      )}
+
       <SuccessDialog
         open={saved}
         title="Changes saved"
         message="Your application has been updated."
         onDone={() => navigate(`/applications/${application.id}`)}
+      />
+
+      <ConfirmDialog
+        open={deleteOpen}
+        title="Delete application?"
+        message="This application and its events will be deleted. This can't be undone."
+        confirmLabel="Delete application"
+        loading={deleting}
+        onConfirm={handleDelete}
+        onCancel={() => setDeleteOpen(false)}
       />
     </Page>
   )

@@ -1,0 +1,22 @@
+.edit-event-page {
+  width: 100%;
+  padding-bottom: var(--space-4);
+}
+
+.edit-event {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  width: 100%;
+}
+
+.edit-event__error {
+  margin: 0;
+  color: var(--color-danger);
+  font-size: var(--font-size-sm);
+}
+
+.edit-event__delete {
+  width: 100%;
+  padding-top: var(--space-4);
+}

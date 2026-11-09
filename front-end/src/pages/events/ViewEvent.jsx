@@ -239,19 +239,6 @@ export default function ViewEvent() {
         </Card>
       </section>
 
-      {/* Other details */}
-      <section className="event-details__section">
-        <SectionHeader title="Other details" />
-
-        <Card padding="none">
-          <ListRow
-            icon="map-pin"
-            title="Location"
-            subtitle={event.location || 'Not added'}
-          />
-        </Card>
-      </section>
-
       {/* Delete event */}
       <div className="event-details__delete-section">
         {deleteError && (
@@ -266,6 +253,7 @@ export default function ViewEvent() {
         <Button
           variant="secondary"
           fullWidth
+          icon="trash"
           onClick={() => setDeleteOpen(true)}
         >
           Delete event
