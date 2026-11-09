@@ -1,0 +1,12 @@
+.discussion-topics { display: flex; flex-wrap: wrap; gap: 8px; }
+.discussion-topics button { min-height: 36px; padding: 6px 12px; border: 1px solid var(--color-border); background: var(--color-surface); font: inherit; cursor: pointer; }
+.discussion-topics button[aria-pressed='true'] { background: var(--color-text); color: var(--color-surface); }
+.discussion-new { width: 100%; margin: 16px 0; }
+.discussion-form { padding: 16px; margin-bottom: 16px; border: 1px solid var(--color-text); }
+.discussion-form label { display: block; margin: 12px 0 6px; }
+.discussion-error { color: #b42318; }
+.discussion-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
+.discussion-list { padding: 0; list-style: none; }
+.discussion-post { padding: 12px 0; border-bottom: 1px solid var(--color-border); }
+.discussion-post p { margin: 0 0 6px; }
+.discussion-tag { display: inline-block; margin-bottom: 6px; padding: 2px 8px; border: 1px solid var(--color-border); font-size: 0.875rem; }

@@ -3,16 +3,35 @@
     "id": "post-brightspace-1",
     "jobId": "brightspace-software-intern",
     "topic": "Interview",
-    "body": "The first interview was one short technical call.",
+    "body": "Got the first round invite about 2 weeks after applying!",
     "anonymous": false,
+    "author": "George S.",
     "createdAt": "2026-10-21T15:00:00.000Z"
   },
   {
     "id": "post-brightspace-2",
     "jobId": "brightspace-software-intern",
-    "topic": "Sponsorship",
-    "body": "The listing says CPT/OPT is accepted.",
-    "anonymous": true,
+    "topic": "Assessment",
+    "body": "Online assessment was 2 coding questions in 70 minutes.",
+    "anonymous": false,
+    "author": "Marcus T.",
     "createdAt": "2026-10-20T15:00:00.000Z"
+  },
+  {
+    "id": "post-brightspace-3",
+    "jobId": "brightspace-software-intern",
+    "topic": "Sponsorship",
+    "body": "Recruiter confirmed they sponsor H-1B for this role and accept CPT.",
+    "anonymous": true,
+    "createdAt": "2026-10-18T15:00:00.000Z"
+  },
+  {
+    "id": "post-brightspace-4",
+    "jobId": "brightspace-software-intern",
+    "topic": "Update",
+    "body": "Still no response after applying on Oct 3. Has anyone heard back?",
+    "anonymous": false,
+    "author": "Lena K.",
+    "createdAt": "2026-10-14T15:00:00.000Z"
   }
 ]
