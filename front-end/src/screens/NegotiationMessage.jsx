@@ -6,7 +6,14 @@ import ScreenTitle from '../components/ui/ScreenTitle.jsx'
 import SectionTitle from '../components/ui/SectionTitle.jsx'
 import TextField from '../components/ui/TextField.jsx'
 import Toggle from '../components/ui/Toggle.jsx'
-import { getApartmentCheck, getArea, getComparables, getProfile, getReport } from '../data/api.js'
+import {
+  getApartmentCheck,
+  getArea,
+  getComparables,
+  getProfile,
+  getReport,
+} from '../data/api.js'
+import { isBankConnected } from '../data/bankConnection.js'
 import { formatRent } from '../data/format.js'
 
 function roundToNearest25(amount) {
@@ -14,9 +21,19 @@ function roundToNearest25(amount) {
 }
 
 // Builds the suggested message from the renter's numbers. The renter can edit it before copying.
-function draftMessage({ check, areaName, comparableCount, currentRent, proposedRent, report, firstName }) {
+function draftMessage({
+  check,
+  areaName,
+  comparableCount,
+  currentRent,
+  proposedRent,
+  report,
+  firstName,
+}) {
   const isRenewal = currentRent > 0
-  const percent = Math.round(((proposedRent - check.localAverage) / check.localAverage) * 100)
+  const percent = Math.round(
+    ((proposedRent - check.localAverage) / check.localAverage) * 100,
+  )
 
   let comparison = 'right at the local average'
   if (percent > 0) {
@@ -33,7 +50,9 @@ function draftMessage({ check, areaName, comparableCount, currentRent, proposedR
 
   let rent = `At ${formatRent(proposedRent)}, the rent is ${comparison}.`
   if (isRenewal) {
-    const increase = Math.round(((proposedRent - currentRent) / currentRent) * 100)
+    const increase = Math.round(
+      ((proposedRent - currentRent) / currentRent) * 100,
+    )
     rent = `The proposed rent of ${formatRent(proposedRent)} is a ${increase}% increase from my current ${formatRent(currentRent)}, and puts it ${comparison}.`
   }
 
@@ -46,10 +65,16 @@ function draftMessage({ check, areaName, comparableCount, currentRent, proposedR
   }
 
   if (percent > 0) {
-    const target = roundToNearest25(Math.max(check.localAverage, isRenewal ? currentRent : 0))
-    paragraphs.push(`Would you consider ${formatRent(target)} a month? I'd be glad to sign at that rent.`)
+    const target = roundToNearest25(
+      Math.max(check.localAverage, isRenewal ? currentRent : 0),
+    )
+    paragraphs.push(
+      `Would you consider ${formatRent(target)} a month? I'd be glad to sign at that rent.`,
+    )
   } else {
-    paragraphs.push("The rent looks fair for the area, and I'd be glad to move forward.")
+    paragraphs.push(
+      "The rent looks fair for the area, and I'd be glad to move forward.",
+    )
   }
 
   paragraphs.push(`Thank you,\n${firstName}`)
@@ -66,7 +91,7 @@ export default function NegotiationMessage() {
   const [copyStatus, setCopyStatus] = useState('idle')
 
   useEffect(() => {
-    getApartmentCheck(checkId).then(async (check) => {
+    getApartmentCheck(checkId).then(async check => {
       if (!check) {
         setData(null)
         return
@@ -74,11 +99,17 @@ export default function NegotiationMessage() {
       const [area, comparables, report, profile] = await Promise.all([
         getArea(check.areaId),
         getComparables(check.id),
-        getReport(),
+        isBankConnected() ? getReport() : null,
         getProfile(),
       ])
       setProposedRent(String(check.askingRent))
-      setData({ check, area, comparables, report, firstName: profile.name.split(' ')[0] })
+      setData({
+        check,
+        area,
+        comparables,
+        report,
+        firstName: profile.name.split(' ')[0],
+      })
     })
   }, [checkId])
 
@@ -87,13 +118,20 @@ export default function NegotiationMessage() {
   }
 
   if (data === null) {
-    return <ScreenTitle title="Apartment not found" subtitle="Go back to Negotiate and choose an apartment." />
+    return (
+      <ScreenTitle
+        title="Apartment not found"
+        subtitle="Go back to Negotiate and choose an apartment."
+      />
+    )
   }
 
   const { check, area, comparables, report, firstName } = data
   const proposed = Number(proposedRent)
   const current = Number(currentRent)
-  const comparableAverage = Math.round(comparables.reduce((sum, item) => sum + item.rent, 0) / comparables.length)
+  const comparableAverage = Math.round(
+    comparables.reduce((sum, item) => sum + item.rent, 0) / comparables.length,
+  )
 
   const suggestedMessage =
     proposed > 0
@@ -109,7 +147,7 @@ export default function NegotiationMessage() {
       : ''
   const message = editedMessage ?? suggestedMessage
 
-  const changeInput = (setter) => (event) => {
+  const changeInput = setter => event => {
     setter(event.target.value)
     setCopyStatus('idle')
   }
@@ -173,13 +211,19 @@ export default function NegotiationMessage() {
         </dl>
       </Card>
 
-      <div className="mt-4 flex items-center justify-between gap-4 border border-line bg-surface p-4">
-        <div>
-          <p className="text-sm font-semibold">Mention my on-time payments</p>
-          <p className="text-xs text-muted">From your Reliability Report</p>
+      {report && (
+        <div className="mt-4 flex items-center justify-between gap-4 border border-line bg-surface p-4">
+          <div>
+            <p className="text-sm font-semibold">Mention my on-time payments</p>
+            <p className="text-xs text-muted">From your Reliability Report</p>
+          </div>
+          <Toggle
+            checked={includeReport}
+            onChange={setIncludeReport}
+            label="Mention my on-time payments"
+          />
         </div>
-        <Toggle checked={includeReport} onChange={setIncludeReport} label="Mention my on-time payments" />
-      </div>
+      )}
 
       <div className="mt-6">
         <div className="mb-1.5 flex items-center justify-between">
@@ -187,7 +231,11 @@ export default function NegotiationMessage() {
             Your message
           </label>
           {editedMessage !== null && (
-            <button type="button" onClick={() => setEditedMessage(null)} className="text-sm font-semibold text-accent hover:underline">
+            <button
+              type="button"
+              onClick={() => setEditedMessage(null)}
+              className="text-sm font-semibold text-accent hover:underline"
+            >
               Reset to suggested
             </button>
           )}
@@ -196,18 +244,23 @@ export default function NegotiationMessage() {
           id="message"
           rows={14}
           value={message}
-          onChange={(event) => {
+          onChange={event => {
             setEditedMessage(event.target.value)
             setCopyStatus('idle')
           }}
           placeholder="Enter the proposed rent to get a suggested message."
           className="w-full border border-line bg-surface px-3 py-3 text-sm leading-relaxed text-ink focus:border-ink focus:outline-none"
         />
-        <p className="mt-1 text-xs text-muted">Edit anything you like. Leverage never sends messages for you.</p>
+        <p className="mt-1 text-xs text-muted">
+          Edit anything you like. Leverage never sends messages for you.
+        </p>
       </div>
 
       {copyStatus === 'copied' && (
-        <p className="mt-4 border border-positive px-3 py-2 text-sm font-semibold text-positive" role="status">
+        <p
+          className="mt-4 border border-positive px-3 py-2 text-sm font-semibold text-positive"
+          role="status"
+        >
           ✓ Message copied. Paste it into your email or text to the landlord.
         </p>
       )}
