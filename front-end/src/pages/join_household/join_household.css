@@ -1,0 +1,69 @@
+.joinHouseholdPage{
+    display:flex;
+    flex-direction: column;
+
+    width:100%;
+    margin:5px auto;
+    padding: 16px;
+    box-sizing: border-box;
+    background: #f8fafc;
+    color: #334155;
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+.joinHouseholdContainer{
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 16px;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+}
+
+.joinHouseholdTitle{
+    margin: 0;
+    padding:10px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 36px;
+    color: #0f172a;
+}
+.joinHouseholdForm{
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.joinHouseholdLabel{
+    margin-top: 15px;
+    border-color: #576490;
+}
+.joinHouseholdError {
+    margin: 0;
+    text-align: center;
+    color: #c93232b4;
+}
+
+.joinHouseholdInput{
+    padding: 12px;
+    font-size: 18px;
+    text-align: center;
+    letter-spacing: 2px;
+    border: 2px solid #c9cad9;
+    border-radius: 10px;
+}
+
+.joinHouseholdSubmit{
+    justify-content: center;
+    align-content: center;
+    height: 40px;
+    padding: 10px 28px;
+    margin:10px;
+    border-radius: 10px;
+    background: #576490;
+    color: #d1d2f9;
+    border: none;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+
+}
