@@ -19,5 +19,205 @@
       "Python": 46,
       "Git": 8
     }
+  },
+  {
+    "jobId": "hathaway-data-intern",
+    "profileId": "profile-myra",
+    "profileRevision": 1,
+    "score": 80,
+    "summary": "Mock match based on your saved skills: Python, SQL.",
+    "fitExplanation": [
+      "Your saved profile includes Python.",
+      "Your saved profile includes SQL."
+    ],
+    "missingSkills": [
+      "Spreadsheets"
+    ],
+    "keyQualifications": [
+      "Comfortable using spreadsheets and SQL.",
+      "Experience with Python or another analysis language.",
+      "Able to explain findings to a nontechnical audience."
+    ],
+    "skillWeights": {
+      "Python": 40,
+      "SQL": 40,
+      "Spreadsheets": 20
+    }
+  },
+  {
+    "jobId": "coffee-design-intern",
+    "profileId": "profile-myra",
+    "profileRevision": 1,
+    "score": 0,
+    "summary": "None of this role's listed skills are in your saved profile yet.",
+    "fitExplanation": [],
+    "missingSkills": [
+      "Figma",
+      "Accessibility",
+      "Design portfolio"
+    ],
+    "keyQualifications": [
+      "A portfolio showing your design process.",
+      "Familiarity with Figma or a similar prototyping tool.",
+      "Interest in accessible mobile interfaces."
+    ],
+    "skillWeights": {
+      "Figma": 40,
+      "Accessibility": 30,
+      "Design portfolio": 30
+    }
+  },
+  {
+    "jobId": "boxgrid-cloud-intern",
+    "profileId": "profile-myra",
+    "profileRevision": 1,
+    "score": 0,
+    "summary": "None of this role's listed skills are in your saved profile yet.",
+    "fitExplanation": [],
+    "missingSkills": [
+      "Linux",
+      "Networking",
+      "Troubleshooting"
+    ],
+    "keyQualifications": [
+      "Familiarity with Linux and basic networking.",
+      "Comfortable writing clear technical notes.",
+      "Patient, methodical troubleshooting skills."
+    ],
+    "skillWeights": {
+      "Linux": 40,
+      "Networking": 30,
+      "Troubleshooting": 30
+    }
+  },
+  {
+    "jobId": "northstar-frontend-intern",
+    "profileId": "profile-myra",
+    "profileRevision": 1,
+    "score": 60,
+    "summary": "Mock match based on your saved skills: JavaScript, React.",
+    "fitExplanation": [
+      "Your saved profile includes JavaScript.",
+      "Your saved profile includes React."
+    ],
+    "missingSkills": [
+      "HTML",
+      "CSS"
+    ],
+    "keyQualifications": [
+      "Experience with HTML, CSS, and JavaScript.",
+      "Some React experience.",
+      "Interest in accessibility and responsive design."
+    ],
+    "skillWeights": {
+      "HTML": 20,
+      "CSS": 20,
+      "JavaScript": 30,
+      "React": 30
+    }
+  },
+  {
+    "jobId": "fieldnote-quality-intern",
+    "profileId": "profile-myra",
+    "profileRevision": 1,
+    "score": 40,
+    "summary": "Mock match based on your saved skills: Python.",
+    "fitExplanation": [
+      "Your saved profile includes Python."
+    ],
+    "missingSkills": [
+      "Automated testing",
+      "Debugging"
+    ],
+    "keyQualifications": [
+      "Experience with a programming language.",
+      "Attention to detail when describing a problem.",
+      "Interest in automated testing and practical debugging."
+    ],
+    "skillWeights": {
+      "Python": 40,
+      "Automated testing": 35,
+      "Debugging": 25
+    }
+  },
+  {
+    "jobId": "brightspace-frontend-entry",
+    "profileId": "profile-myra",
+    "profileRevision": 1,
+    "score": 50,
+    "summary": "Mock match based on your saved skills: JavaScript, React.",
+    "fitExplanation": [
+      "Your saved profile includes JavaScript.",
+      "Your saved profile includes React."
+    ],
+    "missingSkills": [
+      "HTML",
+      "CSS",
+      "Git"
+    ],
+    "keyQualifications": [
+      "Experience with HTML, CSS, JavaScript, and React through coursework or projects.",
+      "Familiarity with Git and automated testing.",
+      "Interest in accessible and responsive web interfaces."
+    ],
+    "skillWeights": {
+      "HTML": 15,
+      "CSS": 15,
+      "JavaScript": 25,
+      "React": 25,
+      "Git": 20
+    }
+  },
+  {
+    "jobId": "hathaway-analyst-entry",
+    "profileId": "profile-myra",
+    "profileRevision": 1,
+    "score": 60,
+    "summary": "Mock match based on your saved skills: Python, SQL.",
+    "fitExplanation": [
+      "Your saved profile includes Python.",
+      "Your saved profile includes SQL."
+    ],
+    "missingSkills": [
+      "Spreadsheets",
+      "Statistics"
+    ],
+    "keyQualifications": [
+      "Experience with SQL, spreadsheets, and basic statistics.",
+      "Python or equivalent analytical programming experience.",
+      "Ability to explain findings clearly and check the quality of source data."
+    ],
+    "skillWeights": {
+      "Python": 30,
+      "SQL": 30,
+      "Spreadsheets": 20,
+      "Statistics": 20
+    }
+  },
+  {
+    "jobId": "northstar-quality-entry",
+    "profileId": "profile-myra",
+    "profileRevision": 1,
+    "score": 60,
+    "summary": "Mock match based on your saved skills: JavaScript, Python.",
+    "fitExplanation": [
+      "Your saved profile includes JavaScript.",
+      "Your saved profile includes Python."
+    ],
+    "missingSkills": [
+      "Browser testing",
+      "Accessibility"
+    ],
+    "keyQualifications": [
+      "Experience programming in JavaScript or Python.",
+      "Careful problem solving and clear written communication.",
+      "Interest in browser testing and accessible user experiences."
+    ],
+    "skillWeights": {
+      "JavaScript": 30,
+      "Python": 30,
+      "Browser testing": 25,
+      "Accessibility": 15
+    }
   }
 ]
