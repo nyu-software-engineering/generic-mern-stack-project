@@ -2,14 +2,14 @@ import { useEffect, useState } from "react";
 import Button from "../components/ui/Button.jsx";
 import ScreenTitle from "../components/ui/ScreenTitle.jsx";
 import TextField from "../components/ui/TextField.jsx";
-import { getProfile } from "../data/api.js";
+import { getMyProfile, saveMyProfile } from "../data/profile.js";
 
 export default function Profile() {
   const [form, setForm] = useState(null);
   const [saved, setSaved] = useState(false);
 
   useEffect(() => {
-    getProfile().then(setForm);
+    getMyProfile().then(setForm);
   }, []);
 
   const updateField = (event) => {
@@ -19,6 +19,7 @@ export default function Profile() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    saveMyProfile(form);
     setSaved(true);
   };
 
