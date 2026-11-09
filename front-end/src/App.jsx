@@ -9,6 +9,7 @@ import Register from "./pages/register/register";
 import AssetList from "./pages/assets/AssetList";
 import MonthlyActivity from "./pages/monthly_activity/MonthlyActivity";
 import UserHomePage from "./pages/user_home_page/UserHomePage";
+import ManageMembersPage from "./pages/manage_members/ManageMembers";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 //import { Link } from "react-router-dom"
 import "./App.css";
@@ -29,6 +30,7 @@ function App() {
         <Route path="/individual-protocol" element={<IndividualProtocol />} />
         <Route path="/assets" element={<AssetList />} />
         <Route path="/monthly-activity" element={<MonthlyActivity />} />
+        <Route path="/manage-members" element={<ManageMembersPage />} />
       </Routes>
     </Router>
   );
