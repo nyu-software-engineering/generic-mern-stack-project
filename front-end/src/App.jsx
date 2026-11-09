@@ -14,6 +14,7 @@ import ProtocolProposal from "./pages/protocol_proposal/protocol_proposal";
 import Profile from "./pages/profile/profile";
 import CreateAsset from "./pages/assets/CreateAsset";
 import ExpenseList from "./pages/expense_list/ExpenseList";
+import JoinHousehold from "./pages/join_household/join_household"
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 //import { Link } from "react-router-dom"
 import "./App.css";
@@ -36,6 +37,7 @@ function App() {
         <Route path="/household" element={<HouseholdDashboard />} />
         <Route path="/new_protocol" element={<ProtocolProposal />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/join-household" element={<JoinHousehold/>}/>
       </Routes>
     </Router>
   );

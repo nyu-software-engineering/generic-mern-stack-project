@@ -81,7 +81,9 @@ function UserHomePage() {
                 >
                     Create Household
                 </button>
-                <button className="createButton">Join Household</button>
+                <button className="createButton"
+                        type="button"
+                        onClick={() => navigate('/join-household')}>Join Household</button>
             </div>
         </div>
     );
