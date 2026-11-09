@@ -20,7 +20,7 @@ export default function MyServices(props) {
 
             {myServices.map(service => (
                 <article key={service.id} className="my-service">
-                    <img src={`https://picsum.photos/seed/${service.id}/400/240`} alt={service.title} />
+                    <img src={service.workSample || `https://picsum.photos/seed/${service.id}/400/240`} alt={service.title} />
                     <h2>{service.title}</h2>
                     <p>{profile.full_name} · {profile.university} · {service.category}</p>
                     <p>
@@ -30,7 +30,7 @@ export default function MyServices(props) {
 
                     <h3>{service.status}</h3>
                     <div className="my-service-actions">
-                        <button className="profile-button" type="button">Edit</button>
+                        <Link className="profile-button" to={`/profile/services/${service.id}/edit`}>Edit</Link>
                         {service.status === 'Paused'
                             ? <button className="profile-button" type="button" onClick={() => props.updateService(service.id, { status: 'Active' })}>Reactivate</button>
                             : <button className="profile-button" type="button" onClick={() => props.updateService(service.id, { status: 'Paused' })}>Pause</button>}

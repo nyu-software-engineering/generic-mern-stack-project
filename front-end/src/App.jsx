@@ -5,6 +5,7 @@ import Search from './pages/Search.jsx'
 import Profile from './pages/Profile.jsx'
 import EditProfile from './pages/EditProfile.jsx'
 import MyServices from './pages/MyServices.jsx'
+import EditListing from './pages/EditListing.jsx'
 import ServiceDetails from './pages/ServiceDetails.jsx'
 import BookingRequest from './pages/BookingRequest.jsx'
 import Bookings from './pages/Bookings.jsx'
@@ -53,7 +54,7 @@ function App() {
             <Route path="/search" element={<Search services={services} />} />
             
             {/* Booking page */}
-            <Route path="/services/:serviceId" element={<ServiceDetails />} />
+            <Route path="/services/:serviceId" element={<ServiceDetails services={services} />} />
             <Route path="/services/:serviceId/request" element={<BookingRequest addBooking={addBooking} />} />
             <Route path="/bookings" element={<Bookings bookings={bookings} />} />
             <Route path="/bookings/:bookingId" element={<BookingDetails bookings={bookings} updateBooking={updateBooking} />} />
@@ -63,6 +64,7 @@ function App() {
             <Route path="/profile" element={<Profile setUser={setUser} profile={profile} services={services}/>} />
             <Route path="/profile/edit" element={<EditProfile profile={profile} setProfile={setProfile}/>}/>
             <Route path="/profile/services" element={<MyServices profile={profile} setProfile={setProfile} services={services} updateService={updateService}/>}/>
+            <Route path="/profile/services/:serviceId/edit" element={<EditListing profile={profile} setProfile={setProfile} services={services} updateService={updateService}/>}/>
 
             {/* Other */}
             <Route path="/login" element={<Navigate to="/" replace />}/>
