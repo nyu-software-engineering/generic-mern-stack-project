@@ -14,7 +14,7 @@ function LogIn() {
     setSubmitting(true)
     try {
       await logIn(email.trim(), password)
-      window.location.hash = '#/jobs'
+      window.location.hash = '#/home'
     } catch (problem) {
       setError(problem.message)
       setPassword('')

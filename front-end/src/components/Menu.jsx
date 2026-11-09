@@ -3,6 +3,7 @@ import { useAppState } from '../data/useAppState.js'
 import './Menu.css'
 
 const LINKS = [
+  { href: '#/home', label: 'Home' },
   { href: '#/jobs', label: 'Browse Jobs' },
   { href: '#/tracker', label: 'My Tracker' },
   { href: '#/deadlines', label: 'Deadlines' },
