@@ -19,7 +19,7 @@ import './EventCard.css'
  */
 export function EventCard({ event, application, to }) {
   return (
-    <Link to={to ?? `/events/${event.id}/edit`} className="event-card">
+    <Link to={to ?? `/events/${event.id}`} className="event-card">
       <DateTile date={event.date} />
       <span className="event-card__text">
         <span className="event-card__title">{event.title}</span>

@@ -20,6 +20,7 @@ import Welcome from './pages/auth/Welcome'
 import ComponentGallery from './pages/dev/ComponentGallery'
 import AddEvent from './pages/events/AddEvent'
 import EditEvent from './pages/events/EditEvent'
+import ViewEvent from './pages/events/ViewEvent'
 import Upcoming from './pages/events/Upcoming'
 import Home from './pages/home/Home'
 import NotFound from './pages/NotFound'
@@ -105,6 +106,7 @@ export default function App() {
               <Route path="/archive" element={<Archive />} />
 
               {/* Events */}
+              <Route path="/events/:id" element={<ViewEvent />} />
               <Route path="/events/new" element={<AddEvent />} />
               <Route path="/events/:id/edit" element={<EditEvent />} />
 
