@@ -1,32 +1,48 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import SplitLeaseLogo from "../../assets/splitlease-blank-background-logo.png";
-import { getHouseholdProtocols } from "./protocolsApi";
 import "./Protocols.css";
+import axios from "axios";
+
+const normalizeProtocol = (raw) => {
+  const statuses = raw.protocol_status.split(" - ");
+  const approvals = statuses.filter((s) => s === "Agreed").length;
+  return {
+    id: raw.protocol_id,
+    name: raw.protocol_name,
+    memberCount: statuses.length,
+    approvals,
+    status: approvals === statuses.length ? "approved" : "pending",
+  };
+};
 
 const Protocols = () => {
   const navigate = useNavigate();
-  const [household, setHousehold] = useState(null);
   const [protocols, setProtocols] = useState([]);
+  const [members, setMembers] = useState([]);
   const [approvedByMe, setApprovedByMe] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
 
   useEffect(() => {
-    getHouseholdProtocols()
-      .then((data) => {
-        setHousehold(data.household);
-        setProtocols(data.protocols);
-        setLoading(false);
-      })
-      .catch(() => {
-        setError("Could not load protocols. Please try again.");
-        setLoading(false);
-      });
+    axios.get(import.meta.env.VITE_PROTOCOLS_API_URL).then((response) => {
+      setProtocols(response.data.map(normalizeProtocol));
+      setLoading(false);
+    });
+  }, []);
+
+  useEffect(() => {
+    axios.get(import.meta.env.VITE_MEMBERS_API_URL).then((response) => {
+      setMembers(response.data);
+    });
   }, []);
 
   const pending = protocols.filter((p) => p.status === "pending");
   const approved = protocols.filter((p) => p.status === "approved");
+
+  const proposer = members[0];
+  const proposedBy = proposer
+    ? `${proposer.first_name} ${proposer.last_name}`
+    : "";
 
   // add the current user's approval; once every member approves, the protocol becomes a household protocol
   const handleApprove = (id) => {
@@ -35,8 +51,7 @@ const Protocols = () => {
       protocols.map((p) => {
         if (p.id !== id) return p;
         const approvals = p.approvals + 1;
-        const status =
-          approvals >= household.memberCount ? "approved" : "pending";
+        const status = approvals >= p.memberCount ? "approved" : "pending";
         return { ...p, approvals, status };
       }),
     );
@@ -48,14 +63,6 @@ const Protocols = () => {
     return (
       <div className="protocolsContainer">
         <p className="protocolsLoading">Loading protocols...</p>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="protocolsContainer">
-        <p className="protocolsLoading">{error}</p>
       </div>
     );
   }
@@ -79,7 +86,7 @@ const Protocols = () => {
       </header>
 
       <section className="protocolsBanner">
-        <h1 className="protocolsTitle">Protocols for {household.name}</h1>
+        <h1 className="protocolsTitle">Protocols</h1>
         <p className="protocolsCount">
           {protocols.length} protocols · {approved.length} approved ·{" "}
           {pending.length} pending
@@ -106,8 +113,8 @@ const Protocols = () => {
                 <div className="protocolsInfo">
                   <span className="protocolsName">{p.name}</span>
                   <span className="protocolsMeta">
-                    Proposed by {p.proposedBy} · {p.approvals}/
-                    {household.memberCount} approved
+                    Proposed by {proposedBy} · {p.approvals}/{p.memberCount}{" "}
+                    approved
                   </span>
                 </div>
                 <div className="protocolsActions">
@@ -144,7 +151,7 @@ const Protocols = () => {
               <div className="protocolsInfo">
                 <span className="protocolsName">{p.name}</span>
                 <span className="protocolsMeta">
-                  Proposed by {p.proposedBy} · Approved by everyone
+                  Proposed by {proposedBy} · Approved by everyone
                 </span>
               </div>
               <div className="protocolsActions">

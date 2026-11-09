@@ -23,9 +23,7 @@ const ProtocolProposal = (props) => {
             Back
           </button>
         </div>
-        <h1 className="protocolTitle">
-          Propose a Protocol for [Household Name]
-        </h1>
+        <h1 className="protocolTitle">Propose a Protocol</h1>
       </header>
 
       <div className="proposalForm">
