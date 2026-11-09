@@ -1,0 +1,105 @@
+.discover {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 430px;
+  min-height: 100vh;
+  margin: 0 auto;
+  background-color: white;
+  color: #1f2a44;
+  text-align: left;
+  padding: 16px;
+}
+
+.discover-search {
+  display: flex;
+  align-items: center;
+  border-radius: 12px;
+  background-color: #f1f2f6;
+}
+
+.discover-input {
+  flex: 1;
+  min-width: 0;
+  height: 44px;
+  padding: 0 14px;
+  border: none;
+  background-color: transparent;
+  color: #1f2a44;
+  font-size: 16px;
+}
+
+.discover-clear {
+  width: 44px;
+  height: 44px;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.discover-count {
+  color: #666d7d;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.discover-result {
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
+  color: #1f2a44;
+  text-decoration: none;
+}
+
+.discover-result-photo {
+  width: 48px;
+  height: 48px;
+  margin-right: 12px;
+  border-radius: 10px;
+}
+
+.discover-result-name {
+  margin: 0;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.discover-result-info {
+  margin: 0;
+  color: #666d7d;
+  font-size: 12px;
+}
+
+.discover-categories {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 12px;
+}
+
+.discover-category {
+  width: 23%;
+  height: 40px;
+  border: none;
+  border-radius: 10px;
+  background-color: #f1f2f6;
+  color: #1f2a44;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.discover-category-active {
+  background-color: #1f2a44;
+  color: white;
+}
+
+.discover-heading {
+  color: #1f2a44;
+  font-weight: bold;
+  margin: 28px 0 12px;
+  font-size: 18px;
+}
+
+.discover-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
