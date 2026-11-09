@@ -63,3 +63,40 @@ for (const body of [null, [], { profile: null }]) {
     assert.equal(result.status, 400)
   })
 }
+
+
+test('every listed job supplies profile-aware mock analysis and responds to saved skill changes', async () => {
+  const listingResponse = await fetch(`${baseURL}/api/jobs`)
+  assert.equal(listingResponse.status, 200)
+  const jobs = await listingResponse.json()
+  assert.ok(jobs.length > 1)
+  for (const job of jobs) {
+    const initial = await request(profile, job.id)
+    assert.equal(initial.status, 200, `Missing match for ${job.id}`)
+    const data = await initial.json()
+    assert.equal(data.jobId, job.id)
+    assert.equal(data.profileId, profile.id)
+    assert.equal(data.profileRevision, profile.revision)
+    assert.ok(Number.isFinite(data.score) && data.score >= 0 && data.score <= 100)
+    assert.ok(typeof data.summary === 'string' && data.summary.trim())
+    for (const field of ['fitExplanation', 'missingSkills', 'keyQualifications']) {
+      assert.ok(Array.isArray(data[field]) && data[field].every(item => typeof item === 'string' && item.trim()), `${job.id}: ${field}`)
+    }
+    assert.deepEqual(data.keyQualifications, job.id === 'brightspace-software-intern'
+      ? ['Pursuing a Computer Science degree.'] : job.requirements)
+    const unrelated = await request({ ...profile, revision: 2, skills: ['Unrelated demo skill'] }, job.id)
+    assert.equal(unrelated.status, 200)
+    const zero = await unrelated.json()
+    assert.equal(zero.score, 0, job.id)
+    assert.deepEqual(zero.fitExplanation, [], job.id)
+    assert.ok(zero.missingSkills.length > 0, job.id)
+    const complete = await request({ ...profile, revision: 3, skills: zero.missingSkills }, job.id)
+    assert.equal(complete.status, 200)
+    const full = await complete.json()
+    assert.equal(full.jobId, job.id)
+    assert.equal(full.profileRevision, 3)
+    assert.equal(full.score, 100, job.id)
+    assert.deepEqual(full.missingSkills, [], job.id)
+    assert.equal(full.fitExplanation.length, zero.missingSkills.length, job.id)
+  }
+})
