@@ -165,11 +165,11 @@ function StageSection({
   )
 }
 
-function Tracker() {
+function Tracker({ initialStage }) {
   const appState = useAppState()
 
   const [selectedStage, setSelectedStage] =
-    useState("All")
+    useState(stages.includes(initialStage) ? initialStage : "All")
 
   const [sortBy, setSortBy] =
     useState("default")

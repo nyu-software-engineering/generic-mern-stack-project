@@ -109,8 +109,8 @@ function App() {
         <MyProfile />
       ) : path === '/profile/edit' ? (
         <EditProfile />
-      ) : path === '/tracker' ? (
-        <Tracker />
+      ) : path === '/tracker' || path.startsWith('/tracker?') ? (
+        <Tracker initialStage={new URLSearchParams(path.split('?')[1] || '').get('stage')} />
       ) : path === '/deadlines' ? (
         <Deadlines />
       ) : route.kind === 'browse' ? (
