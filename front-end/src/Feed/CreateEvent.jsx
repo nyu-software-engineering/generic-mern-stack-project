@@ -3,7 +3,8 @@ import "./CreateEvent.css"
 
 function CreateEvent() {
   const [location, setLocation] = useState("")
-  const [time, setTime] = useState("")
+  const [date, setDate] = useState("")
+const [time, setTime] = useState("")
   const [capacity, setCapacity] = useState("")
   const [caption, setCaption] = useState("")
 
@@ -19,8 +20,7 @@ function CreateEvent() {
       />
 
       <input
-        type="text"
-        placeholder="Time"
+        type="datetime-local"
         value={time}
         onChange={(e) => setTime(e.target.value)}
       />
