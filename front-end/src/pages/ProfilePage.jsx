@@ -56,10 +56,10 @@ export default function ProfilePage() {
      <span>Edit email</span>
      <span>&gt;</span>
    </button>
-        <button type="button" className="flex w-full justify-between border-b border-stone-200 py-3 text-sm">
-          <span>Change password</span>
-          <span>&gt;</span>
-        </button>
+          <button type="button" onClick={() => navigate('/profile/reset-password')} className="flex w-full justify-between border-b border-stone-200 py-3 text-sm">
+            <span>Change password</span>
+            <span>&gt;</span>
+          </button>
       </div>
 
       <div className="mt-8 flex flex-col gap-3 px-4">
