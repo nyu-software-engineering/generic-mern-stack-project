@@ -11,7 +11,7 @@ export default function Bookings({ bookings }) {
   <>
   <Header />
   <div className="booking-content">
-    <h1>Manage bookings</h1><p>As client</p>
+    <h1>Manage bookings</h1>
     <div className="booking-switch"><button className="booking-button" onClick={() => setPeriod('upcoming')}>Upcoming</button><button className="booking-button" onClick={() => setPeriod('past')}>Past</button></div>
     <h2>{period === 'upcoming' ? 'Upcoming bookings' : 'Past bookings'}</h2>
     {visible.length === 0 && <p>No bookings yet.</p>}
