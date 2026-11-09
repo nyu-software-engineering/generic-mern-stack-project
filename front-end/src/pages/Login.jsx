@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router'
 import TextField from '../components/TextField'
 import './Login.css'
+import Button from '../components/Button'
 
 function validateUsernameOrEmail(value) {
   if (!value.trim()) return 'Enter your username or email.'
@@ -47,7 +48,7 @@ export default function Login() {
     }
 
     // TODO: replace with a real backend login call.
-    navigate('/home', { replace: true })
+    navigate('/', { replace: true })
     
     
   }
@@ -98,9 +99,9 @@ export default function Login() {
         </div>
 
         {/* Login button */}
-        <button type="submit" className="login-submit btn-primary hover:btn-primary-hover">
+        <Button type="submit" className="login-submit">
           Log in
-        </button>
+        </Button>
       </form>
 
       {/* Signup link */}

@@ -2,11 +2,12 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router'
 import TextField from '../components/TextField'
 import './Signup.css'
+import Button from '../components/Button'
 
 //TEMPORARY. TESTING BEFORE BACKEND DONE
 //Will change to real test once the backend exists 
 
-const TAKEN_USERNAMES = ['admin', 'later', 'test']
+//const TAKEN_USERNAMES = ['admin', 'later', 'test']
 
 // Checks a username and returns an error message, or '' if it's fine.
 function validateUsername(username) {
@@ -14,7 +15,7 @@ function validateUsername(username) {
   if (!value) return 'Pick a username.'
   if (value.length < 3) return 'Use at least 3 characters.'
   if (!/^[a-z0-9_]+$/.test(value)) return 'Use only letters, numbers, and underscores.'
-  if (TAKEN_USERNAMES.includes(value)) return 'That username is taken.'
+  //TO DO: Check username availability with back end
   return ''
 }
 
@@ -63,7 +64,7 @@ export default function Signup() {
     // If either field has an error, stop here and let the user fix it
     if (validateUsername(username) || validateEmail(email) || validatePassword(password)) return
     
-    navigate('/home', { replace: true })
+    navigate('/', { replace: true })
 
   }
 
@@ -106,9 +107,9 @@ export default function Signup() {
           hint="At least 8 characters, including a number."
           autoComplete="new-password"
         />
-        <button type="submit" className="signup-submit btn-primary hover:btn-primary-hover">
+        <Button type="submit" className="signup-submit">
           Create account
-        </button>
+        </Button>
       </form>
 
       <p className="signup-footer">

@@ -7,6 +7,7 @@ export default function TextField({
   onBlur,
   error,
   hint,
+  autoComplete,
   
 }) {
   return (
@@ -17,6 +18,7 @@ export default function TextField({
         value={value}
         onChange={onChange}
         onBlur={onBlur}
+        autoComplete={autoComplete}
         // Tells user the field has a problem
         aria-invalid={Boolean(error)}
         className={`min-h-11 input-field focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand ${
