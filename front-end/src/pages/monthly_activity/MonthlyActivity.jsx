@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import SplitLeaseLogo from '../../assets/splitlease-blank-background-logo.png'
-import { getMonthlyActivity } from './mockActivity'
+import { getMonthlyActivity } from './activityApi'
 import './MonthlyActivity.css'
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
@@ -30,13 +30,19 @@ const MonthlyActivity = () => {
   const [members, setMembers] = useState([])
   const [activity, setActivity] = useState([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
 
   useEffect(() => {
-    getMonthlyActivity().then(data => {
-      setMembers(data.members)
-      setActivity(data.activity)
-      setLoading(false)
-    })
+    getMonthlyActivity()
+      .then(data => {
+        setMembers(data.members)
+        setActivity(data.activity)
+        setLoading(false)
+      })
+      .catch(() => {
+        setError('Could not load activity. Please try again.')
+        setLoading(false)
+      })
   }, [])
 
   const monthEntries = activity
@@ -59,6 +65,14 @@ const MonthlyActivity = () => {
     return (
       <div className="activityContainer">
         <p className="activityLoading">Loading activity...</p>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="activityContainer">
+        <p className="activityLoading">{error}</p>
       </div>
     )
   }

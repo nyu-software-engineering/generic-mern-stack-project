@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import SplitLeaseLogo from "../../assets/splitlease-blank-background-logo.png";
-import { getHouseholdProtocols } from "./mockProtocols";
+import { getHouseholdProtocols } from "./protocolsApi";
 import "./Protocols.css";
 
 const Protocols = () => {
@@ -10,13 +10,19 @@ const Protocols = () => {
   const [protocols, setProtocols] = useState([]);
   const [approvedByMe, setApprovedByMe] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    getHouseholdProtocols().then((data) => {
-      setHousehold(data.household);
-      setProtocols(data.protocols);
-      setLoading(false);
-    });
+    getHouseholdProtocols()
+      .then((data) => {
+        setHousehold(data.household);
+        setProtocols(data.protocols);
+        setLoading(false);
+      })
+      .catch(() => {
+        setError("Could not load protocols. Please try again.");
+        setLoading(false);
+      });
   }, []);
 
   const pending = protocols.filter((p) => p.status === "pending");
@@ -42,6 +48,14 @@ const Protocols = () => {
     return (
       <div className="protocolsContainer">
         <p className="protocolsLoading">Loading protocols...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="protocolsContainer">
+        <p className="protocolsLoading">{error}</p>
       </div>
     );
   }
