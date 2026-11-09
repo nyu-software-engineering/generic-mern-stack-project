@@ -6,6 +6,7 @@ import axios from 'axios';
 import './ManageMembers.css';
 import ManageMemberRow from '../../components/ManageMemberRow';
 import MemberQuickView from '../../components/MemberQuickView';
+import HeaderButtons from "../../components/HeaderButtons";
 
 const ManageMembersPage = () => {
     const navigate = useNavigate();
@@ -37,17 +38,7 @@ const ManageMembersPage = () => {
     return(
         <div className='mainContainer'> {/* Parent div */}
             <div className="header">
-                <div className='headerButtons'>
-                    <img
-                          src={SplitLeaseLogo}
-                          alt="SplitLease logo"
-                          className="logo"
-                          onClick={() => navigate("/home")}
-                    />
-    
-                    <button className="manageMembersBack" onClick={() => navigate("/household")}> Back </button>
-                    
-                </div>
+                <HeaderButtons backTo='/household'/>
                 <h1 className="pageTitle">Manage Members</h1>
             </div>
                 
