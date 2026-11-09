@@ -8,6 +8,7 @@ import Register from "./pages/register/register";
 import AssetList from "./pages/assets/AssetList";
 import MonthlyActivity from "./pages/monthly_activity/MonthlyActivity";
 import UserHomePage from "./pages/user_home_page/UserHomePage";
+import ManageMembersPage from "./pages/manage_members/ManageMembers";
 import HouseholdDashboard from "./pages/household-dashboard/HouseholdDashboard";
 import ProtocolProposal from "./pages/protocol_proposal/protocol_proposal";
 import Profile from "./pages/profile/profile";
@@ -31,6 +32,7 @@ function App() {
         <Route path="/assets/create" element={<CreateAsset />} />
         <Route path="/expenses" element={<ExpenseList />} />
         <Route path="/monthly-activity" element={<MonthlyActivity />} />
+        <Route path="/manage-members" element={<ManageMembersPage />} />
         <Route path="/household" element={<HouseholdDashboard />} />
         <Route path="/new_protocol" element={<ProtocolProposal />} />
         <Route path="/profile" element={<Profile />} />

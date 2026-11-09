@@ -47,7 +47,7 @@ const HouseholdDashboard = () => {
             <p className="fieldText">Members</p>
             <button
               className="manageMembersButton"
-              onClick={() => navigate("/members")}
+              onClick={() => navigate("/manage-members")}
             >
               Manage Members
             </button>
