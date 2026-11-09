@@ -8,6 +8,7 @@ import ManageMemberRow from '../../components/ManageMemberRow';
 import MemberQuickView from '../../components/MemberQuickView';
 
 const ManageMembersPage = () => {
+    const navigate = useNavigate();
     const [members, setMembers] = useState([]);
     const [memberSelected, setMemberSelected] = useState(null);
     const [copyCodeSelected, setCopyCodeSelected] = useState(false);
@@ -16,7 +17,11 @@ const ManageMembersPage = () => {
         const fetchMembers = async () => {
             try{
                 const response = await axios.get(import.meta.env.VITE_MEMBERS_API_URL)
-                setMembers(response.data)
+                if (Array.isArray(response.data)) {
+                    setMembers(response.data)
+                }else {
+                    console.error('Members response was not a list:', response.data)
+                }
             }catch(e) {
                 console.log('Could not fetch the members')
                 console.error(e)
@@ -24,26 +29,29 @@ const ManageMembersPage = () => {
         } 
         fetchMembers()
     }, [])
-  members.forEach(member => {
-        console.log(`first name: ${member.first_name}`)
-    })
-    console.log(`members.first_name: ${members.map(member => member.first_name)}`);
+//   members.forEach(member => {
+//         console.log(`first name: ${member.first_name}`)
+//     })
+    // console.log(`members.first_name: ${members.map(member => member.first_name)}`);
 
     return(
         <div className='mainContainer'> {/* Parent div */}
-           
-            <div className='header'> {/* Header */}
+            <div className="header">
                 <div className='headerButtons'>
                     <img
                           src={SplitLeaseLogo}
                           alt="SplitLease logo"
                           className="logo"
-                        />
-                    <button className="backButton"> Back </button>
+                          onClick={() => navigate("/home")}
+                    />
+    
+                    <button className="manageMembersBack" onClick={() => navigate("/household")}> Back </button>
+                    
                 </div>
-                
                 <h1 className="pageTitle">Manage Members</h1>
             </div>
+                
+            
             <div>
                 <button className="copyInviteButton" onClick={() => setCopyCodeSelected(true)}> Copy Invite Code </button>
             </div>    

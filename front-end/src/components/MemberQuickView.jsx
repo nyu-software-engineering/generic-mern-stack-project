@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import './MemberQuickView.css'
-const MemberQuickView = ( {member} ) => {
+const MemberQuickView = ( { member } ) => {
     return(
        <div className='quickViewContainer'>
             <div className='quickViewHeader'>

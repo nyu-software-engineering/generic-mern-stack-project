@@ -6,7 +6,9 @@
 .quickViewHeader{
     display: flex;
     flex-direction: column;
+    align-items: center;
     justify-self: center;
+    text-align: center;
 
 }
 .memberNameQVP{
