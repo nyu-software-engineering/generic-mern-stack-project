@@ -54,6 +54,38 @@ function findEvent(data, id) {
   return event
 }
 
+function findInterviewEventForRound(data, { applicationId, roundId, roundName, roundDate }) {
+  return (
+    data.events.find(
+      (event) => event.applicationId === applicationId && roundId && event.roundId === roundId,
+    ) ||
+    data.events.find(
+      (event) =>
+        event.applicationId === applicationId &&
+        event.type === 'interview' &&
+        event.title === roundName &&
+        event.date === roundDate,
+    ) ||
+    null
+  )
+}
+
+function findInterviewRoundForEvent(data, event) {
+  if (event.type !== 'interview' || !event.applicationId) return null
+
+  const application = data.applications.find((item) => item.id === event.applicationId)
+  if (!application) return null
+
+  const round =
+    application.interviewRounds.find((item) => event.roundId && item.id === event.roundId) ||
+    application.interviewRounds.find(
+      (item) => item.name === event.title && item.date === event.date,
+    ) ||
+    null
+
+  return round ? { application, round } : null
+}
+
 /* ===================== Saved accounts and session ===================== */
 
 const ACCOUNTS_KEY = 'applytrack-mock-accounts'
@@ -357,7 +389,22 @@ async function updateInterviewRound(applicationId, roundId, changes) {
 async function deleteInterviewRound(applicationId, roundId) {
   const data = await getStore()
   const application = findApplication(data, applicationId)
+  const round = application.interviewRounds.find((item) => item.id === roundId)
+  if (!round) throw new Error('Interview round not found')
+
+  const linkedEvent = findInterviewEventForRound(data, {
+    applicationId,
+    roundId,
+    roundName: round.name,
+    roundDate: round.date,
+  })
+
   application.interviewRounds = application.interviewRounds.filter((item) => item.id !== roundId)
+
+  if (linkedEvent) {
+    data.events = data.events.filter((event) => event.id !== linkedEvent.id)
+  }
+
   return { ok: true }
 }
 
@@ -394,7 +441,15 @@ async function updateEvent(id, changes) {
 
 async function deleteEvent(id) {
   const data = await getStore()
-  findEvent(data, id)
+  const event = findEvent(data, id)
+  const linkedRound = findInterviewRoundForEvent(data, event)
+
+  if (linkedRound) {
+    linkedRound.application.interviewRounds = linkedRound.application.interviewRounds.filter(
+      (round) => round.id !== linkedRound.round.id,
+    )
+  }
+
   data.events = data.events.filter((event) => event.id !== id)
   return { ok: true }
 }

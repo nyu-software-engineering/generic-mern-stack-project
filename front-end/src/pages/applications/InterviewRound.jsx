@@ -189,13 +189,7 @@ function InterviewRoundForm({ application, round, isEditing }) {
 
     setDeleting(true)
     try {
-      const linkedEvent = await findLinkedEvent(application.id, round.id, round.name, round.date)
       await api.deleteInterviewRound(application.id, round.id)
-
-      if (linkedEvent) {
-        await api.deleteEvent(linkedEvent.id)
-      }
-
       navigate(`/applications/${application.id}`)
     } catch (err) {
       setSaveError(err.message || 'Could not delete interview round. Please try again.')
