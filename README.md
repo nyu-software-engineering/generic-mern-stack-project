@@ -44,5 +44,13 @@ As part of our initial project setup, our team has:
 4. Discussed the initial project requirements and features.
 
 ## Project building and testing
-The project is currently in its early development stage. No further building and testing planned yet.
+To run the back-end, install Node.js and npm, then run:
+
+```bash
+cd back-end
+npm install
+npm run dev
+```
+
+The server will be available at http://localhost:3000. To run it without automatic restarts, use `npm start` instead of `npm run dev`.
 
