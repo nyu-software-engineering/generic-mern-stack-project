@@ -6,10 +6,18 @@ From `back-end/`:
 
 ```sh
 npm install
-cp .env.example .env
 ```
 
-Set `MOCKAROO_API_KEY` in `.env` using the team's private key, then run:
+If you already have `.env`, keep it and add `MOCKAROO_API_KEY` using the team's
+private key. Preserve your existing values, including `MONGODB_URI`.
+
+For first-time setup, copy the template without overwriting an existing file:
+
+```sh
+cp -n .env.example .env
+```
+
+Set `MOCKAROO_API_KEY` in the new `.env` using the team's private key. Then run:
 
 ```sh
 npm run dev
