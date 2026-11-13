@@ -73,6 +73,19 @@ describe("Backend foundation", () => {
     expect(response.status).to.equal(413);
     expect(await response.json()).to.deep.equal({ error: "Request body too large." });
   });
+
+  for (const [name, headers] of [
+    ["charset", { "content-type": "application/json; charset=iso-8859-1" }],
+    ["content encoding", { "content-type": "application/json", "content-encoding": "unsupported" }],
+  ]) {
+    it(`returns safe 415 JSON for an unsupported ${name}`, async () => {
+      const response = await fetch(`${server.baseUrl}/api/mock-data`, {
+        method: "POST", headers, body: JSON.stringify({ private: "request details" }),
+      });
+      expect(response.status).to.equal(415);
+      expect(await response.json()).to.deep.equal({ error: "Unsupported request encoding." });
+    });
+  }
 });
 
 describe("Placeholder identity and error middleware", () => {

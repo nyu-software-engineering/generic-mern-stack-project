@@ -10,6 +10,9 @@ export function errorHandler(error, _request, response, next) {
   } else if (error.type === "entity.too.large") {
     status = 413;
     message = "Request body too large.";
+  } else if (error.type === "charset.unsupported" || error.type === "encoding.unsupported") {
+    status = 415;
+    message = "Unsupported request encoding.";
   } else if (error.status === 502) {
     status = 502;
     message = "Could not load mock data.";
