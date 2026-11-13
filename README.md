@@ -14,7 +14,7 @@ Our goal is to make borrowing within the NYU community safer, simpler, and more 
 
 ## Project History
 
-DormShare began as the team's proposal for helping NYU students access everyday items temporarily instead of buying something they only need for a short time. The team is shaping that idea into a verified campus marketplace. Sprint 0 is focused on defining the user flows, preparing the prototype, and setting up shared development practices.
+DormShare began as the team's proposal for helping NYU students access everyday items temporarily instead of buying something they only need for a short time. The team is shaping that idea into a verified campus marketplace. Sprint 0 defined the user flows, produced the prototype, and established shared development practices.
 
 ## The Problem
 
@@ -73,17 +73,7 @@ All team members participate as developers. Product Owner and Scrum Master respo
 
 ## Project Status
 
-DormShare is currently in **Sprint 0**, focused on product definition, user experience design, prototyping, project setup, and sprint planning.
-
-Current Sprint 0 work includes:
-
-- defining the product backlog and MVP
-- developing the application map and mobile-first wireframes
-- building a clickable prototype
-- establishing team development and contribution practices
-- preparing the repository for implementation
-
-Application development begins in Sprint 1.
+Sprint 1 implemented the frontend workflows with mock data. Sprint 2 adds Express API routes, serves static files, and connects the frontend to the backend.
 
 ## UX Design
 
@@ -113,42 +103,53 @@ Additional development and deployment tooling will be documented as the project 
 
 ## Development Setup
 
-The repository includes a basic React front end and an Express backend health check for local setup. Product features are planned for later sprints. To run both development servers:
+Use Node.js 20.19.0 or later with npm.
 
 ```bash
-git clone https://github.com/agile-students-fall2026/dormshare.git
+git clone https://github.com/agile-students-fall2026/generic-mern-stack-project-dormshare.git dormshare
 cd dormshare
+npm --prefix back-end install
+npm --prefix front-end install
 ```
 
-In one terminal:
+Add `MOCKAROO_API_KEY` to `back-end/.env` using the key shared privately by the team. For a new setup, copy `back-end/.env.example` to `back-end/.env` first. Preserve any values in an existing `.env`, including `MONGODB_URI`. Keep the key out of version control. [Backend setup](./back-end/README.md)
+
+### Run the development servers
+
+From the repository root, start Express in one terminal:
 
 ```bash
-cd front-end
-npm install
-cp .env.example .env.local
+npm --prefix back-end run dev
 ```
 
-Set `MOCKAROO_API_KEY` in `front-end/.env.local` using the team's key shared privately. The account must have the saved `DormShare` schema and `GET /dormshare.json` mock API. See [Mockaroo setup](./mockaroo/README.md) for the saved configuration and response fields. Never commit the key. Then start the front end:
+Until the frontend uses the backend API ([#89](https://github.com/agile-students-fall2026/generic-mern-stack-project-dormshare/issues/89)), add `MOCKAROO_API_KEY` to `front-end/.env.local` for Vite's existing Mockaroo proxy. Use `front-end/.env.example` as a template if the file is new. From the repository root, start Vite in a second terminal:
 
 ```bash
-npm run dev
+npm --prefix front-end run dev
 ```
 
-In a second terminal from the repository root:
+Open the URL printed by Vite. Express exposes its health check at <http://127.0.0.1:3001/api/health>. [Mockaroo setup](./mockaroo/README.md)
+
+### Serve the frontend build with Express
+
+From the repository root:
 
 ```bash
-cd back-end
-npm install
-npm run dev
+npm --prefix front-end run build
+npm --prefix back-end start
 ```
 
-Open `/listings` to create, edit, preview, publish, or pause items. Open `/owner-dashboard` for rental counts, recorded income, and filters. Owner and booking pages fetch users, listings, and rentals from Mockaroo once, then share the same in-memory records. Changes reset on reload. Failed loads show **Try again** and never fall back to hardcoded records.
+If Express is already running, build the frontend and use the running server. Open <http://127.0.0.1:3001> for the built app. Express serves the listing placeholder at `/listing-images/placeholder.png` and supports direct links such as `/browse`. Use Vite for pages that still load data through its Mockaroo proxy until #89 is integrated.
 
-Vite supplies the API key through its local proxy, keeping it out of browser code. Both `npm run dev` and `npm run preview` use this proxy. Static hosting will need its own proxy.
+### Run checks
 
-From `front-end`, run `npm test`, `npm run lint`, and `npm run build` to check changes.
+```bash
+npm --prefix back-end run test:coverage
+npm --prefix front-end test
+npm --prefix front-end run lint
+```
 
-The front end prints its local address. The backend health check is at <http://127.0.0.1:3001/api/health> and returns `{"status":"ok"}`. Read [CONTRIBUTING.md](./CONTRIBUTING.md) for prerequisites, test commands, and troubleshooting before beginning work.
+The backend coverage report includes `app.js` and files under `back-end/routes/`.
 
 ## Repository Structure
 

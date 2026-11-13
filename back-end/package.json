@@ -11,7 +11,7 @@
     "dev": "node --watch server.js",
     "db:check": "node check-db.js",
     "test": "mocha \"test/**/*.test.js\"",
-    "test:coverage": "c8 --all --include app.js --reporter=text mocha \"test/**/*.test.js\""
+    "test:coverage": "c8 --all --include app.js --include \"routes/**\" --reporter=text mocha \"test/**/*.test.js\""
   },
   "dependencies": {
     "dotenv": "^18.0.9",

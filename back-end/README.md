@@ -78,9 +78,4 @@ Mockaroo key. `test/fixtures.js` supplies related example records.
 available port. It returns `baseUrl` and an async `close()` function. Call
 `close()` from the suite's cleanup hook.
 
-The existing coverage script still includes only `app.js`. #90 will extend it.
-To measure the new backend modules before that change lands, run:
-
-```sh
-npm exec -- c8 --all --include app.js --include 'routes/**' --include 'middleware/**' --include 'services/**' --reporter=text mocha 'test/**/*.test.js'
-```
+The coverage script includes `app.js` and all route files under `routes/`.

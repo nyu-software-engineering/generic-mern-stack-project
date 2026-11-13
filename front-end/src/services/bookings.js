@@ -26,8 +26,7 @@ export const getIncomingRequests = (ownerId) =>
     (rental) => sameId(rental.ownerId, ownerId) && rental.status === 'requested',
   )
 
-export const listingImage = (listingId, size = 160) =>
-  `https://picsum.photos/seed/dormshare-${listingId}/${size}/${size}`
+export const listingImage = () => '/listing-images/placeholder.png'
 
 export function countDays(startDate, endDate) {
   return Math.round((new Date(endDate) - new Date(startDate)) / 86400000)
