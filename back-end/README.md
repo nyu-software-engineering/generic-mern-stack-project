@@ -28,11 +28,10 @@ MongoDB is not required for the Sprint 2 mock API.
 
 - `GET /api/health` returns `{ "status": "ok" }` without loading data.
 - `GET /api/mock-data` returns the shared users, listings, rentals, conversations,
-  reviews, item requests, and Quick Borrow requests for #89.
+  reviews, item requests, and Quick Borrow requests. The frontend loads it on startup.
 - Failed data loads return safe JSON errors. A missing key returns 503. An
   upstream failure or invalid response returns 502. A later request can retry.
 
-The current frontend still uses its existing Mockaroo proxy until #89 switches it.
 Backend data stays in memory and resets when the server restarts.
 
 ## Add feature routes
