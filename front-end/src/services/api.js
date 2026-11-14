@@ -30,11 +30,18 @@ export async function api(path, { method = 'GET', body } = {}) {
     throw new ApiError(NOT_RUNNING, 0)
   }
 
-  const data = response.status === 204 ? null : await response.json().catch(() => null)
   if (!response.ok) {
     // Back-end routes send { error }. Vite's proxy sends an empty 502 when Express is down.
+    const data = await response.json().catch(() => null)
     const fallback = response.status === 502 ? NOT_RUNNING : `Request failed (${response.status}).`
     throw new ApiError(data?.error ?? fallback, response.status, data?.errors)
   }
-  return data
+  if (response.status === 204) return null
+
+  // A successful response must be readable JSON; callers should not get null by mistake.
+  try {
+    return await response.json()
+  } catch {
+    throw new ApiError('Could not read the response from the back-end.', response.status)
+  }
 }

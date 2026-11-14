@@ -29,6 +29,32 @@ test('an empty 204 response returns null', async (t) => {
   assert.equal(await api('/notifications/1', { method: 'DELETE' }), null)
 })
 
+test('a successful response with malformed JSON throws', async (t) => {
+  t.mock.method(globalThis, 'fetch', async () =>
+    new Response('{"id": 1', { status: 200, headers: { 'Content-Type': 'application/json' } }))
+
+  await assert.rejects(api('/listings/mine'), (error) => {
+    assert.ok(error instanceof ApiError)
+    assert.equal(error.message, 'Could not read the response from the back-end.')
+    assert.equal(error.status, 200)
+    return true
+  })
+})
+
+test('a successful response whose body fails to read throws', async (t) => {
+  // e.g. the 15-second timeout firing while the body is still downloading.
+  const body = new ReadableStream({
+    start(controller) { controller.error(new DOMException('The operation timed out.', 'TimeoutError')) },
+  })
+  t.mock.method(globalThis, 'fetch', async () => new Response(body, { status: 200 }))
+
+  await assert.rejects(api('/mock-data'), {
+    name: 'ApiError',
+    message: 'Could not read the response from the back-end.',
+    status: 200,
+  })
+})
+
 test('a route error keeps the server message, status, and field errors', async (t) => {
   t.mock.method(globalThis, 'fetch', async () =>
     Response.json({ error: 'Invalid listing details.', errors: { title: 'Add a title.' } }, { status: 400 }))
