@@ -5,6 +5,7 @@ import { currentUser } from "./middleware/currentUser.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 import { mockDataRouter } from "./routes/mockData.js";
 import { ownerListingsRouter } from "./routes/ownerListings.js";
+import { publicListingsRouter } from "./routes/publicListings.js";
 import { createMockDataStore } from "./services/mockData.js";
 
 const frontendDist = fileURLToPath(new URL("../front-end/dist/", import.meta.url));
@@ -23,6 +24,7 @@ export function createApp({ store = createMockDataStore() } = {}) {
   });
   app.use("/api", mockDataRouter);
   app.use("/api/listings", ownerListingsRouter);
+  app.use("/api/listings", publicListingsRouter);
   app.use("/api", (_request, response) => {
     response.status(404).json({ error: "API route not found." });
   });

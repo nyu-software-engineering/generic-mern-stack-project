@@ -87,9 +87,21 @@ Edits and status changes return 404 for a missing listing and 403 for another
 owner's listing. Invalid details or status values return 400 without changing
 the records. Successful changes remain in the shared store until restart.
 
-Search and individual item reads belong to #116 in a separate router. Mount
-that router after `ownerListingsRouter` so `/mine` takes precedence over `/:id`.
 Frontend integration remains in #108.
+
+## Public listing routes
+
+- `GET /api/listings` returns published listings in their stored order. The
+  optional `search` matches title and description with a case-insensitive
+  substring search. The optional `category` accepts an exact shared category.
+  Omit either filter or pass an empty value to leave it unset. Repeated
+  `search` or `category` parameters and invalid categories return 400.
+- `GET /api/listings/:id` returns a published listing. Unknown, draft, and
+  paused listings return 404.
+
+The owner router is mounted first so `/api/listings/mine` continues to return
+the current owner's listings in every status. Both routers use the same store.
+Frontend integration remains in #117.
 
 ## Tests
 
