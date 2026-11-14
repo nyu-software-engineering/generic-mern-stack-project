@@ -11,14 +11,30 @@ function Profile({ setIsLoggedIn }) {
   const navigate = useNavigate()
 
   useEffect(() => {
-    fetch('/api/mockData')
+    fetch('/api/profile')
       .then(res => {
         if (!res.ok) throw new Error('Failed to fetch profile')
         return res.json()
       })
-      .then(data => setProfile(data.profile))
+      .then(setProfile)
       .catch(err => console.error(err))
   }, [])
+
+  // send the edited profile to the back-end
+  function saveProfile(updated) {
+    fetch('/api/profile', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updated),
+    })
+      .then(res => res.json())
+      .then(saved => {
+        setProfile(saved)
+        setEditing(false)
+      })
+      .catch(err => console.error(err))
+  }
+
 
   if (!profile) {
     return <div className="profile-page">Loading profile...</div>
@@ -28,10 +44,7 @@ function Profile({ setIsLoggedIn }) {
     return (
       <EditProfile
         profile={profile}
-        onSave={(updated) => {
-          setProfile(updated)
-          setEditing(false)
-        }}
+        onSave={saveProfile}
         onCancel={() => setEditing(false)}
       />
     )
