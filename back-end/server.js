@@ -1,19 +1,18 @@
+
 #!/usr/bin/env node
 
-const server = require("./app") // load up the web server
+import app from "./app.js";
 
-const port = 3000 // the port to listen to for incoming requests
+const port = process.env.PORT || 3000;
 
-// call express's listen function to start listening to the port
-const listener = server.listen(port, function () {
-  console.log(`Server running on port: ${port}`)
-})
+// Start the Express server
+const listener = app.listen(port, () => {
+  console.log(`Server running on port: ${port}`);
+});
 
-// a function to stop listening to the port
+// Gracefully stop the server
 const close = () => {
-  listener.close()
-}
+  listener.close();
+};
 
-module.exports = {
-  close: close,
-}
+export { close };
