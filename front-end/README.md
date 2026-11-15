@@ -29,6 +29,8 @@ previous listing status. Controls are disabled while saving to prevent duplicate
 requests. Successful responses update the shared client cache so existing Browse
 and booking readers see the changes. Listing images use the local placeholder.
 Backend changes stay in memory until Express restarts.
+Reloading My Listings replaces the current owner's cached records with the full
+API response, including an empty response, while preserving other owners' items.
 
 `npm test` includes listing integration tests against a local Express server.
 Install dependencies in both `front-end` and `back-end` before running them.

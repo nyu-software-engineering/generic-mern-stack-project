@@ -61,6 +61,17 @@ export function cacheListing(listing) {
   return structuredClone(cached)
 }
 
+// A full owner response also removes records lost after a backend restart.
+export function cacheOwnerListings(ownerListings) {
+  const cached = structuredClone(ownerListings)
+  const ids = new Set(cached.map((listing) => String(listing.id)))
+  const otherListings = listings.filter((listing) =>
+    !sameId(listing.ownerId, CURRENT_USER_ID) && !ids.has(String(listing.id)),
+  )
+  listings = [...cached, ...otherListings]
+  return structuredClone(cached)
+}
+
 export function getRentals() {
   return structuredClone(rentals)
 }

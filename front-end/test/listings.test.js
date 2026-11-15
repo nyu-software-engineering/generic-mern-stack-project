@@ -74,6 +74,29 @@ describe('Listing API integration (#108)', () => {
     assert.equal(cache.getListings().filter((listing) => listing.id === 1).length, 1)
   })
 
+  it('removes owner listings that disappeared after a backend restart', async () => {
+    const created = await listings.createListing(details)
+    await listings.updateListingStatus(created.id, 'published')
+    assert(listings.getPublishedListings().some((listing) => listing.id === created.id))
+    const otherOwner = getListing(2)
+
+    data = mockResponse()
+    assert.deepEqual(await listings.getMyListings(), [data.listings[0]])
+    assert.equal(getListing(created.id), undefined)
+    assert.equal(listings.getPublishedListings().some((listing) => listing.id === created.id), false)
+    assert.deepEqual(getListing(2), otherOwner)
+  })
+
+  it('clears only the current owner cache when the API returns no listings', async () => {
+    await listings.getMyListings()
+    const otherOwner = getListing(2)
+    data.listings = data.listings.filter((listing) => listing.ownerId !== 'owner-1')
+
+    assert.deepEqual(await listings.getMyListings(), [])
+    assert.deepEqual(cache.getListingsForOwner('owner-1'), [])
+    assert.deepEqual(getListing(2), otherOwner)
+  })
+
   for (const [name, operation, status] of [
     ['invalid creation', () => listings.createListing({ ...details, title: '' }), 400],
     ['missing listing', () => listings.updateListing(999, details), 404],
@@ -118,5 +141,20 @@ describe('Listing API integration (#108)', () => {
     cache.cacheListing({ ...record, id: '99', title: 'Updated item' })
     assert.equal(getListing(99).title, 'Updated item')
     assert.equal(cache.getListings().filter((listing) => String(listing.id) === '99').length, 1)
+  })
+
+  it('clones a full owner refresh and replaces reused IDs without removing unrelated items', () => {
+    const unrelated = { ...data.listings[1], id: 42 }
+    cache.cacheListing(unrelated)
+    cache.cacheListing({ ...data.listings[1], id: '2' })
+    const record = { ...data.listings[0], id: 2, title: 'Returned owner listing' }
+    const result = cache.cacheOwnerListings([record])
+    record.title = 'Changed input'
+    result[0].title = 'Changed output'
+
+    assert.equal(getListing(2).title, 'Returned owner listing')
+    assert.equal(getListing(2).ownerId, 'owner-1')
+    assert.equal(cache.getListings().filter((listing) => String(listing.id) === '2').length, 1)
+    assert.deepEqual(getListing(42), unrelated)
   })
 })
