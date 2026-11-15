@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import ListingCard from "../components/ListingCard";
 import ReviewCard from "../components/ReviewCard";
 import mockListings from "../mockListings";
+import { useNavigate } from "react-router-dom";
 import "./Profile.css";
 
 const USER = {
@@ -19,10 +20,18 @@ const REVIEWS = [
 ];
 
 export default function Profile(props) {
-  // set default props if not passed in
-  let currentUser = props.user;
-  if (!currentUser) {
-    currentUser = USER;
+  const navigate = useNavigate();
+
+  // Check props first, then localStorage, then fallback to mock USER
+  const storedUser = JSON.parse(localStorage.getItem("user"));
+  let currentUser = props.user || storedUser || USER;
+
+  function handleLogout() {
+    localStorage.removeItem("user");
+    if (props.onLogout) {
+      props.onLogout();
+    }
+    navigate("/");
   }
 
   let savedListings = props.savedListings;
@@ -236,7 +245,7 @@ export default function Profile(props) {
           </div>
         </div>
 
-        <button className="logout-btn" onClick={props.onLogout}>
+        <button className="logout-btn" onClick={handleLogout}>
           Log Out
         </button>
       </div>
