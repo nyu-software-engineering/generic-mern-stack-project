@@ -106,6 +106,38 @@ the records. Successful changes remain in the shared store until restart.
 
 Frontend integration remains in #108.
 
+## Owner dashboard route
+
+`GET /api/owner/dashboard` handles #110 and returns:
+
+```js
+{
+  summary: { totalRentals, activeRentals, recordedIncome },
+  rentals: [{ ...rental, listingTitle, borrowerName }]
+}
+```
+
+Only rentals owned by `request.currentUserId` appear in the response. Rentals
+where that user is only the borrower do not count. The summary covers all of the
+owner's rentals, even when filters narrow the rows. `activeRentals` includes
+`active` and `extension_requested`, since the item is still on loan.
+`recordedIncome` sums completed rental prices and rounds to cents.
+
+Optional query parameters:
+
+- `search`: Trimmed, case-insensitive text matching the listing title, borrower
+  name, or borrower ID. Blank text has no effect.
+- `status`: `all` by default, or one exact value from the shared rental statuses.
+  Search and status filters apply together.
+
+Unknown, repeated, or bracketed parameters and invalid statuses return 400 with
+`{ "error": "Invalid dashboard filters." }` before loading data.
+
+Rows preserve their stored order and all rental fields. Missing listings display
+`Listing unavailable`; missing users display their borrower ID. Fallback labels
+do not count as names when searching. The route does not change shared records.
+Frontend integration remains in #112.
+
 ## Public listing routes
 
 - `GET /api/listings` returns published listings in their stored order. The
