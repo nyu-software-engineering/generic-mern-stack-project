@@ -48,3 +48,14 @@ app.put("/api/listings/:listingId", (req, res) => {
 
     res.json(listing);
 });
+
+app.get("/api/listings/:listingId", (req,res) => {
+    const listing = listings.find(listing => listing.id === Number(req.params.listingId));
+
+    if (!listing || (!listing.active && listing.ownerId !== req.userId)) {
+        return res.status(404).json({ error: "Listing not found." });
+    }
+    res.json(listing);
+});
+
+export default app;
