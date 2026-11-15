@@ -21,8 +21,8 @@ const initialSavedHotels = [
     description: 'Try the onsen baths.',
   },
 
- // generated mock data
-  
+  // generated mock data
+
   {
     id: '8',
     name: 'The Fifth Avenue Grand',
