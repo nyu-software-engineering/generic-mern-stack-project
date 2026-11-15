@@ -3,7 +3,6 @@ import listings from "../data/listings.js";
 
 const app = express.Router();
 
-app.use(express.json());
 
 app.use((req, res, next) => {
     req.userId = req.header("x-user-id") || "user1";
