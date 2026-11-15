@@ -4,11 +4,11 @@ The shared mock API returns users, listings, rentals, conversations, reviews, it
 
 ## Run the app
 
-Use the setup commands in the [root README](../README.md#development-setup). Copy `front-end/.env.example` to `front-end/.env.local`, then set `MOCKAROO_API_KEY` using the key shared privately. Restart Vite after changing it.
+Use the setup commands in the [root README](../README.md#development-setup). Set `MOCKAROO_API_KEY` in `back-end/.env` using the key shared privately. Restart Express after changing it.
 
 - Remote endpoint: `GET https://my.api.mockaroo.com/dormshare.json`
-- App request: `GET /mock-api/dormshare.json`
-- Authentication: Vite adds the `X-API-Key` header from the environment file.
+- App request: `GET /api/mock-data` (Express fetches the remote endpoint)
+- Authentication: Express adds the `X-API-Key` header from `back-end/.env`.
 - Response: an object with `users`, `listings`, `rentals`, `conversations`, `reviews`, `itemRequests`, and `quickBorrowRequests` arrays.
 - Initial records are cached by Mockaroo for one day. Local app edits stay in memory and reset on reload.
 

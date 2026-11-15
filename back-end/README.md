@@ -28,11 +28,10 @@ MongoDB is not required for the Sprint 2 mock API.
 
 - `GET /api/health` returns `{ "status": "ok" }` without loading data.
 - `GET /api/mock-data` returns the shared users, listings, rentals, conversations,
-  reviews, item requests, and Quick Borrow requests for #89.
+  reviews, item requests, and Quick Borrow requests. The frontend loads it on startup.
 - Failed data loads return safe JSON errors. A missing key returns 503. An
   upstream failure or invalid response returns 502. A later request can retry.
 
-The current frontend still uses its existing Mockaroo proxy until #89 switches it.
 Backend data stays in memory and resets when the server restarts.
 
 ## Add feature routes
@@ -106,6 +105,38 @@ the records. Successful changes remain in the shared store until restart.
 
 Frontend integration remains in #108.
 
+## Owner dashboard route
+
+`GET /api/owner/dashboard` handles #110 and returns:
+
+```js
+{
+  summary: { totalRentals, activeRentals, recordedIncome },
+  rentals: [{ ...rental, listingTitle, borrowerName }]
+}
+```
+
+Only rentals owned by `request.currentUserId` appear in the response. Rentals
+where that user is only the borrower do not count. The summary covers all of the
+owner's rentals, even when filters narrow the rows. `activeRentals` includes
+`active` and `extension_requested`, since the item is still on loan.
+`recordedIncome` sums completed rental prices and rounds to cents.
+
+Optional query parameters:
+
+- `search`: Trimmed, case-insensitive text matching the listing title, borrower
+  name, or borrower ID. Blank text has no effect.
+- `status`: `all` by default, or one exact value from the shared rental statuses.
+  Search and status filters apply together.
+
+Unknown, repeated, or bracketed parameters and invalid statuses return 400 with
+`{ "error": "Invalid dashboard filters." }` before loading data.
+
+Rows preserve their stored order and all rental fields. Missing listings display
+`Listing unavailable`; missing users display their borrower ID. Fallback labels
+do not count as names when searching. The route does not change shared records.
+Frontend integration remains in #112.
+
 ## Public listing routes
 
 - `GET /api/listings` returns published listings in their stored order. The
@@ -119,6 +150,43 @@ Frontend integration remains in #108.
 The owner router is mounted first so `/api/listings/mine` continues to return
 the current owner's listings in every status. Both routers use the same store.
 Frontend integration remains in #117.
+
+## Booking routes
+
+`routes/bookings.js` handles #91 under `/api/bookings`. Bookings are stored in
+the shared `rentals` array, so other routes such as `/api/rentals/mine` and the
+owner dashboard see them immediately.
+
+| Method | Path | Response |
+| --- | --- | --- |
+| POST | `/api/bookings` | Created booking with status `requested`, status 201 |
+| GET | `/api/bookings/requests` | Requested bookings waiting on the current owner |
+| GET | `/api/bookings/:id` | One booking, for its owner or borrower only |
+| PATCH | `/api/bookings/:id/status` | Booking with status `confirmed` or `declined` |
+
+POST accepts a JSON body such as
+`{ "listingId": 2, "startDate": "2026-12-01", "endDate": "2026-12-04", "message": "Hi!" }`.
+
+- `listingId` must be a positive integer for a published listing. Missing,
+  draft, and paused listings return 404. Booking your own listing returns 400.
+- `startDate` and `endDate` must be real calendar dates in `YYYY-MM-DD` form,
+  with `endDate` after `startDate`. The total is `days × pricePerDay`, rounded to
+  cents, where `days` is `endDate − startDate`.
+- `startDate` cannot be in the past. The frontend should block dates before the
+  viewer's local today. The server cannot see the viewer's time zone, so it
+  accepts any date that is today somewhere (from UTC−12) and returns 400 for
+  dates that are already past everywhere.
+- `message` is optional text and defaults to an empty string. Other types
+  return 400.
+- A total too large to store returns 400 without changing the rentals.
+
+The server assigns the ID, owner, borrower, status, price terms, total, and
+creation date. Other submitted fields are ignored.
+
+GET `/:id` returns 403 for bookings the current user is not part of. PATCH
+`/:id/status` accepts `{ "status": "confirmed" }` or `{ "status": "declined" }`,
+returns 403 for anyone but the owner, and 409 if the booking was already
+answered. Unknown booking IDs return 404. Frontend integration remains in #93.
 
 ## Conversation routes
 
