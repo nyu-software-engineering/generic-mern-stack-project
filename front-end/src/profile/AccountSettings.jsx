@@ -10,14 +10,25 @@ function AccountSettings() {
   const [saved, setSaved] = useState(false)
   const navigate = useNavigate()
 
-  // not sent anywhere yet; the back-end will check the current password
+  // quick checks here, then the back-end checks the current password
   function handleSubmit(e) {
     e.preventDefault()
     if (next.length < 8) return setError('New password must be at least 8 characters.')
     if (next !== confirm) return setError('New passwords do not match.')
     if (next === current) return setError('New password must be different from your current one.')
-    setError('')
-    setSaved(true)
+
+    fetch('/api/account/password', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ currentPassword: current, newPassword: next }),
+    })
+      .then(async (res) => {
+        const data = await res.json()
+        if (!res.ok) return setError(data.error)
+        setError('')
+        setSaved(true)
+      })
+      .catch(() => setError('Could not reach the server. Try again.'))
   }
 
   if (saved) {
