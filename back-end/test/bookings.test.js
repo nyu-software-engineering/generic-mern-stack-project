@@ -81,6 +81,35 @@ describe("Booking routes (#91)", () => {
       }
     });
 
+    it("rejects dates that do not exist on the calendar", async () => {
+      const valid = "2026-12-04";
+      for (const badDate of ["2026-13-01", "2026-00-10", "2026-04-31", "2026-02-30", "2026-02-29", "2100-02-29"]) {
+        const asStart = await api("POST", "", { listingId: 2, startDate: badDate, endDate: "2027-01-01" });
+        const asEnd = await api("POST", "", { listingId: 2, startDate: "2026-01-01", endDate: badDate });
+        expect(asStart.status, `start ${badDate}`).to.equal(400);
+        expect(asEnd.status, `end ${badDate}`).to.equal(400);
+      }
+      expect((await api("POST", "", { listingId: 2, startDate: "2026-12-01", endDate: valid })).status).to.equal(201);
+      expect(data.rentals.every((rental) => Number.isFinite(rental.totalPrice))).to.equal(true);
+    });
+
+    it("accepts February 29 in leap years and prices across it", async () => {
+      const { status, body } = await api("POST", "", {
+        listingId: 2, startDate: "2028-02-28", endDate: "2028-03-01",
+      });
+      expect(status).to.equal(201);
+      expect(body.totalPrice).to.equal(3);
+
+      const leapDay = await api("POST", "", { listingId: 2, startDate: "2028-02-29", endDate: "2028-03-02" });
+      expect(leapDay.status).to.equal(201);
+      expect(leapDay.body.totalPrice).to.equal(3);
+    });
+
+    it("prices across month and year boundaries", async () => {
+      const { body } = await api("POST", "", { listingId: 2, startDate: "2026-12-30", endDate: "2027-01-02" });
+      expect(body.totalPrice).to.equal(4.5);
+    });
+
     it("does not let an owner book their own listing", async () => {
       const { status } = await api("POST", "", { listingId: 1, startDate: "2026-12-01", endDate: "2026-12-04" });
       expect(status).to.equal(400);
