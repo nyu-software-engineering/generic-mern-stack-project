@@ -1,48 +1,49 @@
-// Booking routes (#91). Respond with mock JSON; nothing is saved to a database yet.
+// Booking routes (#91). Read and change rentals in the shared mock data store (#88);
+// nothing is saved to a database yet.
 import { Router } from "express";
-import * as data from "../data/bookingsMockData.js";
 
 export const bookingsRouter = Router();
-
-// TODO: use the current-user middleware from #88 once it lands.
-// Until then the user is owner-1, or whoever the x-user-id header names (used by tests).
-const currentUserId = (request) =>
-  request.currentUserId ?? request.get("x-user-id") ?? "owner-1";
 
 const sameId = (a, b) => String(a) === String(b);
 const isDate = (value) => typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value);
 const countDays = (start, end) => Math.round((new Date(end) - new Date(start)) / 86400000);
 const roundCents = (amount) => Math.round(amount * 100) / 100;
 
-const findListing = (id) => data.listings.find((listing) => sameId(listing.id, id));
-const findRental = (id) => data.rentals.find((rental) => sameId(rental.id, id));
-
 const fail = (response, status, error) => response.status(status).json({ error });
+
+// Load the shared data before every booking route.
+bookingsRouter.use(async (request, _response, next) => {
+  request.data = await request.app.locals.mockDataStore.load();
+  next();
+});
 
 // Load the booking named in the URL, or answer 404.
 bookingsRouter.param("id", (request, response, next, id) => {
-  request.rental = findRental(id);
+  request.rental = request.data.rentals.find((rental) => sameId(rental.id, id));
   if (!request.rental) return fail(response, 404, "Booking not found.");
   next();
 });
 
-// Borrower requests a listing for a date range.
+// Borrower requests a published listing for a date range.
 bookingsRouter.post("/", (request, response) => {
+  const { data, currentUserId } = request;
   const { listingId, startDate, endDate, message = "" } = request.body ?? {};
-  const listing = findListing(listingId);
-  const userId = currentUserId(request);
 
+  if (!Number.isSafeInteger(listingId) || listingId < 1) {
+    return fail(response, 400, "A positive integer listingId is required.");
+  }
+  const listing = data.listings.find((item) => item.id === listingId && item.status === "published");
   if (!listing) return fail(response, 404, "Listing not found.");
   if (!isDate(startDate) || !isDate(endDate) || endDate <= startDate) {
     return fail(response, 400, "startDate and endDate must be YYYY-MM-DD, with endDate after startDate.");
   }
-  if (sameId(listing.ownerId, userId)) return fail(response, 400, "You cannot book your own listing.");
+  if (sameId(listing.ownerId, currentUserId)) return fail(response, 400, "You cannot book your own listing.");
 
   const rental = {
     id: Math.max(0, ...data.rentals.map((item) => item.id)) + 1,
     listingId: listing.id,
     ownerId: listing.ownerId,
-    borrowerId: userId,
+    borrowerId: currentUserId,
     startDate,
     endDate,
     status: "requested",
@@ -58,14 +59,20 @@ bookingsRouter.post("/", (request, response) => {
 // Requests waiting on the current user as owner.
 // Declared before /:id so "requests" isn't read as a booking id.
 bookingsRouter.get("/requests", (request, response) => {
-  const userId = currentUserId(request);
   response.json(
-    data.rentals.filter((rental) => sameId(rental.ownerId, userId) && rental.status === "requested"),
+    request.data.rentals.filter(
+      (rental) => sameId(rental.ownerId, request.currentUserId) && rental.status === "requested",
+    ),
   );
 });
 
+// Only the owner or borrower can see a booking.
 bookingsRouter.get("/:id", (request, response) => {
-  response.json(request.rental);
+  const { rental, currentUserId } = request;
+  if (!sameId(rental.ownerId, currentUserId) && !sameId(rental.borrowerId, currentUserId)) {
+    return fail(response, 403, "You are not part of this booking.");
+  }
+  response.json(rental);
 });
 
 // Owner accepts or declines a request.
@@ -76,7 +83,7 @@ bookingsRouter.patch("/:id/status", (request, response) => {
   if (!["confirmed", "declined"].includes(status)) {
     return fail(response, 400, 'status must be "confirmed" or "declined".');
   }
-  if (!sameId(rental.ownerId, currentUserId(request))) {
+  if (!sameId(rental.ownerId, request.currentUserId)) {
     return fail(response, 403, "Only the owner can respond to this request.");
   }
   if (rental.status !== "requested") return fail(response, 409, `Booking is already ${rental.status}.`);
