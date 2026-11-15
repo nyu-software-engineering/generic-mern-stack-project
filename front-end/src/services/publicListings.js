@@ -1,11 +1,15 @@
 import { api, ApiError } from './api.js'
+import { cacheListing } from './mockDataService.js'
 
-export function searchListings({ search = '', category = '' } = {}) {
+export async function searchListings({ search = '', category = '', signal } = {}) {
   const params = new URLSearchParams()
   if (search) params.set('search', search)
   if (category) params.set('category', category)
   const query = params.toString()
-  return api(query ? `/listings?${query}` : '/listings')
+  const listings = await api(query ? `/listings?${query}` : '/listings')
+  // Existing save and booking flows still read from the shared client cache.
+  if (!signal?.aborted) listings.forEach(cacheListing)
+  return listings
 }
 
 export async function getPublicListing(id) {

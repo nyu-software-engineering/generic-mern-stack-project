@@ -68,15 +68,16 @@ function ListingResults({ search, category, onClear }) {
   const [result, setResult] = useState(null)
 
   useEffect(() => {
-    let current = true
+    const request = new AbortController()
+    const { signal } = request
     const timer = setTimeout(() => {
-      searchListings({ search, category }).then(
-        (listings) => { if (current) setResult({ listings }) },
-        (error) => { if (current) setResult({ error: error.message }) },
+      searchListings({ search, category, signal }).then(
+        (listings) => { if (!signal.aborted) setResult({ listings }) },
+        (error) => { if (!signal.aborted) setResult({ error: error.message }) },
       )
     }, search ? 200 : 0)
     return () => {
-      current = false
+      request.abort()
       clearTimeout(timer)
     }
   }, [search, category, attempt])
