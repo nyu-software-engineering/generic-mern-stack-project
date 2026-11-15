@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, it } from "mocha";
 import { expect } from "chai";
 import { createApp } from "../app.js";
+import { earliestToday } from "../routes/bookings.js";
 import { mockData } from "./fixtures.js";
 import { startTestServer } from "./helpers/server.js";
 
@@ -50,7 +51,7 @@ describe("Booking routes (#91)", () => {
   describe("POST /api/bookings", () => {
     it("creates a requested booking in the shared data and prices it from the listing", async () => {
       const { status, body } = await api("POST", "", {
-        listingId: 2, startDate: "2026-12-01", endDate: "2026-12-04", message: "Hi!",
+        listingId: 2, startDate: "2030-12-01", endDate: "2030-12-04", message: "Hi!",
       });
 
       expect(status).to.equal(201);
@@ -62,35 +63,33 @@ describe("Booking routes (#91)", () => {
     });
 
     it("rejects a missing or non-integer listingId", async () => {
-      expect((await api("POST", "", { startDate: "2026-12-01", endDate: "2026-12-04" })).status).to.equal(400);
-      expect((await api("POST", "", { listingId: "2", startDate: "2026-12-01", endDate: "2026-12-04" })).status)
+      expect((await api("POST", "", { startDate: "2030-12-01", endDate: "2030-12-04" })).status).to.equal(400);
+      expect((await api("POST", "", { listingId: "2", startDate: "2030-12-01", endDate: "2030-12-04" })).status)
         .to.equal(400);
     });
 
     it("returns 404 for unknown, draft or paused listings", async () => {
       for (const listingId of [999, 3, 4]) {
-        const { status } = await api("POST", "", { listingId, startDate: "2026-12-01", endDate: "2026-12-04" });
+        const { status } = await api("POST", "", { listingId, startDate: "2030-12-01", endDate: "2030-12-04" });
         expect(status, `listing ${listingId}`).to.equal(404);
       }
     });
 
     it("rejects missing, malformed or backwards dates", async () => {
-      for (const dates of [{}, { startDate: "12/01/2026", endDate: "2026-12-04" },
-        { startDate: "2026-12-04", endDate: "2026-12-01" }, { startDate: "2026-12-04", endDate: "2026-12-04" }]) {
+      for (const dates of [{}, { startDate: "12/01/2030", endDate: "2030-12-04" },
+        { startDate: "2030-12-04", endDate: "2030-12-01" }, { startDate: "2030-12-04", endDate: "2030-12-04" }]) {
         expect((await api("POST", "", { listingId: 2, ...dates })).status).to.equal(400);
       }
     });
 
     it("rejects dates that do not exist on the calendar", async () => {
-      const valid = "2026-12-04";
-      for (const badDate of ["2026-13-01", "2026-00-10", "2026-04-31", "2026-02-30", "2026-02-29", "2100-02-29"]) {
-        const asStart = await api("POST", "", { listingId: 2, startDate: badDate, endDate: "2027-01-01" });
-        const asEnd = await api("POST", "", { listingId: 2, startDate: "2026-01-01", endDate: badDate });
+      for (const badDate of ["2030-13-01", "2030-00-10", "2030-04-31", "2030-02-30", "2030-02-29", "2100-02-29"]) {
+        const asStart = await api("POST", "", { listingId: 2, startDate: badDate, endDate: "2101-01-01" });
+        const asEnd = await api("POST", "", { listingId: 2, startDate: "2029-12-01", endDate: badDate });
         expect(asStart.status, `start ${badDate}`).to.equal(400);
         expect(asEnd.status, `end ${badDate}`).to.equal(400);
       }
-      expect((await api("POST", "", { listingId: 2, startDate: "2026-12-01", endDate: valid })).status).to.equal(201);
-      expect(data.rentals.every((rental) => Number.isFinite(rental.totalPrice))).to.equal(true);
+      expect(data.rentals).to.have.length(4);
     });
 
     it("accepts February 29 in leap years and prices across it", async () => {
@@ -106,12 +105,52 @@ describe("Booking routes (#91)", () => {
     });
 
     it("prices across month and year boundaries", async () => {
-      const { body } = await api("POST", "", { listingId: 2, startDate: "2026-12-30", endDate: "2027-01-02" });
+      const { body } = await api("POST", "", { listingId: 2, startDate: "2030-12-30", endDate: "2031-01-02" });
       expect(body.totalPrice).to.equal(4.5);
     });
 
+    it("rejects start dates that are already past everywhere, and allows today and later", async () => {
+      const shift = (isoDate, days) =>
+        new Date(Date.parse(`${isoDate}T00:00:00Z`) + days * 86400000).toISOString().slice(0, 10);
+      const today = earliestToday();
+
+      const yesterday = await api("POST", "", { listingId: 2, startDate: shift(today, -1), endDate: shift(today, 2) });
+      expect(yesterday.status).to.equal(400);
+      expect(yesterday.body.error).to.equal("startDate cannot be in the past.");
+      expect((await api("POST", "", { listingId: 2, startDate: "2020-01-01", endDate: "2020-01-02" })).status)
+        .to.equal(400);
+
+      expect((await api("POST", "", { listingId: 2, startDate: today, endDate: shift(today, 1) })).status).to.equal(201);
+      expect((await api("POST", "", { listingId: 2, startDate: shift(today, 30), endDate: shift(today, 33) })).status)
+        .to.equal(201);
+    });
+
+    it("treats today as the earliest calendar day anywhere (UTC-12)", () => {
+      expect(earliestToday(new Date("2026-11-15T11:59:00Z"))).to.equal("2026-11-14");
+      expect(earliestToday(new Date("2026-11-15T12:00:00Z"))).to.equal("2026-11-15");
+    });
+
+    it("rejects a total that overflows without changing the shared rentals", async () => {
+      data.listings.push({ ...data.listings[1], id: 5, title: "Gold kettle", price: 1e307 });
+      const { status, body } = await api("POST", "", { listingId: 5, startDate: "2030-12-01", endDate: "2030-12-04" });
+      expect(status).to.equal(400);
+      expect(body.error).to.equal("Booking total is too large.");
+      expect(data.rentals).to.have.length(4);
+    });
+
+    it("accepts a text message, defaults a missing one, and rejects other types", async () => {
+      const dates = { listingId: 2, startDate: "2030-12-01", endDate: "2030-12-04" };
+      expect((await api("POST", "", dates)).body.terms.message).to.equal("");
+      for (const message of [{ toString: null }, ["hi"], 5, null, true]) {
+        const { status, body } = await api("POST", "", { ...dates, message });
+        expect(status, JSON.stringify(message)).to.equal(400);
+        expect(body.error).to.equal("message must be text.");
+      }
+      expect(data.rentals).to.have.length(5);
+    });
+
     it("does not let an owner book their own listing", async () => {
-      const { status } = await api("POST", "", { listingId: 1, startDate: "2026-12-01", endDate: "2026-12-04" });
+      const { status } = await api("POST", "", { listingId: 1, startDate: "2030-12-01", endDate: "2030-12-04" });
       expect(status).to.equal(400);
     });
   });
@@ -170,7 +209,7 @@ describe("Booking routes (#91)", () => {
   });
 
   it("makes new bookings visible to other routes through the shared store", async () => {
-    const created = await api("POST", "", { listingId: 2, startDate: "2026-12-01", endDate: "2026-12-04" });
+    const created = await api("POST", "", { listingId: 2, startDate: "2030-12-01", endDate: "2030-12-04" });
     const mine = await fetch(`${server.baseUrl}/api/rentals/mine`).then((response) => response.json());
     expect(JSON.stringify(mine)).to.include(`"id":${created.body.id}`);
   });

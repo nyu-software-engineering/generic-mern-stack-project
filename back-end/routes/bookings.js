@@ -12,6 +12,12 @@ const isDate = (value) => {
   const date = new Date(`${value}T00:00:00Z`);
   return !Number.isNaN(date.getTime()) && date.toISOString().slice(0, 10) === value;
 };
+// The earliest calendar date that is "today" anywhere (UTC-12). The booking form
+// blocks start dates before the viewer's local today; the server can't see the
+// viewer's time zone, so it accepts any date that is today somewhere and rejects
+// dates that are already past everywhere.
+export const earliestToday = (now = new Date()) =>
+  new Date(now.getTime() - 12 * 60 * 60 * 1000).toISOString().slice(0, 10);
 const countDays = (start, end) => Math.round((new Date(end) - new Date(start)) / 86400000);
 const roundCents = (amount) => Math.round(amount * 100) / 100;
 
@@ -35,6 +41,8 @@ bookingsRouter.post("/", (request, response) => {
   const { data, currentUserId } = request;
   const { listingId, startDate, endDate, message = "" } = request.body ?? {};
 
+  if (typeof message !== "string") return fail(response, 400, "message must be text.");
+
   if (!Number.isSafeInteger(listingId) || listingId < 1) {
     return fail(response, 400, "A positive integer listingId is required.");
   }
@@ -43,7 +51,12 @@ bookingsRouter.post("/", (request, response) => {
   if (!isDate(startDate) || !isDate(endDate) || endDate <= startDate) {
     return fail(response, 400, "startDate and endDate must be YYYY-MM-DD, with endDate after startDate.");
   }
+  if (startDate < earliestToday()) return fail(response, 400, "startDate cannot be in the past.");
   if (sameId(listing.ownerId, currentUserId)) return fail(response, 400, "You cannot book your own listing.");
+
+  // A huge listing price can overflow to Infinity, which would break the shared data.
+  const totalPrice = roundCents(countDays(startDate, endDate) * listing.price);
+  if (!Number.isFinite(totalPrice)) return fail(response, 400, "Booking total is too large.");
 
   const rental = {
     id: Math.max(0, ...data.rentals.map((item) => item.id)) + 1,
@@ -53,8 +66,8 @@ bookingsRouter.post("/", (request, response) => {
     startDate,
     endDate,
     status: "requested",
-    terms: { pricePerDay: listing.price, rentalTerms: listing.rentalTerms, message: String(message) },
-    totalPrice: roundCents(countDays(startDate, endDate) * listing.price),
+    terms: { pricePerDay: listing.price, rentalTerms: listing.rentalTerms, message },
+    totalPrice,
     createdAt: new Date().toISOString().slice(0, 10),
     extensionRequest: null,
   };
