@@ -63,6 +63,23 @@ headers. This is the placeholder for #92, not a login system.
 Validation and option values live in `../shared/`. The frontend imports the same
 rules through its existing service and option paths.
 
+## Renter dashboard and saved items
+
+These routes use the server's current user and the shared mock listings and
+rentals. Saved items are stored in memory per user and reset on server restart.
+
+| Method | Path | Response |
+| --- | --- | --- |
+| GET | `/api/rentals/mine` | Rentals for the current borrower, with a `listingTitle` field |
+| GET | `/api/saved-items` | The current user's saved listings that are still published |
+| POST | `/api/saved-items` | The saved listing, with 201 for a new save or 200 if already saved |
+| DELETE | `/api/saved-items` | 204, including when there is no matching save |
+
+POST and DELETE accept a JSON body such as `{ "listingId": 5 }`. Invalid IDs
+return 400. POST returns 404 for missing or unpublished listings and 403 for
+the current user's own listings. DELETE can remove a save even if the listing
+is unavailable. Frontend integration remains in #120.
+
 ## Owner listing routes
 
 `routes/ownerListings.js` handles #106 under `/api/listings`:
