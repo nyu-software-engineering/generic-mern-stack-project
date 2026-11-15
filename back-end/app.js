@@ -6,6 +6,7 @@ import { errorHandler } from "./middleware/errorHandler.js";
 import { mockDataRouter } from "./routes/mockData.js";
 import { ownerListingsRouter } from "./routes/ownerListings.js";
 import { publicListingsRouter } from "./routes/publicListings.js";
+import { createRenterDashboardRouter } from "./routes/renterDashboard.js";
 import { createMockDataStore } from "./services/mockData.js";
 
 const frontendDist = fileURLToPath(new URL("../front-end/dist/", import.meta.url));
@@ -23,6 +24,7 @@ export function createApp({ store = createMockDataStore() } = {}) {
     response.json({ status: "ok" });
   });
   app.use("/api", mockDataRouter);
+  app.use("/api", createRenterDashboardRouter());
   app.use("/api/listings", ownerListingsRouter);
   app.use("/api/listings", publicListingsRouter);
   app.use("/api", (_request, response) => {
