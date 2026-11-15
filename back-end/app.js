@@ -7,6 +7,7 @@ import { mockDataRouter } from "./routes/mockData.js";
 import { ownerListingsRouter } from "./routes/ownerListings.js";
 import { ownerDashboardRouter } from "./routes/ownerDashboard.js";
 import { publicListingsRouter } from "./routes/publicListings.js";
+import { communityRulesRouter, reportsRouter } from "./routes/reports.js";
 import { createRenterDashboardRouter } from "./routes/renterDashboard.js";
 import { createMockDataStore } from "./services/mockData.js";
 
@@ -29,6 +30,8 @@ export function createApp({ store = createMockDataStore() } = {}) {
   app.use("/api/listings", ownerListingsRouter);
   app.use("/api/listings", publicListingsRouter);
   app.use("/api/owner", ownerDashboardRouter);
+  app.use("/api/reports", reportsRouter);
+  app.use("/api/community-rules", communityRulesRouter);
   app.use("/api", (_request, response) => {
     response.status(404).json({ error: "API route not found." });
   });
