@@ -1,12 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { listingCategories, listingStatuses } from '../../data/options.js'
-import {
-  CURRENT_USER_ID,
-  getListingsForOwner,
-  updateListingStatus,
-} from '../../services/mockDataService.js'
-import { createListing, getMyListings, updateListing } from '../../services/listings.js'
+import { listingImage } from '../../services/bookings.js'
+import { createListing, getMyListings, updateListing, updateListingStatus } from '../../services/listings.js'
 
 const emptyForm = {
   title: '',
@@ -138,16 +134,26 @@ function MyListings({ initialFormOpen = false }) {
     }
   }
 
-  function publishListing(id) {
-    updateListingStatus(id, 'published')
-    setListings(getListingsForOwner(CURRENT_USER_ID))
-    setPreviewId(null)
+  async function changeListingStatus(id, status) {
+    if (mutationPending.current || loading || loadError) return
+    mutationPending.current = true
+    setPending(true)
+    setSaveError('')
+    try {
+      const savedListing = await updateListingStatus(id, status)
+      setListings((current) => current.map((listing) => listing.id === savedListing.id ? savedListing : listing))
+      if (previewId === id) setPreviewId(null)
+    } catch (error) {
+      setSaveError(error.message)
+    } finally {
+      mutationPending.current = false
+      setPending(false)
+    }
   }
 
   function toggleListingStatus(listing) {
     const nextStatus = listing.status === 'published' ? 'paused' : 'published'
-    updateListingStatus(listing.id, nextStatus)
-    setListings(getListingsForOwner(CURRENT_USER_ID))
+    changeListingStatus(listing.id, nextStatus)
   }
 
   function closeForm() {
@@ -188,6 +194,7 @@ function MyListings({ initialFormOpen = false }) {
         </div>
       )}
       {saveError && <p role="alert">{saveError}</p>}
+      {pending && !formOpen && <p role="status">Updating listing...</p>}
 
       {formOpen && (
         <form className="listing-form" onSubmit={saveListing} aria-busy={pending}>
@@ -274,7 +281,7 @@ function MyListings({ initialFormOpen = false }) {
       {previewListing && (
         <section className="preview-card">
           <h2>Listing preview</h2>
-          {previewListing.image && <img className="listing-image" src={previewListing.image} alt={previewListing.title} />}
+          <img className="listing-image" src={listingImage(previewListing.id)} alt={previewListing.title} />
           <p>{previewListing.category}</p>
           <h3>{previewListing.title}</h3>
           <p>{previewListing.description}</p>
@@ -293,7 +300,7 @@ function MyListings({ initialFormOpen = false }) {
             <button
               className="primary-button"
               type="button"
-              onClick={() => publishListing(previewListing.id)}
+              onClick={() => changeListingStatus(previewListing.id, 'published')}
               disabled={disabled}
             >
               Publish listing
@@ -339,7 +346,7 @@ function MyListings({ initialFormOpen = false }) {
           <div className="listing-grid">
             {visibleListings.map((listing) => (
               <article className="listing-card" key={listing.id}>
-                {listing.image && <img className="listing-image" src={listing.image} alt={listing.title} loading="lazy" />}
+                <img className="listing-image" src={listingImage(listing.id)} alt={listing.title} loading="lazy" />
                 <div>
                   <h3>{listing.title}</h3>
                   <p>{listing.category}</p>

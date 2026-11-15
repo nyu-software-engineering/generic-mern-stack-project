@@ -17,6 +17,22 @@ npm run dev
 
 Open <http://localhost:5173>. A page reading "Front-end health check: OK" means you good.
 
+## Owner listings
+
+Run Express alongside Vite using the [root setup instructions](../README.md#development-setup).
+My Listings loads from `GET /api/listings/mine`. The shared listing service uses
+POST to create drafts, PUT to edit details, and PATCH to publish or pause items.
+The `/listings/new` page opens the same form.
+
+The page shows loading and retry states. Failed writes keep form values and the
+previous listing status. Controls are disabled while saving to prevent duplicate
+requests. Successful responses update the shared client cache so existing Browse
+and booking readers see the changes. Listing images use the local placeholder.
+Backend changes stay in memory until Express restarts.
+
+`npm test` includes listing integration tests against a local Express server.
+Install dependencies in both `front-end` and `back-end` before running them.
+
 ## Scripts
 
 | Command           | What it does                            |
