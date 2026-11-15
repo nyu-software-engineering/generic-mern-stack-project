@@ -1,4 +1,4 @@
-// Booking routes (#91). Read and change rentals in the shared mock data store (#88);
+// Booking (#91), extension (#95) and cancellation (#99) routes. Read and change rentals in the shared mock data store (#88);
 // nothing is saved to a database yet.
 import { Router } from "express";
 
@@ -85,6 +85,19 @@ bookingsRouter.get("/requests", (request, response) => {
   );
 });
 
+// Extension requests waiting on the current user as owner (#95).
+// Declared before /:id so "extension-requests" isn't read as a booking id.
+bookingsRouter.get("/extension-requests", (request, response) => {
+  response.json(
+    request.data.rentals.filter(
+      (rental) =>
+        sameId(rental.ownerId, request.currentUserId) &&
+        rental.status === "extension_requested" &&
+        Boolean(rental.extensionRequest?.newEndDate),
+    ),
+  );
+});
+
 // Only the owner or borrower can see a booking.
 bookingsRouter.get("/:id", (request, response) => {
   const { rental, currentUserId } = request;
@@ -108,5 +121,75 @@ bookingsRouter.patch("/:id/status", (request, response) => {
   if (rental.status !== "requested") return fail(response, 409, `Booking is already ${rental.status}.`);
 
   rental.status = status;
+  response.json(rental);
+});
+
+// ---- Extensions (#95) ----
+
+// Borrower asks to return an active rental later.
+bookingsRouter.post("/:id/extensions", (request, response) => {
+  const { rental } = request;
+  const { newEndDate } = request.body ?? {};
+
+  if (!sameId(rental.borrowerId, request.currentUserId)) {
+    return fail(response, 403, "Only the borrower can request an extension.");
+  }
+  if (rental.status !== "active") return fail(response, 409, "Only active bookings can be extended.");
+  if (!isDate(newEndDate) || newEndDate <= rental.endDate) {
+    return fail(response, 400, "newEndDate must be a YYYY-MM-DD date after the current return date.");
+  }
+  if (newEndDate < earliestToday()) return fail(response, 400, "newEndDate cannot be in the past.");
+
+  rental.status = "extension_requested";
+  rental.extensionRequest = { newEndDate, status: "pending" };
+  response.status(201).json(rental);
+});
+
+// Owner approves or declines. Either way the rental goes back to active;
+// if approved, the return date moves and the extra days are added to the total.
+bookingsRouter.patch("/:id/extensions", (request, response) => {
+  const { rental } = request;
+  const { approve } = request.body ?? {};
+
+  if (typeof approve !== "boolean") return fail(response, 400, "approve must be true or false.");
+  if (!sameId(rental.ownerId, request.currentUserId)) {
+    return fail(response, 403, "Only the owner can respond to an extension.");
+  }
+  if (rental.status !== "extension_requested" || !rental.extensionRequest?.newEndDate) {
+    return fail(response, 409, "There is no pending extension request.");
+  }
+
+  const { newEndDate } = rental.extensionRequest;
+  if (approve) {
+    const pricePerDay = rental.terms?.pricePerDay ?? 0;
+    const totalPrice = roundCents(rental.totalPrice + countDays(rental.endDate, newEndDate) * pricePerDay);
+    if (!Number.isFinite(totalPrice)) return fail(response, 400, "Booking total is too large.");
+    rental.endDate = newEndDate;
+    rental.totalPrice = totalPrice;
+  }
+  rental.status = "active";
+  rental.extensionRequest = { newEndDate, status: approve ? "approved" : "declined" };
+  response.json(rental);
+});
+
+// ---- Cancellation (#99) ----
+
+// Before pickup: the borrower can withdraw a request; once confirmed, either
+// person can cancel. Owners decline requests instead of cancelling them.
+bookingsRouter.post("/:id/cancel", (request, response) => {
+  const { rental, currentUserId } = request;
+  const isBorrower = sameId(rental.borrowerId, currentUserId);
+  const isOwner = sameId(rental.ownerId, currentUserId);
+
+  if (!isBorrower && !isOwner) return fail(response, 403, "You are not part of this booking.");
+  const allowed = (rental.status === "requested" && isBorrower) || rental.status === "confirmed";
+  if (!allowed) {
+    const reason = rental.status === "requested"
+      ? "Owners decline requests instead of cancelling them."
+      : `A ${rental.status} booking cannot be cancelled.`;
+    return fail(response, 409, reason);
+  }
+
+  rental.status = "cancelled";
   response.json(rental);
 });
