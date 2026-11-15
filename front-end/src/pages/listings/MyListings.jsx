@@ -1,13 +1,12 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { listingCategories, listingStatuses } from '../../data/options.js'
 import {
   CURRENT_USER_ID,
-  createListing,
   getListingsForOwner,
-  updateListing,
   updateListingStatus,
 } from '../../services/mockDataService.js'
+import { createListing, getMyListings, updateListing } from '../../services/listings.js'
 
 const emptyForm = {
   title: '',
@@ -23,15 +22,38 @@ function formatStatus(status) {
 
 function MyListings({ initialFormOpen = false }) {
   const navigate = useNavigate()
-  const [listings, setListings] = useState(() =>
-    getListingsForOwner(CURRENT_USER_ID),
-  )
+  const [listings, setListings] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [loadError, setLoadError] = useState('')
+  const [loadAttempt, setLoadAttempt] = useState(0)
+  const [pending, setPending] = useState(false)
+  const [saveError, setSaveError] = useState('')
+  const mutationPending = useRef(false)
   const [formOpen, setFormOpen] = useState(initialFormOpen)
   const [editingId, setEditingId] = useState(null)
   const [form, setForm] = useState(emptyForm)
   const [previewId, setPreviewId] = useState(null)
   const [listingSearch, setListingSearch] = useState('')
   const [listingStatus, setListingStatus] = useState('all')
+
+  useEffect(() => {
+    let current = true
+    getMyListings().then(
+      (result) => {
+        if (!current) return
+        setListings(result)
+        setLoading(false)
+      },
+      (error) => {
+        if (!current) return
+        setLoadError(error.message)
+        setLoading(false)
+      },
+    )
+    return () => { current = false }
+  }, [loadAttempt])
+
+  const disabled = pending || loading || Boolean(loadError)
 
   const visibleListings = listings.filter((listing) => {
     const matchesStatus =
@@ -45,6 +67,7 @@ function MyListings({ initialFormOpen = false }) {
   const previewListing = listings.find((listing) => listing.id === previewId)
 
   function startNewListing() {
+    setSaveError('')
     setEditingId(null)
     setForm(emptyForm)
     setPreviewId(null)
@@ -52,6 +75,7 @@ function MyListings({ initialFormOpen = false }) {
   }
 
   function startEditing(listing) {
+    setSaveError('')
     setEditingId(listing.id)
     setForm({
       title: listing.title,
@@ -69,8 +93,9 @@ function MyListings({ initialFormOpen = false }) {
     setForm((current) => ({ ...current, [name]: value }))
   }
 
-  function saveListing(event) {
+  async function saveListing(event) {
     event.preventDefault()
+    if (mutationPending.current || loading || loadError) return
 
     const details = {
       title: form.title.trim(),
@@ -85,24 +110,32 @@ function MyListings({ initialFormOpen = false }) {
       !details.category ||
       !details.description ||
       !details.rentalTerms ||
-      !Number.isFinite(details.price) ||
+      !form.price.trim() || !Number.isFinite(details.price) ||
       details.price < 0
     ) {
       return
     }
 
-    const savedListing =
-      editingId === null
-        ? createListing(details)
-        : updateListing(editingId, details)
-
-    if (!savedListing) return
-
-    setListings(getListingsForOwner(CURRENT_USER_ID))
-    setFormOpen(false)
-    setEditingId(null)
-    setForm(emptyForm)
-    setPreviewId(savedListing.id)
+    mutationPending.current = true
+    setPending(true)
+    setSaveError('')
+    try {
+      const savedListing = editingId === null
+        ? await createListing(details)
+        : await updateListing(editingId, details)
+      setListings((current) => editingId === null
+        ? [savedListing, ...current]
+        : current.map((listing) => listing.id === savedListing.id ? savedListing : listing))
+      setFormOpen(false)
+      setEditingId(null)
+      setForm(emptyForm)
+      setPreviewId(savedListing.id)
+    } catch (error) {
+      setSaveError(error.message)
+    } finally {
+      mutationPending.current = false
+      setPending(false)
+    }
   }
 
   function publishListing(id) {
@@ -118,6 +151,7 @@ function MyListings({ initialFormOpen = false }) {
   }
 
   function closeForm() {
+    setSaveError('')
     setFormOpen(false)
     setEditingId(null)
     setForm(emptyForm)
@@ -136,19 +170,34 @@ function MyListings({ initialFormOpen = false }) {
           className="primary-button"
           type="button"
           onClick={startNewListing}
+          disabled={disabled}
         >
           Add listing
         </button>
       </header>
 
+      {loading && <p role="status">Loading your listings...</p>}
+      {loadError && (
+        <div role="alert">
+          <p>{loadError}</p>
+          <button type="button" onClick={() => {
+            setLoadError('')
+            setLoading(true)
+            setLoadAttempt((attempt) => attempt + 1)
+          }}>Try again</button>
+        </div>
+      )}
+      {saveError && <p role="alert">{saveError}</p>}
+
       {formOpen && (
-        <form className="listing-form" onSubmit={saveListing}>
+        <form className="listing-form" onSubmit={saveListing} aria-busy={pending}>
           <h2>{editingId === null ? 'New listing' : 'Edit listing'}</h2>
 
           <label>
             Item name
             <input
               name="title"
+              disabled={disabled}
               required
               value={form.title}
               onChange={updateForm}
@@ -159,6 +208,7 @@ function MyListings({ initialFormOpen = false }) {
             Category
             <select
               name="category"
+              disabled={disabled}
               required
               value={form.category}
               onChange={updateForm}
@@ -176,6 +226,7 @@ function MyListings({ initialFormOpen = false }) {
             Description
             <textarea
               name="description"
+              disabled={disabled}
               required
               rows="3"
               value={form.description}
@@ -187,6 +238,7 @@ function MyListings({ initialFormOpen = false }) {
             Price per day
             <input
               name="price"
+              disabled={disabled}
               required
               min="0"
               step="0.01"
@@ -200,6 +252,7 @@ function MyListings({ initialFormOpen = false }) {
             Rental terms
             <textarea
               name="rentalTerms"
+              disabled={disabled}
               required
               rows="3"
               value={form.rentalTerms}
@@ -208,10 +261,10 @@ function MyListings({ initialFormOpen = false }) {
           </label>
 
           <div className="form-actions">
-            <button className="primary-button" type="submit">
-              Save and preview
+            <button className="primary-button" type="submit" disabled={disabled}>
+              {pending ? 'Saving...' : 'Save and preview'}
             </button>
-            <button type="button" onClick={closeForm}>
+            <button type="button" onClick={closeForm} disabled={pending}>
               Cancel
             </button>
           </div>
@@ -233,6 +286,7 @@ function MyListings({ initialFormOpen = false }) {
             <button
               type="button"
               onClick={() => startEditing(previewListing)}
+              disabled={disabled}
             >
               Edit
             </button>
@@ -240,17 +294,18 @@ function MyListings({ initialFormOpen = false }) {
               className="primary-button"
               type="button"
               onClick={() => publishListing(previewListing.id)}
+              disabled={disabled}
             >
               Publish listing
             </button>
-            <button type="button" onClick={() => setPreviewId(null)}>
+            <button type="button" onClick={() => setPreviewId(null)} disabled={pending}>
               Close preview
             </button>
           </div>
         </section>
       )}
 
-      <section className="listings-section">
+      {!loading && !loadError && <section className="listings-section">
         <h2>My listings</h2>
 
         <div className="filters">
@@ -295,13 +350,14 @@ function MyListings({ initialFormOpen = false }) {
                 </div>
 
                 <div className="listing-actions">
-                  <button type="button" onClick={() => startEditing(listing)}>
+                  <button type="button" onClick={() => startEditing(listing)} disabled={disabled}>
                     Edit
                   </button>
                   {listing.status === 'draft' ? (
                     <button
                       type="button"
                       onClick={() => setPreviewId(listing.id)}
+                      disabled={disabled}
                     >
                       Preview
                     </button>
@@ -309,6 +365,7 @@ function MyListings({ initialFormOpen = false }) {
                     <button
                       type="button"
                       onClick={() => toggleListingStatus(listing)}
+                      disabled={disabled}
                     >
                       {listing.status === 'published' ? 'Pause' : 'Publish'}
                     </button>
@@ -318,7 +375,7 @@ function MyListings({ initialFormOpen = false }) {
             ))}
           </div>
         )}
-      </section>
+      </section>}
     </main>
   )
 }
