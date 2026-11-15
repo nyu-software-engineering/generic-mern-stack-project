@@ -1,11 +1,12 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import {
   CURRENT_USER_ID,
-  getListing,
   getUser,
   listingImage,
 } from '../../services/bookings'
+import { cacheListing } from '../../services/mockDataService.js'
+import { getPublicListing } from '../../services/publicListings.js'
 import {
   getSavedListings,
   isListingSaved,
@@ -16,26 +17,65 @@ import './browse.css'
 
 function ItemDetails() {
   const { id } = useParams()
-  const navigate = useNavigate()
+  return <ItemDetailsRequest key={id} id={id} />
+}
 
+function ItemDetailsRequest({ id }) {
+  const [attempt, setAttempt] = useState(0)
+  const [result, setResult] = useState(null)
+
+  useEffect(() => {
+    let current = true
+    getPublicListing(id)
+      .then((listing) => {
+        if (!current) return
+        // The booking form and saved-items service still read from this cache.
+        cacheListing(listing)
+        setResult({ listing })
+      })
+      .catch((error) => { if (current) setResult({ error }) })
+    return () => { current = false }
+  }, [id, attempt])
+
+  if (!result) {
+    return <main className="item-details-page"><p role="status">Loading item...</p></main>
+  }
+
+  if (result.error) {
+    const unavailable = result.error.status === 404
+    return (
+      <main className="item-details-page">
+        {unavailable ? (
+          <>
+            <h1>Item unavailable</h1>
+            <p>This listing could not be found or is no longer published.</p>
+          </>
+        ) : (
+          <>
+            <h1>Could not load item</h1>
+            <p role="alert">{result.error.message}</p>
+            <button type="button" onClick={() => {
+              setResult(null)
+              setAttempt((value) => value + 1)
+            }}>Try again</button>
+          </>
+        )}
+        <Link to="/browse">Back to browse</Link>
+      </main>
+    )
+  }
+
+  return <ListingDetails listing={result.listing} />
+}
+
+function ListingDetails({ listing }) {
+  const navigate = useNavigate()
   const [startDate, setStartDate] = useState('')
   const [endDate, setEndDate] = useState('')
   const [error, setError] = useState('')
   const [savedListings, setSavedListings] = useState(() =>
     getSavedListings(CURRENT_USER_ID),
   )
-  const listing = getListing(id)
-
-  if (!listing || listing.status !== 'published') {
-    return (
-      <main className="item-details-page">
-        <h1>Item unavailable</h1>
-        <p>This listing could not be found or is no longer published.</p>
-        <Link to="/browse">Back to browse</Link>
-      </main>
-    )
-  }
-
   const owner = getUser(listing.ownerId)
   const isOwnListing = listing.ownerId === CURRENT_USER_ID
 

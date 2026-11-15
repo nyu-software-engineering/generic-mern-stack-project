@@ -51,6 +51,16 @@ export function getListingsForOwner(ownerId) {
   return getListings().filter((listing) => sameId(listing.ownerId, ownerId))
 }
 
+// Keep legacy readers current after a successful listing API response.
+export function cacheListing(listing) {
+  const cached = structuredClone(listing)
+  const exists = listings.some((item) => sameId(item.id, cached.id))
+  listings = exists
+    ? listings.map((item) => sameId(item.id, cached.id) ? cached : item)
+    : [cached, ...listings]
+  return structuredClone(cached)
+}
+
 export function getRentals() {
   return structuredClone(rentals)
 }
