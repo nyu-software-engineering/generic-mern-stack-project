@@ -16,7 +16,7 @@ const ExpenseList = () => {
   });
 
   const selectedExpense = expenses.find(
-    (expense) => expense.id === selectedExpenseId
+    (expense) => expense.id === selectedExpenseId,
   );
 
   useEffect(() => {
@@ -54,14 +54,11 @@ const ExpenseList = () => {
     }
 
     try {
-      const response = await axios.post(
-        import.meta.env.VITE_EXPENSES_API_URL,
-        {
-          name: trimmedName,
-          description: trimmedDescription,
-          price: trimmedPrice,
-        }
-      );
+      const response = await axios.post(import.meta.env.VITE_EXPENSES_API_URL, {
+        name: trimmedName,
+        description: trimmedDescription,
+        price: trimmedPrice,
+      });
 
       setExpenses((prevExpenses) => [...prevExpenses, response.data]);
       setSelectedExpenseId(response.data.id);
@@ -91,10 +88,7 @@ const ExpenseList = () => {
           />
         </button>
 
-        <button
-          className="backButton"
-          onClick={() => navigate("/dashboard")}
-        >
+        <button className="backButton" onClick={() => navigate("/household")}>
           Back
         </button>
       </header>
