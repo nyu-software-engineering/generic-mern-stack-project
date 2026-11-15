@@ -23,32 +23,58 @@ export const communityRules = [
 ];
 
 const text = (value) => (typeof value === "string" ? value.trim() : "");
-const sameId = (first, second) => String(first) === String(second);
+const sameId = (first, second) => first === second || String(first) === String(second);
 
-// Returns the id as a string if it matches a record, otherwise an empty string.
-const knownId = (records, id) => {
-  const record = id === undefined ? undefined : records.find((item) => sameId(item.id, id));
-  return record ? String(record.id) : "";
-};
+// A record id sent by the client: absent, text, or a whole number. Anything else
+// (objects, arrays, booleans, floats) is rejected before any lookup runs.
+const isIdInput = (value) =>
+  value === undefined || value === null || typeof value === "string" || Number.isSafeInteger(value);
+const hasId = (value) => value !== undefined && value !== null && value !== "";
 
 reportsRouter.post("/", async (request, response) => {
   const { reason, description, imageName = "", rentalId, listingId, conversationId } = request.body ?? {};
   const trimmed = text(description);
-  if (!reportReasons.includes(reason) || !trimmed || typeof imageName !== "string") {
+  if (!reportReasons.includes(reason) || !trimmed || typeof imageName !== "string" ||
+      ![rentalId, listingId, conversationId].every(isIdInput)) {
     return response.status(400).json({ error: "Invalid report details." });
   }
 
   const data = await request.app.locals.mockDataStore.load();
+  const { currentUserId } = request;
+  // A report can only point at records the reporter is part of. Unknown records and
+  // other people's records get the same answer, so ids can't be probed.
+  const rental = hasId(rentalId)
+    ? data.rentals.find((item) => sameId(item.id, rentalId) &&
+        (sameId(item.ownerId, currentUserId) || sameId(item.borrowerId, currentUserId)))
+    : undefined;
+  const conversation = hasId(conversationId)
+    ? data.conversations.find((item) => sameId(item.id, conversationId) &&
+        item.participantIds.some((id) => sameId(id, currentUserId)))
+    : undefined;
+  if ((hasId(rentalId) && !rental) || (hasId(conversationId) && !conversation)) {
+    return response.status(400).json({ error: "Invalid report details." });
+  }
+
+  // A listing reached through the reporter's own rental or conversation is always
+  // allowed. One reported directly must be published or the reporter's own.
+  const viaRecord = rental?.listingId ?? conversation?.listingId;
+  const listing = viaRecord !== undefined
+    ? data.listings.find((item) => sameId(item.id, viaRecord))
+    : hasId(listingId)
+      ? data.listings.find((item) => sameId(item.id, listingId) &&
+          (item.status === "published" || sameId(item.ownerId, currentUserId)))
+      : undefined;
+  if (viaRecord === undefined && hasId(listingId) && !listing) {
+    return response.status(400).json({ error: "Invalid report details." });
+  }
+
   data.reports ??= [];
-  const rental = data.rentals.find((item) => sameId(item.id, rentalId));
-  const conversation = data.conversations.find((item) => sameId(item.id, conversationId));
   const report = {
     id: `DS-${data.reports.length + 101}`,
-    reporterId: request.currentUserId,
+    reporterId: currentUserId,
     rentalId: rental ? String(rental.id) : "",
     conversationId: conversation ? String(conversation.id) : "",
-    // Unknown ids are dropped, so a report can only point at real records.
-    listingId: knownId(data.listings, rental?.listingId ?? conversation?.listingId ?? listingId),
+    listingId: listing ? String(listing.id) : "",
     reason,
     description: trimmed,
     imageName: imageName.trim(),

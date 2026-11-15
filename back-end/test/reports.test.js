@@ -47,14 +47,6 @@ describe("Reporting routes (#118)", () => {
       expect(second.body.id).to.equal("DS-102");
     });
 
-    it("drops ids that match no record", async () => {
-      const response = await api("POST", "/reports", {
-        reason: "Other", description: "Odd.", rentalId: 999, conversationId: 999, listingId: 999,
-      });
-      expect(response.status).to.equal(201);
-      expect(response.body).to.include({ rentalId: "", conversationId: "", listingId: "" });
-    });
-
     it("links a conversation and takes the listing from it", async () => {
       const response = await api("POST", "/reports", { reason: "Unsafe listing", description: "Odd.", conversationId: 1 });
       expect(response.status).to.equal(201);
@@ -76,6 +68,95 @@ describe("Reporting routes (#118)", () => {
     it("leaves every link blank when none are given", async () => {
       const response = await api("POST", "/reports", { reason: "Other", description: "Odd." });
       expect(response.body).to.include({ rentalId: "", conversationId: "", listingId: "" });
+    });
+
+    it("rejects ids that match no record", async () => {
+      for (const body of [{ rentalId: 999 }, { conversationId: 999 }, { listingId: 999 }]) {
+        const response = await api("POST", "/reports", { reason: "Other", description: "Odd.", ...body });
+        expect(response.status).to.equal(400);
+      }
+      expect(data.reports ?? []).to.have.length(0);
+    });
+
+    describe("records the reporter is not part of (#132)", () => {
+      beforeEach(() => {
+        data.users.push({ id: "other-3", name: "Other" }, { id: "other-4", name: "Other 2" });
+        data.listings.push(
+          { ...data.listings[0], id: 2, ownerId: "other-3" },
+          { ...data.listings[0], id: 3, ownerId: "other-3", status: "draft" },
+        );
+        data.rentals.push({ ...data.rentals[0], id: 202, listingId: 2, ownerId: "other-3", borrowerId: "other-4" });
+        data.conversations.push({ id: 2, listingId: 2, participantIds: ["other-3", "other-4"], messages: [] });
+      });
+
+      it("rejects another pair's rental", async () => {
+        const response = await api("POST", "/reports", { reason: "Other", description: "Odd.", rentalId: 202 });
+        expect(response.status).to.equal(400);
+        expect(data.reports ?? []).to.have.length(0);
+      });
+
+      it("rejects another pair's conversation", async () => {
+        const response = await api("POST", "/reports", { reason: "Other", description: "Odd.", conversationId: 2 });
+        expect(response.status).to.equal(400);
+        expect(data.reports ?? []).to.have.length(0);
+      });
+
+      it("rejects the pair's records even when the reporter's own are also sent", async () => {
+        const response = await api("POST", "/reports", {
+          reason: "Other", description: "Odd.", rentalId: 101, conversationId: 2,
+        });
+        expect(response.status).to.equal(400);
+      });
+
+      it("treats another pair's records like unknown ones", async () => {
+        const others = await api("POST", "/reports", { reason: "Other", description: "Odd.", rentalId: 202 });
+        const unknown = await api("POST", "/reports", { reason: "Other", description: "Odd.", rentalId: 999 });
+        expect(others).to.deep.equal(unknown);
+      });
+
+      it("allows reporting another owner's published listing directly", async () => {
+        const response = await api("POST", "/reports", { reason: "Unsafe listing", description: "Odd.", listingId: 2 });
+        expect(response.status).to.equal(201);
+        expect(response.body.listingId).to.equal("2");
+      });
+
+      it("rejects another owner's unpublished listing", async () => {
+        const response = await api("POST", "/reports", { reason: "Other", description: "Odd.", listingId: 3 });
+        expect(response.status).to.equal(400);
+      });
+
+      it("still links a listing that was paused after the reporter's own rental", async () => {
+        data.listings[0].status = "paused";
+        const response = await api("POST", "/reports", { reason: "Damage", description: "Odd.", rentalId: 101 });
+        expect(response.status).to.equal(201);
+        expect(response.body.listingId).to.equal("1");
+      });
+    });
+
+    describe("malformed ids (#132)", () => {
+      for (const [name, value] of [
+        ["object with a null toString", { toString: null }],
+        ["array", [1]],
+        ["boolean", true],
+        ["fraction", 1.5],
+        ["nested object", { id: 1 }],
+      ]) {
+        for (const field of ["rentalId", "conversationId", "listingId"]) {
+          it(`rejects ${name} as ${field} with 400`, async () => {
+            const response = await api("POST", "/reports", { reason: "Other", description: "Odd.", [field]: value });
+            expect(response.status).to.equal(400);
+            expect(response.body).to.deep.equal({ error: "Invalid report details." });
+          });
+        }
+      }
+
+      it("accepts ids sent as text or left empty", async () => {
+        const text = await api("POST", "/reports", { reason: "Other", description: "Odd.", rentalId: "101" });
+        expect(text.status).to.equal(201);
+        const empty = await api("POST", "/reports", { reason: "Other", description: "Odd.", rentalId: "", listingId: null });
+        expect(empty.status).to.equal(201);
+        expect(empty.body).to.include({ rentalId: "", listingId: "" });
+      });
     });
 
     for (const [name, change] of [
