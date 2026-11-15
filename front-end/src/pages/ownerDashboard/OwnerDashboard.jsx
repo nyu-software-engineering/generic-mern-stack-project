@@ -17,7 +17,7 @@ function OwnerDashboard() {
 
   useEffect(() => {
     let current = true
-    getOwnerDashboard().then(
+    getOwnerDashboard({ search: rentalSearch, status: rentalStatus }).then(
       (result) => {
         if (!current) return
         setDashboard(result)
@@ -30,19 +30,9 @@ function OwnerDashboard() {
       },
     )
     return () => { current = false }
-  }, [attempt])
+  }, [rentalSearch, rentalStatus, attempt])
 
   const rentals = dashboard?.rentals ?? []
-
-  const visibleRentals = rentals.filter((rental) => {
-    const matchesStatus =
-      rentalStatus === 'all' || rental.status === rentalStatus
-    const searchText =
-      `${rental.listingTitle} ${rental.borrowerName} ${rental.borrowerId}`.toLowerCase()
-    const matchesSearch = searchText.includes(rentalSearch.trim().toLowerCase())
-
-    return matchesStatus && matchesSearch
-  })
 
   return (
     <main className="page">
@@ -77,12 +67,20 @@ function OwnerDashboard() {
             aria-label="Search rentals"
             placeholder="Search by item or borrower"
             value={rentalSearch}
-            onChange={(event) => setRentalSearch(event.target.value)}
+            onChange={(event) => {
+              setRentalSearch(event.target.value)
+              setLoading(true)
+              setError('')
+            }}
           />
           <select
             aria-label="Filter rentals by status"
             value={rentalStatus}
-            onChange={(event) => setRentalStatus(event.target.value)}
+            onChange={(event) => {
+              setRentalStatus(event.target.value)
+              setLoading(true)
+              setError('')
+            }}
           >
             <option value="all">All</option>
             {rentalStatuses.map((status) => (
@@ -103,11 +101,11 @@ function OwnerDashboard() {
           }}>Try again</button>
         </div>}
 
-        {!loading && !error && (visibleRentals.length === 0 ? (
+        {!loading && !error && (rentals.length === 0 ? (
           <p>No rentals match your search.</p>
         ) : (
           <div className="rental-grid">
-            {visibleRentals.map((rental) => (
+            {rentals.map((rental) => (
                 <article className="rental-card" key={rental.id}>
                   <div>
                     <h3>{rental.listingTitle}</h3>
