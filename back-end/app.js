@@ -14,6 +14,31 @@ app.get('/api/mockData', (req, res) => {
   res.json(data)
 })
 
+// new post testing
+let posts = []
+
+app.get('/api/posts', (req, res) => {
+  res.json(posts)
+})
+
+app.post('/api/posts', (req, res) => {
+  const { id, username, pfp, category, title, desc, date, time, location, image, 
+    includeBounty, bounty } = req.body
+  if (!title || !title.trim() || !desc || !desc.trim()) {
+    return res.status(400).json({ error: 'Title and description are required' })
+  }
+  if (includeBounty && (!bounty || !bounty.trim())) {
+    return res.status(400).json({ error: 'If including bounty, bounty is required' })
+  }
+  const newPost = {
+    id, username, pfp, category, title: title.trim(), desc: desc.trim(), date, time, 
+    location, image, includeBounty, bounty
+  }
+  posts.unshift(newPost)
+  // successfully created new post
+  res.status(201).json(newPost)
+})
+
 // resolved posts start from the mock data and new ones are added when a post is resolved
 let resolvedPosts = JSON.parse(fs.readFileSync(mockDataPath, 'utf8')).resolvedPosts
 
@@ -66,4 +91,3 @@ app.post('/api/account/password', (req, res) => {
 })
 
 export default app
-
