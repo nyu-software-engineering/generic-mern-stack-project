@@ -9,6 +9,7 @@ import SignIn from "./pages/SignIn";
 import { SavedContent } from "./shared_content/SavedContent";
 import { SavedCurrentBooking } from "./shared_content/SavedCurrentBookings";
 import Profile from "./pages/Profile";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const hideNavOn = ["/signin", "/signup"];
 
@@ -39,7 +40,14 @@ function AppContent() {
     <div className="phone-screen">
       <div className="page-content">
         <Routes>
-          <Route path="/" element={<HomePage />} />
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <HomePage />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/results" element={<ResultsPage />} />
           <Route path="/saved" element={<Saved />} />
           <Route path="/editsaved" element={<EditSaved />} />
