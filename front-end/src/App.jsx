@@ -42,8 +42,8 @@ function App() {
       .then(data => {
         // console.log('Mock posts:', data.posts)
 
-        setPostsData (prev => [...prev, ...data.posts])
-        setCount(prev => prev + data.posts.length)
+        // setPostsData (prev => [...prev, ...data.posts])
+        // setCount(prev => prev + data.posts.length)
         setConversations(data.conversations)
         setNotifications(data.notifications)
       })

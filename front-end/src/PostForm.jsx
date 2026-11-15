@@ -51,12 +51,14 @@ const PostForm = props => {
         if (props.origin === 'publish') {
             // props.setPostsData(prev => [formData, ...prev])
             // props.setCount(prev => prev + 1)
+            // const post = new FormData(e.currentTarget)
 
 
             fetch('/api/posts', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData),
+                // body: post
             })
             .then(res => res.json())
             .then(saved => {
@@ -74,7 +76,8 @@ const PostForm = props => {
 
     return (
         <>
-            {!props.isSubmitted && <form className='postForm' onSubmit={submitForm}>
+            {!props.isSubmitted && <form className='postForm' action='/api/posts' 
+                method='POST' encType='multipart/form-data' onSubmit={submitForm}>
                 <div className='types'>
                     <input 
                         type='button' 
@@ -177,7 +180,7 @@ const PostForm = props => {
                         onChange={e => {
                             setFormData({
                                 ...formData,
-                                image: URL.createObjectURL(e.target.files[0]) 
+                                image: URL.createObjectURL(e.target.files[0])
                             })
                         }}
                     />
