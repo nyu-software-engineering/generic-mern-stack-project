@@ -3,6 +3,7 @@ import { fileURLToPath } from "node:url";
 import express from "express";
 import { currentUser } from "./middleware/currentUser.js";
 import { errorHandler } from "./middleware/errorHandler.js";
+import { bookingsRouter } from "./routes/bookings.js";
 import { mockDataRouter } from "./routes/mockData.js";
 import { ownerListingsRouter } from "./routes/ownerListings.js";
 import { ownerDashboardRouter } from "./routes/ownerDashboard.js";
@@ -27,6 +28,7 @@ export function createApp({ store = createMockDataStore() } = {}) {
   });
   app.use("/api", mockDataRouter);
   app.use("/api", createRenterDashboardRouter());
+  app.use("/api/bookings", bookingsRouter);
   app.use("/api/listings", ownerListingsRouter);
   app.use("/api/listings", publicListingsRouter);
   app.use("/api/owner", ownerDashboardRouter);
