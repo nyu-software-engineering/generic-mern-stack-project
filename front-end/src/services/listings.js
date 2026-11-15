@@ -1,5 +1,24 @@
-import { getListings } from './mockDataService.js'
+import { api } from './api.js'
+import { cacheListing, getListings } from './mockDataService.js'
 
 export function getPublishedListings() {
   return getListings().filter((listing) => listing.status === 'published')
+}
+
+export async function getMyListings() {
+  const listings = await api('/listings/mine')
+  listings.forEach(cacheListing)
+  return listings
+}
+
+export async function createListing(details) {
+  return cacheListing(await api('/listings', { method: 'POST', body: details }))
+}
+
+export async function updateListing(id, details) {
+  return cacheListing(await api(`/listings/${encodeURIComponent(id)}`, { method: 'PUT', body: details }))
+}
+
+export async function updateListingStatus(id, status) {
+  return cacheListing(await api(`/listings/${encodeURIComponent(id)}/status`, { method: 'PATCH', body: { status } }))
 }
