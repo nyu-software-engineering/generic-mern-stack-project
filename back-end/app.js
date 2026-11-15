@@ -30,4 +30,23 @@ app.post('/api/profile', (req, res) => {
   res.json(profile)
 })
 
+// mock password kept in memory until real accounts are set up with the database
+let password = 'password123'
+
+app.post('/api/account/password', (req, res) => {
+  const { currentPassword, newPassword } = req.body
+  if (currentPassword !== password) {
+    return res.status(401).json({ error: 'Current password is incorrect.' })
+  }
+  if (!newPassword || newPassword.length < 8) {
+    return res.status(400).json({ error: 'New password must be at least 8 characters.' })
+  }
+  if (newPassword === currentPassword) {
+    return res.status(400).json({ error: 'New password must be different from your current one.' })
+  }
+  password = newPassword
+  res.json({ message: 'Password updated' })
+})
+
 export default app
+
