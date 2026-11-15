@@ -1,8 +1,8 @@
 import express from 'express' 
-import listings from "./data/listings.js";
+import listings from "../data/listings.js";
 
-const app = express();
-app.use(express.json());
+const app = express.Router();
+
 
 app.use((req, res, next) => {
     req.userId = req.header("x-user-id") || "user1";
