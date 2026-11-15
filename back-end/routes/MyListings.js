@@ -1,7 +1,8 @@
 import express from 'express' 
-import listings from "./data/listings.js";
+import listings from "../data/listings.js";
 
-const app = express();
+const app = express.Router();
+
 app.use(express.json());
 
 app.use((req, res, next) => {

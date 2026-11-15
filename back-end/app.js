@@ -1,12 +1,10 @@
 import express from 'express';
-import listings from "./data/listings.js";
+import listingsRouter from "./data/listings.js";
 
 const app = express();
 
 app.use(express.json());
 
-app.get("/api/listings", (req, res) => {
-    res.json(listings);
-});
+app.use("api/listings", listingsRouter)
 
 export default app;
