@@ -25,13 +25,25 @@ function App() {
   const [notifications, setNotifications] = useState([])
 
   useEffect(() => {
+    fetch('/api/posts')
+      .then(res => {
+        if (!res.ok) throw new Error('Failed to fetch posts')
+        return res.json()
+      })
+      .then(data => {
+        setPostsData(data)
+        setCount(data.length)
+      })
+      .catch(err => console.error(err))
+
+    // still including mock data
     fetch('/api/mockData')
       .then(res => res.json())
       .then(data => {
         // console.log('Mock posts:', data.posts)
 
-        setPostsData(data.posts)
-        setCount(data.posts.length)
+        setPostsData (prev => [...prev, ...data.posts])
+        setCount(prev => prev + data.posts.length)
         setConversations(data.conversations)
         setNotifications(data.notifications)
       })
