@@ -2,6 +2,9 @@
 import express from 'express' // ES module import style
 const app = express() // instantiate an Express object
 
+import initialSavedHotels from './mock/savedHotels.js';
+
+
 // use express's builtin body-parser middleware to parse any data included in a request
 app.use(express.json()) // decode JSON-formatted incoming POST data
 app.use(express.urlencoded({ extended: true })) // decode url-encoded incoming POST data
@@ -12,29 +15,10 @@ app.use('/static', express.static('public'))
 //NOTE: Above code is taken from SWE sample/example code from https://github.com/nyu-software-engineering/express-js-starter-app/blob/master/app.js
 
 // ===== SAVED HOTELS =====
-let savedHotels = [
-    {
-        id: "1",
-        name: "The Grand Hotel",
-        location: "Manhattan, New York",
-        date: "2026-12-04",
-        description: "Close to restaurants and shopping.",
-    },
-    {
-        id: "3",
-        name: "Hotel Aurora",
-        location: "Paris, France",
-        date: "2027-01-15",
-        description: "Ask for a room with a rooftop view.",
-    },
-    {
-        id: "7",
-        name: "Lotus Garden Resort",
-        location: "Kyoto, Japan",
-        date: "2027-04-02",
-        description: "Try the onsen baths.",
-    },
-]
+
+
+// this is mock data, it is stored in the mock data folder
+let savedHotels = initialSavedHotels.map((hotel) => ({ ...hotel }));
 
 app.get("/api/saved", (req, res) => {//get all saved hotels
     res.json(savedHotels);
