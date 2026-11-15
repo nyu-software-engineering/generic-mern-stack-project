@@ -6,7 +6,7 @@ import Card from "../components/Card";
 
 function Saved() {
   {/* use the useState to load up the saved array from db when we get a db */}
-  const { savedItems, removeSaved, updateDescription } = useSaved();
+  const { savedItems, loading, error, removeSaved, updateDescription } = useSaved();
 
   const [filterText, setFilterText] = useState("");
   const visibleItems = savedItems.filter((item) =>
@@ -31,15 +31,23 @@ function Saved() {
   }
 
   {/*modify for data base later*/}
-  const handleSave = (id, newDescription) => {
-    updateDescription(id, newDescription);
-    handleGoBack();
+  const handleSave = async (id, newDescription) => {
+    try {
+      await updateDescription(id, newDescription);
+      handleGoBack();
+    } catch (err) {
+      console.err(err.message);
+    }
   };
 
   {/*modify for data base later*/}
-  const handleDelete = (id) => { 
-    removeSaved(id);
-    handleGoBack();
+  const handleDelete = async (id) => {
+    try {
+      await removeSaved(id);      
+      handleGoBack();
+    } catch (err) {
+      alert(err.message);
+    }
   };
 
   if(currentView === 'noEdit'){
@@ -63,7 +71,11 @@ function Saved() {
 
         <h2>Saved Hotels</h2>
         
-      {savedItems.length === 0 ? (
+      {loading ? (
+        <p>Loading...</p>
+      ) : error ? (
+        <p>Couldn't load saved hotels: {error}</p>
+      ) : savedItems.length === 0 ? (
         <p>You haven't saved any hotels yet!</p>
       ) : visibleItems.length === 0 ? (
         <p>No saved hotels match "{filterText}".</p>
