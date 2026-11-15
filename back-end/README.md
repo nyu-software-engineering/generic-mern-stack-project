@@ -103,6 +103,25 @@ The owner router is mounted first so `/api/listings/mine` continues to return
 the current owner's listings in every status. Both routers use the same store.
 Frontend integration remains in #117.
 
+## Conversation routes
+
+`routes/conversations.js` handles #102 under `/api/conversations`:
+
+| Method | Path | Response |
+| --- | --- | --- |
+| GET | `/api/conversations` | Current user's conversations, newest message first |
+| GET | `/api/conversations/:id` | One conversation with all its messages |
+| POST | `/api/conversations/:id/messages` | Created text message, status 201 |
+
+POST accepts `{ "text": "..." }`. The text is trimmed and must not be empty;
+otherwise the route returns 400. The server sets the message `id`, `senderId`,
+`type`, and `sentAt`, and ignores those fields in the body. Message IDs are
+unique across all conversations.
+
+Unknown conversations return 404. Conversations the current user is not part of
+return 403. Messages stay in the shared store until restart. Offer routes follow
+in a separate issue.
+
 ## Tests
 
 ```sh

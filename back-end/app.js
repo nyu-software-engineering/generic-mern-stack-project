@@ -3,6 +3,7 @@ import { fileURLToPath } from "node:url";
 import express from "express";
 import { currentUser } from "./middleware/currentUser.js";
 import { errorHandler } from "./middleware/errorHandler.js";
+import { conversationsRouter } from "./routes/conversations.js";
 import { mockDataRouter } from "./routes/mockData.js";
 import { ownerListingsRouter } from "./routes/ownerListings.js";
 import { publicListingsRouter } from "./routes/publicListings.js";
@@ -25,6 +26,7 @@ export function createApp({ store = createMockDataStore() } = {}) {
   app.use("/api", mockDataRouter);
   app.use("/api/listings", ownerListingsRouter);
   app.use("/api/listings", publicListingsRouter);
+  app.use("/api/conversations", conversationsRouter);
   app.use("/api", (_request, response) => {
     response.status(404).json({ error: "API route not found." });
   });
