@@ -2,10 +2,8 @@
 import express from 'express' // ES module import style
 import session from 'express-session'
 const app = express() // instantiate an Express object
-import express from 'express'; // ES module import style
-const app = express(); // instantiate an Express object
 
-import initialSavedHotels from './mockData/hotelList.js';
+import initialSavedHotels from './mockData/savedHotels.js';
 
 // use express's builtin body-parser middleware to parse any data included in a request
 app.use(express.json()); // decode JSON-formatted incoming POST data
@@ -139,7 +137,7 @@ app.post('/api/saved', (req, res) => {
     location: hotel.location || '',
     date: hotel.date || '',
     description: hotel.description || '',
-    imageSrc: hotel.imageSrc || '',
+    imageSrc: hotel.imageSrc || '', //should change this later to match an image source for google places
   };
   savedHotels.push(newHotel);
   res.status(200);

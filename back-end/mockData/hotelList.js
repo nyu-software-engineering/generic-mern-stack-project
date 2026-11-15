@@ -1,4 +1,4 @@
-const initialSavedHotels = [
+const initialSearchHotels = [
   {
     id: '1',
     name: 'The Grand Hotel',
