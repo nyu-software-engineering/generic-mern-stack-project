@@ -40,7 +40,7 @@ test('loads once and keeps local changes when another page loads', async (t) => 
   await service.loadMockData()
 
   assert.equal(fetchMock.mock.callCount(), 1)
-  assert.equal(fetchMock.mock.calls[0].arguments[0], '/mock-api/dormshare.json')
+  assert.equal(fetchMock.mock.calls[0].arguments[0], '/api/mock-data')
   assert.equal(service.getListings()[0].title, 'Updated lamp')
   assert.equal(service.getReviews().length, 3)
   assert.equal(service.getUser('student-2').name, 'Online borrower')

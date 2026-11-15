@@ -1,22 +1,14 @@
 
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
-import { defineConfig, loadEnv } from 'vite'
+import { defineConfig } from 'vite'
 
-export default defineConfig(({ mode }) => {
-  const { MOCKAROO_API_KEY } = loadEnv(mode, '.', '')
-
-  return {
-    plugins: [react(), tailwindcss()],
-    server: {
-      proxy: {
-        '/mock-api': {
-          target: 'https://my.api.mockaroo.com',
-          changeOrigin: true,
-          headers: { 'X-API-Key': MOCKAROO_API_KEY || '' },
-          rewrite: (path) => path.replace(/^\/mock-api/, ''),
-        },
-      },
+export default defineConfig({
+  plugins: [react(), tailwindcss()],
+  server: {
+    // Send /api requests to the Express back-end, so pages can use relative paths.
+    proxy: {
+      '/api': 'http://127.0.0.1:3001',
     },
-  }
+  },
 })

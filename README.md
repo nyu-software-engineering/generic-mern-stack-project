@@ -122,13 +122,24 @@ From the repository root, start Express in one terminal:
 npm --prefix back-end run dev
 ```
 
-Until the frontend uses the backend API ([#89](https://github.com/agile-students-fall2026/generic-mern-stack-project-dormshare/issues/89)), add `MOCKAROO_API_KEY` to `front-end/.env.local` for Vite's existing Mockaroo proxy. Use `front-end/.env.example` as a template if the file is new. From the repository root, start Vite in a second terminal:
+From the repository root, start Vite in a second terminal:
 
 ```bash
 npm --prefix front-end run dev
 ```
 
-Open the URL printed by Vite. Express exposes its health check at <http://127.0.0.1:3001/api/health>. [Mockaroo setup](./mockaroo/README.md)
+Open the URL printed by Vite. Vite forwards `/api` requests to Express, so the frontend needs no API key of its own. Express exposes its health check at <http://127.0.0.1:3001/api/health>. [Mockaroo setup](./mockaroo/README.md)
+
+Frontend services call the backend through `api()` in `front-end/src/services/api.js`:
+
+```js
+import { api } from './api.js'
+
+export const getMyListings = () => api('/listings/mine')
+export const createListing = (details) => api('/listings', { method: 'POST', body: details })
+```
+
+`api()` returns the parsed JSON. Failed requests throw an `ApiError` with the route's `error` message, the HTTP `status`, and any per-field `errors`.
 
 ### Serve the frontend build with Express
 
@@ -139,7 +150,7 @@ npm --prefix front-end run build
 npm --prefix back-end start
 ```
 
-If Express is already running, build the frontend and use the running server. Open <http://127.0.0.1:3001> for the built app. Express serves the listing placeholder at `/listing-images/placeholder.png` and supports direct links such as `/browse`. Use Vite for pages that still load data through its Mockaroo proxy until #89 is integrated.
+If Express is already running, build the frontend and use the running server. Open <http://127.0.0.1:3001> for the built app. Express serves the listing placeholder at `/listing-images/placeholder.png` and supports direct links such as `/browse`.
 
 ### Run checks
 

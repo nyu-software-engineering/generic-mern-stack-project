@@ -1,4 +1,5 @@
 import { validateMockData } from '../../../shared/validateMockData.mjs'
+import { api } from './api.js'
 
 export const CURRENT_USER_ID = 'owner-1'
 
@@ -15,11 +16,9 @@ const sameId = (first, second) => String(first) === String(second)
 
 export function loadMockData() {
   if (!loading) {
-    loading = fetch('/mock-api/dormshare.json', { signal: AbortSignal.timeout(15000) })
-      .then(async (response) => {
-        if (!response.ok) throw new Error(`Could not load mock data (${response.status}).`)
-
-        const data = await response.json()
+    // The back-end fetches the shared Mockaroo data and keeps the API key private.
+    loading = api('/mock-data')
+      .then((data) => {
         validateMockData(data)
 
         users = data.users
