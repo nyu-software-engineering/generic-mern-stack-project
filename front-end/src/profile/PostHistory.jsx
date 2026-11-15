@@ -7,11 +7,11 @@ function PostHistory({ postsData }) {
   const [resolvedPosts, setResolvedPosts] = useState([])
   const navigate = useNavigate()
 
-  // resolving a post deletes it, so old posts come from mock data until the back-end keeps them
+  // resolved posts are kept by the back-end when a post is resolved
   useEffect(() => {
-    fetch('/api/mockData')
+    fetch('/api/posts/resolved')
       .then((res) => res.json())
-      .then((data) => setResolvedPosts(data.resolvedPosts))
+      .then((data) => setResolvedPosts(data))
       .catch((err) => console.error(err))
   }, [])
 

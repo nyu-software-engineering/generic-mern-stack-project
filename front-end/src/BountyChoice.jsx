@@ -40,6 +40,19 @@ const BountyChoice = props => {
     const submitForm = e => {
         e.preventDefault()
 
+        // keep the post in the user's history before removing it from the feed
+        const post = props.postsData[props.curr]
+        fetch('/api/posts/resolved', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                title: post.title,
+                category: post.category,
+                location: post.location,
+                date: post.date,
+            }),
+        }).catch(err => console.error(err))
+
         // show confirmation notice afterwards
         setIsSubmitted(true)
 
