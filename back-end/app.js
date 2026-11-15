@@ -2,7 +2,7 @@
 import express from 'express' // ES module import style
 const app = express() // instantiate an Express object
 
-import initialSavedHotels from './mock/savedHotels.js';
+import initialSavedHotels from './mockData/hotelList.js';
 
 
 // use express's builtin body-parser middleware to parse any data included in a request
