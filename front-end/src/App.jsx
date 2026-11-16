@@ -15,7 +15,7 @@ import Login from './pages/Login.jsx'
 import Register from './pages/Register.jsx'
 import BookingDetails from './pages/BookingDetails.jsx'
 import initialBookings from './data/bookings.json'
-import profileData from './profile1.json'
+import profileData from './users.json'
 // import initialServices from './services.json'
 import './App.css'
 
@@ -33,6 +33,7 @@ function App() {
   }, [])
 
   const updateService = (id, changes) => setServices(services.map(s => s.id === id ? { ...s, ...changes } : s))
+  const removeService = id => setServices(services.filter(s => s.id !== id))
   const [bookings, setBookings] = useState(initialBookings)
   const addBooking = booking => setBookings([...bookings, { ...booking, id: String(Date.now()), status: 'requested' }])
   const updateBooking = (id, changes) => setBookings(bookings.map(b => b.id === id ? { ...b, ...changes } : b))
@@ -74,8 +75,8 @@ function App() {
             {/* Profile page */}
             <Route path="/profile" element={<Profile setUser={setUser} profile={profile} services={services}/>} />
             <Route path="/profile/edit" element={<EditProfile profile={profile} setProfile={setProfile}/>}/>
-            <Route path="/profile/services" element={<MyServices profile={profile} setProfile={setProfile} services={services} updateService={updateService}/>}/>
-            <Route path="/profile/services/:serviceId/edit" element={<EditListing profile={profile} setProfile={setProfile} services={services} updateService={updateService}/>}/>
+            <Route path="/profile/services" element={<MyServices profile={profile} setProfile={setProfile} services={services} updateService={updateService} removeService={removeService}/>}/>
+            <Route path="/profile/services/:serviceId/edit" element={<EditListing profile={profile} services={services} updateService={updateService} removeService={removeService}/>}/>
 
             {/* Other */}
             <Route path="/login" element={<Navigate to="/" replace />}/>
