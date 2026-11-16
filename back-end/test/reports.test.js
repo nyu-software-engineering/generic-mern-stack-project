@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, it } from "mocha";
 import { expect } from "chai";
 import { createApp } from "../app.js";
+import { maxDescriptionLength } from "../routes/reports.js";
 import { createMockDataStore } from "../services/mockData.js";
 import { mockData } from "./fixtures.js";
 import { startTestServer } from "./helpers/server.js";
@@ -131,6 +132,74 @@ describe("Reporting routes (#118)", () => {
         expect(response.status).to.equal(201);
         expect(response.body.listingId).to.equal("1");
       });
+    });
+
+    describe("conflicting references", () => {
+      beforeEach(() => {
+        data.listings.push({ ...data.listings[0], id: 2, ownerId: "student-2" });
+        // The reporter is in a conversation about listing 2 and a rental for listing 1.
+        data.conversations.push({ id: 2, listingId: 2, participantIds: ["owner-1", "student-2"], messages: [] });
+      });
+
+      const send = (body) => api("POST", "/reports", { reason: "Damage", description: "Odd.", ...body });
+
+      it("rejects a rental and a conversation about different listings", async () => {
+        const response = await send({ rentalId: 101, conversationId: 2 });
+        expect(response.status).to.equal(400);
+        expect(response.body).to.deep.equal({ error: "Invalid report details." });
+        expect(data.reports ?? []).to.have.length(0);
+      });
+
+      it("rejects a direct listing that differs from the rental's", async () => {
+        expect((await send({ rentalId: 101, listingId: 2 })).status).to.equal(400);
+      });
+
+      it("rejects a direct listing that differs from the conversation's", async () => {
+        expect((await send({ conversationId: 1, listingId: 2 })).status).to.equal(400);
+      });
+
+      it("accepts references that all agree, with ids as text or numbers", async () => {
+        const response = await send({ rentalId: 101, conversationId: 1, listingId: "1" });
+        expect(response.status).to.equal(201);
+        expect(response.body).to.include({ rentalId: "101", conversationId: "1", listingId: "1" });
+      });
+    });
+
+    describe("description and image name limits", () => {
+      const send = (body) => api("POST", "/reports", { reason: "Other", description: "Odd.", ...body });
+
+      it("accepts a description of exactly the maximum length and rejects one longer", async () => {
+        expect((await send({ description: "a".repeat(maxDescriptionLength) })).status).to.equal(201);
+        expect((await send({ description: "a".repeat(maxDescriptionLength + 1) })).status).to.equal(400);
+      });
+
+      it("measures the description after trimming", async () => {
+        const response = await send({ description: ` ${"a".repeat(maxDescriptionLength)} ` });
+        expect(response.status).to.equal(201);
+      });
+
+      for (const name of ["photo.jpg", "my photo (1).png", "café’s.jpeg", "", "a".repeat(255)]) {
+        it(`accepts the image name "${name.slice(0, 20)}"`, async () => {
+          expect((await send({ imageName: name })).status).to.equal(201);
+        });
+      }
+
+      for (const [label, name] of [
+        ["a parent folder path", "../../etc/passwd"],
+        ["a Windows path", "C:\\photos\\a.png"],
+        ["a folder", "photos/a.png"],
+        ["angle brackets", "<script>alert(1)</script>.png"],
+        ["a control character", "a\u0000.png"],
+        ["a newline", "a\n.png"],
+        ["a right-to-left override", "photo\u202egpj.exe"],
+        ["a zero-width space", "a\u200b.png"],
+        ["a dot name", ".."],
+        ["more than 255 characters", "a".repeat(256)],
+      ]) {
+        it(`rejects an image name with ${label}`, async () => {
+          expect((await send({ imageName: name })).status).to.equal(400);
+        });
+      }
     });
 
     describe("malformed ids (#132)", () => {

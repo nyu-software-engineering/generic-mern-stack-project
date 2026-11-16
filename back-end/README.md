@@ -169,8 +169,10 @@ POST accepts a JSON body such as
 
 - `reason` must be one of `reportReasons` in the shared options: `Damage`,
   `Missing item`, `Unsafe listing`, or `Other`.
-- `description` must be non-blank text. It is trimmed. `imageName` is optional
-  text and defaults to an empty string.
+- `description` must be non-blank text of at most 2,000 characters after
+  trimming. `imageName` is optional text and defaults to an empty string. It must
+  be a plain file name of at most 255 characters, with no `/`, `\`, `<`, `>` or
+  control characters.
 - `rentalId`, `conversationId` and `listingId` are optional. Each must be text or
   a whole number, and `null` or an empty string means "not given". Any other
   type, such as an object, array or boolean, returns 400.
@@ -178,7 +180,9 @@ POST accepts a JSON body such as
   conversation is attached only if the current user is a participant. Unknown
   records and other people's records both return 400, so ids can't be probed.
 - The listing is taken from the attached rental or conversation. A `listingId`
-  sent on its own must be published or belong to the current user.
+  sent on its own must be published or belong to the current user. When more
+  than one of `rentalId`, `conversationId` and `listingId` is sent, they must all
+  be about the same listing, or the request returns 400.
 - Invalid details return 400 `Invalid report details.` without creating a report.
 
 The server assigns the report ID (`DS-101`, `DS-102`, ...), reporter, status and

@@ -31,10 +31,19 @@ const isIdInput = (value) =>
   value === undefined || value === null || typeof value === "string" || Number.isSafeInteger(value);
 const hasId = (value) => value !== undefined && value !== null && value !== "";
 
+export const maxDescriptionLength = 2000;
+const maxImageNameLength = 255;
+// A plain file name: no folders, angle brackets, control characters or invisible
+// text-direction marks (which can disguise an extension, as in "photo\u202egpj.exe").
+const isImageName = (value) =>
+  value.length <= maxImageNameLength && ![".", ".."].includes(value) &&
+  !/[\\/<>\u0000-\u001f\u007f\u200b-\u200f\u2028-\u202e\u2066-\u2069\ufeff]/.test(value);
+
 reportsRouter.post("/", async (request, response) => {
   const { reason, description, imageName = "", rentalId, listingId, conversationId } = request.body ?? {};
   const trimmed = text(description);
-  if (!reportReasons.includes(reason) || !trimmed || typeof imageName !== "string" ||
+  if (!reportReasons.includes(reason) || !trimmed || trimmed.length > maxDescriptionLength ||
+      typeof imageName !== "string" || !isImageName(imageName.trim()) ||
       ![rentalId, listingId, conversationId].every(isIdInput)) {
     return response.status(400).json({ error: "Invalid report details." });
   }
@@ -52,6 +61,13 @@ reportsRouter.post("/", async (request, response) => {
         item.participantIds.some((id) => sameId(id, currentUserId)))
     : undefined;
   if ((hasId(rentalId) && !rental) || (hasId(conversationId) && !conversation)) {
+    return response.status(400).json({ error: "Invalid report details." });
+  }
+
+  // Every reference must agree on one listing, so a moderator sees a consistent report.
+  const linkedListingIds = [rental?.listingId, conversation?.listingId, hasId(listingId) ? listingId : undefined]
+    .filter((id) => id !== undefined);
+  if (!linkedListingIds.every((id) => sameId(id, linkedListingIds[0]))) {
     return response.status(400).json({ error: "Invalid report details." });
   }
 
