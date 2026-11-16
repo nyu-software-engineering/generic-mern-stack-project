@@ -2,11 +2,12 @@ import { Link, useParams } from "react-router-dom";
 import { useSaved } from "../shared_content/SavedContent";
 import { useCurBookings } from "../shared_content/SavedCurrentBookings";
 import "./HotelDetails.css";
+import initialSearchHotels from "../../../back-end/mockData/hotelList";
 
 function HotelDetails() {
   const { id } = useParams();
 
-  const hotel = mockHotels.find((item) => item.id === id);
+  const hotel = initialSearchHotels.find((item) => item.id === id);
 
   const { isSaved, toggleSaved } = useSaved();
   const { isBookingSaved, toggleBookingSaved} = useCurBookings();
