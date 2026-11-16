@@ -76,3 +76,16 @@ front-end/
 └── README.md
 ```
 
+## Owner dashboard
+
+The owner dashboard uses `GET /api/owner/dashboard` through the shared API helper.
+Search and status filters are sent to the backend. Summary totals cover all of
+the owner's rentals and stay unchanged by filters. Active rentals include items
+awaiting an extension decision. Recorded income includes completed rentals only.
+
+The page shows loading and retry states. It preserves selected filters on errors
+and ignores older responses after filters change. The last loaded summary stays
+visible while results refresh, and stale rental rows are hidden.
+
+Dashboard integration tests run against a local Express server, so install both
+frontend and backend dependencies before running `npm test`.
