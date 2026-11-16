@@ -1,5 +1,7 @@
 import { useState } from 'react'
+import { useEffect } from 'react'
 import { Navigate, NavLink, Route, Routes } from 'react-router'
+import axios from 'axios'
 import Home from './pages/Home.jsx'
 import Search from './pages/Search.jsx'
 import Profile from './pages/Profile.jsx'
@@ -14,13 +16,22 @@ import Register from './pages/Register.jsx'
 import BookingDetails from './pages/BookingDetails.jsx'
 import initialBookings from './data/bookings.json'
 import profileData from './profile1.json'
-import initialServices from './services.json'
+// import initialServices from './services.json'
 import './App.css'
 
 function App() {
   const [user, setUser] = useState(null)
   const [profile, setProfile] = useState(profileData[0])
-  const [services, setServices] = useState(initialServices)
+  const [services, setServices] = useState([])
+
+  useEffect(() => {
+    async function getServices(){
+      const response = await axios("/api/services")
+      setServices(response.data)
+    }
+    getServices()
+  }, [])
+
   const updateService = (id, changes) => setServices(services.map(s => s.id === id ? { ...s, ...changes } : s))
   const [bookings, setBookings] = useState(initialBookings)
   const addBooking = booking => setBookings([...bookings, { ...booking, id: String(Date.now()), status: 'requested' }])
