@@ -51,10 +51,20 @@ describe('Owner dashboard API integration (#112)', () => {
     })
   }
 
-  for (const search of ['  dEsK  ', 'Online borrower', 'student-2']) {
-    it(`sends the search query ${JSON.stringify(search)} to the API`, async () => {
+  it('searches listing titles ignoring case and surrounding whitespace', async () => {
+    const result = await getOwnerDashboard({ search: '  dEsK  ' })
+    assert.equal(result.rentals.length, 7)
+    assert.deepEqual(result.summary, summary)
+  })
+
+  for (const search of ['Online borrower', 'student-2']) {
+    it(`searches ${JSON.stringify(search)} and excludes other borrowers`, async () => {
+      data.users.push({ id: 'student-3', name: 'Another borrower' })
+      data.rentals[0].borrowerId = 'student-3'
+
       const result = await getOwnerDashboard({ search })
-      assert.equal(result.rentals.length, 7)
+      assert.deepEqual(result.rentals.map((rental) => rental.id), [102, 103, 104, 105, 106, 107])
+      assert(result.rentals.every((rental) => rental.borrowerId === 'student-2'))
       assert.deepEqual(result.summary, summary)
     })
   }
