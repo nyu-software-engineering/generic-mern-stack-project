@@ -1,16 +1,30 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import "./Explore.css";
 import ListingCard from "../components/ListingCard";
-import mockListings from "../mockListings";
 
 function Explore({ savedIds, onToggleSave }) {
+    const [listings, setListings] = useState([]);
     const [location, setLocation] = useState("");
     const [maxPrice, setMaxPrice] = useState("");
     const [availableDate, setAvailableDate] = useState("");
     const [showFilters, setShowFilters] = useState(false);
 
-    const filteredListings = mockListings.filter((listing) => {
+    useEffect(() => {
+        async function getListings() {
+            try {
+                const response = await axios("/api/listings");
+                setListings(response.data);
+            } catch (error) {
+                console.error("Error fetching listings:", error);
+            }
+        }
+
+        getListings();
+    }, []);
+
+    const filteredListings = listings.filter((listing) => {
         const matchesLocation = listing.location.toLowerCase().includes(location.toLowerCase().trim());
         const price = Number(listing.price.replace(/[$,]/g, ""));
         const matchesPrice = maxPrice === "" || price <= Number(maxPrice);
