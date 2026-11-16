@@ -21,6 +21,16 @@ export const earliestToday = (now = new Date()) =>
 const countDays = (start, end) => Math.round((new Date(end) - new Date(start)) / 86400000);
 const roundCents = (amount) => Math.round(amount * 100) / 100;
 
+const isRate = (value) => Number.isFinite(value) && value >= 0;
+
+// Daily rate for a booking: the agreed rate stored on it, falling back to the
+// listing's current price like the frontend dailyRate(). Null if neither is usable.
+const dailyRate = (data, rental) => {
+  if (isRate(rental.terms?.pricePerDay)) return rental.terms.pricePerDay;
+  const listingPrice = data.listings.find((listing) => listing.id === rental.listingId)?.price;
+  return isRate(listingPrice) ? listingPrice : null;
+};
+
 const fail = (response, status, error) => response.status(status).json({ error });
 
 // Load the shared data before every booking route.
@@ -161,7 +171,8 @@ bookingsRouter.patch("/:id/extensions", (request, response) => {
 
   const { newEndDate } = rental.extensionRequest;
   if (approve) {
-    const pricePerDay = rental.terms?.pricePerDay ?? 0;
+    const pricePerDay = dailyRate(request.data, rental);
+    if (pricePerDay === null) return fail(response, 409, "This booking has no usable daily rate.");
     const totalPrice = roundCents(rental.totalPrice + countDays(rental.endDate, newEndDate) * pricePerDay);
     if (!Number.isFinite(totalPrice)) return fail(response, 400, "Booking total is too large.");
     rental.endDate = newEndDate;

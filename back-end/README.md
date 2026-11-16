@@ -179,8 +179,11 @@ PATCH `/:id/extensions` accepts `{ "approve": true }` or `{ "approve": false }`.
 Only the owner can answer (403), and only a pending request (409). Either way the
 booking returns to `active`, and `extensionRequest.status` becomes `approved` or
 `declined`. Approving moves `endDate` to `newEndDate` and adds
-`days × terms.pricePerDay` to `totalPrice`. A total too large to store returns
-400 without changing the booking.
+`days × daily rate` to `totalPrice`. The daily rate is the agreed
+`terms.pricePerDay`; if that is missing or not a valid amount, it falls back to
+the listing's current price, like the frontend `dailyRate()`. If neither is
+usable, approving returns 409 without changing the booking (declining still
+works). A total too large to store returns 400 without changing the booking.
 
 POST `/:id/cancel` takes no body. Before pickup, the borrower can withdraw a
 `requested` booking, and either person can cancel a `confirmed` one. Owners

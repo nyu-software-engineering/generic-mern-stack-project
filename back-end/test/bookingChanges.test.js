@@ -151,6 +151,50 @@ describe("Extension (#95) and cancellation (#99) routes", () => {
       expect(rental(303).totalPrice).to.equal(35);
     });
 
+    it("falls back to the listing price when the booking has no stored daily rate", async () => {
+      const { pricePerDay, ...termsWithoutRate } = rental(303).terms;
+      expect(pricePerDay).to.equal(5);
+      rental(303).terms = termsWithoutRate;
+      data.listings[0].price = 4;
+
+      const { status, body } = await api("PATCH", "/303/extensions", { approve: true });
+      expect(status).to.equal(200);
+      expect(body).to.include({ endDate: "2030-01-08", totalPrice: 32 });
+      expect(() => validateMockData(data)).not.to.throw();
+    });
+
+    it("treats an unusable stored rate as missing", async () => {
+      data.listings[0].price = 4;
+      for (const badRate of ["5", -1, null]) {
+        Object.assign(rental(303), {
+          terms: { ...rental(303).terms, pricePerDay: badRate },
+          status: "extension_requested", endDate: "2030-01-05", totalPrice: 20,
+        });
+        const { body } = await api("PATCH", "/303/extensions", { approve: true });
+        expect(body.totalPrice, String(badRate)).to.equal(32);
+      }
+    });
+
+    it("keeps the agreed rate even if the listing price changed", async () => {
+      data.listings[0].price = 100;
+      const { body } = await api("PATCH", "/303/extensions", { approve: true });
+      expect(body.totalPrice).to.equal(35);
+    });
+
+    it("refuses to approve when there is no usable rate, without changing the rental", async () => {
+      const { pricePerDay: _unused, ...termsWithoutRate } = rental(303).terms;
+      rental(303).terms = termsWithoutRate;
+      data.listings[0].price = Number.NaN;
+
+      const { status, body } = await api("PATCH", "/303/extensions", { approve: true });
+      expect(status).to.equal(409);
+      expect(body.error).to.equal("This booking has no usable daily rate.");
+      expect(rental(303)).to.include({ status: "extension_requested", endDate: "2030-01-05", totalPrice: 20 });
+
+      const declined = await api("PATCH", "/303/extensions", { approve: false });
+      expect(declined.body.extensionRequest.status).to.equal("declined");
+    });
+
     it("rejects an overflowing total without changing the rental", async () => {
       rental(303).terms = { ...rental(303).terms, pricePerDay: 1e308 };
       const { status } = await api("PATCH", "/303/extensions", { approve: true });
