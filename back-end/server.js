@@ -1,13 +1,15 @@
-require("dotenv").config();
+#!/usr/bin/env node
 
-const app = require("./app");
+import server from './app.js'
 
-const port = process.env.PORT || 5002;
+const port = 3000
 
-const listener = app.listen(port, () => {
-  console.log(`Flier server running on port ${port}`);
-});
+const listener = server.listen(port, function () {
+  console.log(`Server running on port: ${port}`)
+})
 
-module.exports = {
-  close: () => listener.close(),
-};
+const close = () => {
+  listener.close()
+}
+
+export { close }
