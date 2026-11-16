@@ -15,7 +15,7 @@ import Login from './pages/Login.jsx'
 import Register from './pages/Register.jsx'
 import BookingDetails from './pages/BookingDetails.jsx'
 import initialBookings from './data/bookings.json'
-import profileData from './profile1.json'
+import profileData from './users.json'
 // import initialServices from './services.json'
 import './App.css'
 
