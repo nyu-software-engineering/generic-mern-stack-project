@@ -1,27 +1,9 @@
 import { Link } from 'react-router-dom'
 import { listingImage } from '../services/bookings'
-import { useState } from 'react'
 import { CURRENT_USER_ID } from '../services/mockDataService.js'
-import {
-  isListingSaved,
-  saveListing,
-  unsaveListing,
-} from '../services/savedItems.js'
+import SaveListingButton from './SaveListingButton.jsx'
 
 function ListingCard({ listing }) {
-    const [saved, setSaved] = useState(() =>
-    isListingSaved(CURRENT_USER_ID, listing.id),
-  )
-
-  function handleToggleSave() {
-    if (isListingSaved(CURRENT_USER_ID, listing.id)) {
-      unsaveListing(CURRENT_USER_ID, listing.id)
-    } else {
-      saveListing(CURRENT_USER_ID, listing.id)
-    }
-
-    setSaved(isListingSaved(CURRENT_USER_ID, listing.id))
-  }
   return (
     <article className="listing-card">
       <img
@@ -40,13 +22,7 @@ function ListingCard({ listing }) {
       <p>{listing.description}</p>
       <p>${listing.price.toFixed(2)} / day</p>
       {listing.ownerId !== CURRENT_USER_ID && (
-        <button
-          type="button"
-          aria-pressed={saved}
-          onClick={handleToggleSave}
-        >
-          {saved ? 'Unsave item' : 'Save item'}
-        </button>
+        <SaveListingButton listing={listing} />
       )}
     </article>
   )

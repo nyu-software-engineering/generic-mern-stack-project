@@ -1,61 +1,51 @@
-import { useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import SaveListingButton, { SavedItemsStatus } from '../../components/SaveListingButton.jsx'
+import { SavedItemsContext } from '../../context/SavedItemsContext.js'
 import { rentalStatuses } from '../../data/options.js'
-import {
-  CURRENT_USER_ID,
-  getListings,
-  getRentals,
-} from '../../services/mockDataService.js'
-import { displayStatus as getDisplayStatus, formatDate } from '../../services/bookings'
-import {
-  getSavedListings,
-  unsaveListing,
-} from '../../services/savedItems.js'
+import { displayStatus, formatDate } from '../../services/bookings'
+import { getMyRentals } from '../../services/renterDashboard.js'
 
 function formatStatus(status) {
   const label = status.replaceAll('_', ' ')
   return label.charAt(0).toUpperCase() + label.slice(1)
 }
 
-function RenterDashboard() {
+function RentalActivity() {
   const [selectedStatus, setSelectedStatus] = useState('all')
+  const [result, setResult] = useState(null)
+  const [attempt, setAttempt] = useState(0)
 
-  const [savedListings, setSavedListings] = useState(() =>
-    getSavedListings(CURRENT_USER_ID),
-  )
+  useEffect(() => {
+    let current = true
+    getMyRentals().then(
+      (rentals) => { if (current) setResult({ rentals }) },
+      (error) => { if (current) setResult({ error }) },
+    )
+    return () => { current = false }
+  }, [attempt])
 
-  function handleUnsave(listingId) {
-    unsaveListing(CURRENT_USER_ID, listingId)
-    setSavedListings(getSavedListings(CURRENT_USER_ID))
+  if (!result) return <p role="status">Loading rentals...</p>
+
+  if (result.error) {
+    return (
+      <div>
+        <p role="alert">Could not load rentals. {result.error.message}</p>
+        <button type="button" onClick={() => {
+          setResult(null)
+          setAttempt((value) => value + 1)
+        }}>Retry rentals</button>
+      </div>
+    )
   }
 
-  const listings = getListings()
-  const rentals = getRentals().filter(
-    (rental) => rental.borrowerId === CURRENT_USER_ID,
-  )
-
-  const now = new Date()
-  const today =
-    `${now.getFullYear()}-` +
-    `${String(now.getMonth() + 1).padStart(2, '0')}-` +
-    `${String(now.getDate()).padStart(2, '0')}`
-
+  const { rentals } = result
   const visibleRentals = rentals.filter(
-    (rental) =>
-      selectedStatus === 'all' ||
-      getDisplayStatus(rental, today) === selectedStatus,
+    (rental) => selectedStatus === 'all' || displayStatus(rental) === selectedStatus,
   )
 
   return (
-    <main className="page">
-      <header className="page-header">
-        <div>
-          <h1>My Rentals</h1>
-          <p>Track your rental requests and borrowed items.</p>
-          <Link to="/browse">Browse items</Link>
-        </div>
-      </header>
-
+    <>
       <div className="filters">
         <label htmlFor="rental-status">Rental status</label>
         <select
@@ -72,9 +62,7 @@ function RenterDashboard() {
         </select>
       </div>
 
-      <p aria-live="polite">
-        {visibleRentals.length} rentals found
-      </p>
+      <p aria-live="polite">{visibleRentals.length} rentals found</p>
 
       {visibleRentals.length === 0 ? (
         <p>
@@ -84,58 +72,57 @@ function RenterDashboard() {
         </p>
       ) : (
         <section className="rental-grid" aria-label="Your rentals">
-          {visibleRentals.map((rental) => {
-            const listing = listings.find(
-              (item) => item.id === rental.listingId,
-            )
-
-            return (
-              <article className="rental-card" key={rental.id}>
-                <div>
-                  <h2>{listing?.title ?? 'Listing unavailable'}</h2>
-                  <p>
-                    {formatDate(rental.startDate)} –{' '}
-                    {formatDate(rental.endDate)}
-                  </p>
-                  <p>Total: ${rental.totalPrice.toFixed(2)}</p>
-                  <Link to={`/bookings/${rental.id}`}>
-                    View booking
-                  </Link>
-                </div>
-                <span className="rental-status">
-                  {formatStatus(getDisplayStatus(rental, today))}
-                </span>
-              </article>
-            )
-          })}
+          {visibleRentals.map((rental) => (
+            <article className="rental-card" key={rental.id}>
+              <div>
+                <h2>{rental.listingTitle}</h2>
+                <p>{formatDate(rental.startDate)} – {formatDate(rental.endDate)}</p>
+                <p>Total: ${rental.totalPrice.toFixed(2)}</p>
+                <Link to={`/bookings/${rental.id}`}>View booking</Link>
+              </div>
+              <span className="rental-status">{formatStatus(displayStatus(rental))}</span>
+            </article>
+          ))}
         </section>
       )}
-          <section aria-labelledby="saved-items-heading">
-        <h2 id="saved-items-heading">Saved items</h2>
+    </>
+  )
+}
 
-        {savedListings.length === 0 ? (
+function RenterDashboard() {
+  const { savedListings } = useContext(SavedItemsContext)
+
+  return (
+    <main className="page">
+      <header className="page-header">
+        <div>
+          <h1>My Rentals</h1>
+          <p>Track your rental requests and borrowed items.</p>
+          <Link to="/browse">Browse items</Link>
+        </div>
+      </header>
+
+      <RentalActivity />
+
+      <section aria-labelledby="saved-items-heading">
+        <h2 id="saved-items-heading">Saved items</h2>
+        <SavedItemsStatus />
+
+        {savedListings?.length === 0 && (
           <p>No saved items yet. Browse items to save something for later.</p>
-        ) : (
+        )}
+
+        {savedListings?.length > 0 && (
           <div className="listing-grid">
             {savedListings.map((listing) => (
               <article className="listing-card" key={listing.id}>
                 <div>
-                  <h3>
-                    <Link to={`/browse/${listing.id}`}>
-                      {listing.title}
-                    </Link>
-                  </h3>
+                  <h3><Link to={`/browse/${listing.id}`}>{listing.title}</Link></h3>
                   <p>{listing.category}</p>
                   <p>${listing.price.toFixed(2)} per day</p>
                 </div>
                 <div className="listing-actions">
-                  <button
-                    type="button"
-                    onClick={() => handleUnsave(listing.id)}
-                    aria-label={`Unsave ${listing.title}`}
-                  >
-                    Unsave
-                  </button>
+                  <SaveListingButton listing={listing} compact />
                 </div>
               </article>
             ))}

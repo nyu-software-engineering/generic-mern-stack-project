@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import ListingCard from '../../components/ListingCard'
+import { SavedItemsStatus } from '../../components/SaveListingButton.jsx'
 import { listingCategories } from '../../data/options.js'
 import { searchListings } from '../../services/publicListings.js'
 import { Link } from 'react-router-dom'
@@ -53,6 +54,7 @@ function Browse() {
         </button>
       </div>
 
+      <SavedItemsStatus />
       <ListingResults
         key={JSON.stringify([searchText, category])}
         search={searchText}

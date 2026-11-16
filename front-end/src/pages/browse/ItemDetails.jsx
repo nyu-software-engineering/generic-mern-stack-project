@@ -7,12 +7,7 @@ import {
 } from '../../services/bookings'
 import { cacheListing } from '../../services/mockDataService.js'
 import { getPublicListing } from '../../services/publicListings.js'
-import {
-  getSavedListings,
-  isListingSaved,
-  saveListing,
-  unsaveListing,
-} from '../../services/savedItems.js'
+import SaveListingButton, { SavedItemsStatus } from '../../components/SaveListingButton.jsx'
 import './browse.css'
 
 function ItemDetails() {
@@ -29,7 +24,7 @@ function ItemDetailsRequest({ id }) {
     getPublicListing(id)
       .then((listing) => {
         if (!current) return
-        // The booking form and saved-items service still read from this cache.
+        // The booking form and report flow still read from this cache.
         cacheListing(listing)
         setResult({ listing })
       })
@@ -73,23 +68,8 @@ function ListingDetails({ listing }) {
   const [startDate, setStartDate] = useState('')
   const [endDate, setEndDate] = useState('')
   const [error, setError] = useState('')
-  const [savedListings, setSavedListings] = useState(() =>
-    getSavedListings(CURRENT_USER_ID),
-  )
   const owner = getUser(listing.ownerId)
   const isOwnListing = listing.ownerId === CURRENT_USER_ID
-
-  const saved = savedListings.some((item) => item.id === listing.id)
-
-  function handleToggleSave() {
-    if (isListingSaved(CURRENT_USER_ID, listing.id)) {
-      unsaveListing(CURRENT_USER_ID, listing.id)
-    } else {
-      saveListing(CURRENT_USER_ID, listing.id)
-    }
-
-    setSavedListings(getSavedListings(CURRENT_USER_ID))
-  }
 
   const today = new Date()
   const todayString =
@@ -151,13 +131,10 @@ function ListingDetails({ listing }) {
       <p>${listing.price.toFixed(2)} / day</p>
 
       {!isOwnListing && (
-        <button
-          type="button"
-          aria-pressed={saved}
-          onClick={handleToggleSave}
-        >
-          {saved ? 'Unsave item' : 'Save item'}
-        </button>
+        <>
+          <SavedItemsStatus />
+          <SaveListingButton listing={listing} />
+        </>
       )}
 
       <section>
