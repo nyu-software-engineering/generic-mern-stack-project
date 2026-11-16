@@ -1,7 +1,7 @@
-import { mockHotels } from "../data/mockHotels";
 import HotelDetails from "../components/HotelDetails";
 import { Link } from "react-router-dom";
 import "./Home&ResultsPage.css";
+import initialSearchHotels from "../../../back-end/mockData/hotelList";
 
 function ResultsPage() {
   return (
@@ -42,7 +42,7 @@ function ResultsPage() {
   <h2 className="results-title">results</h2>
 
 <div className="results-cards">
-  {mockHotels.map((hotel) => (
+  {initialSearchHotels.map((hotel) => (
     <HotelDetails key={hotel.id} hotel={hotel} />
   ))}
 </div>
