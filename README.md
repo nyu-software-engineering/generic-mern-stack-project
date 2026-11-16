@@ -108,3 +108,55 @@ clearly labeled as such; it is not a history of this account. Account and
 leaderboard sample data are not synchronized with trading. Live quote refresh,
 server execution, pending/unknown order states, and contextual learning overlays
 are not implemented in this demo.
+
+## Run the backend locally
+
+Use Node.js 24 or newer. From the repository root:
+
+```bash
+cd back-end
+npm ci
+npm run dev
+```
+
+The Express API runs on port `3001` by default. To change it, copy
+`back-end/.env.example` to `back-end/.env` and set `PORT`. Node loads this
+optional file automatically. Use `npm start` to run without watching files.
+
+Check that the server is running:
+
+```bash
+curl http://localhost:3001/api/health
+```
+
+The health route returns `200` with `{"status":"ok"}`. Authentication routes
+are scaffolded for the next implementation steps:
+
+| Method | Route | Purpose |
+| --- | --- | --- |
+| POST | `/api/auth/register` | Create an account |
+| POST | `/api/auth/login` | Log in |
+| POST | `/api/auth/logout` | Log out |
+| POST | `/api/auth/forgot-password` | Request a reset link |
+| POST | `/api/auth/reset-password` | Set a new password |
+
+These five routes currently return `501` with a JSON `NOT_IMPLEMENTED` error.
+They do not create accounts, authenticate users, send email, or store data.
+The frontend login remains its existing demo flow. User validation, password
+hashing, authorization, reset tokens, and frontend integration are later steps;
+database implementation is outside this setup.
+
+Requests use JSON with a 10 KB body limit. Malformed JSON, oversized bodies,
+and unknown routes return JSON errors with statuses `400`, `413`, and `404`.
+
+Run backend checks from `back-end/`:
+
+```bash
+npm run lint
+npm test
+npm run test:coverage
+```
+
+Tests use Mocha, Chai, and Supertest. The c8 command reports coverage for all
+backend source files, writes an HTML report to `back-end/coverage/index.html`,
+and enforces the course's minimum 10% coverage requirement.

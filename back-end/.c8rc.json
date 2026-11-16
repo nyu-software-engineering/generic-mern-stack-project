@@ -1,0 +1,10 @@
+{
+  "all": true,
+  "include": ["src/**/*.js"],
+  "reporter": ["text", "html"],
+  "check-coverage": true,
+  "lines": 10,
+  "functions": 10,
+  "branches": 10,
+  "statements": 10
+}
