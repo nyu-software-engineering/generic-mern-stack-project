@@ -1,7 +1,10 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
+import { getBooking } from '../src/services/bookings.js'
+import { getRentals, loadMockData } from '../src/services/mockDataService.js'
 import { getMyRentals } from '../src/services/renterDashboard.js'
 import { getSavedListings, saveListing, unsaveListing } from '../src/services/savedItems.js'
+import { mockResponse } from './fixtures.js'
 
 test('loads renter rentals and saved listings from their API endpoints', async (t) => {
   const rental = { id: 101, listingTitle: 'Desk lamp' }
@@ -32,6 +35,27 @@ test('saves and unsaves using the listing ID and accepts a 204 deletion', async 
     assert.equal(options.method, method)
     assert.deepEqual(JSON.parse(options.body), { listingId: 2 })
   }
+})
+
+test('makes new and updated dashboard rentals available to Booking Details', async (t) => {
+  const initial = mockResponse()
+  const existing = initial.rentals.find((rental) => rental.id === 201)
+  const updated = { ...existing, status: 'active', listingTitle: 'Projector' }
+  const created = { ...existing, id: 901, listingTitle: 'Projector' }
+  const unrelated = initial.rentals[0]
+  t.mock.method(globalThis, 'fetch', async (path) =>
+    Response.json(path === '/api/mock-data' ? initial : [updated, created]),
+  )
+
+  await loadMockData()
+  assert.equal(getBooking('901'), null)
+  assert.equal(getBooking('201').status, 'confirmed')
+
+  await getMyRentals()
+  assert.deepEqual(getBooking('901'), created)
+  assert.deepEqual(getBooking('201'), updated)
+  assert.deepEqual(getBooking(unrelated.id), unrelated)
+  assert.equal(getRentals().filter((rental) => rental.id === existing.id).length, 1)
 })
 
 test('lets the page handle a rejected save or unsave', async (t) => {

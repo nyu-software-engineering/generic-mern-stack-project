@@ -76,6 +76,14 @@ export function getRentals() {
   return structuredClone(rentals)
 }
 
+export function cacheRentals(fetchedRentals) {
+  const rentalsById = new Map(rentals.map((rental) => [String(rental.id), rental]))
+  for (const rental of fetchedRentals) {
+    rentalsById.set(String(rental.id), structuredClone(rental))
+  }
+  rentals = [...rentalsById.values()]
+}
+
 export function getRentalsForOwner(ownerId) {
   return getRentals().filter((rental) => sameId(rental.ownerId, ownerId))
 }
