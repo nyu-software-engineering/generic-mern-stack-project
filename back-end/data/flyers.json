@@ -1,0 +1,16 @@
+[
+  {
+    "id": "42",
+    "title": "Fall Hackathon",
+    "organizationId": "1",
+    "date": "2026-11-20",
+    "location": "Bobst Library LL1"
+  },
+  {
+    "id": "102",
+    "title": "Intro to Express Workshop",
+    "organizationId": "1",
+    "date": "2026-11-25",
+    "location": "60 Fifth Ave"
+  }
+]
