@@ -2,6 +2,7 @@ import express from 'express'
 import morgan from 'morgan'
 import cors from 'cors'
 import authRouter from './routes/auth.js'
+import landlordRouter from './routes/landlord.js'
 
 const app = express()
 
@@ -16,5 +17,6 @@ app.get('/', (req, res) => {
 })
 
 app.use('/auth', authRouter)
+app.use('/landlord', landlordRouter)
 
 export default app
