@@ -125,4 +125,149 @@ describe("Conversation and message routes (#102)", () => {
       expect(body).to.deep.equal({ error: "Conversation not found." });
     });
   });
+
+  const offerDetails = () => ({ totalPrice: 12.345, startDate: "2099-01-10", endDate: "2099-01-12" });
+
+  describe("POST /api/conversations/:id/offers", () => {
+    it("adds a pending offer from the current user with the total rounded to cents", async () => {
+      const { status, body } = await request("POST", "/1/offers", offerDetails());
+      expect(status).to.equal(201);
+      expect(body).to.include({
+        id: 8, senderId: "owner-1", type: "offer", totalPrice: 12.35,
+        startDate: "2099-01-10", endDate: "2099-01-12", status: "pending",
+      });
+      expect(data.conversations[0].messages.at(-1)).to.deep.equal(body);
+    });
+
+    it("marks the previous pending offer as countered", async () => {
+      const first = await request("POST", "/1/offers", offerDetails());
+      const second = await request("POST", "/1/offers", { ...offerDetails(), totalPrice: 10 });
+      const messages = data.conversations[0].messages;
+      expect(messages.find((message) => message.id === first.body.id).status).to.equal("countered");
+      expect(messages.find((message) => message.id === second.body.id).status).to.equal("pending");
+    });
+
+    it("ignores a submitted sender, ID, or status", async () => {
+      const { body } = await request("POST", "/1/offers", {
+        ...offerDetails(), senderId: "student-2", id: 1, status: "accepted",
+      });
+      expect(body).to.include({ senderId: "owner-1", id: 8, status: "pending" });
+    });
+
+    for (const [name, changes] of [
+      ["a missing total", { totalPrice: undefined }],
+      ["a negative total", { totalPrice: -1 }],
+      ["a string total", { totalPrice: "12" }],
+      ["a missing start date", { startDate: undefined }],
+      ["an impossible date", { startDate: "2099-02-30" }],
+      ["a wrongly formatted date", { endDate: "12/01/2099" }],
+      ["an end date before the start", { endDate: "2099-01-09" }],
+      ["an end date equal to the start", { endDate: "2099-01-10" }],
+      ["a start date in the past", { startDate: "2000-01-01", endDate: "2000-01-03" }],
+    ]) {
+      it(`rejects ${name} without saving anything`, async () => {
+        const { status } = await request("POST", "/1/offers", { ...offerDetails(), ...changes });
+        expect(status).to.equal(400);
+        expect(data.conversations[0].messages).to.have.length(1);
+      });
+    }
+
+    it("rejects a missing body", async () => {
+      expect((await request("POST", "/1/offers")).status).to.equal(400);
+    });
+
+    it("returns 403 for another student's conversation and 404 for an unknown one", async () => {
+      expect((await request("POST", "/3/offers", offerDetails())).status).to.equal(403);
+      expect((await request("POST", "/999/offers", offerDetails())).status).to.equal(404);
+      expect(data.conversations[2].messages).to.have.length(1);
+    });
+  });
+
+  describe("accepting and declining offers", () => {
+    // student-2 offers owner-1 their own Desk lamp in conversation 2.
+    let offer;
+
+    beforeEach(() => {
+      offer = {
+        id: 20, senderId: "student-2", type: "offer", totalPrice: 9,
+        startDate: "2099-01-10", endDate: "2099-01-12", status: "pending", sentAt: "2026-11-05T10:00:00Z",
+      };
+      data.conversations[1].messages.push(offer);
+    });
+
+    it("accepts the other student's offer as a confirmed booking", async () => {
+      const { status, body } = await request("POST", "/2/offers/20/accept");
+      expect(status).to.equal(201);
+      expect(body.booking).to.deep.equal({
+        id: 102, listingId: 1, ownerId: "owner-1", borrowerId: "student-2",
+        startDate: "2099-01-10", endDate: "2099-01-12", status: "confirmed",
+        terms: { pricePerDay: 5, rentalTerms: "Return clean.", message: "Terms agreed in chat." },
+        totalPrice: 9, createdAt: body.booking.createdAt, extensionRequest: null,
+      });
+      expect(body.booking.createdAt).to.match(/^\d{4}-\d{2}-\d{2}$/);
+      expect(body.offer).to.include({ id: 20, status: "accepted", bookingId: 102 });
+      expect(data.rentals.at(-1)).to.deep.equal(body.booking);
+      expect(offer).to.deep.equal(body.offer);
+    });
+
+    it("declines the other student's offer without creating a booking", async () => {
+      const { status, body } = await request("POST", "/2/offers/20/decline");
+      expect(status).to.equal(200);
+      expect(body).to.include({ id: 20, status: "declined" });
+      expect(data.rentals).to.have.length(1);
+    });
+
+    for (const action of ["accept", "decline"]) {
+      it(`returns 403 when you ${action} your own offer`, async () => {
+        offer.senderId = "owner-1";
+        const { status, body } = await request("POST", `/2/offers/20/${action}`);
+        expect(status).to.equal(403);
+        expect(body).to.deep.equal({ error: "You cannot answer your own offer." });
+        expect(offer.status).to.equal("pending");
+      });
+
+      it(`returns 409 when you ${action} an offer that was already answered`, async () => {
+        offer.status = "countered";
+        const { status, body } = await request("POST", `/2/offers/20/${action}`);
+        expect(status).to.equal(409);
+        expect(body).to.deep.equal({ error: "Offer is already countered." });
+        expect(data.rentals).to.have.length(1);
+      });
+
+      it(`returns 404 when you ${action} a text message or unknown offer`, async () => {
+        for (const messageId of ["2", "999", "abc"]) {
+          const { status, body } = await request("POST", `/2/offers/${messageId}/${action}`);
+          expect(status).to.equal(404);
+          expect(body).to.deep.equal({ error: "Offer not found." });
+        }
+      });
+
+      it(`returns 403 when you ${action} in another student's conversation`, async () => {
+        expect((await request("POST", `/3/offers/7/${action}`)).status).to.equal(403);
+      });
+    }
+
+    it("cannot accept the same offer twice", async () => {
+      expect((await request("POST", "/2/offers/20/accept")).status).to.equal(201);
+      expect((await request("POST", "/2/offers/20/accept")).status).to.equal(409);
+      expect(data.rentals).to.have.length(2);
+    });
+
+    it("returns 409 when the offer's dates have passed", async () => {
+      Object.assign(offer, { startDate: "2000-01-01", endDate: "2000-01-03" });
+      const { status, body } = await request("POST", "/2/offers/20/accept");
+      expect(status).to.equal(409);
+      expect(body).to.deep.equal({ error: "This offer's dates have already passed." });
+      expect(offer.status).to.equal("pending");
+    });
+
+    it("returns 409 when the listing is no longer published", async () => {
+      data.listings[0].status = "paused";
+      const { status, body } = await request("POST", "/2/offers/20/accept");
+      expect(status).to.equal(409);
+      expect(body).to.deep.equal({ error: "This listing is no longer available." });
+      expect(offer.status).to.equal("pending");
+      expect(data.rentals).to.have.length(1);
+    });
+  });
 });

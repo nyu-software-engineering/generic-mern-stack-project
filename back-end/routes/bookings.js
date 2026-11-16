@@ -7,7 +7,7 @@ export const bookingsRouter = Router();
 const sameId = (a, b) => String(a) === String(b);
 // A real calendar date in YYYY-MM-DD form. Rejects 2026-13-01, 2026-02-30 and
 // 2026-02-29 (not a leap year), which Date would otherwise roll over or reject.
-const isDate = (value) => {
+export const isDate = (value) => {
   if (typeof value !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
   const date = new Date(`${value}T00:00:00Z`);
   return !Number.isNaN(date.getTime()) && date.toISOString().slice(0, 10) === value;
