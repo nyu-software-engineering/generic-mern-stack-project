@@ -165,4 +165,4 @@ const initialSearchHotels = [
   },
 ];
 
-export default initialSavedHotels;
+export default initialSearchHotels;
