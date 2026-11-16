@@ -7,12 +7,31 @@ import "./Login.css"
 export default function Login(props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
-
-  function handleLogin(e) {
+  async function handleLogin(e) {
     e.preventDefault();
-    props.onLogin();
+    setError("");
+
+  const res = await fetch("/api/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password }),
+  });
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    setError(data.error || "Login failed.");
+    return;
+  }
+
+  localStorage.setItem("user", JSON.stringify(data));
+    if (props.onLogin) {
+      props.onLogin(data);
+    }
+    navigate("/app/explore");
   }
 
   return (

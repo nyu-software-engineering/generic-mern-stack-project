@@ -8,17 +8,36 @@ export default function SignUp(props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  function handleSignUp(e) {
+  async function handleSignUp(e) {
     e.preventDefault();
+    setError("")
 
     if (password !== confirmPassword) {
-      alert("Passwords do not match!");
+      setError("Passwords do not match!");
       return;
     }
 
-    props.onSignUp();
+    const res = await fetch("/api/signup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, email, password }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      setError(data.error || "Sign up failed.");
+      return;
+    }
+
+    localStorage.setItem("user", JSON.stringify(data));
+    if (props.onSignUp) {
+      props.onSignUp(data);
+    }
+    navigate("/app/explore");
   }
 
   return (
@@ -51,6 +70,7 @@ export default function SignUp(props) {
               value={confirmPassword} 
               onChange={(e) => setConfirmPassword(e.target.value)} 
             />
+            {error && <p style={{ color: "red", marginBottom: "10px" }}>{error}</p>}
             <button type="submit" className="btn primary">
               Sign Up
             </button>
