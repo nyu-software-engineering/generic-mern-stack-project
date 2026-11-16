@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 import Navbar from './components/Navbar'
 import MockData from './components/MockData'
+import SavedItemsProvider from './context/SavedItemsProvider.jsx'
 
 import Welcome from './pages/auth/Welcome'
 import Login from './pages/auth/Login'
@@ -59,9 +60,13 @@ function App() {
           <Route path="/listings/new" element={<CreateListing />} />
           <Route path="/owner-dashboard" element={<OwnerDashboard />} />
 
-          {/* Browse and chat */}
-          <Route path="/browse" element={<Browse />} />
-          <Route path="/browse/:id" element={<ItemDetails />} />
+          <Route element={<SavedItemsProvider />}>
+            <Route path="/browse" element={<Browse />} />
+            <Route path="/browse/:id" element={<ItemDetails />} />
+            <Route path="/renter-dashboard" element={<RenterDashboard />} />
+          </Route>
+
+          {/* Chat */}
           <Route path="/inbox" element={<Inbox />} />
 
           {/* Booking */}
@@ -70,9 +75,6 @@ function App() {
           <Route path="/bookings/:bookingId" element={<BookingDetails />} />
           <Route path="/bookings/:bookingId/extension" element={<Extensions />} />
           <Route path="/bookings/:bookingId/cancel" element={<Cancellation />} />
-
-          {/* Renter dashboard */}
-          <Route path="/renter-dashboard" element={<RenterDashboard />} />
 
           {/* Pickup and return */}
           <Route path="/handoff/:rentalId" element={<PickupReturn />} />

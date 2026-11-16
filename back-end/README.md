@@ -191,8 +191,6 @@ creation time. Other submitted fields are ignored.
 GET `/api/reports/:id` returns 404 for an unknown ID and for another user's
 report, using the same response for both. Frontend integration remains in #121.
 
-
-=======
 ## Booking routes
 
 `routes/bookings.js` handles #91 under `/api/bookings`. Bookings are stored in
@@ -230,6 +228,42 @@ GET `/:id` returns 403 for bookings the current user is not part of. PATCH
 returns 403 for anyone but the owner, and 409 if the booking was already
 answered. Unknown booking IDs return 404. Frontend integration remains in #93.
 
+
+## Extension and cancellation routes
+
+The same router handles #95 and #99. Unknown booking IDs return 404.
+
+| Method | Path | Response |
+| --- | --- | --- |
+| GET | `/api/bookings/extension-requests` | Pending extensions waiting on the current owner |
+| POST | `/api/bookings/:id/extensions` | Booking with status `extension_requested`, status 201 |
+| PATCH | `/api/bookings/:id/extensions` | Booking back to `active`, with the extension approved or declined |
+| POST | `/api/bookings/:id/cancel` | Booking with status `cancelled` |
+
+POST `/:id/extensions` accepts `{ "newEndDate": "2026-12-10" }`. Only the
+borrower can ask (403 otherwise), and only for an `active` booking (409
+otherwise, including while another extension is pending). `newEndDate` must be
+a real calendar date after the current `endDate` and not already past, using
+the same "today" rule as booking. The booking gets
+`extensionRequest: { newEndDate, status: "pending" }`.
+
+PATCH `/:id/extensions` accepts `{ "approve": true }` or `{ "approve": false }`.
+Only the owner can answer (403), and only a pending request (409). Either way the
+booking returns to `active`, and `extensionRequest.status` becomes `approved` or
+`declined`. Approving moves `endDate` to `newEndDate` and adds
+`days × daily rate` to `totalPrice`. The daily rate is the agreed
+`terms.pricePerDay`; if that is missing or not a valid amount, it falls back to
+the listing's current price, like the frontend `dailyRate()`. If neither is
+usable, approving returns 409 without changing the booking (declining still
+works). A total too large to store returns 400 without changing the booking.
+
+POST `/:id/cancel` takes no body. Before pickup, the borrower can withdraw a
+`requested` booking, and either person can cancel a `confirmed` one. Owners
+decline requests with PATCH `/:id/status` instead, so the owner cancelling a
+`requested` booking returns 409. Active, completed, declined, and cancelled
+bookings return 409. People outside the booking get 403.
+
+Frontend integration remains in #97 and #100.
 
 ## Tests
 
