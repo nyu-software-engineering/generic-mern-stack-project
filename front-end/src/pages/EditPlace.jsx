@@ -1,9 +1,11 @@
 import { useMemo, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router'
 import TextField from '../components/TextField'
-import { categories } from '../data/demoData'
 import { getPlaceDetail, updatePlaceDetails } from '../data/mockDataLayer'
 import BackLink from '../components/BackLink'
+import { getConfig } from '../api/config'
+import { useApi } from '../hooks/useApi'
+import { LoadingState, ErrorState } from '../components/LoadState'
 
 // Each check returns an error message, or '' when the value is fine
 function validateName(name) {
@@ -18,7 +20,7 @@ function validateLocation(location) {
   return ''
 }
 
-function validateCategory(categoryId) {
+function validateCategory(categoryId, categories) {
   if (!categories.some((category) => category.id === categoryId)) return 'Pick a category.'
   return ''
 }
@@ -27,6 +29,8 @@ export default function EditPlace() {
   const { placeId } = useParams()
   const navigate = useNavigate()
   const place = useMemo(() => getPlaceDetail(placeId), [placeId])
+  // Categories come from the server (GET /api/config), not demoData
+  const config = useApi(getConfig)
 
   // The form starts out filled with what we already know about the place
   const [name, setName] = useState(place?.name ?? '')
@@ -41,21 +45,25 @@ export default function EditPlace() {
       <section className="px-5 py-10 text-center">
         <h1 className="text-2xl font-semibold">Place not found</h1>
         <p className="mt-2 text-sm text-muted">There is nothing to edit here.</p>
-        <BackLink to={`/place/${place.id}`} label={`Back to ${place.name}`} className="mb-6" />
+        <BackLink to="/" label="Back to your lists" className="mb-6" />
       </section>
     )
   }
 
+  if (config.loading) return <LoadingState message="Loading categories…" />
+  if (config.error) return <ErrorState message={config.error.message} onRetry={config.retry} />
+
+  const categories = config.data.categories
+
   const nameError = touched.name ? validateName(name) : ''
-  const categoryError = touched.category ? validateCategory(categoryId) : ''
+  const categoryError = touched.category ? validateCategory(categoryId, categories) : ''
   const locationError = touched.location ? validateLocation(location) : ''
 
   function handleSubmit(event) {
     event.preventDefault()
     // Show every error at once, even for fields the user never clicked into
     setTouched({ name: true, category: true, location: true })
-    if (validateName(name) || validateCategory(categoryId) || validateLocation(location)) return
-
+    if (validateName(name) || validateCategory(categoryId, categories) || validateLocation(location)) return
     const result = updatePlaceDetails(place.id, { name, categoryId, neighborhood: location })
     if (!result.ok) {
       setFormError(result.error)
