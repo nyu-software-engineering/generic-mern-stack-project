@@ -103,4 +103,11 @@ app.post("/api/listings", (req,res) => {
     res.status(201).json(newListing);
 });
 
+app.get("/api/users/me/payment-methods", (req, res) => {
+    const card = paymentMethods
+        .filter(method => method.userId === req.userId)
+        .map(({ userId, ...method }) => method); 
+    res.json(card);
+});
+
 export default app;
