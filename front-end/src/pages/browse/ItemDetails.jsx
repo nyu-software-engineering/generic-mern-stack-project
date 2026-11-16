@@ -1,55 +1,75 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import {
   CURRENT_USER_ID,
-  getListing,
   getUser,
   listingImage,
 } from '../../services/bookings'
-import {
-  getSavedListings,
-  isListingSaved,
-  saveListing,
-  unsaveListing,
-} from '../../services/savedItems.js'
+import { cacheListing } from '../../services/mockDataService.js'
+import { getPublicListing } from '../../services/publicListings.js'
+import SaveListingButton, { SavedItemsStatus } from '../../components/SaveListingButton.jsx'
 import './browse.css'
 
 function ItemDetails() {
   const { id } = useParams()
-  const navigate = useNavigate()
+  return <ItemDetailsRequest key={id} id={id} />
+}
 
-  const [startDate, setStartDate] = useState('')
-  const [endDate, setEndDate] = useState('')
-  const [error, setError] = useState('')
-  const [savedListings, setSavedListings] = useState(() =>
-    getSavedListings(CURRENT_USER_ID),
-  )
-  const listing = getListing(id)
+function ItemDetailsRequest({ id }) {
+  const [attempt, setAttempt] = useState(0)
+  const [result, setResult] = useState(null)
 
-  if (!listing || listing.status !== 'published') {
+  useEffect(() => {
+    let current = true
+    getPublicListing(id)
+      .then((listing) => {
+        if (!current) return
+        // The booking form and report flow still read from this cache.
+        cacheListing(listing)
+        setResult({ listing })
+      })
+      .catch((error) => { if (current) setResult({ error }) })
+    return () => { current = false }
+  }, [id, attempt])
+
+  if (!result) {
+    return <main className="item-details-page"><p role="status">Loading item...</p></main>
+  }
+
+  if (result.error) {
+    const unavailable = result.error.status === 404
     return (
       <main className="item-details-page">
-        <h1>Item unavailable</h1>
-        <p>This listing could not be found or is no longer published.</p>
+        {unavailable ? (
+          <>
+            <h1>Item unavailable</h1>
+            <p>This listing could not be found or is no longer published.</p>
+          </>
+        ) : (
+          <>
+            <h1>Could not load item</h1>
+            <p role="alert">{result.error.message}</p>
+            <button type="button" onClick={() => {
+              setResult(null)
+              setAttempt((value) => value + 1)
+            }}>Try again</button>
+          </>
+        )}
         <Link to="/browse">Back to browse</Link>
       </main>
     )
   }
 
+  return <ListingDetails listing={result.listing} />
+}
+
+function ListingDetails({ listing }) {
+  const navigate = useNavigate()
+  const [startDate, setStartDate] = useState('')
+  const [endDate, setEndDate] = useState('')
+  const [error, setError] = useState('')
   const owner = getUser(listing.ownerId)
   const isOwnListing = listing.ownerId === CURRENT_USER_ID
-
-  const saved = savedListings.some((item) => item.id === listing.id)
-
-  function handleToggleSave() {
-    if (isListingSaved(CURRENT_USER_ID, listing.id)) {
-      unsaveListing(CURRENT_USER_ID, listing.id)
-    } else {
-      saveListing(CURRENT_USER_ID, listing.id)
-    }
-
-    setSavedListings(getSavedListings(CURRENT_USER_ID))
-  }
 
   const today = new Date()
   const todayString =
@@ -111,13 +131,10 @@ function ItemDetails() {
       <p>${listing.price.toFixed(2)} / day</p>
 
       {!isOwnListing && (
-        <button
-          type="button"
-          aria-pressed={saved}
-          onClick={handleToggleSave}
-        >
-          {saved ? 'Unsave item' : 'Save item'}
-        </button>
+        <>
+          <SavedItemsStatus />
+          <SaveListingButton listing={listing} />
+        </>
       )}
 
       <section>

@@ -30,6 +30,7 @@ function BookingSummary({ bookingId }) {
   if (!booking) return <main className="booking-page"><p>Booking not found.</p></main>
 
   const listing = getListing(booking.listingId)
+  const rentalTerms = booking.terms?.rentalTerms ?? listing?.rentalTerms
   const isOwner = booking.ownerId === CURRENT_USER_ID
   const other = getUser(isOwner ? booking.borrowerId : booking.ownerId)
   const canRespond = isOwner && booking.status === 'requested'
@@ -52,7 +53,11 @@ function BookingSummary({ bookingId }) {
         </p>
       )}
 
-      <ListingSummary listing={listing} />
+      {listing ? (
+        <ListingSummary listing={listing} />
+      ) : (
+        <div className="booking-card"><h2>{booking.listingTitle ?? 'Listing unavailable'}</h2></div>
+      )}
 
       <div className="booking-card">
         <div><StatusBadge status={displayStatus(booking)} /></div>
@@ -62,11 +67,13 @@ function BookingSummary({ bookingId }) {
         {booking.terms?.message && <p>Message: “{booking.terms.message}”</p>}
       </div>
 
-      <div className="booking-card">
-        <h2>Condition and included items</h2>
-        <p>{listing.description}</p>
-        <p>{booking.terms?.rentalTerms ?? listing.rentalTerms}</p>
-      </div>
+      {(listing?.description || rentalTerms) && (
+        <div className="booking-card">
+          <h2>Condition and included items</h2>
+          {listing?.description && <p>{listing.description}</p>}
+          {rentalTerms && <p>{rentalTerms}</p>}
+        </div>
+      )}
 
       <div className="booking-card">
         <h2>Basic rental agreement</h2>
