@@ -1,4 +1,3 @@
-import { mockHotels } from "../data/mockHotels";
 import HotelDetails from "../components/HotelDetails";
 import { Link } from "react-router-dom";
 import "./Home&ResultsPage.css";

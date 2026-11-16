@@ -1,5 +1,4 @@
 import { Link, useParams } from "react-router-dom";
-import { mockHotels } from "../data/mockHotels";
 import { useSaved } from "../shared_content/SavedContent";
 import { useCurBookings } from "../shared_content/SavedCurrentBookings";
 import "./HotelDetails.css";

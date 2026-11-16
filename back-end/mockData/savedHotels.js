@@ -21,3 +21,5 @@ const initialSavedHotels = [
         description: 'A boutique luxury hotel near the promenade.',
     },
 ]
+
+export default initialSavedHotels;
