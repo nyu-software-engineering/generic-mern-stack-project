@@ -35,6 +35,20 @@ API response, including an empty response, while preserving other owners' items.
 `npm test` includes listing integration tests against a local Express server.
 Install dependencies in both `front-end` and `back-end` before running them.
 
+### Shared API cache pattern
+
+For features whose existing readers still use the shared client cache:
+
+- Use `cacheListing(record)` after a successful write or for each record in a
+  filtered API result. A filtered result should not remove unreturned records.
+- Use `cacheOwnerListings(records)` for the full `/listings/mine` response. It
+  replaces the current owner's records, including an empty result, and preserves
+  unrelated owners' items.
+- Update the cache only for a successful, current request. Failed or superseded
+  requests must leave it unchanged. Both helpers clone records to protect the cache.
+
+Follow the same pattern as other feature APIs replace their local data operations.
+
 ## Scripts
 
 | Command           | What it does                            |
