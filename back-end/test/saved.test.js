@@ -38,4 +38,20 @@ describe("Saved Listings API", () => {
 
         expect(saved.body.some((listing) => listing.id === 1)).to.equal(false);
     });
+
+    it("should prevent duplicate saves", async () => {
+        await request.execute(app).post("/api/saved/1");
+        await request.execute(app).post("/api/saved/1");
+
+        const res = await request.execute(app).get("/api/saved");
+
+        expect(res.body).to.have.lengthOf(1);
+    });
+
+    it("should reject a nonexistent listing", async () => {
+        const res = await request.execute(app).post("/api/saved/999");
+
+        expect(res).to.have.status(404);
+        expect(res.body.error).to.equal("Listing not found");
+    });
 });
