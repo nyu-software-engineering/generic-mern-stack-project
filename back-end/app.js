@@ -36,7 +36,7 @@ app.delete("/api/saved/:listingId", (req, res) => {
     res.json(savedIds);
 })
 
-app.get("/api/listing/saved", (req,res) => {
+app.get("/api/listings/saved", (req,res) => {
     const savedListings = listings.filter(listing => savedIds.includes(listing.id));
 
     res.json(savedListings);
