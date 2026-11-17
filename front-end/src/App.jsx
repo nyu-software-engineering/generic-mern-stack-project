@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Login from "./pages/Login";
 import Layout from "./pages/Layout";
 import Signup from "./pages/Signup";
@@ -10,12 +10,24 @@ import Profile from "./pages/Profile"
 import MyListings from "./pages/MyListings"
 import SavedListings from "./pages/SavedListings";
 import ViewDetails from "./pages/ViewDetails";
-
 import {BrowserRouter, Routes, Route} from "react-router-dom";
 import "./App.css";
 
 function App() {
   const [savedIds, setSavedIds] = useState([]);
+  const [user, setUser] = useState(() => {
+    try {
+      const raw = localStorage.getItem("user");
+      return raw ? JSON.parse(raw) : null;
+    } catch {
+      return null;
+    }
+  });
+  
+  function handleLogout() {
+    localStorage.removeItem("user");
+    setUser(null);
+  }
 
   function toggleSave(id) {
     setSavedIds(current => {
@@ -29,7 +41,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path = "/app" element ={<Layout/>}>
-          <Route index element = {<Login />} />
+          <Route index element = {<Login onLogin={setUser} />} />
           <Route
             path="explore"
             element={<Explore savedIds={savedIds} onToggleSave={toggleSave} />}
@@ -38,7 +50,9 @@ function App() {
           <Route path = "signUp" element = {<Signup />} />
           <Route path = "messages" element = {<Messages />} />
           <Route path = "post" element = {<PostSubletPage />} />
-          <Route path = "profile" element = {<Profile />} />
+          <Route path="my-listings" element={<MyListings />} /> //==
+          <Route path="profile" element={<Profile user={user} savedIds={savedIds} onLogout={handleLogout} /> }
+          />
           <Route path="listings/:id" element={<ViewDetails />} />
           <Route
             path="saved"
@@ -46,12 +60,18 @@ function App() {
           />
         </Route>
 
-        <Route path = "/" element = {<Login />} />
+        <Route path = "/" element = {<Login onLogin={setUser} />} />
         <Route path = "/signUp" element = {<Signup />} />
       </Routes>
     </BrowserRouter>
   );
-  // const [page, setPage] = useState("login");
+  
+}
+
+export default App;
+
+
+// const [page, setPage] = useState("login");
 
   // if (page === "login") {
   //   return (
@@ -88,6 +108,3 @@ function App() {
   //     </main>
   //   </div>
   // );
-}
-
-export default App;
