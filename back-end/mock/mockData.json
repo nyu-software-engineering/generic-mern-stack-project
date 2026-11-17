@@ -51,7 +51,7 @@
     },
     {
       "id": "2",
-      "postId": 2,
+      "postId": 1,
       "username": "Bob B.",
       "pfp": "https://picsum.photos/200?random=3",
       "item": "Lost Keys",
@@ -77,7 +77,7 @@
       "time": "Today · 2:04 PM",
       "read": false,
       "link": "Open Conversation",
-      "path": "/messages/1",
+      "path": "/messages/0",
       "pfp": "https://picsum.photos/200?random=1"
     },
     {

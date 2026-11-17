@@ -60,3 +60,46 @@ describe('PATCH /api/conversations/:id/read', () => {
     expect(res.status).to.equal(404)
   })
 })
+
+describe('POST /api/conversations/:id/messages', () => {
+  it('adds a message from you', async () => {
+    const res = await request(app)
+      .post('/api/conversations/0/messages')
+      .send({ text: '  Yes, I have it!  ' })
+    expect(res.status).to.equal(201)
+    expect(res.body.text).to.equal('Yes, I have it!')
+    expect(res.body.sender).to.equal('you')
+    expect(res.body).to.include.all.keys('id', 'time', 'createdAt')
+
+    const convo = await request(app).get('/api/conversations/0')
+    expect(convo.body.messages.at(-1).text).to.equal('Yes, I have it!')
+  })
+
+  it('marks the chat unread when the other person sends a message', async () => {
+    const res = await request(app)
+      .post('/api/conversations/0/messages')
+      .send({ text: 'Great, where can we meet?', sender: 'other' })
+    expect(res.status).to.equal(201)
+
+    const convo = await request(app).get('/api/conversations/0')
+    expect(convo.body.read).to.equal(false)
+  })
+
+  it('rejects an empty message', async () => {
+    const res = await request(app).post('/api/conversations/0/messages').send({ text: '   ' })
+    expect(res.status).to.equal(400)
+    expect(res.body.error).to.equal('Message text is required')
+  })
+
+  it('rejects a missing message', async () => {
+    const res = await request(app).post('/api/conversations/0/messages').send({})
+    expect(res.status).to.equal(400)
+  })
+
+  it('responds with 404 for an unknown conversation', async () => {
+    const res = await request(app)
+      .post('/api/conversations/does-not-exist/messages')
+      .send({ text: 'Hello?' })
+    expect(res.status).to.equal(404)
+  })
+})

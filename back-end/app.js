@@ -96,6 +96,27 @@ app.patch('/api/conversations/:id/read', (req, res) => {
   res.json(convo)
 })
 
+app.post('/api/conversations/:id/messages', (req, res) => {
+  const convo = conversations.find(c => String(c.id) === req.params.id)
+  if (!convo) {
+    return res.status(404).json({ error: 'Conversation not found' })
+  }
+  const { text, sender } = req.body
+  if (typeof text !== 'string' || !text.trim()) {
+    return res.status(400).json({ error: 'Message text is required' })
+  }
+  const message = {
+    id: crypto.randomUUID(),
+    sender: sender === 'other' ? 'other' : 'you',
+    text: text.trim(),
+    time: new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }),
+    createdAt: new Date().toISOString()
+  }
+  convo.messages.push(message)
+  convo.read = message.sender === 'you'
+  res.status(201).json(message)
+})
+
 // mock password kept in memory until real accounts are set up with the database
 let password = 'password123'
 
