@@ -25,8 +25,21 @@ app.post("/api/saved/:listingId", (req, res) => {
     res.json(savedIds);
 });
 
-// app.get("api/listings/saved", (req,res) => {
-//     //to-do
-// })
+app.delete("/api/saved/:listingId", (req, res) => {
+    const listingId = Number(req.params.listingId);
+    const index = savedIds.indexOf(listingId);
+
+    if (index !== -1) {
+        savedIds.splice(index, 1);
+    }
+
+    res.json(savedIds);
+})
+
+app.get("/api/listing/saved", (req,res) => {
+    const savedListings = listings.filter(listing => savedIds.includes(listing.id));
+
+    res.json(savedListings);
+})
 
 export default app;
