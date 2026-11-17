@@ -17,6 +17,12 @@
     "multer": "^2.5.0"
   },
   "devDependencies": {
-    "nodemon": "^3.1.14"
+    "eslint": "^10.15.0",
+    "eslint-config-node": "^4.1.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^5.5.7",
+    "nodemon": "^3.1.14",
+    "prettier": "^3.10.1"
   }
 }
