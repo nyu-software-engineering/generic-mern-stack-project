@@ -1,7 +1,8 @@
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import BookingForm from './BookingForm'
 import ListingSummary from './ListingSummary'
-import { CURRENT_USER_ID, createBooking, getListing } from '../../services/bookings'
+import { CURRENT_USER_ID, getListing } from '../../services/bookings'
+import { requestBooking } from '../../services/bookingsApi'
 import './booking.css'
 
 // Request rental (prototype m21). Item details can prefill dates with
@@ -19,8 +20,9 @@ function Booking() {
     return <main className="booking-page"><p>You can&apos;t request your own listing.</p></main>
   }
 
-  const handleSubmit = (form) => {
-    const booking = createBooking({ ...form, listingId: listing.id, borrowerId: CURRENT_USER_ID })
+  // Throws on failure so the form can show the server's message.
+  const handleSubmit = async (form) => {
+    const booking = await requestBooking({ ...form, listingId: listing.id })
     navigate(`/bookings/${booking.id}`)
   }
 

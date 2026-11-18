@@ -1,11 +1,13 @@
 import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import StatusBadge from '../../components/StatusBadge'
+import BookingLoadState from './BookingLoadState'
 import ListingSummary from './ListingSummary'
+import { useBooking } from './useBooking'
 import {
-  CURRENT_USER_ID, canCancel, canConfirmPickup, canConfirmReturn, displayStatus, formatDate, formatMoney, getBooking, getListing, getUser,
-  updateBookingStatus,
+  CURRENT_USER_ID, canCancel, canConfirmPickup, canConfirmReturn, displayStatus, formatDate, formatMoney, getListing, getUser,
 } from '../../services/bookings'
+import { answerBookingRequest } from '../../services/bookingsApi'
 import { getReviewForBooking, getReviewTarget } from '../../services/reviews.js'
 import './booking.css'
 
@@ -24,10 +26,10 @@ function BookingDetails() {
 }
 
 function BookingSummary({ bookingId }) {
-  const [booking, setBooking] = useState(() => getBooking(bookingId))
+  const { booking, loadError, retry, pending, actionError, run } = useBooking(bookingId)
   const [agreed, setAgreed] = useState(false)
 
-  if (!booking) return <main className="booking-page"><p>Booking not found.</p></main>
+  if (!booking) return <BookingLoadState loadError={loadError} retry={retry} />
 
   const listing = getListing(booking.listingId)
   const rentalTerms = booking.terms?.rentalTerms ?? listing?.rentalTerms
@@ -37,7 +39,7 @@ function BookingSummary({ bookingId }) {
   const canWriteReview = Boolean(getReviewTarget(booking, CURRENT_USER_ID)) &&
     !getReviewForBooking(booking.id, CURRENT_USER_ID)
 
-  const respond = (status) => setBooking(updateBookingStatus(booking.id, status))
+  const respond = (status) => run(() => answerBookingRequest(booking.id, status))
 
   return (
     <main className="booking-page">
@@ -84,7 +86,11 @@ function BookingSummary({ bookingId }) {
 
       <p className="booking-note">Payment is arranged outside DormShare.</p>
 
-      <div className="booking-actions">
+      {actionError && (
+        <p className="field-error" role="alert">Could not update this booking. {actionError.message}</p>
+      )}
+
+      <div className="booking-actions" aria-busy={pending}>
         {canRespond && (
           <>
             <label className="booking-check">
@@ -94,10 +100,10 @@ function BookingSummary({ bookingId }) {
             <button
               type="button"
               className="booking-btn booking-btn--primary"
-              disabled={!agreed}
+              disabled={!agreed || pending}
               onClick={() => respond('confirmed')}
             >
-              Confirm booking
+              {pending ? 'Saving...' : 'Confirm booking'}
             </button>
           </>
         )}
@@ -163,6 +169,7 @@ function BookingSummary({ bookingId }) {
           <button
             type="button"
             className="booking-btn booking-btn--link"
+            disabled={pending}
             onClick={() => respond('declined')}
           >
             Decline request
