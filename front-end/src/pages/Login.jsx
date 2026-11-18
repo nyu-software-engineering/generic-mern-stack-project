@@ -61,7 +61,7 @@ export default function Login() {
                 />
               </div>
 
-              <div className="mt-1 flex items-center">
+              <div className="mt-1 space-y-2.5">
                 <label className="flex cursor-pointer items-center gap-2 text-sm select-none">
                   <input
                     type="checkbox"
@@ -71,9 +71,17 @@ export default function Login() {
                   />
                   <span>Stay signed in?</span>
                 </label>
+
+                <Link
+                  to="/forgot-password"
+                  className="text-sm font-medium text-(--nyu-indigo) hover:underline"
+                >
+                  Forgot password?
+                </Link>
               </div>
             </form>
           </div>
+          
 
           {/* Action Buttons */}
           <div className="mt-8 flex flex-col gap-3 pb-4">
