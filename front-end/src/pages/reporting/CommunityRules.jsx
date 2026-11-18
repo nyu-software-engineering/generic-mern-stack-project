@@ -1,35 +1,47 @@
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { getCommunityRules } from '../../services/reports'
 import './reporting.css'
 
-// Community rules (M33). Static content.
+// Community rules (M33). The rules come from the back-end.
 function CommunityRules() {
+  const [result, setResult] = useState(null)
+  const [attempt, setAttempt] = useState(0)
+
+  useEffect(() => {
+    let current = true
+    getCommunityRules().then(
+      (rules) => { if (current) setResult({ attempt, rules }) },
+      (error) => { if (current) setResult({ attempt, error }) },
+    )
+    return () => { current = false }
+  }, [attempt])
+
+  const loading = result?.attempt !== attempt
+
   return (
     <main className="page report-page">
       <h1>Sharing within NYU</h1>
 
-      <article className="rental-card">
-        <div>
-          <h3>Suitable items</h3>
-          <p>Electronics, supplies, tools, sports gear, games and appropriate household items.</p>
-        </div>
-      </article>
+      {loading && <p role="status">Loading rules...</p>}
 
-      <article className="rental-card">
+      {!loading && result.error && (
         <div>
-          <h3>Prohibited items</h3>
-          <p>Unsafe, illegal, age-restricted, controlled, medical, stolen or inappropriate goods.</p>
+          <p role="alert">Could not load the community rules. {result.error.message}</p>
+          <button type="button" className="report-button" onClick={() => setAttempt((value) => value + 1)}>
+            Try again
+          </button>
         </div>
-      </article>
+      )}
 
-      <article className="rental-card">
-        <div>
-          <h3>Simple sharing rules</h3>
-          <p>
-            Meet in shared spaces. Agree on terms. Return items on time in the agreed condition.
-            Report problems through DormShare.
-          </p>
-        </div>
-      </article>
+      {!loading && result.rules?.map((rule) => (
+        <article className="rental-card" key={rule.id}>
+          <div>
+            <h3>{rule.title}</h3>
+            <p>{rule.body}</p>
+          </div>
+        </article>
+      ))}
 
       <Link className="report-link" to="/report">Report a problem</Link>
     </main>

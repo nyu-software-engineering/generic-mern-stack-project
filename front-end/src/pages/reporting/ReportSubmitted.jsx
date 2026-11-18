@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { getReport, resolveReportSubject } from '../../services/reports'
 import './reporting.css'
@@ -5,10 +6,37 @@ import './reporting.css'
 // Report submitted confirmation
 function ReportSubmitted() {
   const { reportId } = useParams()
-  const report = getReport(reportId)
+  const [result, setResult] = useState(null)
+  const [attempt, setAttempt] = useState(0)
 
-  if (!report) return <main className="page"><p>Report not found.</p></main>
+  useEffect(() => {
+    let current = true
+    getReport(reportId).then(
+      (report) => { if (current) setResult({ reportId, attempt, report }) },
+      (error) => { if (current) setResult({ reportId, attempt, error }) },
+    )
+    return () => { current = false }
+  }, [reportId, attempt])
 
+  // A result for another report or an earlier attempt means the new one is still loading.
+  if (result?.reportId !== reportId || result.attempt !== attempt) {
+    return <main className="page"><p role="status">Loading report...</p></main>
+  }
+
+  if (result.error?.status === 404) return <main className="page"><p>Report not found.</p></main>
+
+  if (result.error) {
+    return (
+      <main className="page">
+        <p role="alert">Could not load the report. {result.error.message}</p>
+        <button type="button" className="report-button" onClick={() => setAttempt((value) => value + 1)}>
+          Try again
+        </button>
+      </main>
+    )
+  }
+
+  const { report } = result
   const { booking, conversation, listing } = resolveReportSubject(report)
   const related = booking ? 'rental' : conversation ? 'conversation' : 'listing'
 
