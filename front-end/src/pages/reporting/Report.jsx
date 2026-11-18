@@ -16,6 +16,7 @@ function Report() {
     listingId: searchParams.get('listingId') ?? '',
   }
   const [error, setError] = useState('')
+  const [submitting, setSubmitting] = useState(false)
   const navigate = useNavigate()
 
   const { booking, conversation, listing } = resolveReportSubject(ids)
@@ -42,23 +43,39 @@ function Report() {
     backLabel = 'Back to listing'
   }
 
-  function handleSubmit(event) {
+  // Only links that matched a real record are sent. The listing comes from the rental
+  // or conversation when there is one, so the links can't disagree.
+  const subjectIds = {
+    rentalId: booking ? booking.id : '',
+    conversationId: conversation ? conversation.id : '',
+    listingId: booking || conversation ? '' : (listing?.id ?? ''),
+  }
+
+  async function handleSubmit(event) {
     event.preventDefault()
     const { reason, description, image } = event.currentTarget.elements
 
-    const report = createReport({
-      ...ids,
-      reason: reason.value,
-      description: description.value,
-      imageName: image.files[0]?.name ?? '',
-    })
-
-    if (!report) {
+    if (!reason.value || !description.value.trim()) {
       setError('Please choose a reason and describe what happened.')
       return
     }
 
-    navigate(`/report/submitted/${report.id}`)
+    // One report per click: the button stays disabled until the back-end answers.
+    setSubmitting(true)
+    try {
+      const report = await createReport({
+        ...subjectIds,
+        reason: reason.value,
+        description: description.value,
+        imageName: image.files[0]?.name ?? '',
+      })
+      navigate(`/report/submitted/${report.id}`)
+    } catch (submitError) {
+      setError(submitError.status === 400
+        ? 'We could not submit this report. Check the details, and that you are part of this rental or conversation.'
+        : `Could not submit the report. ${submitError.message}`)
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -85,7 +102,7 @@ function Report() {
 
         <div>
           <label htmlFor="description">What happened?</label>
-          <textarea id="description" name="description" placeholder="Describe the issue" required />
+          <textarea id="description" name="description" placeholder="Describe the issue" maxLength={2000} required />
         </div>
 
         <div>
@@ -93,7 +110,9 @@ function Report() {
           <input id="image" name="image" type="file" accept="image/*" />
         </div>
 
-        <button type="submit" className="report-button">Submit report</button>
+        <button type="submit" className="report-button" disabled={submitting}>
+          {submitting ? 'Submitting...' : 'Submit report'}
+        </button>
       </form>
 
       {error && <p role="alert" className="report-error">{error}</p>}

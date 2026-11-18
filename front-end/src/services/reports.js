@@ -1,24 +1,15 @@
-// later to be replaced with real backend
-// survives refresh
-import { CURRENT_USER_ID } from './mockDataService.js'
+// Reports and community rules come from the back-end (#118): POST /api/reports,
+// GET /api/reports/:id and GET /api/community-rules.
+import { reportReasons } from '../data/options.js'
+import { api } from './api.js'
 import { getBooking, getListing } from './bookings.js'
 import { getConversation } from './chat.js'
 
-const STORAGE_KEY = 'dormshare.reports'
+export const REPORT_REASONS = reportReasons
 
-export const REPORT_REASONS = ['Damage', 'Missing item', 'Unsafe listing', 'Other']
-
-function readAll() {
-  try {
-    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY))
-    return Array.isArray(saved) ? saved : []
-  } catch {
-    return []
-  }
-}
-
-// Looks up what a report is about. Unknown ids are dropped, so only real
-// rentals, conversations and listings can be attached to a report.
+// Looks up what a report is about, for showing titles and names on the page.
+// Unknown ids are dropped. The back-end still checks that the reporter is part of
+// the rental or conversation.
 export function resolveReportSubject({ rentalId, listingId, conversationId } = {}) {
   const booking = rentalId ? getBooking(rentalId) : undefined
   const conversation = conversationId ? getConversation(conversationId) : undefined
@@ -27,28 +18,15 @@ export function resolveReportSubject({ rentalId, listingId, conversationId } = {
   return { booking, conversation, listing }
 }
 
-export const getReport = (id) => readAll().find((report) => report.id === id)
-
-// Returns the saved report, or null if the reason is invalid or the description is blank.
-export function createReport({ rentalId, listingId, conversationId, reason, description, imageName = '', reporterId = CURRENT_USER_ID }) {
-  const trimmed = description.trim()
-  if (!REPORT_REASONS.includes(reason) || !trimmed) return null
-
-  const { booking, conversation, listing } = resolveReportSubject({ rentalId, listingId, conversationId })
-  const reports = readAll()
-  const report = {
-    id: `DS-${reports.length + 101}`,
-    reporterId,
-    rentalId: booking ? String(booking.id) : '',
-    conversationId: conversation ? String(conversation.id) : '',
-    listingId: listing ? String(listing.id) : '',
-    reason,
-    description: trimmed,
-    imageName,
-    status: 'awaiting moderator review',
-    createdAt: new Date().toISOString(),
-  }
-
-  localStorage.setItem(STORAGE_KEY, JSON.stringify([...reports, report]))
-  return report
+// Rejects with an ApiError when the back-end refuses the report (for example 400).
+export function createReport({ rentalId, listingId, conversationId, reason, description, imageName = '' }) {
+  return api('/reports', {
+    method: 'POST',
+    body: { rentalId, listingId, conversationId, reason, description, imageName },
+  })
 }
+
+// Rejects with an ApiError with status 404 if the report is unknown or not yours.
+export const getReport = (id) => api(`/reports/${encodeURIComponent(id)}`)
+
+export const getCommunityRules = () => api('/community-rules')
