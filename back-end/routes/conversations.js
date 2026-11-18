@@ -67,6 +67,9 @@ conversationsRouter.post("/:id/offers", async (request, response) => {
   if (startDate < earliestToday()) {
     return response.status(400).json({ error: "startDate cannot be in the past." });
   }
+  // A huge total can round to Infinity, which would make the shared data invalid.
+  const total = roundCents(totalPrice);
+  if (!Number.isFinite(total)) return response.status(400).json({ error: "Offer total is too large." });
 
   const data = await request.app.locals.mockDataStore.load();
   for (const message of request.conversation.messages) {
@@ -76,7 +79,7 @@ conversationsRouter.post("/:id/offers", async (request, response) => {
     id: nextMessageId(data.conversations),
     senderId: request.currentUserId,
     type: "offer",
-    totalPrice: roundCents(totalPrice),
+    totalPrice: total,
     startDate,
     endDate,
     status: "pending",

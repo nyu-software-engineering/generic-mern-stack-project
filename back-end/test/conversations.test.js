@@ -176,6 +176,13 @@ describe("Conversation and message routes (#102)", () => {
       expect((await request("POST", "/1/offers")).status).to.equal(400);
     });
 
+    it("rejects a total that would round to Infinity without saving anything", async () => {
+      const { status, body } = await request("POST", "/2/offers", { ...offerDetails(), totalPrice: 1e307 });
+      expect(status).to.equal(400);
+      expect(body).to.deep.equal({ error: "Offer total is too large." });
+      expect(data.conversations[1].messages).to.have.length(1);
+    });
+
     it("returns 403 for another student's conversation and 404 for an unknown one", async () => {
       expect((await request("POST", "/3/offers", offerDetails())).status).to.equal(403);
       expect((await request("POST", "/999/offers", offerDetails())).status).to.equal(404);
