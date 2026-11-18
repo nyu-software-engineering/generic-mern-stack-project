@@ -19,7 +19,7 @@ function RequestCard({ booking, onDecline, declining = false, disabled = false }
         <ListingSummary listing={listing} detail={`${formatMoney(booking.totalPrice)} offer · ${dates}`} />
       ) : (
         <div className="booking-card">
-          <h2>{booking.listingTitle ?? 'Listing unavailable'}</h2>
+          <h2>Listing unavailable</h2>
           <p>{formatMoney(booking.totalPrice)} offer · {dates}</p>
         </div>
       )}
