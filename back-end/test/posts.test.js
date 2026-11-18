@@ -1,6 +1,7 @@
 import { expect } from 'chai'
 import request from 'supertest'
 import app from '../app.js'
+import { storage } from '../app.js'
 
 describe('GET /api/posts', () => {
   it('responds with a list of posts', async () => {
@@ -44,6 +45,43 @@ describe('POST /api/posts', () => {
       .post('/api/posts')
       .send({ title: 'title', desc: 'desc', includeBounty: true, bounty: ' ' })
     expect(res.status).to.equal(400)
+  })
+
+  it('saves uploaded images in public/uploads', async () => {
+    let x
+    let y
+
+    const cb = (arg1, arg2) => {
+      x = arg1
+      y = arg2
+    }
+
+    storage.getDestination({}, {}, cb)
+    
+    expect(x).to.equal(null)
+    expect(y).to.equal('public/uploads')
+  })
+
+  it('names uploaded images based on current time', async () => {
+    let x
+    let y
+
+    const file = {
+      fieldname: 'test', 
+      originalname: 'test.png'
+    }
+
+    const date = Date.now()
+
+    const cb = (arg1, arg2) => {
+      x = arg1
+      y = arg2
+    }
+
+    storage.getFilename({}, file, cb)
+    
+    expect(x).to.equal(null)
+    expect(y).to.equal(`test-${date}.png`)
   })
 
   it('adds a new post to home', async () => {

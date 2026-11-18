@@ -129,5 +129,5 @@ typings/
 **/_site/
 
 # Need uploads directory to exist
-public/uploads/*
-!public/uploads/.gitkeep
+**/public/uploads/*
+!**/public/uploads/.gitkeep
