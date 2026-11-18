@@ -1,6 +1,6 @@
 # DormShare design direction
 
-Direction A, the light campus marketplace, was selected on November 18, 2026. Detailed implementation is proposed in the [design specification](docs/design/2026-11-18-nyu-redesign-design.md) and awaits the owner's written-plan review.
+Direction A, the light campus marketplace, and the [written design specification](docs/design/2026-11-18-nyu-redesign-design.md) were approved by the owner on November 18, 2026.
 
 ## Visual identity
 

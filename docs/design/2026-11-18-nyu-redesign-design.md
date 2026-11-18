@@ -1,6 +1,6 @@
 # NYU-inspired DormShare redesign
 
-Prepared November 18, 2026 for #140 and #141. Direction A is selected. This written plan is ready for owner review before implementation begins.
+Prepared November 18, 2026 for #140 and #141. The owner approved direction A and this written plan on November 18, 2026.
 
 ## Goal and scope
 
@@ -128,5 +128,5 @@ For #142, verify search and category filtering, no results and reset, saving acr
 - NYU university-wide direction: confirmed.
 - Visual direction A: selected by the owner.
 - Brand research and 28-route source inventory: recorded.
-- Detailed font, navigation, component, and verification plan: ready for owner review.
-- Application styling implementation: starts after the written plan is approved.
+- Detailed font, navigation, component, and verification plan: approved by the owner.
+- Application styling implementation: approved to begin with #142.
