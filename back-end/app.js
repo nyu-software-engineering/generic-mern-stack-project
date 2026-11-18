@@ -4,6 +4,7 @@ import express from "express";
 import { currentUser } from "./middleware/currentUser.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 import { bookingsRouter } from "./routes/bookings.js";
+import { conversationsRouter } from "./routes/conversations.js";
 import { mockDataRouter } from "./routes/mockData.js";
 import { ownerListingsRouter } from "./routes/ownerListings.js";
 import { ownerDashboardRouter } from "./routes/ownerDashboard.js";
@@ -32,6 +33,7 @@ export function createApp({ store = createMockDataStore() } = {}) {
   app.use("/api/listings", ownerListingsRouter);
   app.use("/api/listings", publicListingsRouter);
   app.use("/api/owner", ownerDashboardRouter);
+  app.use("/api/conversations", conversationsRouter);
   app.use("/api/reports", reportsRouter);
   app.use("/api/community-rules", communityRulesRouter);
   app.use("/api", (_request, response) => {

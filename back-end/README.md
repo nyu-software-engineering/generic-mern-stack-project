@@ -265,6 +265,41 @@ bookings return 409. People outside the booking get 403.
 
 Frontend integration remains in #97 and #100.
 
+## Conversation routes
+
+`routes/conversations.js` handles #102 under `/api/conversations`:
+
+| Method | Path | Response |
+| --- | --- | --- |
+| GET | `/api/conversations` | Current user's conversations, newest message first |
+| GET | `/api/conversations/:id` | One conversation with all its messages |
+| POST | `/api/conversations/:id/messages` | Created text message, status 201 |
+| POST | `/api/conversations/:id/offers` | Created pending offer, status 201 |
+| POST | `/api/conversations/:id/offers/:messageId/accept` | `{ offer, booking }` with a confirmed booking, status 201 |
+| POST | `/api/conversations/:id/offers/:messageId/decline` | Declined offer |
+
+POST accepts `{ "text": "..." }`. The text is trimmed and must not be empty;
+otherwise the route returns 400. The server sets the message `id`, `senderId`,
+`type`, and `sentAt`, and ignores those fields in the body. Message IDs are
+unique across all conversations.
+
+Unknown conversations return 404. Conversations the current user is not part of
+return 403. Messages stay in the shared store until restart.
+
+Offers accept `{ "totalPrice": 18, "startDate": "2026-12-01", "endDate": "2026-12-04" }`.
+`totalPrice` must be a number of 0 or more and is rounded to cents. Dates follow
+the booking rules: real `YYYY-MM-DD` dates, `endDate` after `startDate`, and no
+start date in the past. Invalid offers return 400. A new offer marks any pending
+offer in the conversation as `countered`.
+
+Only the other participant can accept or decline a pending offer. Your own offer
+returns 403, an unknown or text message ID returns 404, and an offer that is no
+longer pending returns 409. Accepting adds a `confirmed` booking to the shared
+`rentals` array with the same fields as `POST /api/bookings`, using the offer's
+dates and total. The borrower is the participant who does not own the listing.
+Accepting returns 409 if the offer's dates have passed or the listing is no
+longer published.
+
 ## Tests
 
 ```sh
