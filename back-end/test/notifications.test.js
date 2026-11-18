@@ -34,3 +34,35 @@ describe('PATCH /api/notifications/read-all', () => {
     expect(res.body.every(n => n.read)).to.equal(true)
   })
 })
+
+describe('notifications for new messages', () => {
+  let convoId
+
+  before(async () => {
+    const res = await request(app)
+      .post('/api/conversations')
+      .send({ postId: 'notification-test-post', username: 'Test User', item: 'Test Item' })
+    convoId = res.body.id
+  })
+
+  it('creates a notification when the other person sends a message', async () => {
+    await request(app)
+      .post(`/api/conversations/${convoId}/messages`)
+      .send({ text: 'I found it!', sender: 'other' })
+    const res = await request(app).get('/api/notifications')
+    const newest = res.body[0]
+    expect(newest.path).to.equal(`/messages/${convoId}`)
+    expect(newest.title).to.equal('New message • Test User')
+    expect(newest.description).to.equal('About Test Item: I found it!')
+    expect(newest.read).to.equal(false)
+  })
+
+  it('does not create a notification for your own messages', async () => {
+    const start = await request(app).get('/api/notifications')
+    await request(app)
+      .post(`/api/conversations/${convoId}/messages`)
+      .send({ text: 'Thank you!' })
+    const end = await request(app).get('/api/notifications')
+    expect(end.body.length).to.equal(start.body.length)
+  })
+})

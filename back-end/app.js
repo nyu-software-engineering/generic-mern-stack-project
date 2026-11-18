@@ -134,6 +134,21 @@ app.post('/api/conversations/:id/messages', (req, res) => {
   }
   convo.messages.push(message)
   convo.read = message.sender === 'you'
+  
+  if (message.sender === 'other') {
+    notifications.unshift({
+      id: crypto.randomUUID(),
+      title: `New message • ${convo.username}`,
+      description: `About ${convo.item}: ${message.text}`,
+      time: `Today · ${message.time}`,
+      createdAt: message.createdAt,
+      read: false,
+      link: 'Open Conversation',
+      path: `/messages/${convo.id}`,
+      pfp: convo.pfp
+    })
+  }
+
   res.status(201).json(message)
 })
 
