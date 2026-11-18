@@ -16,7 +16,22 @@ The app's core features are a personalized Feed, user Profiles, Chat, a Discover
 Want to contribute? Read our [CONTRIBUTING.md](./CONTRIBUTING.md) for our team norms, Git workflow, and setup instructions.
 
 # Instructions for Building and Testing
-Coming soon. This section will be updated once the front end and back end are runnable.
+## Back-end
+1. `cd back-end`
+2. `npm install`
+3. `cp .env.example .env`
+4. `npm run dev` (runs on http://localhost:3000)
+
+## Front-end
+In a second terminal:
+1. `cd front-end`
+2. `npm install`
+3. `npm run dev`
+
+## Tests
+From `back-end/`:
+- `npm test` runs the unit tests
+- `npm run coverage` shows code coverage
 
 # Other Information + Key Links
 - [UX Design (app map, wireframes, prototype)](./UX-DESIGN.md)
