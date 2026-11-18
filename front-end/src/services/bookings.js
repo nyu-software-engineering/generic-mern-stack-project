@@ -40,6 +40,14 @@ function markLocalOnly(booking) {
   return booking
 }
 
+// Bookings created only in this browser get IDs from a separate range, so a booking
+// the server creates later (counting up from its own highest ID) can never reuse one.
+export const LOCAL_BOOKING_ID_START = 1_000_000_001
+function nextLocalBookingId() {
+  const localIds = getRentals().map((rental) => Number(rental.id)).filter((id) => id >= LOCAL_BOOKING_ID_START)
+  return Math.max(LOCAL_BOOKING_ID_START - 1, ...localIds) + 1
+}
+
 export function countDays(startDate, endDate) {
   return Math.round((new Date(endDate) - new Date(startDate)) / 86400000)
 }
@@ -49,6 +57,7 @@ export function createBooking({ listingId, borrowerId, startDate, endDate, total
   if (!listing) return null
 
   return markLocalOnly(createRental({
+    id: nextLocalBookingId(),
     listingId: listing.id,
     borrowerId,
     ownerId: listing.ownerId,

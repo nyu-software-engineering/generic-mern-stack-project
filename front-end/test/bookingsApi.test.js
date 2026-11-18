@@ -3,7 +3,9 @@ import { after, afterEach, before, beforeEach, describe, it } from 'node:test'
 import { createApp } from '../../back-end/app.js'
 import { startTestServer } from '../../back-end/test/helpers/server.js'
 import { ApiError } from '../src/services/api.js'
-import { clearLocalOnlyBooking, confirmPickup, getBooking, isLocalOnlyBooking } from '../src/services/bookings.js'
+import {
+  LOCAL_BOOKING_ID_START, clearLocalOnlyBooking, confirmPickup, getBooking, isLocalOnlyBooking,
+} from '../src/services/bookings.js'
 import { acceptOffer, getConversation, sendOffer } from '../src/services/chat.js'
 import { loadMockData } from '../src/services/mockDataService.js'
 import {
@@ -179,6 +181,47 @@ describe('Booking, extension and cancellation API integration (#93, #97, #100)',
       const extended = await sendExtensionRequest(201, '2030-06-01')
       assert.equal(extended.status, 'extension_requested')
       assert.ok(getBooking(201).pickupCheck, 'the pickup check survives later changes')
+    })
+
+    // Review regression: accept a chat offer, then request a different rental through
+    // the API. The server's new booking must not take over the chat booking's ID.
+    it('keeps a chat booking when a separate API request is created afterwards', async () => {
+      const conversation = getConversation(data.conversations[0].id)
+      const other = conversation.participantIds.find((id) => id !== 'owner-1')
+      sendOffer(conversation.id, other, { totalPrice: 12, startDate: '2030-05-01', endDate: '2030-05-03' })
+      const offer = getConversation(conversation.id).messages.findLast((message) => message.type === 'offer')
+      const chatBooking = acceptOffer(conversation.id, offer.id)
+      localIds.push(chatBooking.id)
+      assert.ok(chatBooking.id >= LOCAL_BOOKING_ID_START, 'chat bookings use the local ID range')
+
+      const requested = await requestBooking({ listingId: 2, startDate: '2030-08-01', endDate: '2030-08-04' })
+      assert.notEqual(requested.id, chatBooking.id)
+      assert.ok(requested.id < LOCAL_BOOKING_ID_START)
+
+      // The chat's "View booking" link still opens the chat booking, unchanged.
+      const viewed = await fetchBooking(chatBooking.id)
+      assert.deepEqual(
+        { status: viewed.status, startDate: viewed.startDate, endDate: viewed.endDate, totalPrice: viewed.totalPrice },
+        { status: 'confirmed', startDate: '2030-05-01', endDate: '2030-05-03', totalPrice: 12 },
+      )
+      assert.equal(getBooking(chatBooking.id).totalPrice, 12)
+      assert.equal((await fetchBooking(requested.id)).startDate, '2030-08-01')
+
+      // A second chat booking gets the next local ID, not a server one.
+      sendOffer(conversation.id, other, { totalPrice: 9, startDate: '2030-09-01', endDate: '2030-09-02' })
+      const nextOffer = getConversation(conversation.id).messages.findLast((message) => message.type === 'offer')
+      const second = acceptOffer(conversation.id, nextOffer.id)
+      localIds.push(second.id)
+      assert.equal(second.id, chatBooking.id + 1)
+    })
+
+    it('never lets a server response replace a local-only booking', async () => {
+      await fetchBooking(201)
+      confirmPickup(201, 'owner-1', { condition: 'As described', accessoriesComplete: true })
+      localIds.push(201)
+      await answerBookingRequest(101, 'confirmed')
+      await fetchBookingRequests()
+      assert.equal(getBooking(201).status, 'active')
     })
 
     it('explains why a local-only action is refused', async () => {

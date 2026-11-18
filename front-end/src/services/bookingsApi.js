@@ -10,14 +10,15 @@
 import { ApiError, api } from './api.js'
 import { cacheRentals } from './mockDataService.js'
 import {
-  CURRENT_USER_ID, cancelBooking, clearLocalOnlyBooking, getBooking, isLocalOnlyBooking,
+  CURRENT_USER_ID, cancelBooking, getBooking, isLocalOnlyBooking,
   requestExtension, respondToExtension, updateBookingStatus,
 } from './bookings.js'
 
-// A server booking is now the source of truth for its ID.
+// Server bookings never replace a local-only booking in the cache. Local-only
+// bookings use a separate ID range (see LOCAL_BOOKING_ID_START), so this is a
+// safety net rather than something that should happen.
 function cached(booking) {
-  clearLocalOnlyBooking(booking.id)
-  cacheRentals([booking])
+  if (!isLocalOnlyBooking(booking.id)) cacheRentals([booking])
   return booking
 }
 
