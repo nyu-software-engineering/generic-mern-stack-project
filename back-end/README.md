@@ -151,6 +151,46 @@ The owner router is mounted first so `/api/listings/mine` continues to return
 the current owner's listings in every status. Both routers use the same store.
 Frontend integration remains in #117.
 
+
+## Reporting routes
+
+`routes/reports.js` handles #118 under `/api/reports` and `/api/community-rules`.
+Reports are stored in `data.reports` in the shared store, which starts empty, so
+they are lost on restart.
+
+| Method | Path | Response |
+| --- | --- | --- |
+| POST | `/api/reports` | Created report with status `awaiting moderator review`, status 201 |
+| GET | `/api/reports/:id` | One report, for the user who filed it only |
+| GET | `/api/community-rules` | `[{ id, title, body }]`, the three community rules |
+
+POST accepts a JSON body such as
+`{ "reason": "Damage", "description": "Cracked screen.", "rentalId": 101 }`.
+
+- `reason` must be one of `reportReasons` in the shared options: `Damage`,
+  `Missing item`, `Unsafe listing`, or `Other`.
+- `description` must be non-blank text of at most 2,000 characters after
+  trimming. `imageName` is optional text and defaults to an empty string. It must
+  be a plain file name of at most 255 characters, with no `/`, `\`, `<`, `>` or
+  control characters.
+- `rentalId`, `conversationId` and `listingId` are optional. Each must be text or
+  a whole number, and `null` or an empty string means "not given". Any other
+  type, such as an object, array or boolean, returns 400.
+- A rental is attached only if the current user is its owner or borrower. A
+  conversation is attached only if the current user is a participant. Unknown
+  records and other people's records both return 400, so ids can't be probed.
+- The listing is taken from the attached rental or conversation. A `listingId`
+  sent on its own must be published or belong to the current user. When more
+  than one of `rentalId`, `conversationId` and `listingId` is sent, they must all
+  be about the same listing, or the request returns 400.
+- Invalid details return 400 `Invalid report details.` without creating a report.
+
+The server assigns the report ID (`DS-101`, `DS-102`, ...), reporter, status and
+creation time. Other submitted fields are ignored.
+
+GET `/api/reports/:id` returns 404 for an unknown ID and for another user's
+report, using the same response for both. Frontend integration remains in #121.
+
 ## Booking routes
 
 `routes/bookings.js` handles #91 under `/api/bookings`. Bookings are stored in
@@ -187,6 +227,7 @@ GET `/:id` returns 403 for bookings the current user is not part of. PATCH
 `/:id/status` accepts `{ "status": "confirmed" }` or `{ "status": "declined" }`,
 returns 403 for anyone but the owner, and 409 if the booking was already
 answered. Unknown booking IDs return 404. Frontend integration remains in #93.
+
 
 ## Extension and cancellation routes
 
