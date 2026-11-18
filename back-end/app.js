@@ -5,10 +5,10 @@ import multer from 'multer'
 
 const app = express()
 const mockDataPath = path.join(import.meta.dirname, 'mock', 'mockData.json')
-// const multer = require('multer')
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+app.use('/uploads', express.static('public/uploads'))
 
 // mock data for now, until the database is set up next sprint
 app.get('/api/mockData', (req, res) => {
@@ -16,21 +16,21 @@ app.get('/api/mockData', (req, res) => {
   res.json(data)
 })
 
-// // taken from express lecture notes
-// // enable file uploads saved to disk in a directory named 'public/uploads'
-// const storage = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     cb(null, "public/uploads")
-//   },
-//   filename: function (req, file, cb) {
-//     cb(
-//       null,
-//       `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`
-//     )
-//   },
-// })
+// taken from express lecture notes
+// enable file uploads saved to disk in a directory named 'public/uploads'
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "public/uploads")
+  },
+  filename: function (req, file, cb) {
+    cb(
+      null,
+      `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`
+    )
+  },
+})
 
-// const upload = multer({ storage: storage })
+const upload = multer({ storage: storage })
 
 // new post testing
 let posts = JSON.parse(fs.readFileSync(mockDataPath, 'utf8')).posts
@@ -39,7 +39,7 @@ app.get('/api/posts', (req, res) => {
   res.json(posts)
 })
 
-app.post('/api/posts', /* upload.single('image'), */ (req, res) => {
+app.post('/api/posts', upload.single('image'), (req, res) => {
   const { id, username, pfp, category, title, desc, date, time, location, image, 
     includeBounty, bounty } = req.body
   if (!title || !title.trim() || !desc || !desc.trim()) {
@@ -49,8 +49,8 @@ app.post('/api/posts', /* upload.single('image'), */ (req, res) => {
     return res.status(400).json({ error: 'If including bounty, bounty is required' })
   }
   const newPost = {
-    id, username, pfp, category, title: title.trim(), desc: desc.trim(), date, time, 
-    location, image, // : req.file ? `/uploads/${req.file.filename}` : '', 
+    id, username, pfp, category: category || 'lost', title: title.trim(), desc: desc.trim(), date, time, 
+    location, image: req.file ? `/uploads/${req.file.filename}` : '', 
     includeBounty, bounty
   }
   posts.unshift(newPost)

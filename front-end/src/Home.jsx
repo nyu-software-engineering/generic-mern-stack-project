@@ -15,7 +15,6 @@ const PostElement = props => {
         <div className="docs">
           <div className='header'>
             <div className='profile'>
-              {/* <img className="icon" src="https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7c/Profile_avatar_placeholder_large.png/250px-Profile_avatar_placeholder_large.png?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail"></img> */}
               <img className='icon' src={props.pfp} alt="" />
               <p>{props.username}</p>
             </div>
@@ -37,7 +36,6 @@ const PostElement = props => {
             {props.location && <p><strong>Location:</strong> {props.location}</p>}
           </div>
           <div className='bounty-image-grouping'>
-            {/* <img className="bounty-image" src="https://static0.srcdn.com/wordpress/wp-content/uploads/2019/12/Persona-5-Joker-Mask-Phantom-Thieves-Edition-Game.jpg"></img> */}
             {props.image && <img className='bounty-image' src={props.image} alt="" />}
             {props.category !== 'found' && <h2>{props.includeBounty ? 'BOUNTY' : 'NO BOUNTY'}</h2>}
             {props.category !== 'found' && <h3>{props.bounty}</h3>}
