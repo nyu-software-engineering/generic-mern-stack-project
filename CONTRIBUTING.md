@@ -77,7 +77,7 @@ npm install
 npm run dev
 ```
 
-Open the local address printed by Vite, usually `http://localhost:5173`. Leave this terminal running.
+Open the address printed by Vite, usually the [local frontend](http://localhost:5173). Leave this terminal running.
 
 ### Run the back end
 
@@ -89,7 +89,7 @@ npm install
 npm run dev
 ```
 
-The server listens at `http://127.0.0.1:3001`. Visit `http://127.0.0.1:3001/api/health`. It should return `{"status":"ok"}`. Leave this terminal running while you work.
+Open the [backend health check](http://127.0.0.1:3001/api/health) on the [local Express server](http://127.0.0.1:3001). It should return `{"status":"ok"}`. Leave this terminal running while you work.
 
 Stop either development server with `Ctrl+C` in its terminal.
 
