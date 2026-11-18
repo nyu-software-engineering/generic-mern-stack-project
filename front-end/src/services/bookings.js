@@ -28,6 +28,26 @@ export const getIncomingRequests = (ownerId) =>
 
 export const listingImage = () => '/listing-images/placeholder.png'
 
+// Bookings changed only in this browser by features that aren't connected to the
+// back-end yet: accepting a chat offer (#104) and pickup/return (#113). The booking
+// pages use the local copy for these instead of the API, so the changes aren't lost.
+// Remove once chat and handoff save through the API.
+const localOnlyBookingIds = new Set()
+export const isLocalOnlyBooking = (id) => localOnlyBookingIds.has(String(id))
+export const clearLocalOnlyBooking = (id) => { localOnlyBookingIds.delete(String(id)) }
+function markLocalOnly(booking) {
+  if (booking) localOnlyBookingIds.add(String(booking.id))
+  return booking
+}
+
+// Bookings created only in this browser get IDs from a separate range, so a booking
+// the server creates later (counting up from its own highest ID) can never reuse one.
+export const LOCAL_BOOKING_ID_START = 1_000_000_001
+function nextLocalBookingId() {
+  const localIds = getRentals().map((rental) => Number(rental.id)).filter((id) => id >= LOCAL_BOOKING_ID_START)
+  return Math.max(LOCAL_BOOKING_ID_START - 1, ...localIds) + 1
+}
+
 export function countDays(startDate, endDate) {
   return Math.round((new Date(endDate) - new Date(startDate)) / 86400000)
 }
@@ -36,7 +56,8 @@ export function createBooking({ listingId, borrowerId, startDate, endDate, total
   const listing = getListing(listingId)
   if (!listing) return null
 
-  return createRental({
+  return markLocalOnly(createRental({
+    id: nextLocalBookingId(),
     listingId: listing.id,
     borrowerId,
     ownerId: listing.ownerId,
@@ -47,7 +68,7 @@ export function createBooking({ listingId, borrowerId, startDate, endDate, total
     totalPrice,
     createdAt: new Date().toISOString().slice(0, 10),
     extensionRequest: null,
-  })
+  }))
 }
 
 export function updateBookingStatus(id, status) {
@@ -171,7 +192,7 @@ export function confirmPickup(id, userId, details) {
   const booking = getBooking(id)
   const pickupCheck = buildCheck(details, userId)
   if (!canConfirmPickup(booking, userId) || !pickupCheck) return null
-  return updateRental(id, { status: 'active', pickupCheck })
+  return markLocalOnly(updateRental(id, { status: 'active', pickupCheck }))
 }
 
 // Owner confirms return: active -> completed. Returns null if not allowed.
@@ -179,5 +200,5 @@ export function confirmReturn(id, userId, details) {
   const booking = getBooking(id)
   const returnCheck = buildCheck(details, userId)
   if (!canConfirmReturn(booking, userId) || !returnCheck) return null
-  return updateRental(id, { status: 'completed', returnCheck })
+  return markLocalOnly(updateRental(id, { status: 'completed', returnCheck }))
 }

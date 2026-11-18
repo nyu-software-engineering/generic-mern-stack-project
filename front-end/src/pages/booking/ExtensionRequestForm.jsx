@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { extensionCost, formatDate, formatMoney } from '../../services/bookings'
+import { extensionCost, formatDate, formatMoney, todayISO } from '../../services/bookings'
 
 const isValidDate = (value) => {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false
@@ -8,7 +8,7 @@ const isValidDate = (value) => {
 }
 
 // Borrower picks a later return date for an active rental (#55).
-function ExtensionRequestForm({ booking, onSubmit }) {
+function ExtensionRequestForm({ booking, onSubmit, submitting = false }) {
   const [newEndDate, setNewEndDate] = useState('')
   const [error, setError] = useState('')
 
@@ -23,6 +23,7 @@ function ExtensionRequestForm({ booking, onSubmit }) {
     if (newEndDate <= booking.endDate) {
       return setError(`New return date must be after ${formatDate(booking.endDate)}.`)
     }
+    if (newEndDate < todayISO()) return setError('New return date cannot be in the past.')
     setError('')
     onSubmit(newEndDate)
   }
@@ -33,7 +34,7 @@ function ExtensionRequestForm({ booking, onSubmit }) {
         New return date
         <input
           type="date"
-          min={booking.endDate}
+          min={booking.endDate > todayISO() ? booking.endDate : todayISO()}
           value={newEndDate}
           onChange={(e) => { setNewEndDate(e.target.value); setError('') }}
           className={error ? 'has-error' : ''}
@@ -45,7 +46,9 @@ function ExtensionRequestForm({ booking, onSubmit }) {
           Extra cost: {formatMoney(extraCost)} · New total: {formatMoney(booking.totalPrice + extraCost)}
         </p>
       )}
-      <button type="submit" className="booking-btn booking-btn--primary">Send extension request</button>
+      <button type="submit" className="booking-btn booking-btn--primary" disabled={submitting}>
+        {submitting ? 'Sending...' : 'Send extension request'}
+      </button>
     </form>
   )
 }

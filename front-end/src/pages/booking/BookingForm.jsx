@@ -10,7 +10,7 @@ function isValidDate(value) {
   return !Number.isNaN(date.getTime()) && date.toISOString().slice(0, 10) === value
 }
 
-function validate({ startDate, endDate, totalPrice }) {
+function validate({ startDate, endDate }) {
   const errors = {}
   if (!startDate) errors.startDate = 'Pick a start date.'
   else if (!isValidDate(startDate)) errors.startDate = 'Enter a valid start date.'
@@ -18,10 +18,11 @@ function validate({ startDate, endDate, totalPrice }) {
   if (!endDate) errors.endDate = 'Pick a return date.'
   else if (!isValidDate(endDate)) errors.endDate = 'Enter a valid return date.'
   else if (!errors.startDate && endDate <= startDate) errors.endDate = 'Return date must be after the start date.'
-  if (!errors.startDate && !errors.endDate && (totalPrice === '' || Number(totalPrice) <= 0)) errors.totalPrice = 'Enter a total above $0.'
   return errors
 }
 
+// onSubmit receives { startDate, endDate, message } and may return a promise.
+// If it rejects, the error message is shown and the form stays filled in.
 function BookingForm({ listing, initialStart = '', initialEnd = '', onSubmit }) {
   const [form, setForm] = useState({
     // Ignore prefilled dates from the URL unless they are real dates.
@@ -29,28 +30,41 @@ function BookingForm({ listing, initialStart = '', initialEnd = '', onSubmit }) 
     endDate: isValidDate(initialEnd) ? initialEnd : '',
     message: '',
   })
-  const [customTotal, setCustomTotal] = useState(null) // null = use the suggested total
   const [errors, setErrors] = useState({})
+  const [submitting, setSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState(null)
 
   const days = isValidDate(form.startDate) && isValidDate(form.endDate)
     ? countDays(form.startDate, form.endDate)
     : 0
-  const suggestedTotal = days > 0 ? roundCents(days * listing.price) : ''
-  const totalPrice = customTotal ?? suggestedTotal
+  // The server calculates the total the same way: days × daily price.
+  const total = days > 0 ? roundCents(days * listing.price) : null
 
-  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value })
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value })
+    setSubmitError(null)
+  }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    const found = validate({ ...form, totalPrice })
+    if (submitting) return
+    const found = validate(form)
     setErrors(found)
-    if (Object.keys(found).length === 0) {
-      onSubmit({ ...form, totalPrice: roundCents(Number(totalPrice)), message: form.message.trim() })
+    if (Object.keys(found).length > 0) return
+
+    setSubmitting(true)
+    setSubmitError(null)
+    try {
+      await onSubmit({ startDate: form.startDate, endDate: form.endDate, message: form.message.trim() })
+    } catch (error) {
+      setSubmitError(error)
+    } finally {
+      setSubmitting(false)
     }
   }
 
   return (
-    <form className="booking-form" onSubmit={handleSubmit} noValidate>
+    <form className="booking-form" onSubmit={handleSubmit} noValidate aria-busy={submitting}>
       <div className="booking-dates">
         <label>
           Start date
@@ -66,18 +80,11 @@ function BookingForm({ listing, initialStart = '', initialEnd = '', onSubmit }) 
         </label>
       </div>
 
-      <label>
-        Proposed total ($)
-        <input type="number" min="1" value={totalPrice}
-          onChange={(e) => setCustomTotal(e.target.value)}
-          className={errors.totalPrice ? 'has-error' : ''} />
-        {days > 0 && (
-          <span className="booking-note">
-            Suggested: {formatMoney(suggestedTotal)} ({days} day{days > 1 ? 's' : ''} × {formatMoney(listing.price)})
-          </span>
-        )}
-        {errors.totalPrice && <p className="field-error">{errors.totalPrice}</p>}
-      </label>
+      <p className="booking-note">
+        {total === null
+          ? `${formatMoney(listing.price)} per day. Pick your dates to see the total.`
+          : `Total: ${formatMoney(total)} (${days} day${days > 1 ? 's' : ''} × ${formatMoney(listing.price)})`}
+      </p>
 
       <label>
         Message to owner
@@ -86,7 +93,10 @@ function BookingForm({ listing, initialStart = '', initialEnd = '', onSubmit }) 
       </label>
 
       <p className="booking-note">Payment is arranged directly with the owner.</p>
-      <button type="submit" className="booking-btn booking-btn--primary">Send request</button>
+      {submitError && <p className="field-error" role="alert">Could not send request. {submitError.message}</p>}
+      <button type="submit" className="booking-btn booking-btn--primary" disabled={submitting}>
+        {submitting ? 'Sending...' : 'Send request'}
+      </button>
     </form>
   )
 }

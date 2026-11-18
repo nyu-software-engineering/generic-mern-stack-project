@@ -1,10 +1,12 @@
-import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import StatusBadge from '../../components/StatusBadge'
+import BookingLoadState from './BookingLoadState'
 import ListingSummary from './ListingSummary'
+import { useBooking } from './useBooking'
 import {
-  CURRENT_USER_ID, cancelBooking, canCancel, formatDate, formatMoney, getBooking, getListing, getUser,
+  CURRENT_USER_ID, canCancel, formatDate, formatMoney, getListing, getUser,
 } from '../../services/bookings'
+import { cancelBookingRequest } from '../../services/bookingsApi'
 import './booking.css'
 
 // Why a booking can't be cancelled, worded for its current status.
@@ -33,9 +35,9 @@ function Cancellation() {
 }
 
 function CancelPage({ bookingId }) {
-  const [booking, setBooking] = useState(() => getBooking(bookingId))
+  const { booking, loadError, retry, pending, actionError, run } = useBooking(bookingId)
 
-  if (!booking) return <main className="booking-page"><p>Booking not found.</p></main>
+  if (!booking) return <BookingLoadState loadError={loadError} retry={retry} />
 
   const listing = getListing(booking.listingId)
   const isOwner = booking.ownerId === CURRENT_USER_ID
@@ -63,13 +65,17 @@ function CancelPage({ bookingId }) {
           </p>
           <p>This can&apos;t be undone.</p>
         </div>
-        <div className="booking-actions">
+        {actionError && (
+          <p className="field-error" role="alert">Could not cancel. {actionError.message}</p>
+        )}
+        <div className="booking-actions" aria-busy={pending}>
           <button
             type="button"
             className="booking-btn booking-btn--danger"
-            onClick={() => setBooking(cancelBooking(booking.id, CURRENT_USER_ID))}
+            disabled={pending}
+            onClick={() => run(() => cancelBookingRequest(booking.id))}
           >
-            {isRequest ? 'Yes, withdraw request' : 'Yes, cancel booking'}
+            {pending ? 'Cancelling...' : isRequest ? 'Yes, withdraw request' : 'Yes, cancel booking'}
           </button>
           <Link to={`/bookings/${booking.id}`} className="booking-btn">Keep booking</Link>
         </div>

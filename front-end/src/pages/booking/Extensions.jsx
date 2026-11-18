@@ -1,12 +1,13 @@
-import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import StatusBadge from '../../components/StatusBadge'
+import BookingLoadState from './BookingLoadState'
 import ExtensionRequestForm from './ExtensionRequestForm'
 import ListingSummary from './ListingSummary'
+import { useBooking } from './useBooking'
 import {
-  CURRENT_USER_ID, extensionCost, formatDate, formatMoney, getBooking, getListing, getUser,
-  requestExtension, respondToExtension,
+  CURRENT_USER_ID, extensionCost, formatDate, formatMoney, getListing, getUser,
 } from '../../services/bookings'
+import { answerExtensionRequest, sendExtensionRequest } from '../../services/bookingsApi'
 import './booking.css'
 
 // Extension requests (#55): the borrower asks for a later return date,
@@ -17,9 +18,9 @@ function Extensions() {
 }
 
 function ExtensionPage({ bookingId }) {
-  const [booking, setBooking] = useState(() => getBooking(bookingId))
+  const { booking, loadError, retry, pending: saving, actionError, run } = useBooking(bookingId)
 
-  if (!booking) return <main className="booking-page"><p>Booking not found.</p></main>
+  if (!booking) return <BookingLoadState loadError={loadError} retry={retry} />
 
   const listing = getListing(booking.listingId)
   const isOwner = booking.ownerId === CURRENT_USER_ID
@@ -27,7 +28,7 @@ function ExtensionPage({ bookingId }) {
   const request = booking.extensionRequest
   const pending = booking.status === 'extension_requested' && request?.status === 'pending'
 
-  const respond = (approve) => setBooking(respondToExtension(booking.id, approve))
+  const respond = (approve) => run(() => answerExtensionRequest(booking.id, approve))
 
   let body
   if (pending && isOwner) {
@@ -40,12 +41,14 @@ function ExtensionPage({ bookingId }) {
           <p>Requested return: {formatDate(request.newEndDate)}</p>
           <p>Extra cost: {formatMoney(extra)} · New total: {formatMoney(booking.totalPrice + extra)}</p>
         </div>
-        <div className="booking-actions">
-          <button type="button" className="booking-btn booking-btn--primary" onClick={() => respond(true)}>
-            Approve extension
+        <div className="booking-actions" aria-busy={saving}>
+          <button type="button" className="booking-btn booking-btn--primary" disabled={saving}
+            onClick={() => respond(true)}>
+            {saving ? 'Saving...' : 'Approve extension'}
           </button>
           <Link to="/inbox" className="booking-btn">Message borrower</Link>
-          <button type="button" className="booking-btn booking-btn--link" onClick={() => respond(false)}>
+          <button type="button" className="booking-btn booking-btn--link" disabled={saving}
+            onClick={() => respond(false)}>
             Decline extension
           </button>
         </div>
@@ -71,7 +74,8 @@ function ExtensionPage({ bookingId }) {
         )}
         <ExtensionRequestForm
           booking={booking}
-          onSubmit={(newEndDate) => setBooking(requestExtension(booking.id, newEndDate))}
+          submitting={saving}
+          onSubmit={(newEndDate) => run(() => sendExtensionRequest(booking.id, newEndDate))}
         />
       </>
     )
@@ -94,6 +98,9 @@ function ExtensionPage({ bookingId }) {
         <p>{formatDate(booking.startDate)} – {formatDate(booking.endDate)}</p>
         <p>Total: {formatMoney(booking.totalPrice)}</p>
       </div>
+      {actionError && (
+        <p className="field-error" role="alert">Could not update the extension. {actionError.message}</p>
+      )}
       {body}
       <p style={{ marginTop: 16 }}>
         <Link to={`/bookings/${booking.id}`}>Back to booking summary</Link>
