@@ -47,6 +47,26 @@ app.post('/api/profile', (req, res) => {
   res.json(profile)
 })
 
+let notifications = JSON.parse(fs.readFileSync(mockDataPath, 'utf8')).notifications
+
+app.get('/api/notifications', (req, res) => {
+  res.json(notifications)
+})
+
+app.patch('/api/notifications/read-all', (req, res) => {
+  notifications.forEach(n => { n.read = true })
+  res.json(notifications)
+})
+
+app.patch('/api/notifications/:id/read', (req, res) => {
+  const notification = notifications.find(n => String(n.id) === req.params.id)
+  if (!notification) {
+    return res.status(404).json({ error: 'Notification not found' })
+  }
+  notification.read = true
+  res.json(notification)
+})
+
 let conversations = JSON.parse(fs.readFileSync(mockDataPath, 'utf8')).conversations
 
 app.get('/api/conversations', (req, res) => {
