@@ -47,6 +47,76 @@ app.post('/api/profile', (req, res) => {
   res.json(profile)
 })
 
+let conversations = JSON.parse(fs.readFileSync(mockDataPath, 'utf8')).conversations
+
+app.get('/api/conversations', (req, res) => {
+  res.json(conversations)
+})
+
+app.get('/api/conversations/:id', (req, res) => {
+  const convo = conversations.find(c => String(c.id) === req.params.id)
+  if (!convo) {
+    return res.status(404).json({ error: 'Conversation not found' })
+  }
+  res.json(convo)
+})
+
+// starts a chat about a post or returns the chat that already exists for that post
+app.post('/api/conversations', (req, res) => {
+  const { postId, username, pfp, item, location, includeBounty, bounty } = req.body
+  if (postId === undefined || postId === null || postId === '') {
+    return res.status(400).json({ error: 'Post id is required' })
+  }
+  const existing = conversations.find(c => String(c.postId) === String(postId))
+  if (existing) {
+    return res.json(existing)
+  }
+  const convo = {
+    id: crypto.randomUUID(),
+    postId,
+    username: username ?? 'Unknown',
+    pfp: pfp ?? '',
+    item: item ?? '',
+    location: location ?? '',
+    includeBounty: includeBounty ?? false,
+    bounty: bounty ?? '',
+    read: true,
+    messages: []
+  }
+  conversations.unshift(convo)
+  res.status(201).json(convo)
+})
+
+app.patch('/api/conversations/:id/read', (req, res) => {
+  const convo = conversations.find(c => String(c.id) === req.params.id)
+  if (!convo) {
+    return res.status(404).json({ error: 'Conversation not found' })
+  }
+  convo.read = true
+  res.json(convo)
+})
+
+app.post('/api/conversations/:id/messages', (req, res) => {
+  const convo = conversations.find(c => String(c.id) === req.params.id)
+  if (!convo) {
+    return res.status(404).json({ error: 'Conversation not found' })
+  }
+  const { text, sender } = req.body
+  if (typeof text !== 'string' || !text.trim()) {
+    return res.status(400).json({ error: 'Message text is required' })
+  }
+  const message = {
+    id: crypto.randomUUID(),
+    sender: sender === 'other' ? 'other' : 'you',
+    text: text.trim(),
+    time: new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }),
+    createdAt: new Date().toISOString()
+  }
+  convo.messages.push(message)
+  convo.read = message.sender === 'you'
+  res.status(201).json(message)
+})
+
 // mock password kept in memory until real accounts are set up with the database
 let password = 'password123'
 
@@ -64,6 +134,10 @@ app.post('/api/account/password', (req, res) => {
   password = newPassword
   res.json({ message: 'Password updated' })
 })
+
+
+
+
 
 export default app
 
