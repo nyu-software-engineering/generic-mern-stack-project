@@ -21,6 +21,7 @@ import EditProfile from './pages/EditProfile';
 import Notifications from './pages/Notifications';
 import Settings from './pages/Settings';
 import Support from './pages/Support';
+import ForgotPassword from './pages/ForgotPassword';
 
 export default function App() {
   return (
@@ -32,6 +33,7 @@ export default function App() {
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
 
         {/* Main Application pages */}
         <Route element={<Layout />}>
