@@ -1,9 +1,11 @@
 import assert from 'node:assert/strict'
-import { after, before, beforeEach, describe, it } from 'node:test'
+import { after, afterEach, before, beforeEach, describe, it } from 'node:test'
 import { createApp } from '../../back-end/app.js'
 import { startTestServer } from '../../back-end/test/helpers/server.js'
 import { ApiError } from '../src/services/api.js'
-import { getBooking } from '../src/services/bookings.js'
+import { clearLocalOnlyBooking, confirmPickup, getBooking, isLocalOnlyBooking } from '../src/services/bookings.js'
+import { acceptOffer, getConversation, sendOffer } from '../src/services/chat.js'
+import { loadMockData } from '../src/services/mockDataService.js'
 import {
   answerBookingRequest, answerExtensionRequest, cancelBookingRequest, fetchBooking,
   fetchBookingRequests, fetchExtensionRequests, requestBooking, sendExtensionRequest,
@@ -121,6 +123,77 @@ describe('Booking, extension and cancellation API integration (#93, #97, #100)',
       assert.equal(declined.endDate, '2026-11-07')
       assert.equal(declined.totalPrice, 10)
       assert.equal(declined.extensionRequest.status, 'declined')
+    })
+  })
+
+  // Regressions from review: chat (#104) and pickup/return (#113) still save only in
+  // the browser, so the booking pages must not lose or overwrite those changes.
+  describe('bookings changed only in this browser', () => {
+    const localIds = []
+
+    beforeEach(async () => {
+      await loadMockData()
+    })
+
+    afterEach(() => {
+      for (const id of localIds.splice(0)) clearLocalOnlyBooking(id)
+    })
+
+    it('opens a booking created by accepting a chat offer, which the server does not have', async () => {
+      const conversation = getConversation(data.conversations[0].id)
+      const other = conversation.participantIds.find((id) => id !== 'owner-1')
+      sendOffer(conversation.id, other, { totalPrice: 12, startDate: '2030-05-01', endDate: '2030-05-03' })
+      const offer = getConversation(conversation.id).messages.findLast((message) => message.type === 'offer')
+
+      const booking = acceptOffer(conversation.id, offer.id)
+      localIds.push(booking.id)
+      assert.equal(isLocalOnlyBooking(booking.id), true)
+      assert.equal(stored(booking.id), undefined, 'the server has never seen this booking')
+
+      const opened = await fetchBooking(booking.id)
+      assert.equal(opened.id, booking.id)
+      assert.equal(opened.status, 'confirmed')
+      assert.equal(opened.totalPrice, 12)
+
+      const cancelled = await cancelBookingRequest(booking.id)
+      assert.equal(cancelled.status, 'cancelled')
+      assert.equal(getBooking(booking.id).status, 'cancelled')
+    })
+
+    it('keeps a confirmed pickup when the booking summary reloads', async () => {
+      await fetchBooking(201)
+      const pickedUp = confirmPickup(201, 'owner-1', { condition: 'As described', accessoriesComplete: true })
+      localIds.push(201)
+      assert.equal(pickedUp.status, 'active')
+
+      // "Back to booking summary" reloads the booking; the server still says confirmed.
+      const reloaded = await fetchBooking(201)
+      assert.equal(stored(201).status, 'confirmed')
+      assert.equal(reloaded.status, 'active')
+      assert.equal(reloaded.pickupCheck.condition, 'As described')
+
+      await fetchBookingRequests()
+      await fetchExtensionRequests()
+      assert.equal(getBooking(201).status, 'active', 'list refreshes do not overwrite it either')
+
+      const extended = await sendExtensionRequest(201, '2030-06-01')
+      assert.equal(extended.status, 'extension_requested')
+      assert.ok(getBooking(201).pickupCheck, 'the pickup check survives later changes')
+    })
+
+    it('explains why a local-only action is refused', async () => {
+      const booking = acceptOffer(...(() => {
+        const conversation = getConversation(data.conversations[0].id)
+        const other = conversation.participantIds.find((id) => id !== 'owner-1')
+        sendOffer(conversation.id, other, { totalPrice: 8, startDate: '2030-07-01', endDate: '2030-07-02' })
+        const offer = getConversation(conversation.id).messages.findLast((message) => message.type === 'offer')
+        return [conversation.id, offer.id]
+      })())
+      localIds.push(booking.id)
+      await assert.rejects(
+        sendExtensionRequest(booking.id, '2030-07-05'),
+        (error) => error instanceof ApiError && error.status === 409 && /active/.test(error.message),
+      )
     })
   })
 

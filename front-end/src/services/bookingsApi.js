@@ -2,17 +2,37 @@
 // Every booking the API returns is also copied into the shared rental cache, so
 // pages that still read it synchronously (chat, handoff, reporting) see the change.
 // The route contracts are documented in back-end/README.md.
-import { api } from './api.js'
+//
+// Bookings that chat or pickup/return changed only in this browser (see
+// isLocalOnlyBooking in bookings.js) don't exist on the server yet, or are older
+// there. For those, these functions use the local copy and the original local
+// logic instead, so nothing the user did is lost or overwritten.
+import { ApiError, api } from './api.js'
 import { cacheRentals } from './mockDataService.js'
+import {
+  CURRENT_USER_ID, cancelBooking, clearLocalOnlyBooking, getBooking, isLocalOnlyBooking,
+  requestExtension, respondToExtension, updateBookingStatus,
+} from './bookings.js'
 
+// A server booking is now the source of truth for its ID.
 function cached(booking) {
+  clearLocalOnlyBooking(booking.id)
   cacheRentals([booking])
   return booking
 }
 
+// Lists never overwrite a local-only booking with the server's older copy.
 function cachedList(bookings) {
-  cacheRentals(bookings)
+  cacheRentals(bookings.filter((booking) => !isLocalOnlyBooking(booking.id)))
   return bookings
+}
+
+// Runs the local version of an action for a local-only booking.
+// The local functions return null when the action isn't allowed.
+function local(id, change, refusal) {
+  const updated = change()
+  if (!updated) throw new ApiError(refusal, getBooking(id) ? 409 : 404)
+  return updated
 }
 
 // ---- Booking (#93) ----
@@ -26,6 +46,10 @@ export async function requestBooking({ listingId, startDate, endDate, message = 
 }
 
 export async function fetchBooking(id) {
+  if (isLocalOnlyBooking(id)) {
+    const booking = getBooking(id)
+    if (booking) return booking
+  }
   return cached(await api(`/bookings/${encodeURIComponent(id)}`))
 }
 
@@ -36,6 +60,9 @@ export async function fetchBookingRequests() {
 
 // status is 'confirmed' or 'declined'.
 export async function answerBookingRequest(id, status) {
+  if (isLocalOnlyBooking(id)) {
+    return local(id, () => updateBookingStatus(id, status), 'This booking was already answered.')
+  }
   return cached(await api(`/bookings/${encodeURIComponent(id)}/status`, {
     method: 'PATCH',
     body: { status },
@@ -50,6 +77,10 @@ export async function fetchExtensionRequests() {
 }
 
 export async function sendExtensionRequest(id, newEndDate) {
+  if (isLocalOnlyBooking(id)) {
+    return local(id, () => requestExtension(id, newEndDate),
+      'Only active bookings can be extended, to a date after the current return date.')
+  }
   return cached(await api(`/bookings/${encodeURIComponent(id)}/extensions`, {
     method: 'POST',
     body: { newEndDate },
@@ -57,6 +88,9 @@ export async function sendExtensionRequest(id, newEndDate) {
 }
 
 export async function answerExtensionRequest(id, approve) {
+  if (isLocalOnlyBooking(id)) {
+    return local(id, () => respondToExtension(id, approve), 'There is no pending extension request.')
+  }
   return cached(await api(`/bookings/${encodeURIComponent(id)}/extensions`, {
     method: 'PATCH',
     body: { approve },
@@ -66,5 +100,8 @@ export async function answerExtensionRequest(id, approve) {
 // ---- Cancellation (#100) ----
 
 export async function cancelBookingRequest(id) {
+  if (isLocalOnlyBooking(id)) {
+    return local(id, () => cancelBooking(id, CURRENT_USER_ID), 'This booking cannot be cancelled.')
+  }
   return cached(await api(`/bookings/${encodeURIComponent(id)}/cancel`, { method: 'POST' }))
 }
