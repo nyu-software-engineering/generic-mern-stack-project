@@ -4,10 +4,11 @@ import BookingLoadState from './BookingLoadState'
 import ListingSummary from './ListingSummary'
 import { useBooking } from './useBooking'
 import {
-  CURRENT_USER_ID, canCancel, formatDate, formatMoney, getListing, getUser,
+  CURRENT_USER_ID, canCancel, dailyRate, formatDate, formatMoney, getListing, getUser,
 } from '../../services/bookings'
 import { cancelBookingRequest } from '../../services/bookingsApi'
 import './booking.css'
+import './booking-nyu.css'
 
 // Why a booking can't be cancelled, worded for its current status.
 function cannotCancelReason(booking, isOwner) {
@@ -61,7 +62,7 @@ function CancelPage({ bookingId }) {
           <p>
             {isRequest
               ? `Your request to ${other?.name} will be withdrawn.`
-              : `The booking with ${other?.name} for ${formatDate(booking.startDate)} – ${formatDate(booking.endDate)} will be marked as cancelled for both of you.`}
+              : `The booking with ${other?.name} for ${formatDate(booking.startDate)} to ${formatDate(booking.endDate)} will be marked as cancelled for both of you.`}
           </p>
           <p>This can&apos;t be undone.</p>
         </div>
@@ -71,13 +72,13 @@ function CancelPage({ bookingId }) {
         <div className="booking-actions" aria-busy={pending}>
           <button
             type="button"
-            className="booking-btn booking-btn--danger"
+            className="ds-button booking-danger"
             disabled={pending}
             onClick={() => run(() => cancelBookingRequest(booking.id))}
           >
             {pending ? 'Cancelling...' : isRequest ? 'Yes, withdraw request' : 'Yes, cancel booking'}
           </button>
-          <Link to={`/bookings/${booking.id}`} className="booking-btn">Keep booking</Link>
+          <Link to={`/bookings/${booking.id}`} className="ds-button ds-button--secondary">Keep booking</Link>
         </div>
       </>
     )
@@ -86,17 +87,21 @@ function CancelPage({ bookingId }) {
   }
 
   return (
-    <main className="booking-page">
-      <h1>Cancel booking</h1>
-      {listing && <ListingSummary listing={listing} />}
+    <main className="ds-page booking-page ds-booking">
+      <h1 className="ds-heading">Cancel booking</h1>
+      {listing && <ListingSummary listing={listing} detail={`Owner: ${getUser(listing.ownerId)?.name ?? 'Unknown'}`} />}
       <div className="booking-card">
         <div><StatusBadge status={booking.status} /></div>
-        <p>{formatDate(booking.startDate)} – {formatDate(booking.endDate)}</p>
-        <p>Total: {formatMoney(booking.totalPrice)}</p>
+        <dl className="booking-facts">
+          <div><dt>Daily rate</dt><dd>{formatMoney(dailyRate(booking))}</dd></div>
+          <div><dt>Pickup date</dt><dd>{formatDate(booking.startDate)}</dd></div>
+          <div><dt>Return date</dt><dd>{formatDate(booking.endDate)}</dd></div>
+          <div><dt>Total</dt><dd>{formatMoney(booking.totalPrice)}</dd></div>
+        </dl>
       </div>
       {body}
       <p style={{ marginTop: 16 }}>
-        <Link to={`/bookings/${booking.id}`}>Back to booking summary</Link>
+        <Link className="ds-text-link" to={`/bookings/${booking.id}`}>Back to booking summary</Link>
       </p>
     </main>
   )

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { flushSync } from 'react-dom'
 import { extensionCost, formatDate, formatMoney, todayISO } from '../../services/bookings'
 
 const isValidDate = (value) => {
@@ -18,35 +19,51 @@ function ExtensionRequestForm({ booking, onSubmit, submitting = false }) {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    if (!newEndDate) return setError('Pick a new return date.')
-    if (!isValidDate(newEndDate)) return setError('Enter a valid date.')
-    if (newEndDate <= booking.endDate) {
-      return setError(`New return date must be after ${formatDate(booking.endDate)}.`)
+    let validationError = ''
+    if (!newEndDate) validationError = 'Pick a new return date.'
+    else if (!isValidDate(newEndDate)) validationError = 'Enter a valid date.'
+    else if (newEndDate <= booking.endDate) {
+      validationError = `New return date must be after ${formatDate(booking.endDate)}.`
+    } else if (newEndDate < todayISO()) {
+      validationError = 'New return date cannot be in the past.'
     }
-    if (newEndDate < todayISO()) return setError('New return date cannot be in the past.')
+    if (validationError) {
+      const field = e.currentTarget.elements.newEndDate
+      flushSync(() => setError(validationError))
+      field.focus()
+      return
+    }
     setError('')
     onSubmit(newEndDate)
   }
 
   return (
-    <form className="booking-form" onSubmit={handleSubmit} noValidate>
-      <label>
-        New return date
+    <form className="booking-form" onSubmit={handleSubmit} noValidate aria-busy={submitting}>
+      <label htmlFor="booking-extension-date">
+        <span id="booking-extension-date-label">New return date</span>
         <input
           type="date"
+          name="newEndDate"
+          id="booking-extension-date"
+          className="ds-field"
+          aria-labelledby="booking-extension-date-label"
+          aria-invalid={error ? true : undefined}
+          aria-describedby={error ? 'booking-extension-date-error' : undefined}
           min={booking.endDate > todayISO() ? booking.endDate : todayISO()}
           value={newEndDate}
-          onChange={(e) => { setNewEndDate(e.target.value); setError('') }}
-          className={error ? 'has-error' : ''}
+          onChange={(e) => {
+            setNewEndDate(e.target.value)
+            setError('')
+          }}
         />
-        {error && <p className="field-error">{error}</p>}
+        {error && <span id="booking-extension-date-error" className="field-error" role="alert">{error}</span>}
       </label>
       {extraCost !== null && (
         <p className="booking-note">
           Extra cost: {formatMoney(extraCost)} · New total: {formatMoney(booking.totalPrice + extraCost)}
         </p>
       )}
-      <button type="submit" className="booking-btn booking-btn--primary" disabled={submitting}>
+      <button type="submit" className="ds-button ds-button--primary" disabled={submitting}>
         {submitting ? 'Sending...' : 'Send extension request'}
       </button>
     </form>

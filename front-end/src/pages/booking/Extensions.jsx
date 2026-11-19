@@ -5,10 +5,11 @@ import ExtensionRequestForm from './ExtensionRequestForm'
 import ListingSummary from './ListingSummary'
 import { useBooking } from './useBooking'
 import {
-  CURRENT_USER_ID, extensionCost, formatDate, formatMoney, getListing, getUser,
+  CURRENT_USER_ID, dailyRate, extensionCost, formatDate, formatMoney, getListing, getUser,
 } from '../../services/bookings'
 import { answerExtensionRequest, sendExtensionRequest } from '../../services/bookingsApi'
 import './booking.css'
+import './booking-nyu.css'
 
 // Extension requests (#55): the borrower asks for a later return date,
 // the owner approves or declines. Keyed so state resets on a new booking id.
@@ -42,12 +43,12 @@ function ExtensionPage({ bookingId }) {
           <p>Extra cost: {formatMoney(extra)} · New total: {formatMoney(booking.totalPrice + extra)}</p>
         </div>
         <div className="booking-actions" aria-busy={saving}>
-          <button type="button" className="booking-btn booking-btn--primary" disabled={saving}
+          <button type="button" className="ds-button ds-button--primary" disabled={saving}
             onClick={() => respond(true)}>
             {saving ? 'Saving...' : 'Approve extension'}
           </button>
-          <Link to="/inbox" className="booking-btn">Message borrower</Link>
-          <button type="button" className="booking-btn booking-btn--link" disabled={saving}
+          <Link to="/inbox" className="ds-button ds-button--secondary">Message borrower</Link>
+          <button type="button" className="ds-button booking-danger" disabled={saving}
             onClick={() => respond(false)}>
             Decline extension
           </button>
@@ -90,20 +91,24 @@ function ExtensionPage({ bookingId }) {
   }
 
   return (
-    <main className="booking-page">
-      <h1>{isOwner ? 'Extension request' : 'Request extension'}</h1>
-      {listing && <ListingSummary listing={listing} />}
+    <main className="ds-page booking-page ds-booking">
+      <h1 className="ds-heading">{isOwner ? 'Extension request' : 'Request extension'}</h1>
+      {listing && <ListingSummary listing={listing} detail={`Owner: ${getUser(listing.ownerId)?.name ?? 'Unknown'}`} />}
       <div className="booking-card">
         <div><StatusBadge status={booking.status} /></div>
-        <p>{formatDate(booking.startDate)} – {formatDate(booking.endDate)}</p>
-        <p>Total: {formatMoney(booking.totalPrice)}</p>
+        <dl className="booking-facts">
+          <div><dt>Daily rate</dt><dd>{formatMoney(dailyRate(booking))}</dd></div>
+          <div><dt>Pickup date</dt><dd>{formatDate(booking.startDate)}</dd></div>
+          <div><dt>Return date</dt><dd>{formatDate(booking.endDate)}</dd></div>
+          <div><dt>Total</dt><dd>{formatMoney(booking.totalPrice)}</dd></div>
+        </dl>
       </div>
       {actionError && (
         <p className="field-error" role="alert">Could not update the extension. {actionError.message}</p>
       )}
       {body}
       <p style={{ marginTop: 16 }}>
-        <Link to={`/bookings/${booking.id}`}>Back to booking summary</Link>
+        <Link className="ds-text-link" to={`/bookings/${booking.id}`}>Back to booking summary</Link>
       </p>
     </main>
   )

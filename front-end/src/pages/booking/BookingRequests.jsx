@@ -6,6 +6,7 @@ import {
   answerBookingRequest, fetchBookingRequests, fetchExtensionRequests,
 } from '../../services/bookingsApi'
 import './booking.css'
+import './booking-nyu.css'
 
 // Owner's incoming rental requests (prototype m22) and pending extensions (#97).
 function BookingRequests() {
@@ -46,14 +47,14 @@ function BookingRequests() {
   }
 
   if (!result) {
-    return <main className="booking-page"><p role="status">Loading requests...</p></main>
+    return <main className="ds-page booking-page ds-booking"><p className="ds-status" role="status">Loading requests...</p></main>
   }
   if (result.error) {
     return (
-      <main className="booking-page">
-        <h1>Incoming rental requests</h1>
-        <p role="alert">Could not load requests. {result.error.message}</p>
-        <button type="button" className="booking-btn" onClick={retry}>Retry</button>
+      <main className="ds-page booking-page ds-booking">
+        <h1 className="ds-heading">Incoming rental requests</h1>
+        <p className="ds-feedback ds-feedback--error" role="alert">Could not load requests. {result.error.message}</p>
+        <button type="button" className="ds-button ds-button--secondary" onClick={retry}>Retry</button>
       </main>
     )
   }
@@ -61,13 +62,17 @@ function BookingRequests() {
   const { requests, extensions } = result
 
   return (
-    <main className="booking-page">
-      <h1>Incoming rental requests</h1>
+    <main className="ds-page booking-page ds-booking">
+      <h1 className="ds-heading">Incoming rental requests</h1>
       {declineError && (
         <p className="field-error" role="alert">Could not decline the request. {declineError.message}</p>
       )}
       {requests.length === 0 ? (
-        <p className="booking-empty">No pending requests.</p>
+        <div className="ds-feedback booking-empty">
+          <h2>No pending requests</h2>
+          <p>New rental requests will appear here when someone asks to borrow your items.</p>
+          <Link className="ds-text-link" to="/listings">Manage listings</Link>
+        </div>
       ) : (
         requests.map((b) => (
           <RequestCard key={b.id} booking={b} onDecline={handleDecline} declining={decliningId === b.id}
@@ -77,10 +82,10 @@ function BookingRequests() {
 
       {extensions.length > 0 && (
         <>
-          <h1 style={{ marginTop: 32 }}>Extension requests</h1>
+          <h2 className="booking-section-heading">Extension requests</h2>
           {extensions.map((b) => (
             <Link key={b.id} to={`/bookings/${b.id}/extension`} className="booking-card" style={{ textDecoration: 'none' }}>
-              <h2>{getListing(b.listingId)?.title ?? 'Listing unavailable'}</h2>
+              <h3>{getListing(b.listingId)?.title ?? 'Listing unavailable'}</h3>
               <p>
                 {getUser(b.borrowerId)?.name} wants to return on {formatDate(b.extensionRequest.newEndDate)}
                 {' '}instead of {formatDate(b.endDate)}

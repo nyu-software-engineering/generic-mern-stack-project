@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { flushSync } from 'react-dom'
 import { countDays, formatMoney, roundCents } from '../../services/bookings'
 
 const todayISO = () => new Date().toLocaleDateString('en-CA') // YYYY-MM-DD
@@ -49,9 +50,14 @@ function BookingForm({ listing, initialStart = '', initialEnd = '', onSubmit }) 
     e.preventDefault()
     if (submitting) return
     const found = validate(form)
-    setErrors(found)
-    if (Object.keys(found).length > 0) return
+    if (found.startDate || found.endDate) {
+      const field = e.currentTarget.elements[found.startDate ? 'startDate' : 'endDate']
+      flushSync(() => setErrors(found))
+      field.focus()
+      return
+    }
 
+    setErrors(found)
     setSubmitting(true)
     setSubmitError(null)
     try {
@@ -66,17 +72,21 @@ function BookingForm({ listing, initialStart = '', initialEnd = '', onSubmit }) 
   return (
     <form className="booking-form" onSubmit={handleSubmit} noValidate aria-busy={submitting}>
       <div className="booking-dates">
-        <label>
-          Start date
-          <input type="date" name="startDate" min={todayISO()} value={form.startDate}
-            onChange={handleChange} className={errors.startDate ? 'has-error' : ''} />
-          {errors.startDate && <p className="field-error">{errors.startDate}</p>}
+        <label htmlFor="booking-start-date">
+          <span id="booking-start-date-label">Start date</span>
+          <input type="date" name="startDate" id="booking-start-date" className="ds-field"
+            min={todayISO()} value={form.startDate} onChange={handleChange}
+            aria-labelledby="booking-start-date-label" aria-invalid={errors.startDate ? true : undefined}
+            aria-describedby={errors.startDate ? 'booking-start-date-error' : undefined} />
+          {errors.startDate && <span id="booking-start-date-error" className="field-error" role="alert">{errors.startDate}</span>}
         </label>
-        <label>
-          Return date
-          <input type="date" name="endDate" min={form.startDate || todayISO()} value={form.endDate}
-            onChange={handleChange} className={errors.endDate ? 'has-error' : ''} />
-          {errors.endDate && <p className="field-error">{errors.endDate}</p>}
+        <label htmlFor="booking-end-date">
+          <span id="booking-end-date-label">Return date</span>
+          <input type="date" name="endDate" id="booking-end-date" className="ds-field"
+            min={form.startDate || todayISO()} value={form.endDate} onChange={handleChange}
+            aria-labelledby="booking-end-date-label" aria-invalid={errors.endDate ? true : undefined}
+            aria-describedby={errors.endDate ? 'booking-end-date-error' : undefined} />
+          {errors.endDate && <span id="booking-end-date-error" className="field-error" role="alert">{errors.endDate}</span>}
         </label>
       </div>
 
@@ -86,15 +96,16 @@ function BookingForm({ listing, initialStart = '', initialEnd = '', onSubmit }) 
           : `Total: ${formatMoney(total)} (${days} day${days > 1 ? 's' : ''} × ${formatMoney(listing.price)})`}
       </p>
 
-      <label>
-        Message to owner
-        <textarea name="message" rows={3} value={form.message} onChange={handleChange}
+      <label htmlFor="booking-message">
+        <span id="booking-message-label">Message to owner</span>
+        <textarea name="message" id="booking-message" className="ds-field" aria-labelledby="booking-message-label"
+          rows={3} value={form.message} onChange={handleChange}
           placeholder="e.g. For a small indoor event" />
       </label>
 
       <p className="booking-note">Payment is arranged directly with the owner.</p>
       {submitError && <p className="field-error" role="alert">Could not send request. {submitError.message}</p>}
-      <button type="submit" className="booking-btn booking-btn--primary" disabled={submitting}>
+      <button type="submit" className="ds-button ds-button--primary" disabled={submitting}>
         {submitting ? 'Sending...' : 'Send request'}
       </button>
     </form>
