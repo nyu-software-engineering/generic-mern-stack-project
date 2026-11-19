@@ -1,3 +1,4 @@
+
 import { afterEach, beforeEach, describe, it } from "mocha";
 import { expect } from "chai";
 import { createApp } from "../app.js";
@@ -90,9 +91,14 @@ describe("Backend foundation", () => {
 
 describe("Placeholder identity and error middleware", () => {
   it("uses owner-1 regardless of a client identity header", () => {
-    const request = { currentUserId: "student-2", get: () => "student-2" };
+    const request = {
+      currentUserId: "student-2",
+      get: (header) => header === "x-user-id" ? "student-2" : undefined,
+    };
     let continued = false;
+
     currentUser(request, {}, () => { continued = true; });
+
     expect(request.currentUserId).to.equal("owner-1");
     expect(continued).to.equal(true);
   });

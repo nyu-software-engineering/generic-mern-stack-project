@@ -9,6 +9,7 @@ import { validateMockData } from "../../shared/validateMockData.mjs";
 describe("Account and sign-in API (#92)", () => {
   let server;
   let data;
+  let app;
 
   const details = {
     fullName: "Test Student",
@@ -18,7 +19,8 @@ describe("Account and sign-in API (#92)", () => {
 
   beforeEach(async () => {
     data = mockData();
-    server = await startTestServer(createApp({ store: { load: async () => data } }));
+    app = createApp({ store: { load: async () => data } });
+    server = await startTestServer(app);
   });
 
   afterEach(async () => {
@@ -152,5 +154,63 @@ describe("Account and sign-in API (#92)", () => {
       .to.equal("Updated Student");
     expect(data.users[0].name).to.equal("Item owner");
     expect(() => validateMockData(data)).not.to.throw();
+  });
+
+  it("rejects stale tokens on existing data routes", async () => {
+    const { body: created } = await signup();
+
+    await api("POST", "/auth/verify", {
+      email: details.email, code: created.demoCode,
+    });
+
+    const { body: login } = await api("POST", "/auth/login", details);
+
+    app.locals.auth.sessions.clear();
+
+    const malformed = await api("PATCH", "/listings/1/status", {
+      status: "paused",
+    }, "not-a-token");
+
+    expect(malformed.status).to.equal(401);
+
+    const result = await api("PATCH", "/listings/1/status", {
+      status: "paused",
+    }, login.token);
+
+    expect(result.status).to.equal(401);
+    expect(data.listings[0].status).to.equal("published");
+  });
+
+  it("keeps private account details out of public mock data", async () => {
+    const { body: created } = await signup();
+
+    await api("POST", "/auth/verify", {
+      email: details.email, code: created.demoCode,
+    });
+
+    const { body: login } = await api("POST", "/auth/login", details);
+
+    expect((await api("PUT", "/users/me", {
+      displayName: "Private Updated Name",
+      campusArea: "Washington Square",
+    }, login.token)).status).to.equal(200);
+
+    const { body: publicData } = await api("GET", "/mock-data");
+    const account = publicData.users.find((user) => user.id === created.user.id);
+
+    expect(account).to.deep.equal({
+      id: created.user.id,
+      name: "DormShare student",
+    });
+
+    const serialized = JSON.stringify(publicData);
+    for (const value of [
+      details.fullName,
+      details.email,
+      "Private Updated Name",
+      "Washington Square",
+    ]) {
+      expect(serialized).not.to.include(value);
+    }
   });
 });
