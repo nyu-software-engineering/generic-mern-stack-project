@@ -9,7 +9,7 @@ import {
 } from '../../services/bookings'
 import { getReviewForBooking, getReviewTarget } from '../../services/reviews.js'
 import '../booking/booking.css'
-import './handoff.css'
+import '../booking/booking-nyu.css'
 
 // Pickup and return (#54): the borrower confirms pickup, the owner confirms return.
 // Keyed by rentalId so its state resets when the route moves to another rental.
@@ -35,7 +35,7 @@ function CheckSummary({ title, check }) {
 function Handoff({ rentalId }) {
   const [booking, setBooking] = useState(() => getBooking(rentalId))
 
-  if (!booking) return <main className="booking-page"><p>Booking not found.</p></main>
+  if (!booking) return <main className="ds-page booking-page ds-booking"><h1 className="ds-heading">Booking not found.</h1></main>
 
   const listing = getListing(booking.listingId)
   const isOwner = booking.ownerId === CURRENT_USER_ID
@@ -79,9 +79,11 @@ function Handoff({ rentalId }) {
         <CheckSummary title="Pickup check" check={booking.pickupCheck} />
         <CheckSummary title="Return check" check={booking.returnCheck} />
         {canWriteReview && (
-          <Link to={`/bookings/${booking.id}/review`} className="booking-btn booking-btn--primary">
-            Write review
-          </Link>
+          <div className="booking-actions">
+            <Link to={`/bookings/${booking.id}/review`} className="ds-button ds-button--primary">
+              Write review
+            </Link>
+          </div>
         )}
       </>
     )
@@ -109,18 +111,28 @@ function Handoff({ rentalId }) {
   }
 
   return (
-    <main className="booking-page">
-      <h1>{title}</h1>
+    <main className="ds-page booking-page ds-booking">
+      <h1 className="ds-heading">{title}</h1>
       {listing && <ListingSummary listing={listing} />}
       <div className="booking-card">
         <div><StatusBadge status={displayStatus(booking)} /></div>
-        <p>{formatDate(booking.startDate)} – {formatDate(booking.endDate)}</p>
-        <p>{isOwner ? 'Borrower' : 'Owner'}: {other?.name}</p>
+        <dl className="booking-facts">
+          <div>
+            <dt>Start date</dt>
+            <dd>{formatDate(booking.startDate)}</dd>
+          </div>
+          <div>
+            <dt>Return date</dt>
+            <dd>{formatDate(booking.endDate)}</dd>
+          </div>
+          <div>
+            <dt>{isOwner ? 'Borrower' : 'Owner'}</dt>
+            <dd>{other?.name}</dd>
+          </div>
+        </dl>
       </div>
       {body}
-      <p style={{ marginTop: 16 }}>
-        <Link to={`/bookings/${booking.id}`}>Back to booking summary</Link>
-      </p>
+      <Link to={`/bookings/${booking.id}`} className="ds-text-link">Back to booking summary</Link>
     </main>
   )
 }
