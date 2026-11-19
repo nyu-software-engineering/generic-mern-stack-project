@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import RequestCard from './RequestCard'
 import { REQUEST_TYPES, getBoardRequests } from '../../services/requestsBoard'
 import './requestsBoard.css'
+import '../../styles/messages.css'
 
 const TABS = [['all', 'All'], ...Object.entries(REQUEST_TYPES), ['mine', 'My requests']]
 
@@ -12,27 +13,26 @@ function RequestsBoard() {
   const requests = getBoardRequests(type)
 
   return (
-    <main className="page">
-      <header className="page-header">
-        <h1>Requests</h1>
+    <main className="ds-page ds-messages ds-request-board">
+      <header className="request-board-header">
+        <h1 className="ds-heading">Requests</h1>
         <div className="request-actions">
-          <Link to="/requests?new" className="request-action request-action--primary">
+          <Link to="/requests?new" className="ds-button ds-button--primary">
             Post an item request
           </Link>
-          <Link to="/quick-borrow" className="request-action">
+          <Link to="/quick-borrow" className="ds-button ds-button--secondary">
             Post a quick borrow
           </Link>
         </div>
       </header>
 
-      <div className="request-tabs" role="tablist" aria-label="Request type">
+      <div className="request-tabs" role="group" aria-label="Request type">
         {TABS.map(([value, label]) => (
           <button
             key={value}
             type="button"
-            role="tab"
-            aria-selected={type === value}
-            className={type === value ? 'request-tab request-tab--active' : 'request-tab'}
+                        aria-pressed={type === value}
+            className="ds-button ds-button--secondary request-tab"
             onClick={() => setType(value)}
           >
             {label}
@@ -41,9 +41,9 @@ function RequestsBoard() {
       </div>
 
       {requests.length === 0 ? (
-        <p>{type === 'mine' ? "You haven't posted any requests yet." : 'No requests yet.'}</p>
+        <p className="ds-feedback">{type === 'mine' ? "You haven't posted any requests yet." : 'No requests yet.'}</p>
       ) : (
-        <div className="rental-grid">
+        <div className="request-board-grid">
           {requests.map((request) => (
             <RequestCard key={`${request.type}-${request.id}`} request={request} />
           ))}
