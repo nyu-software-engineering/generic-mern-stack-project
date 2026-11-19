@@ -1,0 +1,231 @@
+.ds-management {
+  overflow-wrap: anywhere;
+}
+
+.ds-management-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.ds-management .ds-page-intro {
+  margin: 8px 0 0;
+  color: var(--ds-muted);
+  font-size: 16px;
+}
+
+.ds-management-header > .ds-button,
+.ds-management-header > .ds-text-link {
+  flex-shrink: 0;
+}
+
+.ds-management-section {
+  margin-top: 32px;
+}
+
+.ds-management-section > h2 {
+  font-size: 20px;
+  line-height: 1.3;
+  margin: 0 0 20px;
+}
+
+.ds-management-filters {
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 20px;
+  margin-bottom: 20px;
+  border: 1px solid var(--ds-line);
+  border-radius: var(--ds-radius-card);
+  background: var(--ds-surface);
+}
+
+.ds-management-filters > label {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.ds-management-filters > label:first-child {
+  flex: 1;
+}
+
+.ds-management-filters select {
+  min-width: 180px;
+}
+
+.ds-management-list {
+  display: grid;
+  gap: 16px;
+}
+
+.ds-management-row {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 24px;
+  min-width: 0;
+  border: 1px solid var(--ds-line);
+  border-radius: var(--ds-radius-card);
+  background: var(--ds-surface);
+}
+
+.ds-management-row > div:first-child {
+  flex: 1;
+  min-width: 0;
+}
+
+.ds-management-row h2,
+.ds-management-row h3 {
+  margin: 0 0 8px;
+  font-size: 18px;
+  line-height: 1.35;
+}
+
+.ds-management-row h3 a {
+  color: var(--ds-ink);
+  text-underline-offset: 3px;
+}
+
+.ds-management-row p {
+  margin: 4px 0;
+}
+
+.ds-management-meta {
+  color: var(--ds-muted);
+  font-size: 14px;
+}
+
+.ds-management-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.ds-management .status-badge {
+  flex-shrink: 0;
+  padding: 6px 12px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.ds-management-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  background: var(--ds-surface);
+  border: 1px solid var(--ds-line);
+  border-radius: var(--ds-radius-card);
+  margin: 0 0 32px;
+}
+
+.ds-management-summary article {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+  padding: 24px;
+  min-width: 0;
+}
+
+.ds-management-summary article + article {
+  border-inline-start: 1px solid var(--ds-line);
+}
+
+.ds-management-summary span {
+  color: var(--ds-muted);
+  font-size: 14px;
+}
+
+.ds-management-summary strong {
+  color: var(--ds-ink);
+  font-size: 28px;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+}
+
+.ds-management-empty {
+  padding: 32px 24px;
+  text-align: center;
+}
+
+.ds-management-empty h2,
+.ds-management-empty h3 {
+  margin: 0 0 8px;
+  font-size: 20px;
+}
+
+.ds-management-empty p {
+  margin: 8px 0;
+}
+
+.ds-management .ds-feedback,
+.ds-management .ds-status {
+  margin-bottom: 16px;
+}
+
+.ds-management :focus-visible {
+  outline: var(--ds-focus-ring);
+  outline-offset: 3px;
+}
+
+@media (max-width: 767px) {
+  .ds-management-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .ds-management-header > .ds-text-link {
+    align-self: flex-start;
+  }
+
+  .ds-management-filters {
+    padding: 16px;
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .ds-management-filters select {
+    min-width: 0;
+  }
+
+  .ds-management-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 20px;
+  }
+
+  .ds-management-row > .ds-button {
+    width: 100%;
+  }
+
+  .ds-management-summary {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .ds-management-summary article {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    padding: 20px;
+  }
+
+  .ds-management-summary article + article {
+    border-inline-start: 0;
+    border-top: 1px solid var(--ds-line);
+  }
+
+  .ds-management-summary strong {
+    font-size: 24px;
+  }
+}
+
+.ds-management-header .ds-page-intro > p {
+  margin: 8px 0 0;
+}
