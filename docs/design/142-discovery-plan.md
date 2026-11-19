@@ -67,9 +67,11 @@ navigate(`/listings/${listing.id}/request?${query.toString()}`)
 - [x] Verify keyboard focus, long content, empty/error/retry states, 320/375/390/768/1024/1366px layouts, and enlarged-text reflow. Check every route still renders after shared styles change.
 - [x] Record screenshots and the route, viewport, steps, and result. Distinguish viewport emulation from real-device testing.
 - [x] Obtain an independent code review and a security review of the final diff. Resolve actionable findings and repeat affected checks.
-- [ ] Open a focused implementation PR. While #153 is unmerged, target its planning branch so the source diff is separate. Retarget to master after #153 merges.
+- [x] Open a focused implementation PR. While #153 is unmerged, target its planning branch so the source diff is separate. Retarget to master after #153 merges.
 
 
 ## Results
 
 Implementation and browser checks are recorded in [the verification report](142-verification.md). The final source and security reviews have no remaining findings. The known baseline notification failure is unchanged.
+
+[PR #154](https://github.com/agile-students-fall2026/generic-mern-stack-project-dormshare/pull/154) targets master after the planning PR #153 merged. Sherry and Aayan are requested reviewers.
