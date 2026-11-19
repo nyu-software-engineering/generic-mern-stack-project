@@ -11,7 +11,7 @@ const AssetList = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios("http://localhost:3000/api/assets")
+    axios(import.meta.env.VITE_ASSETS_API_URL)
       .then((response) => {
         console.log("API Response:", response.data);
         setAssets(response.data);
@@ -82,10 +82,9 @@ const AssetList = () => {
                       <div className="asset-name">{asset.asset_name}</div>
                       <img
                         src={
-                          asset.image ||
                           "https://picsum.photos/id/" +
-                            asset.id * 20 +
-                            "/100/100"
+                          asset.id * 20 +
+                          "/100/100"
                         }
                         alt={asset.asset_name}
                         className="asset-image"
