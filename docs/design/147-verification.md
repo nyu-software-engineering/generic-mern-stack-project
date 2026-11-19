@@ -1,6 +1,6 @@
 # Notifications and trust verification
 
-Work in progress for #147, November 19, 2026. Base: master at `6c718b6`. The [interface contract](147-trust-interface.md) and [implementation plan](147-trust-plan.md) define the scope. This branch is a draft until the remaining checks below are complete.
+Verified for #147 on November 19, 2026. Base: master at `6c718b6`. The [interface contract](147-trust-interface.md) and [implementation plan](147-trust-plan.md) define the scope. The remaining browser flows and final source re-review are complete.
 
 ## Automated checks
 
@@ -28,18 +28,37 @@ Used the in-app Chromium browser with a disposable local Express fixture. All na
 - A report with a valid reason and spaces-only description showed a linked error, set `aria-invalid`, and focused the description. Changing the reason retained that description error. Correcting the description cleared it.
 - A failed report submission retained its reason and description and enabled submission again.
 
-These observations were made before browser controls became unavailable. Screenshots were inspected during testing but have not yet been saved as deliverable evidence.
+The initial checks used the in-app browser. The final checks used a fresh headless Chromium session through Playwright 1.61.1 against the same disposable fixture. No personal browser profile or live data was used. Screenshots below were saved and inspected.
 
 ## Review status
 
-The independent security review passed and also ran the 11 targeted frontend tests and 61 backend reporting tests. The source review raised two findings: unrelated field edits cleared description feedback, and the report-confirmation loading branch lacked a heading. Both were fixed in `11e998f`. The error-retention fix was checked in the browser. The loading branch was checked in source. Final independent re-review could not finish because the workspace reviewer reached its usage limit.
+The independent security review passed and also ran the 11 targeted frontend tests and 61 backend reporting tests. The source review raised two findings: unrelated field edits cleared description feedback, and the report-confirmation loading branch lacked a heading. Both were fixed in `11e998f`. The error-retention fix was checked in the browser. The loading branch was checked in source. The final independent source re-review approved `ade3a49`, confirming both fixes. No application source changed after that review.
 
-## Remaining before ready for review
+## Final browser checks
 
-- Complete keyboard radio selection, native required-rating behavior, successful local review submission, duplicate and ineligible review states, and reputation listing expansion.
-- Complete report submission and confirmation for general, rental, conversation, and listing contexts. Check the unchanged payloads and destination links, conflicting references, selected filename retention, delayed pending state, and filename-only help.
-- Check confirmation and rules read failures and retries, missing reports, empty rules, and stale response behavior in the browser.
-- Check phone bottom-navigation clearance, enlarged text, empty notification data, and save desktop and phone screenshots.
-- Complete the independent source re-review of the two fixes.
+All ten scenario groups passed in the local Playwright run.
+
+| Area | Observed result |
+| --- | --- |
+| Reviews | Required native ratings blocked empty submission. Space selected a rating and ArrowRight changed it. Submission opened the other participant's reputation and displayed the comment. Returning within the app showed the duplicate guard. Missing and incomplete bookings stayed ineligible. |
+| Reputation | Missing users showed the recovery heading. The other student's empty reviews and unrated state rendered correctly. The published-listing toggle showed and hid the controlled section. |
+| Report contexts | General, rental, conversation, direct listing, and unknown-rental-with-known-listing forms sent the existing six-field JSON payload. Each saved report opened confirmation and retained its exact related destination after a direct reload. |
+| Report errors and pending | A whitespace description stayed invalid after selecting a file. Correcting it cleared the linked error. A rejected write retained reason, description, and selected filename. Delayed retry disabled submission and set busy state, then succeeded with only the filename in the JSON payload. |
+| Conflicting subjects | Conflicting known rental and conversation references were rejected by the backend. The form retained its description and showed the existing error. |
+| Read recovery | Rules recovered from a read failure, handled empty data, and retried to populated data. Missing reports showed not found. A failed confirmation read exposed retry, a loading heading and status, then the saved report. |
+| Stale response | A delayed confirmation response for one report did not replace the not-found result after navigating to another report. |
+| Empty notifications | Empty activity produced the no-notifications state and disabled bulk read. |
+| Reflow and text | Repeated the six routes at all six planned widths with no page-level overflow. All six also fit a 390px viewport with the root font size set to 200%. This is a text-size check, not a browser-zoom claim. |
+| Phone navigation | The signed-in review submit button remained fully above the fixed phone navigation. Native rating labels remained visible and usable. |
+
+## Screenshots
+
+All records are synthetic. The desktop report shows its subject, form, and filename-only explanation. The phone images show reputation and review controls, including the space above navigation.
+
+![Report form at 1366px](147-evidence/report-desktop.jpg)
+
+![Student reputation at 390px](147-evidence/reputation-mobile.jpg)
+
+![Review controls at 390px](147-evidence/review-mobile.jpg)
 
 Review and notification changes still use local state and existing services. Report and rule requests still use the existing backend APIs. No service, identity, route, API payload, or eligibility contract was changed. This report does not claim physical-device, Safari, Firefox, screen-reader, or zoom coverage.

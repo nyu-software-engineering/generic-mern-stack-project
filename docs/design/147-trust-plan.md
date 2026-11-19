@@ -28,7 +28,7 @@ Files: `notifications/Notifications.jsx`, `reviews/ReviewParticipant.jsx`, `revi
 - [x] Keep explicit Unread text, pressed filter state, individual read/unread actions, mark-all disabling, and empty All/Unread states. Add no asynchronous loading or persistence claims.
 - [x] Give the review form one page heading and clear fieldset legends. Preserve required native 1-to-5 radios, optional 500-character comment, service validation, synchronous submission, and destination.
 - [x] Keep review eligibility, duplicate-submission states, reputation calculations, listing toggle, and review links. Remove unsupported verified-account copy and show completed-rental counts only when provided by the data.
-- [ ] Browser-check mark/read/unread/all and destination behavior, keyboard radio selection, successful review and duplicate guard, missing user/booking, no reviews, and listing expansion.
+- [x] Browser-check mark/read/unread/all and destination behavior, keyboard radio selection, successful review and duplicate guard, missing user/booking, no reviews, and listing expansion.
 - [x] Commit notifications separately from reputation and review forms.
 
 ## 4. Reporting and community rules
@@ -45,12 +45,12 @@ Files: `reporting/Report.jsx`, `ReportSubmitted.jsx`, `CommunityRules.jsx`.
 ## 5. Verification and delivery
 
 - [x] Run `node --test test/notifications.test.js test/reviews.test.js test/reports.test.js`, full frontend tests, lint, and production build. Run `git diff --check`.
-- [ ] Check all six route patterns at 320, 375, 390, 768, 1024, and 1366px with long comments, names, titles, and rules. Check native rating target size and phone navigation clearance.
-- [ ] Cover rental/conversation/listing/general report contexts, whitespace validation, failure retaining values, delayed pending submission, success, confirmation recovery links, failed reads/retry, missing report, and empty rules.
-- [ ] Save phone/desktop screenshots and `docs/design/147-verification.md` with actual checks and limits. Distinguish local review/read state from backend report storage.
-- [ ] Obtain independent source and security reviews. Resolve findings and repeat affected checks.
-- [ ] Push small commits under the user's identity, open a PR against master for #147, set Sprint 2 and relevant labels, and request Omer and Samuel. Keep the issue open until merge.
+- [x] Check all six route patterns at 320, 375, 390, 768, 1024, and 1366px with long comments, names, titles, and rules. Check native rating target size and phone navigation clearance.
+- [x] Cover rental/conversation/listing/general report contexts, whitespace validation, failure retaining values, delayed pending submission, success, confirmation recovery links, failed reads/retry, missing report, and empty rules.
+- [x] Save phone/desktop screenshots and `docs/design/147-verification.md` with actual checks and limits. Distinguish local review/read state from backend report storage.
+- [x] Obtain independent source and security reviews. Resolve findings and repeat affected checks.
+- [x] Push small commits under the user's identity, open a PR against master for #147, set Sprint 2 and relevant labels, and request Omer and Samuel. Keep the issue open until merge.
 
-Current state: implementation and automated checks are complete. Browser checks are partial. Final source re-review and saved screenshots remain pending. See [verification](147-verification.md). Keep the PR in draft.
+Current state: implementation, automated checks, browser verification, screenshots, and final source re-review are complete. See [verification](147-verification.md).
 
-Draft review: [PR #159](https://github.com/agile-students-fall2026/generic-mern-stack-project-dormshare/pull/159), targeting master, assigned to the owner with Sprint 2, accessibility, and enhancement. Request Omer and Samuel after the remaining checks pass and the PR is marked ready.
+Review: [PR #159](https://github.com/agile-students-fall2026/generic-mern-stack-project-dormshare/pull/159), targeting master, assigned to the owner with Sprint 2, accessibility, and enhancement. Omer and Samuel are the relevant notification, review, and reporting reviewers.
