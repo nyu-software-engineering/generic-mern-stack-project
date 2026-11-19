@@ -11,7 +11,7 @@ const AssetList = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios(import.meta.env.VITE_EXPENSES_API_URL)
+    axios(import.meta.env.VITE_ASSETS_API_URL)
       .then((response) => {
         console.log("API Response:", response.data);
         setAssets(response.data);
@@ -22,7 +22,7 @@ const AssetList = () => {
   }, []);
 
   const filteredAssets = assets.filter((asset) =>
-    asset.expense_name?.toLowerCase().includes(searchTerm.toLowerCase()),
+    asset.asset_name?.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   return (
@@ -79,14 +79,14 @@ const AssetList = () => {
                 filteredAssets.map((asset) => (
                   <div key={asset.id} className="asset-card">
                     <div className="asset-square">
-                      <div className="asset-name">{asset.expense_name}</div>
+                      <div className="asset-name">{asset.asset_name}</div>
                       <img
                         src={
                           "https://picsum.photos/id/" +
                           asset.id * 20 +
                           "/100/100"
                         }
-                        alt={asset.expense_name}
+                        alt={asset.asset_name}
                         className="asset-image"
                       />
                       <div className="asset-description">
