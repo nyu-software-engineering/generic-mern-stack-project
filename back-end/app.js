@@ -2,6 +2,8 @@ import express from "express"
 import cors from "cors"
 import discoverRoutes from "./routes/discover.js"
 import profileRoutes from "./routes/profile.js"
+import postsRouter from "./routes/posts.js"
+import followingRouter from "./routes/following.js"
 
 const app = express()
 
@@ -11,6 +13,8 @@ app.use("/api", discoverRoutes)
 app.use("/api", profileRoutes)
 app.use(express.urlencoded({ extended: true }))
 app.use("/static", express.static("public"))
+app.use("/api/posts", postsRouter)
+app.use("/api/following", followingRouter)
 
 app.get("/api/health", (req, res) => {
   res.json({ status: "ok" })
