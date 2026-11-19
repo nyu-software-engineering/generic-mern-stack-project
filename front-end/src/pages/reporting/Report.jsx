@@ -68,6 +68,8 @@ function Report() {
       return
     }
 
+    setInvalidField('')
+    setError('')
     // One report per click: the button stays disabled until the back-end answers.
     setSubmitting(true)
     try {
@@ -99,7 +101,13 @@ function Report() {
         </article>
       )}
 
-      <form className="report-form trust-surface" onSubmit={handleSubmit} aria-busy={submitting} onChange={() => { setError(''); setInvalidField('') }}>
+      <form className="report-form trust-surface" onSubmit={handleSubmit} aria-busy={submitting} onChange={(event) => {
+        if (invalidField) {
+          if (event.target.name !== invalidField || !event.target.value.trim()) return
+          setInvalidField('')
+        }
+        setError('')
+      }}>
         <div>
           <label htmlFor="reason">Reason</label>
           <select id="reason" name="reason" className="ds-field" defaultValue="" required aria-invalid={invalidField === 'reason' || undefined} aria-describedby={invalidField === 'reason' ? 'report-error' : undefined}>

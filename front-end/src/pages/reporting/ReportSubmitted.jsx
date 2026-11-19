@@ -21,7 +21,7 @@ function ReportSubmitted() {
 
   // A result for another report or an earlier attempt means the new one is still loading.
   if (result?.reportId !== reportId || result.attempt !== attempt) {
-    return <main className="ds-page ds-trust report-page"><p className="ds-status" role="status">Loading report...</p></main>
+    return <main className="ds-page ds-trust report-page"><h1 className="ds-heading">Report confirmation</h1><p className="ds-status" role="status">Loading report...</p></main>
   }
 
   if (result.error?.status === 404) return <main className="ds-page ds-trust report-page"><h1 className="ds-heading">Report not found</h1><Link className="ds-text-link" to="/browse">Back to Browse</Link></main>
