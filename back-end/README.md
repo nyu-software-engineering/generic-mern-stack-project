@@ -300,6 +300,35 @@ dates and total. The borrower is the participant who does not own the listing.
 Accepting returns 409 if the offer's dates have passed or the listing is no
 longer published.
 
+
+## Account and sign-in routes (#92)
+
+| Method | Endpoint | Purpose |
+| --- | --- | --- |
+| POST | `/api/auth/signup` | Create an NYU account |
+| POST | `/api/auth/verify` | Verify a six-digit demo code |
+| POST | `/api/auth/login` | Sign in with email and password |
+| GET | `/api/users/me` | Get the signed-in profile |
+| PUT | `/api/users/me` | Update display name and campus area |
+
+
+Signup accepts `{ fullName, email, password }` and returns `{ user, demoCode }`
+with status 201. Duplicate emails return 409.
+
+Verification accepts `{ email, code }` and returns `{ user }`.
+Login accepts `{ email, password }` and returns `{ user, token }`.
+Unverified accounts cannot log in (403); invalid credentials return 401.
+
+
+Protected requests use `Authorization: Bearer <token>`.
+Profile updates accept `{ "displayName": "Student", "campusArea": "Washington Square" }`.
+
+Authentication is simulated for Sprint 2. Verification codes are returned in
+signup responses rather than emailed. Accounts and sessions reset on restart.
+Existing non-account routes retain the `owner-1` fallback without a token.
+This is not production authentication.
+
+
 ## Tests
 
 ```sh

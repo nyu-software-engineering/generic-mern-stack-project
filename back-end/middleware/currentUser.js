@@ -1,5 +1,11 @@
-// Sprint 2 placeholder. Account routes will replace this identity in #92.
+
 export function currentUser(request, _response, next) {
-  request.currentUserId = "owner-1";
+  const token = /^Bearer ([a-f0-9]{64})$/.exec(request.get?.("authorization") ?? "")?.[1];
+
+  request.authenticatedUserId = token
+    ? request.app?.locals?.auth?.sessions?.get(token)
+    : undefined;
+
+  request.currentUserId = request.authenticatedUserId ?? "owner-1";
   next();
 }

@@ -12,6 +12,7 @@ import { publicListingsRouter } from "./routes/publicListings.js";
 import { communityRulesRouter, reportsRouter } from "./routes/reports.js";
 import { createRenterDashboardRouter } from "./routes/renterDashboard.js";
 import { createMockDataStore } from "./services/mockData.js";
+import { accountRouter } from "./routes/accounts.js";
 
 const frontendDist = fileURLToPath(new URL("../front-end/dist/", import.meta.url));
 const listingImages = fileURLToPath(
@@ -21,8 +22,10 @@ const listingImages = fileURLToPath(
 export function createApp({ store = createMockDataStore() } = {}) {
   const app = express();
   app.locals.mockDataStore = store;
+  app.locals.auth = { credentials: new Map(), sessions: new Map() };
   app.use(express.json());
   app.use(currentUser);
+  app.use("/api", accountRouter);
 
   app.get("/api/health", (_request, response) => {
     response.json({ status: "ok" });
