@@ -1,0 +1,17 @@
+.ds-save-button[aria-pressed="true"] {
+  color: var(--ds-violet);
+  border-color: var(--ds-violet);
+  background: var(--ds-lilac);
+}
+
+.ds-save-button[aria-pressed="true"] .ds-icon {
+  fill: currentColor;
+}
+
+.ds-save-error {
+  flex-basis: 100%;
+  color: var(--ds-error);
+  font-size: 14px;
+  overflow-wrap: anywhere;
+  margin: 0;
+}
