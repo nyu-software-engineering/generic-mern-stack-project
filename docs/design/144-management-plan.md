@@ -42,4 +42,6 @@ Baseline: 127 frontend tests pass. The unchanged notification test fails at `tes
 - [x] Verify all four routes at 320, 375, 390, 768, 1024, and 1366px. Check long content, keyboard focus, and phone navigation clearance. Record what was and was not tested.
 - [x] Capture phone and desktop screenshots with synthetic data.
 - [x] Obtain independent code and security reviews. Fix actionable findings and rerun affected checks.
-- [ ] Open the PR against #154's branch while it is unmerged. If #154 merges first, rebase onto master and target master. Request Sherry and Aayan. Keep #144 open until merge.
+- [x] Open the PR against #154's branch while it is unmerged. If #154 merges first, rebase onto master and target master. Request Sherry and Aayan. Keep #144 open until merge.
+
+Review: [PR #155](https://github.com/agile-students-fall2026/generic-mern-stack-project-dormshare/pull/155), targeting #154's branch until that dependency merges. Sherry and Aayan were requested.
