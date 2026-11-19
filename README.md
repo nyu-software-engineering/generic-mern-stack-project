@@ -32,7 +32,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for details on contribution conventions a
 ```
 cd back-end
 npm install
-npm start        # runs the server on http://localhost:5002
+npm start        # runs the server on http://localhost:3000
 npm test         # runs the mocha + chai unit tests
 npm run coverage # runs the tests and prints a c8 coverage report
 ```
@@ -42,7 +42,7 @@ npm run coverage # runs the tests and prints a c8 coverage report
 Flyer images are uploaded with `POST /api/uploads` as `multipart/form-data`, with the file in a field named `image`. JPEG, PNG, GIF, and WebP images up to 5 MB are accepted. The response includes a `url` (for example `/static/uploads/flyer-123.png`) that can be saved on the flyer and used in an `<img src>`.
 
 ```
-curl -F "image=@poster.png" http://localhost:5002/api/uploads
+curl -F "image=@poster.png" http://localhost:3000/api/uploads
 ```
 
 Other routes can accept an image the same way with `upload.single("image")` from `back-end/middleware/upload.js`.
