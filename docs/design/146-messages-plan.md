@@ -36,6 +36,8 @@ Baseline: 127 frontend tests pass. The existing notification assertion at `test/
 - [x] Check phone navigation clearance and a short viewport as a keyboard-space approximation. Record that this is not a physical keyboard or device test.
 - [x] Save desktop and phone screenshots and a verification note with tested behavior and limits.
 - [x] Obtain independent source and security reviews, fix actionable findings, and repeat affected checks.
-- [ ] Push small commits under the user's identity. Open a PR against master, set Sprint 2 and relevant labels, assign the user, and request Yutong and Samuel. Keep #146 open until merge.
+- [x] Push small commits under the user's identity. Open a PR against master, set Sprint 2 and relevant labels, assign the user, and request Yutong and Samuel. Keep #146 open until merge.
 
 Verification results and device limits are recorded in [146-verification.md](146-verification.md).
+
+Implementation: [#160](https://github.com/agile-students-fall2026/generic-mern-stack-project-dormshare/pull/160), against master. Assigned to hassanraza04 in Sprint 2, with reviews requested from Yutong and Samuel.
