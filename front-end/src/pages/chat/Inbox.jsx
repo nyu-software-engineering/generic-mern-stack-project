@@ -4,6 +4,7 @@ import { CURRENT_USER_ID, formatDate, getListing, listingImage } from '../../ser
 import {
   formatSentAt, getConversations, getLastMessage, getOtherParticipant,
 } from '../../services/chat'
+import '../../styles/messages.css'
 import './chat.css'
 
 function previewText(message) {
@@ -27,24 +28,24 @@ function Inbox() {
   const conversations = getConversations(CURRENT_USER_ID)
 
   return (
-    <main className="chat-page">
-      <h1>Messages</h1>
+    <main className="ds-page ds-messages chat-page">
+      <h1 className="ds-heading">Messages</h1>
       {conversations.length === 0 ? (
-        <p className="chat-empty">No conversations yet.</p>
+        <p className="ds-feedback">No conversations yet.</p>
       ) : (
         conversations.map((c) => {
           const listing = getListing(c.listingId)
           const other = getOtherParticipant(c, CURRENT_USER_ID)
           const last = getLastMessage(c)
           return (
-            <Link key={c.id} to={`/inbox?conversation=${c.id}`} className="chat-card chat-row">
+            <Link key={c.id} to={`/inbox?conversation=${c.id}`} className="ds-message-surface chat-card chat-row">
               <img src={listingImage(listing.id, 96)} alt={listing.title} />
               <div className="chat-row-text">
                 <h2>{other?.name}</h2>
                 <p className="chat-item-title">{listing.title}</p>
-                <p className="chat-preview">{previewText(last)}</p>
+                <p>{previewText(last)}</p>
+                <span className="chat-time">{formatSentAt(last.sentAt)}</span>
               </div>
-              <span className="chat-row-time">{formatSentAt(last.sentAt)}</span>
             </Link>
           )
         })
