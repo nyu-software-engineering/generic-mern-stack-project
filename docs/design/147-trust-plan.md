@@ -52,3 +52,5 @@ Files: `reporting/Report.jsx`, `ReportSubmitted.jsx`, `CommunityRules.jsx`.
 - [ ] Push small commits under the user's identity, open a PR against master for #147, set Sprint 2 and relevant labels, and request Omer and Samuel. Keep the issue open until merge.
 
 Current state: implementation and automated checks are complete. Browser checks are partial. Final source re-review and saved screenshots remain pending. See [verification](147-verification.md). Keep the PR in draft.
+
+Draft review: [PR #159](https://github.com/agile-students-fall2026/generic-mern-stack-project-dormshare/pull/159), targeting master, assigned to the owner with Sprint 2, accessibility, and enhancement. Request Omer and Samuel after the remaining checks pass and the PR is marked ready.
