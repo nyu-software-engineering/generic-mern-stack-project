@@ -5,7 +5,7 @@ import ExtensionRequestForm from './ExtensionRequestForm'
 import ListingSummary from './ListingSummary'
 import { useBooking } from './useBooking'
 import {
-  CURRENT_USER_ID, extensionCost, formatDate, formatMoney, getListing, getUser,
+  CURRENT_USER_ID, dailyRate, extensionCost, formatDate, formatMoney, getListing, getUser,
 } from '../../services/bookings'
 import { answerExtensionRequest, sendExtensionRequest } from '../../services/bookingsApi'
 import './booking.css'
@@ -93,10 +93,11 @@ function ExtensionPage({ bookingId }) {
   return (
     <main className="ds-page booking-page ds-booking">
       <h1 className="ds-heading">{isOwner ? 'Extension request' : 'Request extension'}</h1>
-      {listing && <ListingSummary listing={listing} />}
+      {listing && <ListingSummary listing={listing} detail={`Owner: ${getUser(listing.ownerId)?.name ?? 'Unknown'}`} />}
       <div className="booking-card">
         <div><StatusBadge status={booking.status} /></div>
         <dl className="booking-facts">
+          <div><dt>Daily rate</dt><dd>{formatMoney(dailyRate(booking))}</dd></div>
           <div><dt>Pickup date</dt><dd>{formatDate(booking.startDate)}</dd></div>
           <div><dt>Return date</dt><dd>{formatDate(booking.endDate)}</dd></div>
           <div><dt>Total</dt><dd>{formatMoney(booking.totalPrice)}</dd></div>

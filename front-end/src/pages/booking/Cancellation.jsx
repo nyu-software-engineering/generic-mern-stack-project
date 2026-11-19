@@ -4,7 +4,7 @@ import BookingLoadState from './BookingLoadState'
 import ListingSummary from './ListingSummary'
 import { useBooking } from './useBooking'
 import {
-  CURRENT_USER_ID, canCancel, formatDate, formatMoney, getListing, getUser,
+  CURRENT_USER_ID, canCancel, dailyRate, formatDate, formatMoney, getListing, getUser,
 } from '../../services/bookings'
 import { cancelBookingRequest } from '../../services/bookingsApi'
 import './booking.css'
@@ -89,10 +89,11 @@ function CancelPage({ bookingId }) {
   return (
     <main className="ds-page booking-page ds-booking">
       <h1 className="ds-heading">Cancel booking</h1>
-      {listing && <ListingSummary listing={listing} />}
+      {listing && <ListingSummary listing={listing} detail={`Owner: ${getUser(listing.ownerId)?.name ?? 'Unknown'}`} />}
       <div className="booking-card">
         <div><StatusBadge status={booking.status} /></div>
         <dl className="booking-facts">
+          <div><dt>Daily rate</dt><dd>{formatMoney(dailyRate(booking))}</dd></div>
           <div><dt>Pickup date</dt><dd>{formatDate(booking.startDate)}</dd></div>
           <div><dt>Return date</dt><dd>{formatDate(booking.endDate)}</dd></div>
           <div><dt>Total</dt><dd>{formatMoney(booking.totalPrice)}</dd></div>

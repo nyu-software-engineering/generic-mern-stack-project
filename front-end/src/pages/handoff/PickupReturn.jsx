@@ -5,7 +5,7 @@ import ListingSummary from '../booking/ListingSummary'
 import HandoffCheckForm from './HandoffCheckForm'
 import {
   CURRENT_USER_ID, canConfirmPickup, canConfirmReturn, confirmPickup, confirmReturn,
-  displayStatus, formatDate, getBooking, getListing, getUser,
+  dailyRate, displayStatus, formatDate, formatMoney, getBooking, getListing, getUser,
 } from '../../services/bookings'
 import { getReviewForBooking, getReviewTarget } from '../../services/reviews.js'
 import '../booking/booking.css'
@@ -113,10 +113,11 @@ function Handoff({ rentalId }) {
   return (
     <main className="ds-page booking-page ds-booking">
       <h1 className="ds-heading">{title}</h1>
-      {listing && <ListingSummary listing={listing} />}
+      {listing && <ListingSummary listing={listing} detail={`Owner: ${getUser(listing.ownerId)?.name ?? 'Unknown'}`} />}
       <div className="booking-card">
         <div><StatusBadge status={displayStatus(booking)} /></div>
         <dl className="booking-facts">
+          <div><dt>Daily rate</dt><dd>{formatMoney(dailyRate(booking))}</dd></div>
           <div>
             <dt>Start date</dt>
             <dd>{formatDate(booking.startDate)}</dd>

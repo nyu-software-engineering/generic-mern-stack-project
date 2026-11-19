@@ -5,7 +5,7 @@ import BookingLoadState from './BookingLoadState'
 import ListingSummary from './ListingSummary'
 import { useBooking } from './useBooking'
 import {
-  CURRENT_USER_ID, canCancel, canConfirmPickup, canConfirmReturn, displayStatus, formatDate, formatMoney, getListing, getUser,
+  CURRENT_USER_ID, canCancel, canConfirmPickup, canConfirmReturn, dailyRate, displayStatus, formatDate, formatMoney, getListing, getUser,
 } from '../../services/bookings'
 import { answerBookingRequest } from '../../services/bookingsApi'
 import { getReviewForBooking, getReviewTarget } from '../../services/reviews.js'
@@ -57,7 +57,7 @@ function BookingSummary({ bookingId }) {
       )}
 
       {listing ? (
-        <ListingSummary listing={listing} />
+        <ListingSummary listing={listing} detail={`Owner: ${getUser(listing.ownerId)?.name ?? 'Unknown'}`} />
       ) : (
         <div className="booking-card"><h2>{booking.listingTitle ?? 'Listing unavailable'}</h2></div>
       )}
@@ -65,6 +65,7 @@ function BookingSummary({ bookingId }) {
       <div className="booking-card">
         <div><StatusBadge status={displayStatus(booking)} /></div>
         <dl className="booking-facts">
+          <div><dt>Daily rate</dt><dd>{formatMoney(dailyRate(booking))}</dd></div>
           <div><dt>Pickup date</dt><dd>{formatDate(booking.startDate)}</dd></div>
           <div><dt>Return date</dt><dd>{formatDate(booking.endDate)}</dd></div>
           <div><dt>{AGREED_STATUSES.includes(booking.status) ? 'Agreed' : 'Proposed'} total</dt><dd>{formatMoney(booking.totalPrice)}</dd></div>

@@ -85,7 +85,7 @@ function BookingRequests() {
           <h2 className="booking-section-heading">Extension requests</h2>
           {extensions.map((b) => (
             <Link key={b.id} to={`/bookings/${b.id}/extension`} className="booking-card" style={{ textDecoration: 'none' }}>
-              <h2>{getListing(b.listingId)?.title ?? 'Listing unavailable'}</h2>
+              <h3>{getListing(b.listingId)?.title ?? 'Listing unavailable'}</h3>
               <p>
                 {getUser(b.borrowerId)?.name} wants to return on {formatDate(b.extensionRequest.newEndDate)}
                 {' '}instead of {formatDate(b.endDate)}
