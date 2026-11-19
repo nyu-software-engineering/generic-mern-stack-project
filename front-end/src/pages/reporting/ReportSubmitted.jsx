@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { getReport, resolveReportSubject } from '../../services/reports'
 import './reporting.css'
+import '../../styles/trust.css'
 
 // Report submitted confirmation
 function ReportSubmitted() {
@@ -20,16 +21,17 @@ function ReportSubmitted() {
 
   // A result for another report or an earlier attempt means the new one is still loading.
   if (result?.reportId !== reportId || result.attempt !== attempt) {
-    return <main className="page"><p role="status">Loading report...</p></main>
+    return <main className="ds-page ds-trust report-page"><p className="ds-status" role="status">Loading report...</p></main>
   }
 
-  if (result.error?.status === 404) return <main className="page"><p>Report not found.</p></main>
+  if (result.error?.status === 404) return <main className="ds-page ds-trust report-page"><h1 className="ds-heading">Report not found</h1><Link className="ds-text-link" to="/browse">Back to Browse</Link></main>
 
   if (result.error) {
     return (
-      <main className="page">
-        <p role="alert">Could not load the report. {result.error.message}</p>
-        <button type="button" className="report-button" onClick={() => setAttempt((value) => value + 1)}>
+      <main className="ds-page ds-trust report-page">
+        <h1 className="ds-heading">Could not load report</h1>
+        <p className="ds-feedback ds-feedback--error" role="alert">Could not load the report. {result.error.message}</p>
+        <button type="button" className="ds-button ds-button--primary" onClick={() => setAttempt((value) => value + 1)}>
           Try again
         </button>
       </main>
@@ -46,18 +48,18 @@ function ReportSubmitted() {
   else if (listing) backTo = `/browse/${listing.id}`
 
   return (
-    <main className="page report-page">
-      <h1>Report submitted</h1>
+    <main className="ds-page ds-trust report-page">
+      <h1 className="ds-heading">Report submitted</h1>
 
-      <article className="rental-card">
+      <article className="trust-surface">
         <div>
-          <h3>Report {report.id}</h3>
+          <h2>Report {report.id}</h2>
           {listing && <p>Related {related}: {listing.title}</p>}
-          <p>Awaiting moderator review</p>
+          <p className="ds-status">Awaiting moderator review</p>
         </div>
       </article>
 
-      <Link className="report-button" to={backTo}>Back to transactions</Link>
+      <Link className="ds-button ds-button--primary" to={backTo}>{booking ? 'Back to rental' : conversation ? 'Back to conversation' : listing ? 'Back to listing' : 'Back to Browse'}</Link>
     </main>
   )
 }
