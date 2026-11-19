@@ -1,12 +1,14 @@
 import express from "express"
 import cors from "cors"
 import discoverRoutes from "./routes/discover.js"
+import profileRoutes from "./routes/profile.js"
 
 const app = express()
 
 app.use(cors())
 app.use(express.json())
 app.use("/api", discoverRoutes)
+app.use("/api", profileRoutes)
 app.use(express.urlencoded({ extended: true }))
 app.use("/static", express.static("public"))
 
