@@ -1,18 +1,20 @@
 import { useContext, useState } from 'react'
 import { SavedItemsContext } from '../context/SavedItemsContext.js'
+import Icon from './Icon.jsx'
+import './SaveListingButton.css'
 
 export function SavedItemsStatus() {
   const { savedListings, loadError, retry } = useContext(SavedItemsContext)
 
   if (loadError) {
     return (
-      <div>
+      <div className="ds-feedback ds-feedback--error">
         <p role="alert">Could not load saved items. {loadError.message}</p>
-        <button type="button" onClick={retry}>Retry saved items</button>
+        <button className="ds-button ds-button--secondary" type="button" onClick={retry}>Retry saved items</button>
       </div>
     )
   }
-  return savedListings === null ? <p role="status">Loading saved items...</p> : null
+  return savedListings === null ? <p className="ds-status" role="status">Loading saved items...</p> : null
 }
 
 export default function SaveListingButton({ listing, compact = false }) {
@@ -34,6 +36,7 @@ export default function SaveListingButton({ listing, compact = false }) {
   return (
     <>
       <button
+        className="ds-button ds-button--secondary ds-save-button"
         type="button"
         aria-label={compact ? `${action} ${listing.title}` : `${action} item: ${listing.title}`}
         aria-pressed={saved}
@@ -41,9 +44,10 @@ export default function SaveListingButton({ listing, compact = false }) {
         disabled={savedListings === null || saving}
         onClick={toggleSaved}
       >
+        <Icon name="heart" size={18} />
         {compact ? action : `${action} item`}
       </button>
-      {error && <p role="alert">Could not update saved item. {error.message}</p>}
+      {error && <p className="ds-save-error" role="alert">Could not update saved item. {error.message}</p>}
     </>
   )
 }

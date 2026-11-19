@@ -8,7 +8,8 @@ import {
 import { cacheListing } from '../../services/mockDataService.js'
 import { getPublicListing } from '../../services/publicListings.js'
 import SaveListingButton, { SavedItemsStatus } from '../../components/SaveListingButton.jsx'
-import './browse.css'
+import Icon from '../../components/Icon.jsx'
+import './itemDetails.css'
 
 function ItemDetails() {
   const { id } = useParams()
@@ -33,29 +34,31 @@ function ItemDetailsRequest({ id }) {
   }, [id, attempt])
 
   if (!result) {
-    return <main className="item-details-page"><p role="status">Loading item...</p></main>
+    return <main className="ds-page ds-item-details"><p className="ds-status" role="status">Loading item...</p></main>
   }
 
   if (result.error) {
     const unavailable = result.error.status === 404
     return (
-      <main className="item-details-page">
+      <main className="ds-page ds-item-details">
+        <section className={`ds-feedback${unavailable ? '' : ' ds-feedback--error'}`}>
         {unavailable ? (
           <>
-            <h1>Item unavailable</h1>
+            <h1 className="ds-heading">Item unavailable</h1>
             <p>This listing could not be found or is no longer published.</p>
           </>
         ) : (
           <>
-            <h1>Could not load item</h1>
+            <h1 className="ds-heading">Could not load item</h1>
             <p role="alert">{result.error.message}</p>
-            <button type="button" onClick={() => {
+            <button className="ds-button ds-button--secondary" type="button" onClick={() => {
               setResult(null)
               setAttempt((value) => value + 1)
             }}>Try again</button>
           </>
         )}
-        <Link to="/browse">Back to browse</Link>
+        <Link className="ds-text-link" to="/browse"><Icon name="arrowLeft" />Back to browse</Link>
+        </section>
       </main>
     )
   }
@@ -81,6 +84,9 @@ function ListingDetails({ listing }) {
     startDate && endDate
       ? (new Date(endDate) - new Date(startDate)) / 86400000
       : 0
+
+  const pickupInvalid = Boolean(error && (!startDate || startDate < todayString))
+  const returnInvalid = Boolean(error && (!endDate || (startDate && endDate <= startDate)))
 
   function handleRequest(event) {
     event.preventDefault()
@@ -115,83 +121,108 @@ function ListingDetails({ listing }) {
   }
 
   return (
-    <main className="item-details-page">
-      <Link to="/browse">Back to browse</Link>
+    <main className="ds-page ds-item-details">
+      <Link className="ds-text-link ds-back-link" to="/browse">
+        <Icon name="arrowLeft" />Back to browse
+      </Link>
 
-      <p>{listing.category}</p>
-      <h1>{listing.title}</h1>
-      <img
-        src={listingImage(listing.id, 480)}
-        alt={listing.title}
-        width={300}
-        height={300}
-      />
-      <p>{listing.description}</p>
-      <p>Owner: {owner?.name ?? 'Student owner'}</p>
-      <p>${listing.price.toFixed(2)} / day</p>
-
-      {!isOwnListing && (
-        <>
-          <SavedItemsStatus />
-          <SaveListingButton listing={listing} />
-        </>
-      )}
-
-      <section>
-        <h2>Rental terms</h2>
-        <p>{listing.rentalTerms}</p>
-      </section>
-
-      {isOwnListing ? (
-        <p>This is your listing. Other students can request to rent it.</p>
-      ) : (
-        <form onSubmit={handleRequest}>
-          <h2>Select rental dates</h2>
-
-          <label>
-            Pickup date
-            <input
-              type="date"
-              required
-              min={todayString}
-              value={startDate}
-              onChange={(event) => {
-                setStartDate(event.target.value)
-                setError('')
-              }}
+      <div className="ds-item-layout">
+        <section className="ds-item-content" aria-labelledby="item-title">
+          <p className="ds-item-category">{listing.category}</p>
+          <h1 className="ds-heading" id="item-title">{listing.title}</h1>
+          <div className="ds-item-image">
+            <img
+              src={listingImage(listing.id, 480)}
+              alt={listing.title}
+              width={480}
+              height={480}
             />
-          </label>
+          </div>
 
-          <label>
-            Return date
-            <input
-              type="date"
-              required
-              min={startDate || todayString}
-              value={endDate}
-              onChange={(event) => {
-                setEndDate(event.target.value)
-                setError('')
-              }}
-            />
-          </label>
+          <div className="ds-item-owner">
+            <span className="ds-owner-icon"><Icon name="profile" size={22} /></span>
+            <p>Listed by <strong>{owner?.name ?? 'Student owner'}</strong></p>
+          </div>
 
-          {days > 0 && (
-            <p aria-live="polite">
-              {days} {days === 1 ? 'day' : 'days'} · Estimated total: $
-              {(days * listing.price).toFixed(2)}
-            </p>
+          <section className="ds-item-section" aria-labelledby="item-description-heading">
+            <h2 id="item-description-heading">About this item</h2>
+            <p>{listing.description}</p>
+          </section>
+          <section className="ds-item-section" aria-labelledby="rental-terms-heading">
+            <h2 id="rental-terms-heading">Rental terms</h2>
+            <p>{listing.rentalTerms}</p>
+          </section>
+        </section>
+
+        <aside className="ds-rental-panel" aria-label="Rental details">
+          <p className="ds-detail-price">${listing.price.toFixed(2)} <span>/ day</span></p>
+
+          {isOwnListing ? (
+            <div className="ds-feedback">
+              <h2>Your listing</h2>
+              <p>This is your listing. Other students can request to rent it.</p>
+              <Link className="ds-text-link" to="/listings">Manage your listings</Link>
+            </div>
+          ) : (
+            <>
+              <div className="ds-detail-save">
+                <SavedItemsStatus />
+                <SaveListingButton listing={listing} />
+              </div>
+              <form className="ds-rental-form" onSubmit={handleRequest}>
+                <h2>Select rental dates</h2>
+                <div className="ds-date-fields">
+                  <label htmlFor="rental-start">
+                    Pickup date
+                    <input
+                      className="ds-field"
+                      id="rental-start"
+                      type="date"
+                      required
+                      min={todayString}
+                      value={startDate}
+                      aria-invalid={pickupInvalid || undefined}
+                      aria-describedby={pickupInvalid ? 'rental-dates-error' : undefined}
+                      onChange={(event) => {
+                        setStartDate(event.target.value)
+                        setError('')
+                      }}
+                    />
+                  </label>
+                  <label htmlFor="rental-end">
+                    Return date
+                    <input
+                      className="ds-field"
+                      id="rental-end"
+                      type="date"
+                      required
+                      min={startDate || todayString}
+                      value={endDate}
+                      aria-invalid={returnInvalid || undefined}
+                      aria-describedby={returnInvalid ? 'rental-dates-error' : undefined}
+                      onChange={(event) => {
+                        setEndDate(event.target.value)
+                        setError('')
+                      }}
+                    />
+                  </label>
+                </div>
+
+                {days > 0 && (
+                  <p className="ds-rental-estimate" aria-live="polite">
+                    {days} {days === 1 ? 'day' : 'days'} · Estimated total: $
+                    {(days * listing.price).toFixed(2)}
+                  </p>
+                )}
+                {error && <p className="ds-date-error" id="rental-dates-error" role="alert">{error}</p>}
+                <button className="ds-button ds-button--primary" type="submit">Request rental</button>
+                <p className="ds-rental-note">Payment is arranged directly with the owner.</p>
+              </form>
+              <Link className="ds-text-link ds-report-link" to={`/report?listingId=${listing.id}`}>Report this listing</Link>
+            </>
           )}
-
-          {error && <p role="alert">{error}</p>}
-
-          <button type="submit">Request rental</button>
-        </form>
-      )}
-
-      {!isOwnListing && (
-        <p><Link to={`/report?listingId=${listing.id}`}>Report this listing</Link></p>
-      )}
+        </aside>
+      </div>
     </main>
   )
 }

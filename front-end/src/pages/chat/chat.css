@@ -248,6 +248,7 @@ a.chat-row:hover {
 }
 
 .chat-overlay {
+  z-index: var(--ds-layer-modal);
   position: fixed;
   inset: 0;
   display: flex;

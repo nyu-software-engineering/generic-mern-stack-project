@@ -10,7 +10,6 @@ import {
   getReviewTarget,
   getReviewableRentals,
 } from '../../services/reviews.js'
-import ReviewNavigation from './ReviewNavigation.jsx'
 import './reviews.css'
 
 function Reputation() {
@@ -141,8 +140,6 @@ function Reputation() {
           </section>
         )}
       </div>
-
-      <ReviewNavigation />
     </main>
   )
 }

@@ -4,6 +4,7 @@ import { SavedItemsStatus } from '../../components/SaveListingButton.jsx'
 import { listingCategories } from '../../data/options.js'
 import { searchListings } from '../../services/publicListings.js'
 import { Link } from 'react-router-dom'
+import Icon from '../../components/Icon.jsx'
 import './browse.css'
 
 function Browse() {
@@ -18,25 +19,37 @@ function Browse() {
   }
 
   return (
-    <main className="browse-page">
-      <h1>Browse items</h1>
-      <p>Find something to borrow or rent from another student.</p>
-      <Link to="/renter-dashboard">My Rentals and saved items</Link>
+    <main className="ds-page ds-discovery">
+      <header className="ds-discovery-header">
+        <div>
+          <h1 className="ds-heading">Browse items</h1>
+          <p className="ds-page-intro">Borrow, lend and rent within NYU.</p>
+        </div>
+        <Link className="ds-text-link" to="/renter-dashboard">
+          <Icon name="rentals" />
+          My Rentals and saved items
+        </Link>
+      </header>
 
-      <div className="browse-filters">
-        <label>
+      <div className="ds-discovery-filters">
+        <label className="ds-search-field">
           Search items
-          <input
-            type="search"
-            placeholder="Search by name or description"
-            value={search}
-            onChange={(event) => setSearch(event.target.value)}
-          />
+          <span className="ds-search-input">
+            <Icon name="search" />
+            <input
+              className="ds-field"
+              type="search"
+              placeholder="Search by name or description"
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+            />
+          </span>
         </label>
 
         <label>
           Category
           <select
+            className="ds-field"
             value={category}
             onChange={(event) => setCategory(event.target.value)}
           >
@@ -49,7 +62,7 @@ function Browse() {
           </select>
         </label>
 
-        <button type="button" onClick={resetFilters}>
+        <button className="ds-button ds-button--secondary" type="button" onClick={resetFilters}>
           Clear filters
         </button>
       </div>
@@ -84,13 +97,20 @@ function ListingResults({ search, category, onClear }) {
     }
   }, [search, category, attempt])
 
-  if (!result) return <p role="status">Loading listings...</p>
+  if (!result) return (
+    <section aria-busy="true">
+      <p className="ds-status" role="status">Loading listings...</p>
+      <div className="ds-catalog-skeleton" aria-hidden="true">
+        {[0, 1, 2].map((item) => <div className="ds-skeleton-item" key={item}><span /><span /><span /></div>)}
+      </div>
+    </section>
+  )
 
   if (result.error) {
     return (
-      <section>
+      <section className="ds-feedback ds-feedback--error">
         <p role="alert">Could not load listings. {result.error}</p>
-        <button type="button" onClick={() => {
+        <button className="ds-button ds-button--secondary" type="button" onClick={() => {
           setResult(null)
           setAttempt((value) => value + 1)
         }}>Try again</button>
@@ -101,18 +121,19 @@ function ListingResults({ search, category, onClear }) {
   const { listings } = result
   return (
     <>
-      <p aria-live="polite">{listings.length} items found</p>
+      <p className="ds-result-count" aria-live="polite">{listings.length} {listings.length === 1 ? 'item' : 'items'} found</p>
       {listings.length > 0 ? (
-        <div className="browse-grid">
+        <div className="ds-catalog-grid">
           {listings.map((listing) => (
             <ListingCard key={listing.id} listing={listing} />
           ))}
         </div>
       ) : (
-        <section>
+        <section className="ds-feedback ds-empty-state">
+          <Icon name="search" size={28} />
           <h2>No items found</h2>
           <p>Try another search or clear your filters.</p>
-          <button type="button" onClick={onClear}>
+          <button className="ds-button ds-button--primary" type="button" onClick={onClear}>
             Show all items
           </button>
         </section>
