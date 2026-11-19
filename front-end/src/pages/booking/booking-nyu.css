@@ -1,0 +1,238 @@
+/* Scoped to the migrated rental journey. Profile keeps booking.css. */
+.ds-booking.booking-page {
+  max-width: calc(var(--ds-reading-width) + var(--ds-gutter) * 2);
+  padding: 32px var(--ds-gutter) 48px;
+  color: var(--ds-ink);
+  overflow-wrap: anywhere;
+}
+
+.ds-booking h1.ds-heading {
+  margin: 0 0 28px;
+  font-size: var(--ds-text-heading);
+}
+
+.ds-booking .booking-card,
+.ds-booking .booking-request {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+  padding: 24px;
+  margin-bottom: 24px;
+  border: 1px solid var(--ds-line);
+  border-radius: var(--ds-radius-card);
+  background: var(--ds-surface);
+  color: var(--ds-ink);
+}
+
+.ds-booking .booking-card h2,
+.ds-booking .booking-section-heading {
+  margin: 0;
+  font-size: 20px;
+  line-height: 1.3;
+}
+
+.ds-booking .booking-section-heading {
+  margin: 32px 0 20px;
+}
+
+.ds-booking .booking-card p {
+  margin: 0;
+  color: var(--ds-ink);
+  white-space: pre-line;
+}
+
+.ds-booking .booking-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.ds-booking .booking-item > div {
+  min-width: 0;
+}
+
+.ds-booking .booking-item img {
+  width: 80px;
+  height: 80px;
+  flex-shrink: 0;
+  object-fit: contain;
+  border-radius: var(--ds-radius);
+  background: var(--ds-lilac);
+}
+
+.ds-booking .booking-item p {
+  margin-top: 8px;
+  color: var(--ds-muted);
+  font-size: 14px;
+}
+
+.ds-booking .booking-form {
+  gap: 24px;
+  margin-block: 24px;
+}
+
+.ds-booking .booking-form label:not(.booking-check) {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.ds-booking .booking-form .ds-field {
+  min-width: 0;
+  min-height: var(--ds-control-height);
+  padding: 10px 12px;
+  border: 1px solid var(--ds-control-border);
+  border-radius: var(--ds-radius);
+  background: var(--ds-surface);
+  color: var(--ds-ink);
+  font: inherit;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.ds-booking .booking-form .ds-field[aria-invalid="true"] {
+  border-color: var(--ds-error);
+}
+
+.ds-booking .booking-form textarea {
+  min-height: 112px;
+  resize: vertical;
+}
+
+.ds-booking .booking-dates {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.ds-booking .booking-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  min-height: 44px;
+  padding-block: 10px;
+  color: var(--ds-ink);
+  font-size: 16px;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.ds-booking .booking-check input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  min-height: 0;
+  flex: 0 0 20px;
+  margin: 2px 0 0;
+  padding: 0;
+  accent-color: var(--ds-violet);
+}
+
+.ds-booking .field-error {
+  color: var(--ds-error);
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.ds-booking .booking-note {
+  color: var(--ds-muted);
+  font-size: 14px;
+}
+
+.ds-booking .booking-actions {
+  gap: 12px;
+  margin-block: 24px;
+}
+
+.ds-booking .booking-alert {
+  padding: 16px;
+  margin-bottom: 24px;
+  border: 1px solid var(--ds-error);
+  border-radius: var(--ds-radius-card);
+  background: var(--ds-surface);
+  color: var(--ds-error);
+}
+
+.ds-booking .booking-danger {
+  border-color: var(--ds-error);
+  color: var(--ds-error);
+}
+
+.ds-booking .booking-danger:hover:not(:disabled),
+.ds-booking .booking-danger:active:not(:disabled) {
+  background: #fff0ee;
+}
+
+.ds-booking .booking-facts {
+  display: grid;
+  gap: 16px;
+  margin: 0;
+}
+
+.ds-booking .booking-facts > div {
+  display: grid;
+  grid-template-columns: minmax(100px, 1fr) minmax(0, 2fr);
+  gap: 16px;
+}
+
+.ds-booking .booking-facts dt {
+  color: var(--ds-muted);
+  font-size: 14px;
+}
+
+.ds-booking .booking-facts dd {
+  margin: 0;
+  font-weight: 700;
+}
+
+.ds-booking .booking-request .booking-card {
+  padding: 0;
+  margin: 0;
+  border: 0;
+  background: transparent;
+}
+
+.ds-booking .booking-request .booking-actions {
+  margin-bottom: 0;
+}
+
+.ds-booking .booking-empty {
+  padding: 24px;
+  color: var(--ds-muted);
+}
+
+.ds-booking .status-badge {
+  justify-self: start;
+  font-weight: 700;
+}
+
+.ds-booking :focus-visible {
+  outline: var(--ds-focus-ring);
+  outline-offset: 3px;
+}
+
+@media (max-width: 767px) {
+  .ds-booking .booking-card,
+  .ds-booking .booking-request {
+    padding: 20px;
+  }
+
+  .ds-booking .booking-item {
+    gap: 16px;
+  }
+
+  .ds-booking .booking-item img {
+    width: 56px;
+    height: 56px;
+  }
+
+  .ds-booking .booking-dates,
+  .ds-booking .booking-facts > div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+  }
+
+  .ds-booking .booking-dates {
+    gap: 24px;
+  }
+}
