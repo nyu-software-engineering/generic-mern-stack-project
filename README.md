@@ -128,7 +128,7 @@ From the repository root, start Vite in a second terminal:
 npm --prefix front-end run dev
 ```
 
-Open the URL printed by Vite. Vite forwards `/api` requests to Express, so the frontend needs no API key of its own. Express exposes its health check at <http://127.0.0.1:3001/api/health>. [Mockaroo setup](./mockaroo/README.md)
+Open the URL printed by Vite. Vite forwards `/api` requests to Express, so the frontend needs no API key of its own. Check that Express is running with the [backend health check](http://127.0.0.1:3001/api/health). [Mockaroo setup](./mockaroo/README.md)
 
 Frontend services call the backend through `api()` in `front-end/src/services/api.js`:
 
@@ -150,7 +150,7 @@ npm --prefix front-end run build
 npm --prefix back-end start
 ```
 
-If Express is already running, build the frontend and use the running server. Open <http://127.0.0.1:3001> for the built app. Express serves the listing placeholder at `/listing-images/placeholder.png` and supports direct links such as `/browse`.
+If Express is already running, build the frontend and open the [local app](http://127.0.0.1:3001). Express serves the listing placeholder at `/listing-images/placeholder.png` and supports direct links such as `/browse`.
 
 ### Run checks
 
