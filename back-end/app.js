@@ -10,6 +10,7 @@ const __dirname = path.dirname(__filename)
 import dotenv from 'dotenv' // load environmental variables from a hidden file named .env
 dotenv.config({ silent: true })
 import morgan from 'morgan' // middleware for nice logging of incoming HTTP requests
+import cors from 'cors' 
 
 // load mock JSON data
 const organizations = JSON.parse(
@@ -19,6 +20,7 @@ const flyers = JSON.parse(
   fs.readFileSync(path.join(__dirname, 'data', 'flyers.json'), 'utf8')
 )
 
+app.use(cors())
 app.use(morgan('dev'))
 
 app.use(express.json()) 
@@ -50,6 +52,10 @@ app.post('/api/users/saved-flyers/:id', (req, res) => {
   }
 
   res.status(201).json(responseData)
+})
+
+app.get('/api/organizations', (req, res) => {
+  res.status(200).json(organizations)
 })
 
 app.get('/api/organizations/:id', (req, res) => {

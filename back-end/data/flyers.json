@@ -1,5 +1,110 @@
 [
   {
+    "id": "1",
+    "title": "Event 1",
+    "organizationId": "1",
+    "date": "2026-11-19",
+    "location": "Kimmel Center"
+  },
+  {
+    "id": "2",
+    "title": "Event 2",
+    "organizationId": "1",
+    "date": "2026-11-19",
+    "location": "Kimmel Center"
+  },
+  {
+    "id": "3",
+    "title": "Event 3",
+    "organizationId": "1",
+    "date": "2026-11-19",
+    "location": "Kimmel Center"
+  },
+  {
+    "id": "4",
+    "title": "Event 4",
+    "organizationId": "1",
+    "date": "2026-11-19",
+    "location": "Kimmel Center"
+  },
+  {
+    "id": "5",
+    "title": "Event 5",
+    "organizationId": "1",
+    "date": "2026-11-22",
+    "location": "Kimmel Center"
+  },
+  {
+    "id": "6",
+    "title": "Event 6",
+    "organizationId": "1",
+    "date": "2026-11-22",
+    "location": "Kimmel Center"
+  },
+  {
+    "id": "7",
+    "title": "Event 7",
+    "organizationId": "1",
+    "date": "2026-11-22",
+    "location": "Kimmel Center"
+  },
+  {
+    "id": "8",
+    "title": "Event 8",
+    "organizationId": "1",
+    "date": "2026-11-22",
+    "location": "Kimmel Center"
+  },
+  {
+    "id": "9",
+    "title": "Event 9",
+    "organizationId": "1",
+    "date": "2026-11-17",
+    "location": "Kimmel Center"
+  },
+  {
+    "id": "10",
+    "title": "Event 10",
+    "organizationId": "1",
+    "date": "2026-11-17",
+    "location": "Kimmel Center"
+  },
+  {
+    "id": "11",
+    "title": "Event 11",
+    "organizationId": "1",
+    "date": "2026-11-17",
+    "location": "Kimmel Center"
+  },
+  {
+    "id": "12",
+    "title": "Event 12",
+    "organizationId": "1",
+    "date": "2026-11-17",
+    "location": "Kimmel Center"
+  },
+  {
+    "id": "ballroom-social",
+    "title": "Thursday Night Social",
+    "organizationId": "ballroom",
+    "date": "2026-11-12",
+    "location": "Kimmel Center, Room 905"
+  },
+  {
+    "id": "code-lab-hack-night",
+    "title": "Hack Night",
+    "organizationId": "code-lab",
+    "date": "2026-11-18",
+    "location": "60 5th Ave, Room 150"
+  },
+  {
+    "id": "film-shorts",
+    "title": "Student Shorts Screening",
+    "organizationId": "film",
+    "date": "2026-11-21",
+    "location": "Tisch, 721 Broadway"
+  },
+  {
     "id": "42",
     "title": "Fall Hackathon",
     "organizationId": "1",

@@ -4,6 +4,8 @@
     "name": "NYU Tech Club",
     "description": "Student organization for software engineering and hackathons.",
     "email": "techclub@nyu.edu",
+    "logo": "https://picsum.photos/seed/nyu-tech-club/320/320",
+    "isAdmin": true,
     "flyers": [
       { "id": "101", "title": "Fall Hackathon" },
       { "id": "102", "title": "Intro to Express Workshop" }
@@ -14,8 +16,52 @@
     "name": "NYU Design Collective",
     "description": "UI/UX and graphic design workshops for students.",
     "email": "design@nyu.edu",
+    "logo": "https://picsum.photos/seed/nyu-design/320/320",
+    "isAdmin": false,
     "flyers": [
       { "id": "103", "title": "Figma Basics Night" }
     ]
+  },
+  {
+    "id": "ballroom",
+    "name": "Ballroom Dance",
+    "description": "Social dance every Thursday",
+    "email": "ballroom@nyu.edu",
+    "logo": "https://picsum.photos/seed/flier-ballroom/320/320",
+    "isAdmin": true,
+    "flyers": [
+      { "id": "ballroom-social", "title": "Thursday Night Social" }
+    ]
+  },
+  {
+    "id": "code-lab",
+    "name": "Code Lab",
+    "description": "Weekly project nights",
+    "email": "codelab@nyu.edu",
+    "logo": "https://picsum.photos/seed/flier-code/320/320",
+    "isAdmin": true,
+    "flyers": [
+      { "id": "code-lab-hack-night", "title": "Hack Night" }
+    ]
+  },
+  {
+    "id": "film",
+    "name": "Film Society",
+    "description": "Screenings and short films",
+    "email": "film@nyu.edu",
+    "logo": "https://picsum.photos/seed/flier-film/320/320",
+    "isAdmin": false,
+    "flyers": [
+      { "id": "film-shorts", "title": "Student Shorts Screening" }
+    ]
+  },
+  {
+    "id": "hiking",
+    "name": "Hiking Club",
+    "description": "Day trips outside the city",
+    "email": "hiking@nyu.edu",
+    "logo": "https://picsum.photos/seed/flier-hike/320/320",
+    "isAdmin": false,
+    "flyers": []
   }
 ]
