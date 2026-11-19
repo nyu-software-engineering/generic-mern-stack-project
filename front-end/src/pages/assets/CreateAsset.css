@@ -97,3 +97,22 @@
     background-color: #576490;
     color: white;
 }
+.errorText {
+    color: #c0392b;
+    font-size: 13px;
+    margin: 6px 0 0;
+}
+
+.formHint {
+    color: #576490;
+    font-size: 12px;
+    margin: 6px 0 0;
+}
+
+.image-preview {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-top: 10px;
+}
