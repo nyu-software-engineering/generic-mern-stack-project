@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { listingCategories, listingStatuses } from '../../data/options.js'
 import { listingImage } from '../../services/bookings.js'
 import { createListing, getMyListings, updateListing, updateListingStatus } from '../../services/listings.js'
+import { validateListingForm } from './listingForm.js'
 
 const emptyForm = {
   title: '',
@@ -24,6 +25,7 @@ function MyListings({ initialFormOpen = false }) {
   const [loadAttempt, setLoadAttempt] = useState(0)
   const [pending, setPending] = useState(false)
   const [saveError, setSaveError] = useState('')
+  const [fieldErrors, setFieldErrors] = useState({})
   const mutationPending = useRef(false)
   const [formOpen, setFormOpen] = useState(initialFormOpen)
   const [editingId, setEditingId] = useState(null)
@@ -63,6 +65,7 @@ function MyListings({ initialFormOpen = false }) {
   const previewListing = listings.find((listing) => listing.id === previewId)
 
   function startNewListing() {
+    setFieldErrors({})
     setSaveError('')
     setEditingId(null)
     setForm(emptyForm)
@@ -71,6 +74,7 @@ function MyListings({ initialFormOpen = false }) {
   }
 
   function startEditing(listing) {
+    setFieldErrors({})
     setSaveError('')
     setEditingId(listing.id)
     setForm({
@@ -87,11 +91,19 @@ function MyListings({ initialFormOpen = false }) {
   function updateForm(event) {
     const { name, value } = event.target
     setForm((current) => ({ ...current, [name]: value }))
+    setFieldErrors((current) => ({ ...current, [name]: undefined }))
   }
 
   async function saveListing(event) {
     event.preventDefault()
     if (mutationPending.current || loading || loadError) return
+
+    const errors = validateListingForm(form)
+    setFieldErrors(errors)
+    if (Object.keys(errors).length) {
+      event.currentTarget.elements.namedItem(Object.keys(errors)[0])?.focus()
+      return
+    }
 
     const details = {
       title: form.title.trim(),
@@ -99,17 +111,6 @@ function MyListings({ initialFormOpen = false }) {
       description: form.description.trim(),
       price: Number(form.price),
       rentalTerms: form.rentalTerms.trim(),
-    }
-
-    if (
-      !details.title ||
-      !details.category ||
-      !details.description ||
-      !details.rentalTerms ||
-      !form.price.trim() || !Number.isFinite(details.price) ||
-      details.price < 0
-    ) {
-      return
     }
 
     mutationPending.current = true
@@ -125,6 +126,7 @@ function MyListings({ initialFormOpen = false }) {
       setFormOpen(false)
       setEditingId(null)
       setForm(emptyForm)
+      setFieldErrors({})
       setPreviewId(savedListing.id)
     } catch (error) {
       setSaveError(error.message)
@@ -157,6 +159,7 @@ function MyListings({ initialFormOpen = false }) {
   }
 
   function closeForm() {
+    setFieldErrors({})
     setSaveError('')
     setFormOpen(false)
     setEditingId(null)
@@ -204,17 +207,22 @@ function MyListings({ initialFormOpen = false }) {
             Item name
             <input
               name="title"
+              aria-invalid={Boolean(fieldErrors.title) || undefined}
+              aria-describedby={fieldErrors.title ? 'listing-title-error' : undefined}
               disabled={disabled}
               required
               value={form.title}
               onChange={updateForm}
             />
+            {fieldErrors.title && <span className="ds-listing-field-error" id="listing-title-error" role="alert">{fieldErrors.title}</span>}
           </label>
 
           <label>
             Category
             <select
               name="category"
+              aria-invalid={Boolean(fieldErrors.category) || undefined}
+              aria-describedby={fieldErrors.category ? 'listing-category-error' : undefined}
               disabled={disabled}
               required
               value={form.category}
@@ -227,24 +235,30 @@ function MyListings({ initialFormOpen = false }) {
                 </option>
               ))}
             </select>
+            {fieldErrors.category && <span className="ds-listing-field-error" id="listing-category-error" role="alert">{fieldErrors.category}</span>}
           </label>
 
           <label>
             Description
             <textarea
               name="description"
+              aria-invalid={Boolean(fieldErrors.description) || undefined}
+              aria-describedby={fieldErrors.description ? 'listing-description-error' : undefined}
               disabled={disabled}
               required
               rows="3"
               value={form.description}
               onChange={updateForm}
             />
+            {fieldErrors.description && <span className="ds-listing-field-error" id="listing-description-error" role="alert">{fieldErrors.description}</span>}
           </label>
 
           <label>
             Price per day
             <input
               name="price"
+              aria-invalid={Boolean(fieldErrors.price) || undefined}
+              aria-describedby={fieldErrors.price ? 'listing-price-error' : undefined}
               disabled={disabled}
               required
               min="0"
@@ -253,18 +267,22 @@ function MyListings({ initialFormOpen = false }) {
               value={form.price}
               onChange={updateForm}
             />
+            {fieldErrors.price && <span className="ds-listing-field-error" id="listing-price-error" role="alert">{fieldErrors.price}</span>}
           </label>
 
           <label>
             Rental terms
             <textarea
               name="rentalTerms"
+              aria-invalid={Boolean(fieldErrors.rentalTerms) || undefined}
+              aria-describedby={fieldErrors.rentalTerms ? 'listing-terms-error' : undefined}
               disabled={disabled}
               required
               rows="3"
               value={form.rentalTerms}
               onChange={updateForm}
             />
+            {fieldErrors.rentalTerms && <span className="ds-listing-field-error" id="listing-terms-error" role="alert">{fieldErrors.rentalTerms}</span>}
           </label>
 
           <div className="form-actions">
