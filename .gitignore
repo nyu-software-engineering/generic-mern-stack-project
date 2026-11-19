@@ -117,6 +117,10 @@ typings/
 # dotenv environment variables file
 .env
 
+# User-uploaded flyer images (keep the folder, not the files)
+back-end/public/uploads/*
+!back-end/public/uploads/.gitkeep
+
 # next.js build output
 .next
 

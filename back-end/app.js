@@ -10,6 +10,7 @@ const __dirname = path.dirname(__filename)
 import dotenv from 'dotenv' // load environmental variables from a hidden file named .env
 dotenv.config({ silent: true })
 import morgan from 'morgan' // middleware for nice logging of incoming HTTP requests
+import uploadRoutes from './routes/uploads.js'
 
 // load mock JSON data
 const organizations = JSON.parse(
@@ -66,5 +67,8 @@ app.get('/api/organizations/:id', (req, res) => {
 
   res.status(200).json(organization)
 })
+
+// flyer image uploads (Multer)
+app.use('/api/uploads', uploadRoutes)
 
 export default app // 
