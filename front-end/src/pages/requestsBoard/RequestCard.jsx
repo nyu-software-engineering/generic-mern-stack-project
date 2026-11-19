@@ -81,7 +81,7 @@ function RequestCard({ request }) {
             View request / offer an item
           </Link>
         ) : (
-          !isOwnRequest && <Link to="/inbox" className="ds-button ds-button--secondary">Message</Link>
+          !isOwnRequest && <Link to="/inbox" className="ds-button ds-button--secondary">Open inbox</Link>
         )}
       </div>
       <span className="ds-status">{REQUEST_TYPES[request.type]}</span>

@@ -14,6 +14,12 @@ function validate({ startDate, endDate, totalPrice }) {
   return errors
 }
 
+function isBackdropEvent(e) {
+  if (e.target !== e.currentTarget) return false
+  const { top, right, bottom, left } = e.currentTarget.getBoundingClientRect()
+  return e.clientX < left || e.clientX >= right || e.clientY < top || e.clientY >= bottom
+}
+
 // Offer / counter-offer dialog (prototype m20). Prefills from the latest offer.
 function OfferForm({ listing, initialOffer, onSubmit, onCancel }) {
   const [form, setForm] = useState({
@@ -25,6 +31,7 @@ function OfferForm({ listing, initialOffer, onSubmit, onCancel }) {
   const dialogRef = useRef(null)
   const totalPriceRef = useRef(null)
   const cancelRef = useRef(null)
+  const backdropPressed = useRef(false)
 
   useEffect(() => {
     const dialog = dialogRef.current
@@ -61,11 +68,9 @@ function OfferForm({ listing, initialOffer, onSubmit, onCancel }) {
   }
 
   const handleBackdropClick = (e) => {
-    if (e.target !== e.currentTarget) return
-    const { top, right, bottom, left } = e.currentTarget.getBoundingClientRect()
-    if (e.clientX < left || e.clientX >= right || e.clientY < top || e.clientY >= bottom) {
-      onCancel()
-    }
+    const clickedBackdrop = backdropPressed.current && isBackdropEvent(e)
+    backdropPressed.current = false
+    if (clickedBackdrop) onCancel()
   }
 
   const handleTab = (e) => {
@@ -87,6 +92,7 @@ function OfferForm({ listing, initialOffer, onSubmit, onCancel }) {
       className="chat-offer-dialog"
       aria-labelledby="chat-offer-heading"
       onCancel={handleCancel}
+      onPointerDown={(e) => { backdropPressed.current = isBackdropEvent(e) }}
       onClick={handleBackdropClick}
       onKeyDown={handleTab}
     >
