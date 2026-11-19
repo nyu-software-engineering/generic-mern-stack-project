@@ -1,146 +1,38 @@
-.review-page {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  max-width: 390px;
-  min-height: 100vh;
-  margin: 0 auto;
-  background: white;
-  color: #292929;
-  font-size: 14px;
+.ds-trust .review-header { margin-bottom: 24px; }
+.ds-trust .review-content { min-width: 0; }
+.ds-trust .review-content > h2,
+.ds-trust .review-content section > h2 { margin: 32px 0 16px; }
+.ds-trust .review-avatar {
+  display: flex; align-items: center; justify-content: center;
+  width: 72px; height: 72px; margin-bottom: 20px;
+  border-radius: 50%; background: var(--ds-lilac); color: var(--ds-violet);
+  font-size: 24px; font-weight: 700;
 }
-
-.review-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  min-height: 88px;
-  padding: 0 24px;
+.ds-trust .review-card {
+  padding: 24px; margin-block: 16px;
+  border: 1px solid var(--ds-line); border-radius: var(--ds-radius-card);
+  background: var(--ds-surface);
 }
-
-.review-header strong {
-  font-size: 16px;
-}
-
-.review-header a {
-  font-size: 12px;
-}
-
-.review-content {
-  flex: 1;
-  padding: 16px 24px 24px;
-}
-
-.review-content h1 {
-  margin: 10px 0;
-  font-size: 22px;
-}
-
-.review-content h2 {
-  margin: 24px 0 12px;
-  font-size: 16px;
-}
-
-.review-content p {
-  margin: 8px 0;
-  line-height: 1.5;
-}
-
-.review-avatar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 96px;
-  height: 96px;
-  margin: 0 auto 16px;
-  border: 1px solid #b2b2b2;
-  border-radius: 50%;
-  background: #f0f0f0;
-  color: #292929;
-  font-size: 30px;
-  font-weight: 600;
-}
-
-.review-card {
-  padding: 12px;
-  margin: 10px 0;
-  border: 1px solid #b2b2b2;
-  border-radius: 4px;
-  background: white;
-}
-
-.review-card h3 {
-  margin: 0 0 6px;
-  font-size: 16px;
-}
-
-.review-card p {
-  margin: 4px 0;
-}
-
-.review-form {
-  display: grid;
-  gap: 12px;
-  margin-top: 10px;
-}
-
-.review-fieldset {
-  min-width: 0;
-  margin: 0;
-  padding: 8px 12px;
-  border: 1px solid #b2b2b2;
-  border-radius: 4px;
-}
-
-.review-fieldset legend,
-.review-form > label {
-  font-weight: 500;
-}
-
-.review-rating-options {
-  display: flex;
-  justify-content: space-between;
-  padding-top: 4px;
-}
-
-.review-rating-options label {
-  display: flex;
-  align-items: center;
-  gap: 4px;
+.ds-trust .review-card h2,
+.ds-trust .review-card h3 { margin: 0 0 12px; }
+.ds-trust .review-card p { margin: 8px 0; white-space: pre-line; }
+.ds-trust .review-form { display: grid; gap: 24px; }
+.ds-trust .review-fieldset { min-width: 0; margin: 0; padding: 0; border: 0; }
+.ds-trust .review-fieldset legend { padding: 0; margin-bottom: 12px; font-weight: 700; }
+.ds-trust .review-rating-options { display: grid; grid-template-columns: repeat(5, minmax(44px, 1fr)); gap: 4px; }
+.ds-trust .review-rating-options label {
+  display: flex; align-items: center; justify-content: center; gap: 4px;
+  min-width: 44px; min-height: 44px; padding: 4px;
+  border: 1px solid var(--ds-control-border); border-radius: var(--ds-radius);
   cursor: pointer;
 }
-
-.review-form textarea {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #b2b2b2;
-  border-radius: 4px;
-  font: inherit;
-}
-
-.review-button {
-  display: flex;
-  width: 100%;
-  min-height: 44px;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid #b2b2b2;
-  border-radius: 4px;
-  font: inherit;
-  font-weight: 500;
-  cursor: pointer;
-}
-
-.review-primary {
-  background: #292929;
-  color: white;
-}
-
-.review-secondary {
-  background: white;
-  color: #292929;
-}
-
-.review-error {
-  color: #b91c1c;
+.ds-trust .review-rating-options label:has(input:checked) { border-color: var(--ds-violet); background: var(--ds-lilac); font-weight: 700; }
+.ds-trust .review-rating-options input { width: 16px; height: 16px; margin: 0; accent-color: var(--ds-violet); }
+.ds-trust .review-comment { display: grid; gap: 8px; }
+.ds-trust .review-comment > label { font-size: 14px; font-weight: 700; }
+.ds-trust .review-comment p { margin: 0; }
+.ds-trust .review-form textarea { min-height: 112px; resize: vertical; }
+.ds-trust .review-error { color: var(--ds-error); }
+@media (max-width: 767px) {
+  .ds-trust .review-card { padding: 20px; }
 }
