@@ -47,6 +47,8 @@ Files: `Booking.jsx`, `BookingDetails.jsx`, `BookingRequests.jsx`, `BookingLoadS
 - [x] Check date and condition errors become associated and focused. Check keyboard checkbox operation. Check Profile still uses its legacy styles.
 - [x] Save desktop and phone screenshots and `docs/design/145-verification.md` with actual results and limits.
 - [x] Obtain independent source and security reviews against the research and interface contract. Resolve actionable findings and repeat affected checks.
-- [ ] Push the small commits under the user's identity. Open a focused PR for #145, assign the user, set Sprint 2 and relevant labels, and request Aayan and Samuel for the booking/handoff paths. Keep the issue open until merge.
+- [x] Push the small commits under the user's identity. Open a focused PR for #145, assign the user, set Sprint 2 and relevant labels, and request Aayan and Samuel for the booking/handoff paths. Keep the issue open until merge.
 
 Implementation is rebased onto master at `6c718b6`. Final source and security reviews passed. See [verification](145-verification.md).
+
+Review: [PR #158](https://github.com/agile-students-fall2026/generic-mern-stack-project-dormshare/pull/158), targeting master. Aayan and Samuel were requested.
