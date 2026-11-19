@@ -1,10 +1,12 @@
 import { useState } from 'react'
+import { flushSync } from 'react-dom'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { getUser } from '../../services/bookings'
 import { getOtherParticipant } from '../../services/chat'
 import { CURRENT_USER_ID } from '../../services/mockDataService'
 import { REPORT_REASONS, createReport, resolveReportSubject } from '../../services/reports'
 import './reporting.css'
+import '../../styles/trust.css'
 
 // Report a problem (M34). The subject comes from the link that opened the form:
 // ?rentalId=<id>, ?conversationId=<id> or ?listingId=<id>. With none it is a general report.
@@ -16,6 +18,7 @@ function Report() {
     listingId: searchParams.get('listingId') ?? '',
   }
   const [error, setError] = useState('')
+  const [invalidField, setInvalidField] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const navigate = useNavigate()
 
@@ -31,7 +34,7 @@ function Report() {
   }
 
   let backTo = '/community-rules'
-  let backLabel = 'Back'
+  let backLabel = 'Back to community rules'
   if (booking) {
     backTo = `/bookings/${booking.id}`
     backLabel = 'Back to rental'
@@ -56,7 +59,12 @@ function Report() {
     const { reason, description, image } = event.currentTarget.elements
 
     if (!reason.value || !description.value.trim()) {
-      setError('Please choose a reason and describe what happened.')
+      const field = !reason.value ? 'reason' : 'description'
+      flushSync(() => {
+        setInvalidField(field)
+        setError('Please choose a reason and describe what happened.')
+      })
+      event.currentTarget.elements[field].focus()
       return
     }
 
@@ -79,22 +87,22 @@ function Report() {
   }
 
   return (
-    <main className="page report-page">
-      <h1>Report a problem</h1>
+    <main className="ds-page ds-trust report-page">
+      <h1 className="ds-heading">Report a problem</h1>
 
       {listing && (
-        <article className="rental-card">
+        <article className="trust-surface">
           <div>
-            <h3>{listing.title}</h3>
+            <h2>{listing.title}</h2>
             <p>{people}</p>
           </div>
         </article>
       )}
 
-      <form className="report-form" onSubmit={handleSubmit} onChange={() => setError('')}>
+      <form className="report-form trust-surface" onSubmit={handleSubmit} aria-busy={submitting} onChange={() => { setError(''); setInvalidField('') }}>
         <div>
           <label htmlFor="reason">Reason</label>
-          <select id="reason" name="reason" defaultValue="" required>
+          <select id="reason" name="reason" className="ds-field" defaultValue="" required aria-invalid={invalidField === 'reason' || undefined} aria-describedby={invalidField === 'reason' ? 'report-error' : undefined}>
             <option value="" disabled>Select a reason</option>
             {REPORT_REASONS.map((reason) => <option key={reason}>{reason}</option>)}
           </select>
@@ -102,22 +110,24 @@ function Report() {
 
         <div>
           <label htmlFor="description">What happened?</label>
-          <textarea id="description" name="description" placeholder="Describe the issue" maxLength={2000} required />
+          <textarea id="description" name="description" className="ds-field" placeholder="Describe the issue" maxLength={2000} required aria-invalid={invalidField === 'description' || undefined} aria-describedby={invalidField === 'description' ? 'report-description-help report-error' : 'report-description-help'} />
+          <p className="trust-meta" id="report-description-help">Describe what happened in up to 2,000 characters.</p>
         </div>
 
         <div>
           <label htmlFor="image">Add supporting image (optional)</label>
-          <input id="image" name="image" type="file" accept="image/*" />
+          <input id="image" name="image" type="file" className="ds-field" accept="image/*" aria-describedby="report-image-help" />
+          <p className="trust-meta" id="report-image-help">Only the file name is saved. The image is not uploaded.</p>
         </div>
 
-        <button type="submit" className="report-button" disabled={submitting}>
+        <button type="submit" className="ds-button ds-button--primary" disabled={submitting}>
           {submitting ? 'Submitting...' : 'Submit report'}
         </button>
       </form>
 
-      {error && <p role="alert" className="report-error">{error}</p>}
+      {error && <p role="alert" id="report-error" className="ds-feedback ds-feedback--error">{error}</p>}
 
-      <Link className="report-link" to={backTo}>{backLabel}</Link>
+      <Link className="ds-text-link" to={backTo}>{backLabel}</Link>
     </main>
   )
 }
