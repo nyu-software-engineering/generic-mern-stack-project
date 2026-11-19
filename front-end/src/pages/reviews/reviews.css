@@ -144,26 +144,3 @@
 .review-error {
   color: #b91c1c;
 }
-
-.review-navigation {
-  position: sticky;
-  bottom: 0;
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  padding: 8px;
-  border-top: 1px solid #b2b2b2;
-  background: white;
-}
-
-.review-navigation a {
-  padding: 14px 0;
-  color: #292929;
-  font-size: 12px;
-  text-align: center;
-  text-decoration: none;
-}
-
-.review-navigation a:hover,
-.review-navigation a:focus-visible {
-  background: #d6d6d6;
-}

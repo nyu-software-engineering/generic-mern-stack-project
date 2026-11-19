@@ -11,7 +11,6 @@ import {
   getReviewTarget,
   submitReview,
 } from '../../services/reviews.js'
-import ReviewNavigation from './ReviewNavigation.jsx'
 import './reviews.css'
 
 const ratingFields = [
@@ -148,8 +147,6 @@ function ReviewParticipant() {
           </button>
         </form>
       </div>
-
-      <ReviewNavigation />
     </main>
   )
 }
