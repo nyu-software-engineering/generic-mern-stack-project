@@ -7,6 +7,7 @@ import { requestBooking } from '../../services/bookingsApi'
 import { cacheListing } from '../../services/mockDataService'
 import { getPublicListing } from '../../services/publicListings'
 import './booking.css'
+import './booking-nyu.css'
 
 // Request rental (prototype m21). Item details can prefill dates with
 // /listings/:listingId/request?start=YYYY-MM-DD&end=YYYY-MM-DD
@@ -42,13 +43,13 @@ function Booking() {
   }, [listingId, attempt])
 
   if (result?.listingId !== listingId) {
-    return <main className="booking-page"><p role="status">Loading listing...</p></main>
+    return <main className="ds-page booking-page ds-booking"><p className="ds-status" role="status">Loading listing...</p></main>
   }
   if (result.error && result.error.status !== 404) {
     return (
-      <main className="booking-page">
-        <p role="alert">Could not load this listing. {result.error.message}</p>
-        <button type="button" className="booking-btn" onClick={() => setAttempt((value) => value + 1)}>
+      <main className="ds-page booking-page ds-booking">
+        <p className="ds-feedback ds-feedback--error" role="alert">Could not load this listing. {result.error.message}</p>
+        <button type="button" className="ds-button ds-button--secondary" onClick={() => setAttempt((value) => value + 1)}>
           Retry
         </button>
       </main>
@@ -57,10 +58,10 @@ function Booking() {
 
   const { listing } = result
   if (!listing || listing.status !== 'published') {
-    return <main className="booking-page"><p>This listing is not available.</p></main>
+    return <main className="ds-page booking-page ds-booking"><h1 className="ds-heading">Listing unavailable</h1><p>This listing is not available.</p><Link className="ds-text-link" to="/browse">Browse items</Link></main>
   }
   if (listing.ownerId === CURRENT_USER_ID) {
-    return <main className="booking-page"><p>You can&apos;t request your own listing.</p></main>
+    return <main className="ds-page booking-page ds-booking"><h1 className="ds-heading">Your listing</h1><p>You can&apos;t request your own listing.</p><Link className="ds-text-link" to="/listings">Manage listings</Link></main>
   }
 
   // Throws on failure so the form can show the server's message.
@@ -70,8 +71,8 @@ function Booking() {
   }
 
   return (
-    <main className="booking-page">
-      <h1>Request rental</h1>
+    <main className="ds-page booking-page ds-booking">
+      <h1 className="ds-heading">Request rental</h1>
       <ListingSummary listing={listing} />
       <BookingForm
         listing={listing}
@@ -80,7 +81,7 @@ function Booking() {
         onSubmit={handleSubmit}
       />
       <p className="booking-note" style={{ marginTop: 12 }}>
-        Track pending requests in <Link to="/renter-dashboard">My Rentals</Link>.
+        Track pending requests in <Link className="ds-text-link" to="/renter-dashboard">My Rentals</Link>.
       </p>
     </main>
   )

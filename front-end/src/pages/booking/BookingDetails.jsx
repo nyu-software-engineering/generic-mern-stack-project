@@ -10,6 +10,7 @@ import {
 import { answerBookingRequest } from '../../services/bookingsApi'
 import { getReviewForBooking, getReviewTarget } from '../../services/reviews.js'
 import './booking.css'
+import './booking-nyu.css'
 
 // Statuses where the owner has accepted, so the price is agreed rather than proposed.
 const AGREED_STATUSES = ['confirmed', 'active', 'extension_requested', 'completed']
@@ -42,8 +43,8 @@ function BookingSummary({ bookingId }) {
   const respond = (status) => run(() => answerBookingRequest(booking.id, status))
 
   return (
-    <main className="booking-page">
-      <h1>Booking summary</h1>
+    <main className="ds-page booking-page ds-booking">
+      <h1 className="ds-heading">Booking summary</h1>
 
       {booking.status === 'cancelled' && (
         <p className="booking-alert">This booking was cancelled.</p>
@@ -63,9 +64,12 @@ function BookingSummary({ bookingId }) {
 
       <div className="booking-card">
         <div><StatusBadge status={displayStatus(booking)} /></div>
-        <p>{formatDate(booking.startDate)} – {formatDate(booking.endDate)}</p>
-        <p>{AGREED_STATUSES.includes(booking.status) ? 'Agreed' : 'Proposed'} total: {formatMoney(booking.totalPrice)}</p>
-        <p>{isOwner ? 'Borrower' : 'Owner'}: {other?.name}</p>
+        <dl className="booking-facts">
+          <div><dt>Pickup date</dt><dd>{formatDate(booking.startDate)}</dd></div>
+          <div><dt>Return date</dt><dd>{formatDate(booking.endDate)}</dd></div>
+          <div><dt>{AGREED_STATUSES.includes(booking.status) ? 'Agreed' : 'Proposed'} total</dt><dd>{formatMoney(booking.totalPrice)}</dd></div>
+          <div><dt>{isOwner ? 'Borrower' : 'Owner'}</dt><dd>{other?.name}</dd></div>
+        </dl>
         {booking.terms?.message && <p>Message: “{booking.terms.message}”</p>}
       </div>
 
@@ -99,7 +103,7 @@ function BookingSummary({ bookingId }) {
             </label>
             <button
               type="button"
-              className="booking-btn booking-btn--primary"
+              className="ds-button ds-button--primary"
               disabled={!agreed || pending}
               onClick={() => respond('confirmed')}
             >
@@ -113,31 +117,31 @@ function BookingSummary({ bookingId }) {
         )}
 
         {!isOwner && booking.status === 'active' && (
-          <Link to={`/bookings/${booking.id}/extension`} className="booking-btn">
+          <Link to={`/bookings/${booking.id}/extension`} className="ds-button ds-button--secondary">
             Request extension
           </Link>
         )}
 
         {booking.status === 'extension_requested' && (
-          <Link to={`/bookings/${booking.id}/extension`} className="booking-btn">
+          <Link to={`/bookings/${booking.id}/extension`} className="ds-button ds-button--secondary">
             {isOwner ? 'Review extension request' : 'View extension request'}
           </Link>
         )}
 
         {canConfirmPickup(booking, CURRENT_USER_ID) && (
-          <Link to={`/handoff/${booking.id}`} className="booking-btn booking-btn--primary">
+          <Link to={`/handoff/${booking.id}`} className="ds-button ds-button--primary">
             Confirm pickup
           </Link>
         )}
 
         {canConfirmReturn(booking, CURRENT_USER_ID) && (
-          <Link to={`/handoff/${booking.id}`} className="booking-btn booking-btn--primary">
+          <Link to={`/handoff/${booking.id}`} className="ds-button ds-button--primary">
             Confirm return
           </Link>
         )}
 
         {HANDOFF_VIEW_STATUSES.includes(booking.status) && !canConfirmReturn(booking, CURRENT_USER_ID) && (
-          <Link to={`/handoff/${booking.id}`} className="booking-btn">
+          <Link to={`/handoff/${booking.id}`} className="ds-button ds-button--secondary">
             View pickup and return checks
           </Link>
         )}
@@ -145,30 +149,30 @@ function BookingSummary({ bookingId }) {
         {canWriteReview && (
           <Link
             to={`/bookings/${booking.id}/review`}
-            className="booking-btn booking-btn--primary"
+            className="ds-button ds-button--primary"
           >
             Write review
           </Link>
         )}
 
-        <Link to="/inbox" className="booking-btn">
+        <Link to="/inbox" className="ds-button ds-button--secondary">
           Message {isOwner ? 'borrower' : 'owner'}
         </Link>
 
         {canCancel(booking, CURRENT_USER_ID) && (
-          <Link to={`/bookings/${booking.id}/cancel`} className="booking-btn booking-btn--link">
+          <Link to={`/bookings/${booking.id}/cancel`} className="ds-button booking-danger">
             {booking.status === 'requested' ? 'Withdraw request' : 'Cancel booking'}
           </Link>
         )}
 
-        <Link to={`/report?rentalId=${booking.id}`} className="booking-btn booking-btn--link">
+        <Link to={`/report?rentalId=${booking.id}`} className="ds-button booking-danger">
           Report a problem
         </Link>
 
         {canRespond && (
           <button
             type="button"
-            className="booking-btn booking-btn--link"
+            className="ds-button booking-danger"
             disabled={pending}
             onClick={() => respond('declined')}
           >
