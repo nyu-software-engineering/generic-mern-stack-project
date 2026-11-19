@@ -1,0 +1,21 @@
+[
+  {
+    "id": "1",
+    "name": "NYU Tech Club",
+    "description": "Student organization for software engineering and hackathons.",
+    "email": "techclub@nyu.edu",
+    "flyers": [
+      { "id": "101", "title": "Fall Hackathon" },
+      { "id": "102", "title": "Intro to Express Workshop" }
+    ]
+  },
+  {
+    "id": "2",
+    "name": "NYU Design Collective",
+    "description": "UI/UX and graphic design workshops for students.",
+    "email": "design@nyu.edu",
+    "flyers": [
+      { "id": "103", "title": "Figma Basics Night" }
+    ]
+  }
+]
