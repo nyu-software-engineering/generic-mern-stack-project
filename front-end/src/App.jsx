@@ -20,6 +20,7 @@ import PlaceDetail from './pages/PlaceDetail'
 import EditPlace from './pages/EditPlace'
 import EditProfile from './pages/EditProfile'
 import ChangePassword from './pages/ChangePassword'
+import UpdatePassword from './pages/UpdatePassword'
 import Invites from './pages/Invites'
 import InviteToList from './pages/InviteToList'
 import FriendProfile from './pages/FriendProfile'
@@ -48,6 +49,7 @@ export default function App() {
         <Route path="/invites" element={<Invites />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/profile/edit" element={<EditProfile />} />
+        <Route path="/profile/password" element={<UpdatePassword />} />
       
         <Route path="/city/:cityId" element={<CityPage />} />
         <Route path="/city/:cityId/members" element={<Members />} />

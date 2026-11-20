@@ -98,6 +98,16 @@ export default function Profile() {
         </ul>
       )}
 
+      <h2 className="mt-8 text-sm font-semibold text-muted">Account</h2>
+      <ul className="mt-2 flex flex-col">
+        <li className="border-b border-border">
+          <Link to="/profile/password" className="-mx-2 flex items-center justify-between rounded-input px-2 py-3 hover:bg-subtle focus-visible:outline-3 focus-visible:outline-brand">
+            <span className="font-semibold">Change password</span>
+            <span aria-hidden="true" className="text-sm text-muted">›</span>
+          </Link>
+        </li>
+      </ul>
+
       <button
         type="button"
         onClick={handleSignOut}
