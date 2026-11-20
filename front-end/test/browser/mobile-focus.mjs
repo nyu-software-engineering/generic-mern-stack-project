@@ -19,6 +19,7 @@ let vite
 let browser
 const failures = []
 let steps = 0
+let keyboardSteps = 0
 const views = [
   ['/quick-borrow', '#itemName'],
   ['/listings/new', 'textarea[name="description"]'],
@@ -76,6 +77,7 @@ try {
           })
           if (!focused) { leftMain = true; break }
           steps += 1
+          if (step) keyboardSteps += 1
           if (focused.visibleHeight === 0) failures.push({ path, width, height, backward, ...focused })
         }
         assert(leftMain, `Focus did not leave ${path}`)
@@ -84,7 +86,7 @@ try {
     await context.close()
   }
   assert.equal(failures.length, 0, `Hidden focus: ${JSON.stringify(failures.slice(0, 4))}`)
-  console.log(`Passed ${steps} native focus steps across six views and three viewport sizes, in both directions.`)
+  console.log(`Passed ${steps} focus observations, including ${keyboardSteps} native Tab or Shift+Tab observations, across six views and three viewport sizes.`)
 } finally {
   await browser?.close()
   await vite?.close()

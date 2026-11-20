@@ -37,7 +37,7 @@ This work adds no dependency, plugin, event listener, resize observer, focus int
 
 Verify the candidate through actual Tab and Shift+Tab input before treating it as the implementation contract. Programmatic focus or `scrollIntoView` alone does not establish native focus scrolling. Cover all six affected journeys with the same fixtures and controls as the reproduction.
 
-At 320 and 390px widths with a 500px height, focused page controls must remain above the measured navigation top with their focus outline visible. Record control bounds and navigation bounds. Check date and time segments, native radio movement, textareas, buttons, and links. Test both forward and backward traversal. A control taller than the remaining visible area needs a separately recorded result rather than a full-visibility claim.
+At 320 and 390px widths with a 500px height, focused controls must have a visible focus indicator and entry area above the measured navigation top. Record partially visible native textareas separately; do not claim full-frame visibility from this minimum-focus check. Record control bounds and navigation bounds. Check date and time segments, native radio movement, textareas, buttons, and links. Test both forward and backward traversal. A control taller than the remaining visible area needs a separately recorded result rather than a full-visibility claim.
 
 Repeat the 320 by 203px approximation and 200% root-text checks. Confirm wrapped labels fit the bar, the measured bar fits the reserved height, and the final page actions can scroll above it. Repeat the affected journeys after any candidate adjustment.
 

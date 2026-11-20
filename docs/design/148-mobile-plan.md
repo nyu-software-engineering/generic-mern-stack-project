@@ -13,7 +13,7 @@ The confirmed new audit finding is focused controls hidden by the fixed phone na
 - [ ] Add a standalone browser regression at `front-end/test/browser/mobile-focus.mjs` using the real Vite app, Express routes, and the existing synthetic test fixture. Load an installed Playwright module through `PLAYWRIGHT_MODULE`, without adding a project dependency.
 - [ ] Traverse native Tab and Shift+Tab until focus leaves the main content. Cover the six affected views at 320 and 390px widths with a 500px height, plus the short 320 by 203px case.
 - [ ] Assert no focused control is fully hidden by the bar. Record any partial native textarea visibility separately. Check the entry line while typing several lines and verify that final controls can scroll clear.
-- [ ] Run the check on the baseline and retain a failing result. Add exact run instructions beside it. Commit `Add mobile focus regression`.
+- [ ] Run the check on the baseline and retain a failing result. Add exact run instructions beside it. Include the regression with its shared CSS fix in one focused commit.
 
 ## 2. Fix the shared scroll area
 
