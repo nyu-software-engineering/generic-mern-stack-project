@@ -10,17 +10,17 @@ The confirmed new audit finding is focused controls hidden by the fixed phone na
 
 ## 1. Preserve the reproduction
 
-- [ ] Add a standalone browser regression at `front-end/test/browser/mobile-focus.mjs` using the real Vite app, Express routes, and the existing synthetic test fixture. Load an installed Playwright module through `PLAYWRIGHT_MODULE`, without adding a project dependency.
-- [ ] Traverse native Tab and Shift+Tab until focus leaves the main content. Cover the six affected views at 320 and 390px widths with a 500px height, plus the short 320 by 203px case.
-- [ ] Assert no focused control is fully hidden by the bar. Record any partial native textarea visibility separately. Check the entry line while typing several lines and verify that final controls can scroll clear.
-- [ ] Run the check on the baseline and retain a failing result. Add exact run instructions beside it. Include the regression with its shared CSS fix in one focused commit.
+- [x] Add a standalone browser regression at `front-end/test/browser/mobile-focus.mjs` using the real Vite app, Express routes, and the existing synthetic test fixture. Load an installed Playwright module through `PLAYWRIGHT_MODULE`, without adding a project dependency.
+- [x] Traverse native Tab and Shift+Tab until focus leaves the main content. Cover the six affected views at 320 and 390px widths with a 500px height, plus the short 320 by 203px case.
+- [x] Assert no focused control is fully hidden by the bar. Record any partial native textarea visibility separately. Check the entry line while typing several lines and verify that final controls can scroll clear.
+- [x] Run the check on the baseline and retain a failing result. Add exact run instructions beside it. Include the regression with its shared CSS fix in one focused commit.
 
 ## 2. Fix the shared scroll area
 
 File: `front-end/src/styles/design-system.css`. Keep component signatures, routes, APIs, provider state, native controls, and dialog behavior unchanged.
 
-- [ ] Set `--ds-nav-height` to the measured 5.5rem candidate so wrapped phone labels fit the shared reserve.
-- [ ] Inside the existing phone media query, add document scroll padding only when the phone bar exists:
+- [x] Set `--ds-nav-height` to the measured 5.5rem candidate so wrapped phone labels fit the shared reserve.
+- [x] Inside the existing phone media query, add document scroll padding only when the phone bar exists:
 
 ```css
 html:has(.ds-mobile-nav) {
@@ -28,15 +28,17 @@ html:has(.ds-mobile-nav) {
 }
 ```
 
-- [ ] Use the existing root bottom-padding calculation and navigation rules with the same height token. Do not add page spacers, global focus handlers, or a second scroll container.
-- [ ] Run the native focus regression, frontend tests, lint, and build. Check signed-out and desktop behavior. Commit `Keep mobile keyboard focus above navigation`.
+- [x] Use the existing root bottom-padding calculation and navigation rules with the same height token. Do not add page spacers, global focus handlers, or a second scroll container.
+- [x] Run the native focus regression, frontend tests, lint, and build. Check signed-out and desktop behavior. Commit `Keep mobile keyboard focus above navigation`.
 
 ## 3. Verify the complete journeys
 
-- [ ] Apply this branch's shared CSS change to the disposable combined checkout. Repeat the six-width and full-page 400% zoom checks. Record actual zoom, viewport, and document bounds.
-- [ ] Check touch and keyboard flows for discovery/save, listing creation/edit/preview/status, dashboard filters, request/summary/extension/cancellation, local handoff, messaging/offers, requests, Quick Borrow, notifications, ratings, rules, and reporting. Include representative validation, loading, failure/retry, empty, and retained-value states.
-- [ ] Verify offer focus containment, internal scrolling, final actions, Escape, and focus return after the document scroll change. Check native date/time, radios, and enlarged text.
+- [x] Apply this branch's shared CSS change to the disposable combined checkout. Repeat the six-width and full-page 400% zoom checks. Record actual zoom, viewport, and document bounds.
+- [x] Check touch and keyboard flows for discovery/save, listing creation/edit/preview/status, dashboard filters, request/summary/extension/cancellation, local handoff, messaging/offers, requests, Quick Borrow, notifications, ratings, rules, and reporting. Include representative validation, loading, failure/retry, empty, and retained-value states.
+- [x] Verify offer focus containment, internal scrolling, final actions, Escape, and focus return after the document scroll change. Check native date/time, radios, and enlarged text.
 - [ ] Inspect the user's physical iPhone Safari evidence. Record visible results without treating screenshots as proof of unshown interactions. Confirm offer date picker, Quick Borrow, and landscape behavior where available.
-- [ ] Save a route checklist, a finding log with reproduction steps, screenshots, and the remaining limits. Keep final merged-version verification pending while #157 and #163 remain open.
-- [ ] Obtain independent source and security reviews. Fix actionable findings and repeat affected checks.
+- [x] Save a route checklist, a finding log with reproduction steps, screenshots, and the remaining limits. Keep final merged-version verification pending while #157 and #163 remain open.
+- [x] Obtain independent source and security reviews. Fix actionable findings and repeat affected checks.
 - [ ] Open a focused PR against master under the user's identity, assigned to the user in Sprint 2. Request Sherry and Omer. Update #148 with verified progress and remaining checks; do not close it while final merge/device checks remain.
+
+Results: [148-verification.md](148-verification.md), [route checklist](148-route-checklist.md), and [counts](148-checks.json). Device confirmations and the final merged-master check remain pending.
