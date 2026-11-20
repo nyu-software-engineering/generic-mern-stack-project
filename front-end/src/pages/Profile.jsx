@@ -1,16 +1,28 @@
-import { useState } from "react";
+import {useEffect, useState } from "react";
 import {useNavigate} from "react-router-dom";
 import "./Profile.css";
 
-function Profile() {
+function Profile() {    
     const navigate = useNavigate();
-    const [username] = useState({name: "John Doe", email: "john.doe@example.com"});
-    const[stays] = useState([
-        {id: 1, hotel: "Waldorf Astoria DC", city: "Washington D.C., USA", date: "2026-10-15"},
-        {id: 2, hotel: "Ritz Carlton Half Moon Bay", city: "Half Moon Bay, USA", date: "2024-02-20"},
-        {id: 3, hotel: "Park Hyatt Tokyo", city: "Tokyo, Japan", date: "2025-03-10"}, 
-    ]);
+
+    const [user, setUser] = useState(null);
+    const [stays, setStays] = useState([]);
     const [selectedYear, setSelectedYear] = useState("All");
+
+    useEffect(() => {
+        fetch("/api/auth/me", { credentials: "include" })
+        .then((res) => (res.ok ? res.json() : Promise.reject(res.status)))
+        .then((data) => setUser(data.user))
+        .catch(() => navigate("/signin")); 
+         fetch("/api/profile/stays", { credentials: "include" })
+        .then((res) => (res.ok ? res.json() : []))
+        .then((data) => setStays(data));
+    }, []);
+
+    async function handleSignOut() {
+        await fetch("/api/auth/logout", { method: "POST", credentials: "include" });
+        navigate("/signin", { replace: true });
+    }
     
     const years = [...new Set(stays.map((stay) => stay.date.slice(0, 4)))]
         .sort((a, b) => b - a);
@@ -24,8 +36,7 @@ function Profile() {
         <div className="profile">
             <header className="profile-header">
                 <h2>Profile</h2>
-                <p>Name: {username.name}</p>
-                <p>Email: {username.email}</p>
+                <p>Email: {user?.email}</p>
             </header>
             <div className="profile-statistics">
                 <h3>Statistics</h3>
@@ -65,7 +76,7 @@ function Profile() {
 
             <div className="profile-actions">
                 <button onClick={() => navigate("/saved")}>View Saved Items</button>
-                <button className="sign-out" onClick={() => navigate("/signin")}>Sign Out</button>
+                <button className="sign-out" onClick={handleSignOut }>Sign Out</button>
             </div>
         </div>
     );
