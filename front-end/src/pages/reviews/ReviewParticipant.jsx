@@ -1,4 +1,3 @@
-
 import { useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import {
@@ -11,6 +10,7 @@ import {
   getReviewTarget,
   submitReview,
 } from '../../services/reviews.js'
+import '../../styles/trust.css'
 import './reviews.css'
 
 const ratingFields = [
@@ -40,27 +40,36 @@ function ReviewParticipant() {
 
   if (!reviewedUserId) {
     return (
-      <main className="review-page">
-        <h1>Review unavailable</h1>
-        <p>Only completed rental participants can submit reviews.</p>
-        <Link to="/browse">Back to Browse</Link>
+      <main className="ds-page ds-trust review-page">
+        <header className="trust-header review-header">
+          <div>
+            <h1 className="ds-heading">Review unavailable</h1>
+            <p>Only completed rental participants can submit reviews.</p>
+          </div>
+          <Link to="/browse" className="ds-text-link">Back to Browse</Link>
+        </header>
       </main>
     )
   }
 
   if (existingReview) {
     return (
-      <main className="review-page">
-        <h1>Review already submitted</h1>
-        <p>You have already reviewed this participant.</p>
-        <Link to={`/users/${reviewedUserId}/reputation`}>
-          View reputation
-        </Link>
+      <main className="ds-page ds-trust review-page">
+        <header className="trust-header review-header">
+          <div>
+            <h1 className="ds-heading">Review already submitted</h1>
+            <p>You have already reviewed this participant.</p>
+          </div>
+          <Link to={`/users/${reviewedUserId}/reputation`} className="ds-text-link">
+            View reputation
+          </Link>
+        </header>
       </main>
     )
   }
 
   const otherUser = getUser(reviewedUserId)
+  const hasCommentError = error === 'Written feedback must be 500 characters or less.'
 
   function handleSubmit(event) {
     event.preventDefault()
@@ -80,22 +89,21 @@ function ReviewParticipant() {
   }
 
   return (
-    <main className="review-page">
-      <header className="review-header">
-        <Link to={`/bookings/${bookingId}`}>Back</Link>
-        <strong>Review participant</strong>
-        <span />
+    <main className="ds-page ds-trust review-page">
+      <header className="trust-header review-header">
+        <h1 className="ds-heading">Review participant</h1>
+        <Link to={`/bookings/${bookingId}`} className="ds-text-link">Back to rental</Link>
       </header>
 
       <div className="review-content">
-        <article className="review-card">
-          <h3>Completed rental #{bookingId}</h3>
+        <article className="trust-surface review-card">
+          <h2>Completed rental #{bookingId}</h2>
           <p>
-            Review your exchange with {otherUser?.name ?? 'Student'}
+            Review your exchange with {otherUser?.name ?? 'Student'}.
           </p>
         </article>
 
-        <form className="review-form" onSubmit={handleSubmit}>
+        <form className="trust-surface review-form" onSubmit={handleSubmit}>
           {ratingFields.map(({ key, label }) => (
             <fieldset className="review-fieldset" key={key}>
               <legend>{label}</legend>
@@ -123,26 +131,34 @@ function ReviewParticipant() {
             </fieldset>
           ))}
 
-          <label htmlFor="reviewComment">
-            Written review (optional)
-          </label>
-          <textarea
-            id="reviewComment"
-            rows={3}
-            maxLength={500}
-            value={comment}
-            onChange={(event) => {
-              setComment(event.target.value)
-              setError('')
-            }}
-            placeholder="Share your experience"
-          />
+          <div className="review-comment">
+            <label htmlFor="reviewComment">
+              Written review (optional)
+            </label>
+            <textarea
+              id="reviewComment"
+              className="ds-field"
+              rows={3}
+              maxLength={500}
+              value={comment}
+              aria-invalid={hasCommentError || undefined}
+              aria-describedby={hasCommentError ? 'reviewCommentCount reviewFormError' : 'reviewCommentCount'}
+              onChange={(event) => {
+                setComment(event.target.value)
+                setError('')
+              }}
+              placeholder="Share your experience"
+            />
+            <p id="reviewCommentCount" className="trust-meta">{comment.length} / 500 characters</p>
+          </div>
 
-          <p>{comment.length} / 500 characters</p>
+          {error && (
+            <p id="reviewFormError" className="ds-feedback ds-feedback--error review-error" role="alert">
+              {error}
+            </p>
+          )}
 
-          {error && <p className="review-error" role="alert">{error}</p>}
-
-          <button className="review-button review-primary" type="submit">
+          <button className="ds-button ds-button--primary review-button" type="submit">
             Submit review
           </button>
         </form>

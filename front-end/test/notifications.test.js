@@ -16,6 +16,8 @@ import {
 } from '../src/services/notifications.js'
 
 test('notifications support rental events, links, and read state', async (t) => {
+  // Start before the fixture's due date so bulk read cannot pre-read the later overdue event.
+  t.mock.timers.enable({ apis: ['Date'], now: new Date('2026-11-06T12:00:00Z') })
   // Simulate browser storage for persistence testing.
   const storage = new Map()
   const originalWindow = globalThis.window

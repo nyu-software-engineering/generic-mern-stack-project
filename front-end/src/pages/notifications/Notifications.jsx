@@ -1,4 +1,3 @@
-
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
@@ -7,6 +6,7 @@ import {
   markNotificationRead,
   markNotificationUnread,
 } from '../../services/notifications.js'
+import '../../styles/trust.css'
 import './notifications.css'
 
 function Notifications() {
@@ -39,30 +39,34 @@ function Notifications() {
   }
 
   return (
-    <main className="notifications-page">
-      <header className="notifications-header">
+    <main className="ds-page ds-trust notifications-page">
+      <header className="trust-header notifications-header">
         <div>
-          <h1>Notifications</h1>
+          <h1 className="ds-heading">Notifications</h1>
           <p>Updates about your rentals, requests, and messages.</p>
         </div>
 
-        <Link to="/browse" className="notifications-back">
+        <Link to="/browse" className="ds-text-link notifications-back">
           Back to Browse
         </Link>
       </header>
 
-      <section className="notifications-panel" aria-label="Your notifications">
+      <section
+        className="notifications-panel"
+        aria-label="Your notifications"
+      >
         <div className="notifications-toolbar">
           <div
             className="notifications-filters"
+            role="group"
             aria-label="Filter notifications"
           >
             <button
               type="button"
               className={
                 filter === 'all'
-                  ? 'notifications-filter notifications-filter--active'
-                  : 'notifications-filter'
+                  ? 'ds-button ds-button--primary notifications-filter notifications-filter--active'
+                  : 'ds-button ds-button--secondary notifications-filter'
               }
               aria-pressed={filter === 'all'}
               onClick={() => setFilter('all')}
@@ -74,8 +78,8 @@ function Notifications() {
               type="button"
               className={
                 filter === 'unread'
-                  ? 'notifications-filter notifications-filter--active'
-                  : 'notifications-filter'
+                  ? 'ds-button ds-button--primary notifications-filter notifications-filter--active'
+                  : 'ds-button ds-button--secondary notifications-filter'
               }
               aria-pressed={filter === 'unread'}
               onClick={() => setFilter('unread')}
@@ -86,7 +90,7 @@ function Notifications() {
 
           <button
             type="button"
-            className="notifications-mark-all"
+            className="ds-button ds-button--secondary notifications-mark-all"
             disabled={unreadCount === 0}
             onClick={handleMarkAllRead}
           >
@@ -95,7 +99,7 @@ function Notifications() {
         </div>
 
         {visibleNotifications.length === 0 ? (
-          <div className="notifications-empty">
+          <div className="trust-empty notifications-empty">
             <h2>
               {filter === 'unread'
                 ? "You're all caught up!"
@@ -109,70 +113,67 @@ function Notifications() {
           </div>
         ) : (
           <ul className="notifications-list">
-            {visibleNotifications.map((notification) => (
-              <li
-                key={notification.id}
-                className={
-                  notification.isRead
-                    ? 'notifications-item'
-                    : 'notifications-item notifications-item--unread'
-                }
-              >
-                <div className="notifications-item-header">
-                  <h2>{notification.title}</h2>
+            {visibleNotifications.map((notification) => {
+              const readAction = notification.isRead
+                ? 'Mark as unread'
+                : 'Mark as read'
 
-                  {!notification.isRead && (
-                    <span className="notifications-unread-label">
-                      <span
-                        className="notifications-dot"
-                        aria-hidden="true"
-                      />
-                      Unread
-                    </span>
-                  )}
-                </div>
+              return (
+                <li
+                  key={notification.id}
+                  className={
+                    notification.isRead
+                      ? 'notifications-item'
+                      : 'notifications-item notifications-item--unread'
+                  }
+                >
+                  <div className="notifications-item-header">
+                    <h2>{notification.title}</h2>
 
-                <p>{notification.message}</p>
+                    {!notification.isRead && (
+                      <span className="ds-status notifications-unread-label">
+                        <span
+                          className="notifications-dot"
+                          aria-hidden="true"
+                        />
+                        Unread
+                      </span>
+                    )}
+                  </div>
 
-                <span className="notifications-category">
-                  {notification.category}
-                </span>
+                  <p>{notification.message}</p>
 
-                <div className="notifications-actions">
-                  <Link
-                    to={notification.to}
-                    className="notifications-view"
-                    onClick={() =>
-                      handleReadChange(notification.id, true)
-                    }
-                  >
-                    View details
-                  </Link>
+                  <span className="trust-meta notifications-category">
+                    {notification.category}
+                  </span>
 
-                  <button
-                    type="button"
-                    className="notifications-read-action"
-                    onClick={() =>
-                      handleReadChange(
-                        notification.id,
-                        !notification.isRead
-                      )
-                    }
-                  >
-                    {notification.isRead
-                      ? 'Mark as unread'
-                      : 'Mark as read'}
-                  </button>
-                </div>
-              </li>
-            ))}
+                  <div className="notifications-actions">
+                    <Link
+                      to={notification.to}
+                      className="ds-button ds-button--primary notifications-view"
+                      aria-label={`View details for ${notification.title}`}
+                      onClick={() => handleReadChange(notification.id, true)}
+                    >
+                      View details
+                    </Link>
+
+                    <button
+                      type="button"
+                      className="ds-button ds-button--secondary notifications-read-action"
+                      aria-label={`${readAction} for ${notification.title}`}
+                      onClick={() =>
+                        handleReadChange(notification.id, !notification.isRead)
+                      }
+                    >
+                      {readAction}
+                    </button>
+                  </div>
+                </li>
+              )
+            })}
           </ul>
         )}
       </section>
-
-      <p className="notifications-footnote">
-        Notifications reflect your current DormShare rental and message activity.
-      </p>
     </main>
   )
 }
