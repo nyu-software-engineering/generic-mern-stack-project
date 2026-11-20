@@ -70,3 +70,17 @@ handoffRouter.post("/:rentalId/pickup", (request, response) => {
   rental.pickupCheck = check;
   response.json(rental);
 });
+
+// Owner confirms the return: active -> completed.
+handoffRouter.post("/:rentalId/return", (request, response) => {
+  const { rental, currentUserId } = request;
+  const { check, error } = buildCheck(request.body, currentUserId);
+
+  if (error) return fail(response, 400, error);
+  if (!sameId(rental.ownerId, currentUserId)) return fail(response, 403, "Only the owner can confirm the return.");
+  if (rental.status !== "active") return fail(response, 409, `A ${rental.status} booking cannot be returned.`);
+
+  rental.status = "completed";
+  rental.returnCheck = check;
+  response.json(rental);
+});

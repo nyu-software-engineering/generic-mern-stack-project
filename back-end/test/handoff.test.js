@@ -146,4 +146,78 @@ describe("Handoff routes (#113)", () => {
       expect((await api("POST", "/999/pickup", check)).status).to.equal(404);
     });
   });
+
+  describe("POST /api/handoff/:rentalId/return", () => {
+    const check = { condition: "Damaged", accessoriesComplete: false, notes: "  Missing the bulb.  " };
+
+    it("lets the owner confirm the return, completing the rental", async () => {
+      const { status, body } = await api("POST", "/602/return", check);
+
+      expect(status).to.equal(200);
+      expect(body.status).to.equal("completed");
+      expect(body.returnCheck).to.include({
+        condition: "Damaged", accessoriesComplete: false, notes: "Missing the bulb.", confirmedBy: "owner-1",
+      });
+      expect(body.returnCheck.confirmedAt).to.be.a("string");
+      expect(rental(602).status).to.equal("completed");
+    });
+
+    it("keeps the pickup check when the return is confirmed", async () => {
+      const pickupCheck = { condition: "As described", accessoriesComplete: true, notes: "", confirmedBy: "student-2" };
+      rental(602).pickupCheck = pickupCheck;
+
+      const { body } = await api("POST", "/602/return", check);
+
+      expect(body.pickupCheck).to.deep.equal(pickupCheck);
+    });
+
+    it("rejects an unknown or missing condition with 400", async () => {
+      for (const condition of ["Brand new", undefined]) {
+        const { status, body } = await api("POST", "/602/return", { ...check, condition });
+
+        expect(status).to.equal(400);
+        expect(body.error).to.include("condition");
+      }
+      expect(rental(602).status).to.equal("active");
+    });
+
+    it("rejects non-boolean accessoriesComplete and non-text notes with 400", async () => {
+      expect((await api("POST", "/602/return", { ...check, accessoriesComplete: "no" })).status).to.equal(400);
+      expect((await api("POST", "/602/return", { ...check, notes: 5 })).status).to.equal(400);
+      expect(rental(602).returnCheck).to.equal(undefined);
+    });
+
+    it("rejects a request with no body with 400", async () => {
+      expect((await api("POST", "/602/return")).status).to.equal(400);
+    });
+
+    it("returns 403 when the borrower tries to confirm the return", async () => {
+      const { status } = await api("POST", "/702/return", check);
+
+      expect(status).to.equal(403);
+      expect(rental(702).status).to.equal("active");
+    });
+
+    it("returns 403 for someone outside the rental", async () => {
+      expect((await api("POST", "/801/return", check)).status).to.equal(403);
+    });
+
+    it("returns 409 unless the rental is active", async () => {
+      const { status, body } = await api("POST", "/601/return", check);
+
+      expect(status).to.equal(409);
+      expect(body.error).to.include("confirmed");
+      expect(rental(601).returnCheck).to.equal(undefined);
+    });
+
+    it("returns 409 when the return is confirmed twice", async () => {
+      await api("POST", "/602/return", check);
+
+      expect((await api("POST", "/602/return", check)).status).to.equal(409);
+    });
+
+    it("returns 404 for an unknown rental", async () => {
+      expect((await api("POST", "/999/return", check)).status).to.equal(404);
+    });
+  });
 });
