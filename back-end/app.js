@@ -61,6 +61,29 @@ app.post('/api/posts', upload.single('image'), (req, res) => {
   res.status(201).json(newPost)
 })
 
+app.delete('/api/posts/:id', (req, res) => {
+  const id = parseInt(req.params.id)
+  const index = posts.findIndex(post => parseInt(post.id) === id)
+
+  if (index === -1) {
+    return res.status(404).json({ error: 'Post id not found' })
+  }
+
+  posts.splice(index, 1)
+
+  posts = posts.map(post => {
+    if (post.id > id) {
+      return {
+        ...post, 
+        id: post.id - 1
+      }
+    }
+    return post
+  })
+
+  res.status(200).json({ message: 'success delete' })
+})
+
 // resolved posts start from the mock data and new ones are added when a post is resolved
 let resolvedPosts = JSON.parse(fs.readFileSync(mockDataPath, 'utf8')).resolvedPosts
 

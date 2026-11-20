@@ -58,19 +58,10 @@ const BountyChoice = props => {
 
         // resolving the post is equivalent to deleting the post, so same
         // code here
-        props.setPostsData(prev => {
-            return prev
-                .filter(post => post.id !== (props.count - props.curr - 1))
-                .map(post => {
-                    if (post.id > (props.count - props.curr - 1)) {
-                        return {
-                            ...post, 
-                            id: post.id - 1
-                        }
-                    }
-                    return post;
-                })
+        fetch(`/api/posts/${post.id}`, {
+            method: 'DELETE'
         })
+        props.fetchPosts()
         props.setCount(prev => prev - 1)
     }
 
