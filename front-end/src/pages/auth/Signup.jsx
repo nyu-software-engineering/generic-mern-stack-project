@@ -1,28 +1,30 @@
-
 import { useContext, useState } from 'react'
-import { AuthContext } from '../../context/AuthContext'
+import { flushSync } from 'react-dom'
 import { Link, useNavigate } from 'react-router-dom'
+import { AuthContext } from '../../context/AuthContext'
+import '../../styles/accounts.css'
 
 function Signup() {
   const { signIn } = useContext(AuthContext)
-  const [message, setMessage] = useState('')
+  const [invalidField, setInvalidField] = useState('')
   const navigate = useNavigate()
 
   function handleSubmit(event) {
     event.preventDefault()
 
-    const fullName = event.currentTarget.elements.fullName.value.trim()
-    const email = event.currentTarget.elements.email.value
-      .trim()
-      .toLowerCase()
+    const fields = event.currentTarget.elements
+    const fullName = fields.fullName.value.trim()
+    const email = fields.email.value.trim().toLowerCase()
 
     if (!fullName) {
-      setMessage('Please enter your full name.')
+      flushSync(() => setInvalidField('fullName'))
+      fields.fullName.focus()
       return
     }
 
     if (!email.endsWith('@nyu.edu')) {
-      setMessage('Please use an NYU email address.')
+      flushSync(() => setInvalidField('email'))
+      fields.email.focus()
       return
     }
 
@@ -31,47 +33,71 @@ function Signup() {
   }
 
   return (
-    <main className="auth-page">
-      <Link to="/">Back</Link>
+    <main className="ds-page ds-account ds-account--form">
+      <section className="ds-account-surface">
+        <Link className="ds-text-link" to="/">Back</Link>
+        <h1 className="ds-heading">Create an account</h1>
+        <p className="ds-feedback">
+          You are creating a demo account. Account changes reset when you reload.
+        </p>
 
-      <h2>Create account</h2>
-      <h1>Join the NYU community</h1>
+        <form className="ds-account-form" onSubmit={handleSubmit} onChange={() => setInvalidField('')}>
+          <div className="ds-account-field">
+            <label htmlFor="fullName">Full name</label>
+            <input
+              className="ds-field"
+              id="fullName"
+              name="fullName"
+              type="text"
+              autoComplete="name"
+              aria-invalid={invalidField === 'fullName' || undefined}
+              aria-describedby={invalidField === 'fullName' ? 'signup-name-error' : undefined}
+              required
+            />
+            {invalidField === 'fullName' && (
+              <p id="signup-name-error" className="ds-account-error" role="alert">Please enter your full name.</p>
+            )}
+          </div>
 
-      <form onSubmit={handleSubmit} onChange={() => setMessage('')}>
-        <label htmlFor="fullName">Full name</label>
-        <input
-          id="fullName"
-          name="fullName"
-          type="text"
-          placeholder="Enter your full name"
-          required
-        />
+          <div className="ds-account-field">
+            <label htmlFor="email">NYU email</label>
+            <input
+              className="ds-field"
+              id="email"
+              name="email"
+              type="email"
+              autoComplete="email"
+              placeholder="name@nyu.edu"
+              aria-invalid={invalidField === 'email' || undefined}
+              aria-describedby={invalidField === 'email' ? 'signup-email-error' : undefined}
+              required
+            />
+            {invalidField === 'email' && (
+              <p id="signup-email-error" className="ds-account-error" role="alert">Please use an NYU email address.</p>
+            )}
+          </div>
 
-        <label htmlFor="email">NYU email</label>
-        <input
-          id="email"
-          name="email"
-          type="email"
-          placeholder="name@nyu.edu"
-          required
-        />
+          <div className="ds-account-field">
+            <label htmlFor="password">Password</label>
+            <input
+              className="ds-field"
+              id="password"
+              name="password"
+              type="password"
+              autoComplete="new-password"
+              aria-describedby="signup-password-help"
+              minLength={8}
+              required
+            />
+            <p id="signup-password-help" className="ds-account-help">Use at least eight characters.</p>
+          </div>
 
-        <label htmlFor="password">Password</label>
-        <input
-          id="password"
-          name="password"
-          type="password"
-          placeholder="Enter a password"
-          minLength={8}
-          required
-        />
-
-        <button type="submit">Create account</button>
-      </form>
-
-      {message && <p role="alert">{message}</p>}
-
-      <Link to="/login">Sign in instead</Link>
+          <div className="ds-account-actions">
+            <button className="ds-button ds-button--primary" type="submit">Create account</button>
+            <Link className="ds-text-link" to="/login">Sign in instead</Link>
+          </div>
+        </form>
+      </section>
     </main>
   )
 }
