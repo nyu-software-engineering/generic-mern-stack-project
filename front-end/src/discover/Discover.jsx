@@ -12,7 +12,7 @@ const Discover = () => {
   const [category, setCategory] = useState("")
 
   useEffect(() => {
-    axios("/mock/hobbies.json").then(response => setHobbies(response.data))
+    axios("/api/hobbies").then(response => setHobbies(response.data))
   }, [])
 
   const results = hobbies.filter(hobby =>
