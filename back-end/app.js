@@ -4,6 +4,7 @@ import session from 'express-session'
 const app = express() // instantiate an Express object
 
 import initialSavedHotels from './mockData/savedHotels.js';
+import stayedHotels from './mockData/stayedHotels.js';
 
 // use express's builtin body-parser middleware to parse any data included in a request
 app.use(express.json()); // decode JSON-formatted incoming POST data
@@ -180,6 +181,19 @@ app.delete('/api/saved/:id', (req, res) => {
   res.json(body);
 });
 // ===== SAVED HOTELS END =====
+
+// ===== PROFILE =====
+app.get('/api/profile/stays', (req, res) => {
+  if (!req.session.userId) {
+    return res.status(401).json({
+      error: "Not authenticated"
+    });
+  }
+
+  const userStays = stayedHotels.filter((stay) => stay.userId === req.session.userId);
+  return res.json(userStays);
+});
+// ===== PROFILE END =====
 
 // export the express app we created to make it available to other modules
 export default app;
