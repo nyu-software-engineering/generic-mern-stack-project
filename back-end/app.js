@@ -73,4 +73,7 @@ app.get('/api/organizations/:id', (req, res) => {
   res.status(200).json(organization)
 })
 
+// flyer image uploads (Multer)
+app.use('/api/uploads', uploadRoutes)
+
 export default app // 
