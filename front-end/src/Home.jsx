@@ -7,7 +7,13 @@ const PostElement = props => {
 
   const toggleOptions = () => {
     props.setCurr(props.count - 1 - props.id)
-    setShowOptions(!showOptions)
+    props.setShowAllOptions(prev => !prev)
+    setShowOptions(prev => !prev)
+  }
+
+  const closeOptions = () => {
+    setShowOptions(false)
+    props.setShowAllOptions(false)
   }
 
     return(
@@ -18,21 +24,17 @@ const PostElement = props => {
               <img className='icon' src={props.pfp} alt="" />
               <p>{props.username}</p>
             </div>
-            <button className='settings' onClick={toggleOptions} >...</button>
+            <button 
+              className={props.showAllOptions ? 'closeSettings' : 'settings'} 
+              onClick={toggleOptions}>...</button>
           </div>
           {/* doesn't work yet. needs to be based on ids not text, but yeah it works for demo */}
-          {/* {showOptions && <div className='buttons'>
+          {showOptions && <div className='buttons'>
             {(props.username === 'You') && <Link className="option" to={`/edit-post/${props.id}`} style={{textDecoration: 'none'}}>Edit</Link>}
             {(props.username === 'You') && <Link className="option" to={`/resolve-post/${props.id}`} style={{textDecoration: 'none'}}>Resolve</Link>}
             {(props.username !== 'You') && <Link className="option" to={`/messages/${props.id}`} style={{textDecoration: 'none'}}>Message</Link>}
-          </div>} */}
-          {/* <dialog closedby='any' open>hi</dialog> */}
-          {/* <button command='show-modal' commandfor='options'>menu</button> */}
-          {showOptions && <dialog closedby='any' id='menu' open>
-            {(props.username === 'You') && <Link className="option" to={`/edit-post/${props.id}`} style={{textDecoration: 'none'}}>Edit</Link>}
-            {(props.username === 'You') && <Link className="option" to={`/resolve-post/${props.id}`} style={{textDecoration: 'none'}}>Resolve</Link>}
-            {(props.username !== 'You') && <Link className="option" to={`/messages/${props.id}`} style={{textDecoration: 'none'}}>Message</Link>}
-          </dialog>}
+          </div>}
+          {showOptions && <div className='closeOptions' onClick={closeOptions}></div>}
           <div className='content'>
             <div className='title'>
               <h2>{props.title} | {props.category.at(0).toUpperCase() + props.category.slice(1)}</h2>
@@ -55,6 +57,7 @@ const PostElement = props => {
 
 const Home = props => {
   const navigate = useNavigate()
+    const [showAllOptions, setShowAllOptions] = useState(false)
 
   useEffect(() => {
     if (!props.isLoggedIn) {
@@ -117,6 +120,8 @@ const Home = props => {
               setCurr={props.setCurr}
               postsData={props.postsData}
               count={props.count}
+              showAllOptions={showAllOptions}
+              setShowAllOptions={setShowAllOptions}
             />
           )
         })}
