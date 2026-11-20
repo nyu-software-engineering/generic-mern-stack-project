@@ -7,7 +7,7 @@ import './Header.css'
 
 export default function Profile(props) {
   const profile1 = props.profile
-  const userServices = props.services.filter(service => profile1.services.includes(service.id))
+  const userServices = props.services.filter(service => service.userId === profile1.id)
   const numListings = userServices.length
 
   return (

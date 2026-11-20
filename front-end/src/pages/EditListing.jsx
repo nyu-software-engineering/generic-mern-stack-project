@@ -14,7 +14,7 @@ const PRICE_UNIT_OPTIONS = [
     { value: 'session', label: 'Per session' },
 ]
 
-function EditListingForm({ service, profile, setProfile, updateService }) {
+function EditListingForm({ service, updateService, removeService }) {
     const navigate = useNavigate()
 
     const [title, setTitle] = useState(service.title)
@@ -74,7 +74,7 @@ function EditListingForm({ service, profile, setProfile, updateService }) {
     }
 
     function removeListing() {
-        setProfile({ ...profile, services: profile.services.filter(serviceId => serviceId !== service.id) })
+        removeService(service.id)
         navigate('/profile/services')
     }
 
@@ -167,7 +167,7 @@ function EditListingForm({ service, profile, setProfile, updateService }) {
 export default function EditListing(props) {
     const { serviceId } = useParams()
     const service = props.services.find(s => String(s.id) === serviceId)
-    const isMine = service && props.profile.services.includes(service.id)
+    const isMine = service && service.userId === props.profile.id
 
     return (
         <>
@@ -176,9 +176,8 @@ export default function EditListing(props) {
                 ? <EditListingForm
                     key={service.id}
                     service={service}
-                    profile={props.profile}
-                    setProfile={props.setProfile}
                     updateService={props.updateService}
+                    removeService={props.removeService}
                 />
                 : <p>Service not found. <Link to="/profile/services">Back to my services</Link></p>}
         </>

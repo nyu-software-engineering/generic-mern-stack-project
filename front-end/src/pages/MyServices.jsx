@@ -4,10 +4,10 @@ import './MyServices.css'
 
 export default function MyServices(props) {
     const profile = props.profile
-    const myServices = props.services.filter(service => profile.services.includes(service.id))
+    const myServices = props.services.filter(service => service.userId === profile.id)
 
     function removeService(id) {
-        props.setProfile({ ...profile, services: profile.services.filter(serviceId => serviceId !== id) })
+        props.removeService(id)
     }
 
     return (
