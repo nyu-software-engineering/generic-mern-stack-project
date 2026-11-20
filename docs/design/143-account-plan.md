@@ -54,6 +54,8 @@ Files: update `pages/auth/Profile.jsx`, `profile.css`, and the unused auth block
 - [x] Exercise native validation, each custom failure, signup, demo verification, resend, profile setup, editing, sign-out, same-session reuse, and reload reset. Check every route guard and all Profile links.
 - [x] Check Profile shared-data failure and retry. Verify the signed-in phone bar does not obscure final controls.
 - [x] Save desktop and phone screenshots and a verification note. Obtain independent source and security reviews. Fix actionable findings and repeat affected checks.
-- [ ] Push small commits under the user's identity. Open a PR against master, assign the user, set Sprint 2 and relevant labels, and request Omer and Sherry. Keep #143 open until merge and record the separate recovery dependency.
+- [x] Push small commits under the user's identity. Open a PR against master, assign the user, set Sprint 2 and relevant labels, and request Omer and Sherry. Keep #143 open until merge and record the separate recovery dependency.
 
 Results and limits: [143-verification.md](143-verification.md).
+
+Implementation: [#163](https://github.com/agile-students-fall2026/generic-mern-stack-project-dormshare/pull/163), against master. Assigned to hassanraza04 in Sprint 2, with reviews requested from Omer and Sherry.
