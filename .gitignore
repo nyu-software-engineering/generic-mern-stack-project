@@ -127,3 +127,7 @@ typings/
 ## Jekyll artifacts
 **/.jekyll-cache
 **/_site/
+
+# Need uploads directory to exist
+**/public/uploads/*
+!**/public/uploads/.gitkeep

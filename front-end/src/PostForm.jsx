@@ -47,20 +47,41 @@ const PostForm = props => {
     // put the post form data into backend... will do in next sprint
     const submitForm = e => {
         e.preventDefault() // prevent normal browser submit behavior
-        props.setIsSubmitted(true)
 
         if (props.origin === 'publish') {
-            props.setPostsData(prev => [formData, ...prev])
-            props.setCount(prev => prev + 1)
+            // props.setPostsData(prev => [formData, ...prev])
+            // props.setCount(prev => prev + 1)
+
+            const post = new FormData(e.currentTarget)
+            post.append("id", formData.id)
+            post.append('username', formData.username)
+            post.append('pfp', formData.pfp)
+
+
+            fetch('/api/posts', {
+                method: 'POST',
+                // headers: { 'Content-Type': 'application/json' },
+                // body: JSON.stringify(formData),
+                body: post
+            })
+            .then(res => res.json())
+            .then(saved => {
+                props.setPostsData(prev => [saved, ...prev])
+                props.setCount(prev => prev + 1)
+            })
+            .catch(err => console.error(err))
         }
         else if (props.origin === 'edit') {
             props.setPostsData(prev => prev.map((post, index) => index === props.curr ? formData : post))
         }
+
+        props.setIsSubmitted(true)
     }
 
     return (
         <>
-            {!props.isSubmitted && <form className='postForm' onSubmit={submitForm}>
+            {!props.isSubmitted && <form className='postForm' action='/api/posts' 
+                method='POST' encType='multipart/form-data' onSubmit={submitForm}>
                 <div className='types'>
                     <input 
                         type='button' 
@@ -91,12 +112,19 @@ const PostForm = props => {
                         })}
                         value='Request'
                     />
+                    <input 
+                        type="hidden" 
+                        id='category'
+                        name='category'
+                        value={formData.category}
+                    />
                 </div>
                 <div className='field'>
                     <label htmlFor='title' className='label'>Title*</label>
                     <input
                         type='text'
                         id='title'
+                        name='title'
                         value={formData.title}
                         required
                         onChange={e => setFormData({
@@ -109,6 +137,7 @@ const PostForm = props => {
                     <label htmlFor='desc' className='label'>Description*</label>
                     <textarea
                         id='desc'
+                        name='desc'
                         value={formData.desc}
                         required
                         onChange={e => setFormData({
@@ -123,6 +152,7 @@ const PostForm = props => {
                         <input
                             type='date'
                             id='date'
+                            name='date'
                             value={formData.date}
                             onChange={e => setFormData({
                                 ...formData, 
@@ -135,6 +165,7 @@ const PostForm = props => {
                         <input 
                             type='time'
                             id='time'
+                            name='time'
                             value={formData.time}
                             onChange={e => setFormData({
                                 ...formData, 
@@ -148,6 +179,7 @@ const PostForm = props => {
                     <input
                         type='text'
                         id='location'
+                        name='location'
                         value={formData.location}
                         onChange={e => setFormData({
                             ...formData, 
@@ -160,10 +192,12 @@ const PostForm = props => {
                     <input
                         type='file'
                         id='image'
+                        name='image'
+                        accept='image/*'
                         onChange={e => {
                             setFormData({
                                 ...formData,
-                                image: URL.createObjectURL(e.target.files[0]) 
+                                image: e.target.files[0]
                             })
                         }}
                     />
@@ -173,6 +207,7 @@ const PostForm = props => {
                     <input
                         type='checkbox'
                         id='includeBounty'
+                        name='includeBounty'
                         checked={formData.includeBounty}
                         onChange={() => {
                             setFormData({
@@ -188,6 +223,7 @@ const PostForm = props => {
                     <input
                         type='text'
                         id='bounty'
+                        name='bounty'
                         value={formData.bounty}
                         required
                         onChange={e => setFormData({

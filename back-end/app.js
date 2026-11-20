@@ -1,17 +1,64 @@
 import express from 'express'
 import fs from 'node:fs'
 import path from 'node:path'
+import multer from 'multer'
 
 const app = express()
 const mockDataPath = path.join(import.meta.dirname, 'mock', 'mockData.json')
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+app.use('/uploads', express.static('public/uploads'))
 
 // mock data for now, until the database is set up next sprint
 app.get('/api/mockData', (req, res) => {
   const data = JSON.parse(fs.readFileSync(mockDataPath, 'utf8'))
   res.json(data)
+})
+
+// taken from express lecture notes
+// enable file uploads saved to disk in a directory named 'public/uploads'
+// creates functions storage.getDestination and storage.getFilename
+export const storage = multer.diskStorage({
+  // saves uploaded files into directory public/uploads
+  destination: function (req, file, cb) {
+    cb(null, "public/uploads")
+  },
+  // creates filename based on current time
+  filename: function (req, file, cb) {
+    cb(
+      null,
+      `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`
+    )
+  },
+})
+
+const upload = multer({ storage: storage })
+
+// new post testing
+let posts = JSON.parse(fs.readFileSync(mockDataPath, 'utf8')).posts
+
+app.get('/api/posts', (req, res) => {
+  res.json(posts)
+})
+
+app.post('/api/posts', upload.single('image'), (req, res) => {
+  const { id, username, pfp, category, title, desc, date, time, location, image, 
+    includeBounty, bounty } = req.body
+  if (!title || !title.trim() || !desc || !desc.trim()) {
+    return res.status(400).json({ error: 'Title and description are required' })
+  }
+  if (includeBounty && (!bounty || !bounty.trim())) {
+    return res.status(400).json({ error: 'If including bounty, bounty is required' })
+  }
+  const newPost = {
+    id, username, pfp, category: category || 'lost', title: title.trim(), desc: desc.trim(), date, time, 
+    location, ...(req.file && { image: `/uploads/${req.file.filename}` }), 
+    includeBounty, bounty
+  }
+  posts.unshift(newPost)
+  // successfully created new post
+  res.status(201).json(newPost)
 })
 
 // resolved posts start from the mock data and new ones are added when a post is resolved
@@ -135,9 +182,4 @@ app.post('/api/account/password', (req, res) => {
   res.json({ message: 'Password updated' })
 })
 
-
-
-
-
 export default app
-

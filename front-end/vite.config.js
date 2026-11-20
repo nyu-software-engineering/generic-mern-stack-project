@@ -7,6 +7,8 @@ export default defineConfig({
     proxy: {
       // send API requests to the Express back-end
       '/api': 'http://localhost:3000',
+      // Allow image uploads to be displayed
+      '/uploads': 'http://localhost:3000'
     },
   },
 })
