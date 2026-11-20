@@ -1,71 +1,8 @@
-
-.welcome-screen {
-  width: 100%;
-  max-width: 390px;
-  min-height: 100vh;
-  margin: 0 auto;
-  padding: 32px 24px;
-  background: white;
-  color: #292929;
-}
-
-.welcome-screen h2 {
-  margin: 0 0 38px;
-  font-size: 16px;
-  font-weight: 700;
-}
-
-.welcome-screen h1 {
-  margin: 0 0 10px;
-  font-size: 22px;
-  font-weight: 700;
-}
-
-.welcome-screen p {
-  margin: 0 0 10px;
-  font-size: 14px;
-}
-
-.welcome-image-placeholder {
-  display: flex;
-  height: 120px;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 10px;
-  border-radius: 4px;
-  background: #d6d6d6;
-  font-size: 12px;
-  color: #292929;
-}
-
-.welcome-actions {
-  display: grid;
-  gap: 10px;
-}
-
-.welcome-button {
-  display: flex;
-  height: 44px;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid #b2b2b2;
-  border-radius: 4px;
-  font-size: 13px;
-  font-weight: 500;
-  text-decoration: none;
-}
-
-.welcome-primary {
-  background: #292929;
-  color: white;
-}
-
-.welcome-secondary {
-  background: white;
-  color: #292929;
-}
-
-.welcome-button:focus-visible {
-  outline: 2px solid #315fce;
-  outline-offset: 2px;
+.ds-account.ds-welcome { display: grid; align-items: center; gap: 32px; }
+.ds-welcome .ds-welcome-intro { max-width: 600px; }
+.ds-welcome .ds-welcome-actions { display: grid; gap: 12px; }
+.ds-welcome .ds-welcome-note { margin: 24px 0 0; }
+@media (min-width: 768px) {
+  .ds-account.ds-welcome { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); padding-block: 64px; gap: 48px; }
+  .ds-welcome .ds-account-surface { margin: 0; }
 }

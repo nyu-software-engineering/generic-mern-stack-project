@@ -1,7 +1,8 @@
-
 import { useContext, useState } from 'react'
+import { flushSync } from 'react-dom'
 import { Link, useNavigate } from 'react-router-dom'
 import { AuthContext } from '../../context/AuthContext'
+import '../../styles/accounts.css'
 
 function Login() {
   const { signIn } = useContext(AuthContext)
@@ -11,50 +12,63 @@ function Login() {
   function handleSubmit(event) {
     event.preventDefault()
 
-    const email = event.currentTarget.elements.email.value
-      .trim()
-      .toLowerCase()
+    const emailInput = event.currentTarget.elements.email
+    const email = emailInput.value.trim().toLowerCase()
 
     if (!email.endsWith('@nyu.edu')) {
-      setMessage('Please enter a valid NYU email address.')
+      flushSync(() => setMessage('Please enter a valid NYU email address.'))
+      emailInput.focus()
       return
     }
 
-    // Simulated sign-in for Sprint 1
     signIn(email)
     navigate('/browse')
   }
 
   return (
-    <main className="auth-page">
-      <h2>Sign in</h2>
-      <h1>Welcome back</h1>
+    <main className="ds-page ds-account ds-account--form">
+      <section className="ds-account-surface">
+        <h1 className="ds-heading">Sign in</h1>
+        <p className="ds-account-help">
+          This demo accepts any password. Account changes reset when you reload.
+        </p>
 
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="loginEmail">NYU email</label>
-        <input
-          id="loginEmail"
-          name="email"
-          type="email"
-          placeholder="student@nyu.edu"
-          required
-        />
+        <form className="ds-account-form" onSubmit={handleSubmit}>
+          <div className="ds-account-field">
+            <label htmlFor="loginEmail">NYU email</label>
+            <input
+              className="ds-field"
+              id="loginEmail"
+              name="email"
+              type="email"
+              autoComplete="username"
+              placeholder="student@nyu.edu"
+              onChange={() => setMessage('')}
+              aria-invalid={Boolean(message) || undefined}
+              aria-describedby={message ? 'login-email-error' : undefined}
+              required
+            />
+            {message && <p id="login-email-error" className="ds-account-error" role="alert">{message}</p>}
+          </div>
 
-        <label htmlFor="loginPassword">Password</label>
-        <input
-          id="loginPassword"
-          name="password"
-          type="password"
-          placeholder="Enter your password"
-          required
-        />
+          <div className="ds-account-field">
+            <label htmlFor="loginPassword">Password</label>
+            <input
+              className="ds-field"
+              id="loginPassword"
+              name="password"
+              type="password"
+              autoComplete="current-password"
+              required
+            />
+          </div>
 
-        <button type="submit">Sign in</button>
-      </form>
-
-      {message && <p>{message}</p>}
-
-      <Link to="/signup">Create account</Link>
+          <div className="ds-account-actions">
+            <button className="ds-button ds-button--primary" type="submit">Sign in</button>
+            <Link className="ds-text-link" to="/signup">Create account</Link>
+          </div>
+        </form>
+      </section>
     </main>
   )
 }
