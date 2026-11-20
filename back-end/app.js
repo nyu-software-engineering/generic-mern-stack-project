@@ -4,7 +4,7 @@ import session from 'express-session'
 const app = express() // instantiate an Express object
 
 import initialSavedHotels from './mockData/savedHotels.js';
-import initialBookings from './mockData/bookingList.js';
+import initialBookings from './mockData/currentBooking.js';
 
 // use express's builtin body-parser middleware to parse any data included in a request
 app.use(express.json()); // decode JSON-formatted incoming POST data
