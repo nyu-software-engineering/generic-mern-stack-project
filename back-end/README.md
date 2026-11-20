@@ -301,6 +301,43 @@ Accepting returns 409 if the offer's dates have passed or the listing is no
 longer published.
 
 
+## Handoff routes (#113)
+
+`routes/handoff.js` handles pickup and return under `/api/handoff`:
+
+| Method | Path | Response |
+| --- | --- | --- |
+| GET | `/api/handoff/:rentalId` | The rental, with `pickupCheck` and `returnCheck` once they exist |
+| POST | `/api/handoff/:rentalId/pickup` | Rental with status `active` and a `pickupCheck` |
+| POST | `/api/handoff/:rentalId/return` | Rental with status `completed` and a `returnCheck` |
+
+The rental has the same fields as `POST /api/bookings`. Pickup adds `pickupCheck`
+and return adds `returnCheck`, each shaped like this:
+
+```json
+{
+  "condition": "Minor wear",
+  "accessoriesComplete": true,
+  "notes": "Small scratch.",
+  "confirmedBy": "owner-1",
+  "confirmedAt": "2026-11-20T15:00:00.000Z"
+}
+```
+
+POST accepts `{ "condition": "As described", "accessoriesComplete": true, "notes": "..." }`.
+`condition` is required and must be `As described`, `Minor wear`, or `Damaged`.
+`accessoriesComplete` must be true or false and defaults to false. `notes` must be
+text, is trimmed, and defaults to an empty string. The server sets `confirmedBy`
+and `confirmedAt`. Invalid bodies return 400.
+
+Only the borrower can confirm pickup, and only for a `confirmed` rental. Only the
+owner can confirm the return, and only for an `active` rental. The wrong person
+gets 403 and any other status gets 409, so confirming twice returns 409. Unknown
+rental IDs return 404, and people outside the rental get 403 on every route,
+including GET. Checks run in this order: rental (404, 403), body (400), role (403),
+status (409). Changes stay in the shared store until restart.
+
+
 ## Account and sign-in routes (#92)
 
 | Method | Endpoint | Purpose |
