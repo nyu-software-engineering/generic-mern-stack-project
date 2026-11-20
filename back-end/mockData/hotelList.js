@@ -5,7 +5,15 @@ const initialSearchHotels = [
     location: 'Manhattan, New York',
     date: '2026-12-04',
     description: 'Close to restaurants and shopping.',
-    imageSrc:'',
+    imageSrc: '',
+  },
+  {
+    id: '2',
+    name: 'The City Hotel',
+    location: 'Brooklyn, New York',
+    date: '2026-12-11',
+    description: 'A stylish and convenient hotel with easy access to the city.',
+    imageSrc: '',
   },
   {
     id: '3',
@@ -13,7 +21,31 @@ const initialSearchHotels = [
     location: 'Paris, France',
     date: '2027-01-15',
     description: 'Ask for a room with a rooftop view.',
-    imageSrc:'',
+    imageSrc: '',
+  },
+  {
+    id: '4',
+    name: 'The Maple Inn',
+    location: 'Burlington, Vermont',
+    date: '2027-02-06',
+    description: 'A cozy countryside inn with a fireplace lounge and hiking trails.',
+    imageSrc: '',
+  },
+  {
+    id: '5',
+    name: 'Casa del Sol',
+    location: 'Barcelona, Spain',
+    date: '2026-12-20',
+    description: 'A bright, modern hotel near the beach with a pool and a tapas bar.',
+    imageSrc: '',
+  },
+  {
+    id: '6',
+    name: 'Harbor View Suites',
+    location: 'Sydney, Australia',
+    date: '2027-03-08',
+    description: 'Spacious suites overlooking the harbor, close to ferries and the city center.',
+    imageSrc: '',
   },
   {
     id: '7',
@@ -21,7 +53,7 @@ const initialSearchHotels = [
     location: 'Kyoto, Japan',
     date: '2027-04-02',
     description: 'Try the onsen baths.',
-    imageSrc:'',
+    imageSrc: '',
   },
 
   // generated mock data
