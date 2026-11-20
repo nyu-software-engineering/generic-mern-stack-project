@@ -29,7 +29,7 @@ function Login() {
     <main className="ds-page ds-account ds-account--form">
       <section className="ds-account-surface">
         <h1 className="ds-heading">Sign in</h1>
-        <p className="ds-feedback">
+        <p className="ds-account-help">
           This demo accepts any password. Account changes reset when you reload.
         </p>
 
@@ -43,6 +43,7 @@ function Login() {
               type="email"
               autoComplete="username"
               placeholder="student@nyu.edu"
+              onChange={() => setMessage('')}
               aria-invalid={Boolean(message) || undefined}
               aria-describedby={message ? 'login-email-error' : undefined}
               required

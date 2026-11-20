@@ -37,7 +37,7 @@ function Signup() {
       <section className="ds-account-surface">
         <Link className="ds-text-link" to="/">Back</Link>
         <h1 className="ds-heading">Create an account</h1>
-        <p className="ds-feedback">
+        <p className="ds-account-help">
           You are creating a demo account. Account changes reset when you reload.
         </p>
 

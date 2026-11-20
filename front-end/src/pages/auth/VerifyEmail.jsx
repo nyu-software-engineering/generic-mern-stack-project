@@ -39,7 +39,7 @@ function VerifyEmail() {
       <section className="ds-account-surface">
         <Link className="ds-text-link" to="/signup">Back</Link>
         <h1 className="ds-heading">Verify your demo email</h1>
-        <p className="ds-feedback">The demo does not send a verification email.</p>
+        <p className="ds-account-help">The demo does not send a verification email.</p>
 
         <form className="ds-account-form" onSubmit={handleSubmit}>
           <div className="ds-account-field">

@@ -40,6 +40,7 @@ function SetupProfile() {
       <section className="ds-account-surface">
         <Link className="ds-text-link" to="/verify-email">Back</Link>
         <h1 className="ds-heading">Set up your profile</h1>
+        <p className="ds-account-help">Demo profile changes reset when you reload.</p>
 
         <form className="ds-account-form" onSubmit={handleSubmit} onChange={() => setErrors({})}>
           <div className="ds-account-field">

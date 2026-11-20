@@ -28,7 +28,7 @@ The current profile remains `{email, displayName, campusArea, emailVerified}`. N
 | SetupProfile | Keep `displayName` and `campusArea` with their existing IDs, current defaults, required constraints, and trimmed nonempty checks. | Signed-out users go to `/signup` with replace. Unverified users go to `/verify-email` with replace. Success calls `updateProfile(displayName, campusArea)` and opens `/browse`. Back remains `/verify-email`, including during editing. |
 | Profile | No account edit form. Keep conditional campus area and `displayName || email`. | Signed-out users go to `/login` with replace. Every existing renter, owner, account, reputation, edit, and sign-out destination remains unchanged. |
 
-Keep native browser validation enabled. Do not add a stricter email, password, name, code, or campus-area policy. Custom failures retain entered values and focus the first field that failed the existing rule. Existing message clearing on form changes remains intact. Verification feedback changes only with code edits, another submit, or its explicit resend reset.
+Keep native browser validation enabled. Do not add a stricter email, password, name, code, or campus-area policy. Custom failures retain entered values and focus the first field that failed the existing rule. Login clears its custom email error when that field is edited, without moving focus. Signup and setup retain their existing form-change clearing. Verification feedback changes only with code edits, another submit, or its explicit resend reset.
 
 ## Feedback and field accessibility
 
