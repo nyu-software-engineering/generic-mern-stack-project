@@ -17,6 +17,7 @@ import SignUp from './SignUp'
 
 
 function App() {
+  const [openMenu, setOpenMenu] = useState(false)
   const [postsData, setPostsData] = useState([])
   const [count, setCount] = useState(0)
   const [curr, setCurr] = useState(-1)
@@ -49,6 +50,21 @@ function App() {
       })
   }, [])
 
+  const toggle = () => {
+    setOpenMenu(prev => !prev)
+  }
+
+  const close = () => {
+    setOpenMenu(false)
+  }
+
+  const handleLogo = () => {
+    setOpenMenu(false)
+    window.scrollTo({
+      top: 0, 
+      behavior: 'smooth'
+    })
+  }
 
   const startConversation = post => {
     const existing = conversations.find(c => c.postId === post.id)
@@ -99,15 +115,18 @@ function App() {
   return (
     <>
       <Router>
-        {isLoggedIn && <nav className="nav">
-          <Link className="nav-logo" to="/" style={{textDecoration: 'none'}}>Bounty</Link>
-          <div className="nav-links">
-            <Link className="nav-link" to="/new-post" style={{textDecoration: 'none'}}>New</Link>
-            <Link className="nav-link" to="/messages" style={{textDecoration: 'none'}}>Messages</Link>
-            <Link className="nav-link" to="/notifications" style={{textDecoration: 'none'}}>Notifications</Link>
-            <Link className="nav-link" to="/profile" style={{textDecoration: 'none'}}>Profile</Link>
-          </div>
-        </nav>}
+          {isLoggedIn && <nav className="nav">
+            <Link onClick={handleLogo} className="nav-logo" to="/" style={{textDecoration: 'none'}}>Bounty</Link>
+            <button className='sidemenu' onClick={toggle}>Menu</button>
+          </nav>}
+          {openMenu && <ul className='open-sidemenu' onClick={close}>
+            <li><Link onClick={toggle} className="nav-link" to="/new-post" style={{textDecoration: 'none'}}>New Post</Link></li>
+            <li><Link onClick={toggle} className="nav-link" to="/messages" style={{textDecoration: 'none'}}>Messages</Link></li>
+            <li><Link onClick={toggle} className="nav-link" to="/notifications" style={{textDecoration: 'none'}}>Notifications</Link></li>
+            <li><Link onClick={toggle} className="nav-link" to="/profile" style={{textDecoration: 'none'}}>Profile</Link></li>
+          </ul>}
+          {openMenu && <div id='close-sidemenu' onClick={close}></div>}
+        
         <Routes>
           <Route path="/" element={<Home isLoggedIn={isLoggedIn} postsData={postsData} count={count} curr={curr} setCurr={setCurr} startConversation={startConversation} />} />
           <Route path="/new-post" element={<NewPost postsData={postsData} setPostsData={setPostsData} count={count} setCount={setCount} />} />
