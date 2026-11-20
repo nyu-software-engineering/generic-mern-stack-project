@@ -9,11 +9,20 @@ const EventDetail = () => {
   const [event, setEvent] = useState(null)
   const [joined, setJoined] = useState(false)
 
-  useEffect(() => {
-    axios("/mock/events.json").then(response => {
-      setEvent(response.data.find(item => item.id === Number(id)))
-    })
+    useEffect(() => {
+    axios(`/api/events/${id}`).then(response => setEvent(response.data))
   }, [id])
+
+  const handleJoin = () => {
+    if (joined) {
+      setJoined(false)
+      return
+    }
+    axios
+      .post(`/api/events/${event.id}/join`)
+      .then(response => setJoined(response.data.joined))
+      .catch(error => console.error(error))
+  }
 
   if (!event) {
     return <p>Loading...</p>
@@ -60,7 +69,7 @@ const EventDetail = () => {
 
       <button
         className={joined ? "event-detail-joined" : "event-detail-join"}
-        onClick={() => setJoined(!joined)}
+        onClick={handleJoin}
       >
         {joined ? "Joined" : "Join event"}
       </button>

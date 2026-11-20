@@ -1,9 +1,21 @@
 import { useState } from "react"
 import { Link } from "react-router-dom"
+import axios from "axios"
 import "./HobbyCard.css"
 
 const HobbyCard = ({ hobby }) => {
   const [joined, setJoined] = useState(false)
+
+  const handleJoin = () => {
+    if (joined) {
+      setJoined(false)
+      return
+    }
+    axios
+      .post(`/api/hobbies/${hobby.id}/join`)
+      .then(response => setJoined(response.data.joined))
+      .catch(error => console.error(error))
+  }
 
   return (
     <article className="hobby-card">
@@ -18,7 +30,7 @@ const HobbyCard = ({ hobby }) => {
       </Link>
       <button
         className={joined ? "hobby-card-button-joined" : "hobby-card-button"}
-        onClick={() => setJoined(!joined)}
+        onClick={handleJoin}
       >
         {joined ? "Joined" : "Join"}
       </button>

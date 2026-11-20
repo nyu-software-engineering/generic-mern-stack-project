@@ -9,14 +9,21 @@ const HobbyDetail = () => {
   const [events, setEvents] = useState([])
   const [joined, setJoined] = useState(false)
 
-  useEffect(() => {
-    axios("/mock/hobbies.json").then(response => {
-      setHobby(response.data.find(item => item.id === Number(id)))
-    })
-    axios("/mock/events.json").then(response => {
-      setEvents(response.data.filter(item => item.hobbyId === Number(id)))
-    })
+     useEffect(() => {
+    axios(`/api/hobbies/${id}`).then(response => setHobby(response.data))
+    axios(`/api/hobbies/${id}/events`).then(response => setEvents(response.data))
   }, [id])
+
+  const handleJoin = () => {
+    if (joined) {
+      setJoined(false)
+      return
+    }
+    axios
+      .post(`/api/hobbies/${hobby.id}/join`)
+      .then(response => setJoined(response.data.joined))
+      .catch(error => console.error(error))
+  }
 
   if (!hobby) {
     return <p>Loading...</p>
@@ -39,7 +46,7 @@ const HobbyDetail = () => {
       <p>{hobby.description}</p>
       <button
         className={joined ? "hobby-detail-joined" : "hobby-detail-join"}
-        onClick={() => setJoined(!joined)}
+        onClick={handleJoin}
       >
         {joined ? "Joined" : "Join hobby"}
       </button>
