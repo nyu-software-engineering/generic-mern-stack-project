@@ -9,6 +9,7 @@ const cors = require("cors");
 
 const { stripPasswordsMiddleware } = require("./utils/stripPasswords");
 const configRoutes = require("./routes/configRoutes");
+const cityListRoutes = require("./routes/cityListRoutes");
 
 const app = express();
 
@@ -31,6 +32,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api", configRoutes);
+app.use("/api", cityListRoutes);
 
 // --- 404 for anything else ---
 app.use((req, res) => {
