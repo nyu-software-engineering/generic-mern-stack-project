@@ -1,21 +1,25 @@
-
 import { useContext, useState } from 'react'
+import { flushSync } from 'react-dom'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { AuthContext } from '../../context/AuthContext'
+import '../../styles/accounts.css'
 
 function SetupProfile() {
   const { currentUser, updateProfile } = useContext(AuthContext)
-  const [message, setMessage] = useState('')
+  const [errors, setErrors] = useState({})
   const navigate = useNavigate()
 
   function handleSubmit(event) {
     event.preventDefault()
 
-    const displayName = event.currentTarget.elements.displayName.value.trim()
-    const campusArea = event.currentTarget.elements.campusArea.value.trim()
+    const fields = event.currentTarget.elements
+    const displayName = fields.displayName.value.trim()
+    const campusArea = fields.campusArea.value.trim()
 
     if (!displayName || !campusArea) {
-      setMessage('Please enter a display name and campus area.')
+      flushSync(() => setErrors({ displayName: !displayName, campusArea: !campusArea }))
+      const firstInvalid = displayName ? fields.campusArea : fields.displayName
+      firstInvalid.focus()
       return
     }
 
@@ -23,7 +27,6 @@ function SetupProfile() {
     navigate('/browse')
   }
 
-  // Route guards must run during rendering, not inside handleSubmit.
   if (!currentUser) {
     return <Navigate to="/signup" replace />
   }
@@ -33,38 +36,54 @@ function SetupProfile() {
   }
 
   return (
-    <main className="auth-page">
-      <Link to="/verify-email">Back</Link>
+    <main className="ds-page ds-account ds-account--form">
+      <section className="ds-account-surface">
+        <Link className="ds-text-link" to="/verify-email">Back</Link>
+        <h1 className="ds-heading">Set up your profile</h1>
 
-      <h2>Basic profile setup</h2>
+        <form className="ds-account-form" onSubmit={handleSubmit} onChange={() => setErrors({})}>
+          <div className="ds-account-field">
+            <label htmlFor="displayName">Display name</label>
+            <input
+              className="ds-field"
+              id="displayName"
+              name="displayName"
+              type="text"
+              autoComplete="nickname"
+              defaultValue={currentUser.displayName || ''}
+              aria-invalid={errors.displayName || undefined}
+              aria-describedby={errors.displayName ? 'profile-name-error' : undefined}
+              required
+            />
+            {errors.displayName && (
+              <p id="profile-name-error" className="ds-account-error" role="alert">Please enter a display name.</p>
+            )}
+          </div>
 
-      <form onSubmit={handleSubmit} onChange={() => setMessage('')}>
-        <label htmlFor="displayName">Display name</label>
-        <input
-          id="displayName"
-          name="displayName"
-          type="text"
-          defaultValue={currentUser.displayName || ''}
-          placeholder="Enter your display name"
-          required
-        />
+          <div className="ds-account-field">
+            <label htmlFor="campusArea">Campus area</label>
+            <input
+              className="ds-field"
+              id="campusArea"
+              name="campusArea"
+              type="text"
+              autoComplete="off"
+              defaultValue={currentUser.campusArea || ''}
+              aria-invalid={errors.campusArea || undefined}
+              aria-describedby={errors.campusArea ? 'profile-area-help profile-area-error' : 'profile-area-help'}
+              required
+            />
+            <p id="profile-area-help" className="ds-account-help">Use a general area, such as Washington Square.</p>
+            {errors.campusArea && (
+              <p id="profile-area-error" className="ds-account-error" role="alert">Please enter a campus area.</p>
+            )}
+          </div>
 
-        <label htmlFor="campusArea">Campus area</label>
-        <input
-          id="campusArea"
-          name="campusArea"
-          type="text"
-          defaultValue={currentUser.campusArea || ''}
-          placeholder="e.g. Near campus"
-          required
-        />
-
-        <p>Your private address and phone number are not public.</p>
-
-        <button type="submit">Save profile</button>
-      </form>
-
-      {message && <p role="alert">{message}</p>}
+          <div className="ds-account-actions">
+            <button className="ds-button ds-button--primary" type="submit">Save profile</button>
+          </div>
+        </form>
+      </section>
     </main>
   )
 }
