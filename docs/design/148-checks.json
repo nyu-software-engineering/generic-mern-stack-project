@@ -1,0 +1,69 @@
+{
+  "date": "2026-11-20",
+  "master": "306fc2ac56da87e828009e184a3dfad5baa587e3",
+  "pending_dashboard_pr": 157,
+  "pending_dashboard_head": "c6e3d9df9b0d3ba0754cbf28f9db466e4eaafcb7",
+  "pending_account_pr": 163,
+  "pending_account_head": "24546782f89c2b58e11bfb170e1ac9059c8b669a",
+  "combined_snapshot": "c94a69e17fa211f60328d91fdef9e97405251e2f",
+  "source_fix": "b4794f1",
+  "route_count": 28,
+  "view_count": 35,
+  "layout_checks": 210,
+  "layout_failures": 0,
+  "zoom_checks": 35,
+  "zoom_failures": 0,
+  "text_checks": 70,
+  "text_failures": 0,
+  "zoom_proof": {
+    "zoom": 3.9999999999999996,
+    "before": {
+      "width": 1280,
+      "height": 813,
+      "outerWidth": 1280,
+      "devicePixelRatio": 1
+    },
+    "after": {
+      "width": 320,
+      "height": 203,
+      "outerWidth": 1280,
+      "devicePixelRatio": 4
+    },
+    "dialog": {
+      "x": 19,
+      "y": 10.1640625,
+      "width": 282,
+      "height": 182.921875
+    },
+    "cancel": {
+      "x": 44,
+      "y": 123.8125,
+      "width": 232,
+      "height": 44.3984375
+    },
+    "focusReturn": true
+  },
+  "branch_tests": 128,
+  "combined_tests": 131,
+  "focus_observations": 324,
+  "native_keyboard_observations": 288,
+  "hidden_focus_baseline": 49,
+  "hidden_focus_after": 0,
+  "journey_groups": {
+    "143": 7,
+    "146": 9,
+    "147": 10
+  },
+  "other_journeys": {
+    "passed": 7,
+    "checks": [
+      "Discovery search, save state across renter dashboard, date estimate and booking prefill",
+      "Listing failed save retains values, pending retry, preview, publish, pause and edit",
+      "Owner filter preserves totals, empty result, reset and booking navigation",
+      "Booking failed request retains dates and retry leads to summary and withdrawal",
+      "Owner confirmation uses native agreement; borrower and owner extension actions work",
+      "Local pickup and owner return retain native checks and show completion",
+      "Notification read state, unread filter, bulk action and refresh persistence"
+    ]
+  }
+}
