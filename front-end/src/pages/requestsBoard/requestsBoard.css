@@ -1,41 +1,13 @@
-/* Requests board extras. Cards and page layout come from the shared styles in index.css. */
-.request-tabs {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 16px;
-}
-
-.request-tab {
-  padding: 6px 14px;
-  border: 1px solid #e0e3e8;
-  border-radius: 999px;
-  background: white;
-  color: #20242b;
-  cursor: pointer;
-}
-
-.request-tab--active {
-  border-color: #222;
-  background: #222;
-  color: white;
-}
-
-.request-action {
-  display: inline-block;
-  padding: 6px 14px;
-  border: 1px solid #222;
-  border-radius: 6px;
-  color: #222;
-  text-decoration: none;
-}
-
-.request-action--primary {
-  background: #222;
-  color: white;
-}
-
-.request-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+.ds-messages .request-board-header { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 20px; margin-bottom: 24px; }
+.ds-messages .request-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 12px; }
+.ds-messages .request-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+.ds-messages .request-tab[aria-pressed='true'] { background: var(--ds-lilac); text-decoration: underline; text-underline-offset: 4px; }
+.ds-messages .request-tab[aria-pressed='true']:hover { color: var(--ds-surface); background: var(--ds-violet); }
+.ds-messages .request-board-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 24px; }
+.ds-messages .request-board-card { display: flex; flex-direction: column; align-items: flex-start; margin: 0; }
+.ds-messages .request-board-card > div { min-width: 0; width: 100%; flex: 1; }
+.ds-messages .request-board-card .ds-status { margin-top: 16px; }
+@media (max-width: 767px) {
+ .ds-messages .request-board-grid { grid-template-columns: minmax(0,1fr); }
+ .ds-messages .request-actions { flex-direction: column; align-items: stretch; width: 100%; }
 }

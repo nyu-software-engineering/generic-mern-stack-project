@@ -28,37 +28,38 @@ function latestReply(request) {
   }
 }
 
-// One request on the board. Uses the shared rental-card styles from index.css.
+// One request on the shared board.
 function RequestCard({ request }) {
   const isItem = request.type === 'item'
   const isOwnRequest = request.requesterId === CURRENT_USER_ID
 
   let needed = `Needed by ${formatDate(request.neededBy)}`
   if (request.neededTime) needed += ` at ${request.neededTime}`
-  if (isItem) needed = `Needed ${formatDate(request.neededBy)} – ${formatDate(request.neededUntil)}`
+  if (isItem) needed = `Needed ${formatDate(request.neededBy)} to ${formatDate(request.neededUntil)}`
 
   // Your own item request (prototype m14): the newest reply and a link to that chat.
   if (isItem && isOwnRequest) {
     const reply = latestReply(request)
     return (
-      <article className="rental-card">
+      <article className="ds-message-surface request-board-card">
         <div>
-          <h3>{request.itemName}</h3>
+          <h2>{request.itemName}</h2>
+          <p className="ds-message-meta">Your request</p>
           <p>{needed}</p>
           <p>{reply ? reply.text : 'No replies yet.'}</p>
           <div className="request-actions">
             {reply && (
               <Link to={`/inbox?conversation=${reply.conversationId}`}
-                className="request-action request-action--primary">
+                className="ds-button ds-button--primary">
                 {reply.hasOffer ? 'View offer in Messages' : 'Open in Messages'}
               </Link>
             )}
-            <Link to={`/requests?request=${request.id}`} className="request-action">
+            <Link to={`/requests?request=${request.id}`} className="ds-button ds-button--secondary">
               Manage request
             </Link>
           </div>
         </div>
-        <span className="rental-status">{REQUEST_TYPES[request.type]}</span>
+        <span className="ds-status">{REQUEST_TYPES[request.type]}</span>
       </article>
     )
   }
@@ -66,9 +67,9 @@ function RequestCard({ request }) {
   const requester = isItem ? getUser(request.requesterId) : null
 
   return (
-    <article className="rental-card">
+    <article className="ds-message-surface request-board-card">
       <div>
-        <h3>{request.itemName}</h3>
+        <h2>{request.itemName}</h2>
         {requester && <p>Posted by {requester.name}</p>}
         <p>{needed}</p>
         {request.borrowDuration && <p>For {request.borrowDuration}</p>}
@@ -76,14 +77,14 @@ function RequestCard({ request }) {
         {isItem && request.targetPrice != null && <p>Target: {formatMoney(request.targetPrice)}</p>}
         {request.details && <p>{request.details}</p>}
         {isItem ? (
-          <Link to={`/requests?request=${request.id}`} className="request-action">
+          <Link to={`/requests?request=${request.id}`} className="ds-button ds-button--secondary">
             View request / offer an item
           </Link>
         ) : (
-          !isOwnRequest && <Link to="/inbox" className="request-action">Message</Link>
+          !isOwnRequest && <Link to="/inbox" className="ds-button ds-button--secondary">Open inbox</Link>
         )}
       </div>
-      <span className="rental-status">{REQUEST_TYPES[request.type]}</span>
+      <span className="ds-status">{REQUEST_TYPES[request.type]}</span>
     </article>
   )
 }
