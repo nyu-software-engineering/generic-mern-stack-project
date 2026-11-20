@@ -38,11 +38,11 @@ html:has(.ds-mobile-nav) {
 - [x] Verify offer focus containment, internal scrolling, final actions, Escape, and focus return after the document scroll change. Check native date/time, radios, and enlarged text.
 - [x] Inspect the user's physical iPhone Safari evidence. Record visible results without treating screenshots as proof of unshown interactions.
 - [x] Record the user's confirmation that the offer dialog worked and Quick Borrow's Save request button was visible and worked with the keyboard open.
-- [ ] Confirm landscape behavior where available.
+- [x] Record the user’s confirmation that Requests and Quick Borrow work in landscape without sideways page scrolling.
 - [x] Save a route checklist, a finding log with reproduction steps, screenshots, and the remaining limits. Keep final merged-version verification pending while #157 and #163 remain open.
 - [x] Obtain independent source and security reviews. Fix actionable findings and repeat affected checks.
 - [x] Open a focused PR against master under the user's identity, assigned to the user in Sprint 2. Request Sherry and Omer. Update #148 with verified progress and remaining checks; do not close it while final merge/device checks remain.
 
-Results: [148-verification.md](148-verification.md), [route checklist](148-route-checklist.md), and [counts](148-checks.json). Device confirmations and the final merged-master check remain pending.
+Results: [148-verification.md](148-verification.md), [route checklist](148-route-checklist.md), and [counts](148-checks.json). The requested iPhone checks are complete. The final merged-master check remains pending.
 
 Implementation: [#164](https://github.com/agile-students-fall2026/generic-mern-stack-project-dormshare/pull/164), against master. Assigned to hassanraza04 in Sprint 2, with reviews requested from Sherry and Omer. #148 remains open for the recorded final checks.

@@ -68,7 +68,7 @@ The user opened the combined preview on an actual iPhone in Safari and supplied 
 
 These images were supplied before the shared scroll fix. They establish those visible device observations, not every requested interaction. The user later confirmed that the offer dialog worked. The user also confirmed that Quick Borrow's Save request button was visible with the keyboard open and saved successfully. The Quick borrow board tab lists existing requests; the form opens through Post a quick borrow or `/quick-borrow`.
 
-Landscape behavior remains unconfirmed. The device confirmations above are user-reported results, separate from the screenshots and automated checks.
+The user also confirmed that Requests and Quick Borrow work in landscape, with readable content, usable fields, and a reachable Save request action without sideways page scrolling. This completes the requested iPhone checks. These confirmations are user-reported results, separate from the screenshots and automated checks.
 
 The additional installed WebKit runner could not load even the local health endpoint. No automated WebKit result is claimed. The physical Safari evidence above is separate from that runner limitation.
 
@@ -76,7 +76,7 @@ The additional installed WebKit runner could not load even the local health endp
 
 Independent source and security reviews approved the final source at `0016168`. Source review prompted precise separation of programmatic starting positions from native keyboard observations, plus pinned links for reports in the pending PRs. Both findings are resolved.
 
-Keep #148 open for the final merged-version audit after #157 and #163 land, the remaining device confirmations, and any fixes those checks reveal. A broad screen-reader audit is outside these results. Real password recovery remains in #139; account API integration remains in #94.
+Keep #148 open for the final merged-version audit after #157, #163, and #164 land, and for any fixes that check reveals. A broad screen-reader audit is outside these results. Real password recovery remains in #139; account API integration remains in #94.
 
 ## Captures
 
