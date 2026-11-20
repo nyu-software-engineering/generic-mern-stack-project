@@ -33,3 +33,40 @@ handoffRouter.param("rentalId", (request, response, next, rentalId) => {
 handoffRouter.get("/:rentalId", (request, response) => {
   response.json(request.rental);
 });
+
+const ITEM_CONDITIONS = ["As described", "Minor wear", "Damaged"];
+
+// Condition, accessories and notes recorded at a handoff, or an error message if the body is invalid.
+// accessoriesComplete defaults to false and notes to an empty string.
+function buildCheck(body, userId) {
+  const { condition, accessoriesComplete = false, notes = "" } = body ?? {};
+  if (!ITEM_CONDITIONS.includes(condition)) {
+    return { error: `condition must be one of: ${ITEM_CONDITIONS.join(", ")}.` };
+  }
+  if (typeof accessoriesComplete !== "boolean") return { error: "accessoriesComplete must be true or false." };
+  if (typeof notes !== "string") return { error: "notes must be text." };
+
+  return {
+    check: {
+      condition,
+      accessoriesComplete,
+      notes: notes.trim(),
+      confirmedBy: userId,
+      confirmedAt: new Date().toISOString(),
+    },
+  };
+}
+
+// Borrower confirms pickup: confirmed -> active.
+handoffRouter.post("/:rentalId/pickup", (request, response) => {
+  const { rental, currentUserId } = request;
+  const { check, error } = buildCheck(request.body, currentUserId);
+
+  if (error) return fail(response, 400, error);
+  if (!sameId(rental.borrowerId, currentUserId)) return fail(response, 403, "Only the borrower can confirm pickup.");
+  if (rental.status !== "confirmed") return fail(response, 409, `A ${rental.status} booking cannot be picked up.`);
+
+  rental.status = "active";
+  rental.pickupCheck = check;
+  response.json(rental);
+});

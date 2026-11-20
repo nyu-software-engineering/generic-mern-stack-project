@@ -74,4 +74,76 @@ describe("Handoff routes (#113)", () => {
       expect(status).to.equal(403);
     });
   });
+
+  describe("POST /api/handoff/:rentalId/pickup", () => {
+    const check = { condition: "Minor wear", accessoriesComplete: true, notes: "  Small scratch.  " };
+
+    it("lets the borrower confirm pickup, recording the check", async () => {
+      const { status, body } = await api("POST", "/701/pickup", check);
+
+      expect(status).to.equal(200);
+      expect(body.status).to.equal("active");
+      expect(body.pickupCheck).to.include({
+        condition: "Minor wear", accessoriesComplete: true, notes: "Small scratch.", confirmedBy: "owner-1",
+      });
+      expect(body.pickupCheck.confirmedAt).to.be.a("string");
+      expect(rental(701).status).to.equal("active");
+    });
+
+    it("defaults accessoriesComplete to false and notes to empty", async () => {
+      const { status, body } = await api("POST", "/701/pickup", { condition: "As described" });
+
+      expect(status).to.equal(200);
+      expect(body.pickupCheck).to.include({ accessoriesComplete: false, notes: "" });
+    });
+
+    it("rejects an unknown or missing condition with 400", async () => {
+      for (const condition of ["Brand new", undefined]) {
+        const { status, body } = await api("POST", "/701/pickup", { ...check, condition });
+
+        expect(status).to.equal(400);
+        expect(body.error).to.include("condition");
+      }
+      expect(rental(701).status).to.equal("confirmed");
+    });
+
+    it("rejects non-boolean accessoriesComplete and non-text notes with 400", async () => {
+      expect((await api("POST", "/701/pickup", { ...check, accessoriesComplete: "yes" })).status).to.equal(400);
+      expect((await api("POST", "/701/pickup", { ...check, notes: 5 })).status).to.equal(400);
+      expect(rental(701).pickupCheck).to.equal(undefined);
+    });
+
+    it("rejects a request with no body with 400", async () => {
+      expect((await api("POST", "/701/pickup")).status).to.equal(400);
+    });
+
+    it("returns 403 when the owner tries to confirm pickup", async () => {
+      const { status } = await api("POST", "/601/pickup", check);
+
+      expect(status).to.equal(403);
+      expect(rental(601).status).to.equal("confirmed");
+    });
+
+    it("returns 403 for someone outside the rental", async () => {
+      expect((await api("POST", "/801/pickup", check)).status).to.equal(403);
+    });
+
+    it("returns 409 unless the rental is confirmed", async () => {
+      const { status, body } = await api("POST", "/702/pickup", check);
+
+      expect(status).to.equal(409);
+      expect(body.error).to.include("active");
+      expect(rental(702).pickupCheck).to.equal(undefined);
+    });
+
+    it("returns 409 when pickup is confirmed twice", async () => {
+      await api("POST", "/701/pickup", check);
+
+      expect((await api("POST", "/701/pickup", check)).status).to.equal(409);
+    });
+
+    it("returns 404 for an unknown rental", async () => {
+      expect((await api("POST", "/999/pickup", check)).status).to.equal(404);
+    });
+  });
 });
