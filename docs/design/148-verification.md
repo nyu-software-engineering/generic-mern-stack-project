@@ -66,7 +66,9 @@ The user opened the combined preview on an actual iPhone in Safari and supplied 
 | `IMG_4493.PNG` | The message field, typed text, and Send action are visible while the real on-screen keyboard is open. |
 | `IMG_4494.PNG` | The sent Test message appears in the conversation. |
 
-These images were supplied before the shared scroll fix. They establish those visible device observations, not every requested interaction. Confirmation remains pending for the offer's native date pickers and cancellation, Quick Borrow's final action with the keyboard open, and landscape behavior after the fix.
+These images were supplied before the shared scroll fix. They establish those visible device observations, not every requested interaction. The user later confirmed that the offer dialog worked. The user also confirmed that Quick Borrow's Save request button was visible with the keyboard open and saved successfully. The Quick borrow board tab lists existing requests; the form opens through Post a quick borrow or `/quick-borrow`.
+
+Landscape behavior remains unconfirmed. The device confirmations above are user-reported results, separate from the screenshots and automated checks.
 
 The additional installed WebKit runner could not load even the local health endpoint. No automated WebKit result is claimed. The physical Safari evidence above is separate from that runner limitation.
 

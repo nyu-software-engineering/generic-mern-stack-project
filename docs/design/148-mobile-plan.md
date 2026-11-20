@@ -36,7 +36,9 @@ html:has(.ds-mobile-nav) {
 - [x] Apply this branch's shared CSS change to the disposable combined checkout. Repeat the six-width and full-page 400% zoom checks. Record actual zoom, viewport, and document bounds.
 - [x] Check touch and keyboard flows for discovery/save, listing creation/edit/preview/status, dashboard filters, request/summary/extension/cancellation, local handoff, messaging/offers, requests, Quick Borrow, notifications, ratings, rules, and reporting. Include representative validation, loading, failure/retry, empty, and retained-value states.
 - [x] Verify offer focus containment, internal scrolling, final actions, Escape, and focus return after the document scroll change. Check native date/time, radios, and enlarged text.
-- [ ] Inspect the user's physical iPhone Safari evidence. Record visible results without treating screenshots as proof of unshown interactions. Confirm offer date picker, Quick Borrow, and landscape behavior where available.
+- [x] Inspect the user's physical iPhone Safari evidence. Record visible results without treating screenshots as proof of unshown interactions.
+- [x] Record the user's confirmation that the offer dialog worked and Quick Borrow's Save request button was visible and worked with the keyboard open.
+- [ ] Confirm landscape behavior where available.
 - [x] Save a route checklist, a finding log with reproduction steps, screenshots, and the remaining limits. Keep final merged-version verification pending while #157 and #163 remain open.
 - [x] Obtain independent source and security reviews. Fix actionable findings and repeat affected checks.
 - [x] Open a focused PR against master under the user's identity, assigned to the user in Sprint 2. Request Sherry and Omer. Update #148 with verified progress and remaining checks; do not close it while final merge/device checks remain.
