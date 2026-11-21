@@ -1,5 +1,11 @@
 # Account recovery research for #139
 
+This is a historical research and setup record. The owner later approved
+emailed codes and separate new-password and confirmation fields. Use the
+[approved design](../superpowers/specs/2026-11-21-account-recovery-design.md)
+and [current interface](../design/139-recovery-interface.md) for implementation.
+Earlier link proposals and dependency statuses below describe their audit date.
+
 Source audit: November 20, 2026. The assigned baseline is master `9e83b384f9003967cf7e255e748d5dae47c8eff0`. This note records current source behavior and a recovery proposal for review with Omer. Brevo setup is now verified in the final section. The recovery API, security policy, and application integration remain proposals. No application code or dependencies changed.
 
 ## Current account system
