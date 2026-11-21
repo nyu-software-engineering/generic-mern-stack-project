@@ -48,12 +48,15 @@ export function createAuthSession({
 }) {
   let lastRequestId = 0
   let invalidatedThrough = 0
+  let pendingSignupRequestId = 0
   let verificationRequestId = 0
+  let tokenRequestId = 0
   let token = null
   let pendingSignup = readPendingSignup()
 
-  function updatePendingSignup(value) {
+  function updatePendingSignup(value, requestId = 0) {
     pendingSignup = value
+    pendingSignupRequestId = requestId
     verificationRequestId = 0
     savePendingSignup(value)
     onPendingSignup(value)
@@ -74,7 +77,7 @@ export function createAuthSession({
     updatePendingSignup({
       email: result.user.email,
       demoCode: result.demoCode,
-    })
+    }, requestId)
 
     return result
   }
@@ -109,7 +112,7 @@ export function createAuthSession({
     updatePendingSignup({
       email: pending.email,
       demoCode: '',
-    })
+    }, requestId)
 
     return result.user
   }
@@ -132,6 +135,7 @@ export function createAuthSession({
     }
 
     token = session.token
+    tokenRequestId = requestId
     setSessionToken(token)
     setCurrentUserId(user.id)
 
@@ -168,6 +172,7 @@ export function createAuthSession({
 
   function clearSignedInSession() {
     token = null
+    tokenRequestId = 0
 
     setSessionToken(null)
     setCurrentUserId(null)
@@ -181,17 +186,14 @@ export function createAuthSession({
   }
 
   function prepareResetSignOut(email) {
-    const startedToken = token
     const startedRequestId = lastRequestId
-    const startedSignup = pendingSignup
 
     return () => {
-      if (token !== startedToken) return
-      if (!startedToken && invalidatedThrough > startedRequestId) return
+      if (tokenRequestId > startedRequestId) return
 
       invalidatedThrough = Math.max(invalidatedThrough, startedRequestId)
-      clearSignedInSession()
-      if (pendingSignup !== startedSignup || verificationRequestId > invalidatedThrough) return
+      if (token) clearSignedInSession()
+      if (pendingSignupRequestId > startedRequestId || verificationRequestId > invalidatedThrough) return
       if (pendingSignup?.demoCode && pendingSignup.email === email) return
       updatePendingSignup(null)
     }
