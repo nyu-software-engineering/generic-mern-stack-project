@@ -126,3 +126,8 @@ The live delivery event verifies this sender and test recipient path. It does no
 No sending activation hold was encountered in the successful live test. The account-details permission denial remains separate from the successful send tests. It was not used as a reason to broaden the key.
 
 This is provider setup evidence. Recovery routes, reset credentials, private capture tests, and the frontend flow are not implemented. The current server does not automatically load `.env.local`; the setup checks loaded it explicitly. The application integration must load its private environment on the backend, keep the key out of the browser, and use the reviewed account contract. A trusted HTTPS reset origin and coordination with #94 remain outstanding.
+
+
+## Implementation contract update, November 21, 2026
+
+Account integration #167 is merged at master `e068ba5`. Omer reviewed this proposal and supports the direction. His remaining requests cover concrete policy settings, out-of-order delivery, private environment loading, and a trusted HTTPS app origin. The [implementation design](../superpowers/specs/2026-11-21-account-recovery-design.md) gives concrete proposed values and behavior for approval. It supersedes the frontend-gap description above for new implementation work. No recovery code has been written.
