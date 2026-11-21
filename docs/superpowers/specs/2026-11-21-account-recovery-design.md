@@ -7,7 +7,7 @@ Status: approved by the repository owner on November 21, 2026. The owner selecte
 1. From Login, choose Forgot password and enter the registered NYU email.
 2. Receive an 8-digit code through Brevo. The same confirmation appears for unknown addresses.
 3. In DormShare, enter the email and code. A valid code opens the password form.
-4. Enter New password and Confirm new password. Successful reset links to normal Login.
+4. Enter New password and Confirm new password. Successful reset links to normal Login. If this browser still has the matching pending signup, it offers email verification first.
 
 Code verification creates a short-lived permission that only allows setting a new password. It does not create a login session. This flow works against a running local app without a public app URL or deployment. Email can be read on another device because it contains a code, not a localhost link. Public app use still requires HTTPS.
 
@@ -81,7 +81,7 @@ Add a Login recovery link and public `/forgot-password` and `/reset-password` ro
 
 Only after successful code verification show New password and Confirm new password, both with `autocomplete="new-password"`. Hold the restricted reset permission in component memory only. Do not put code, permission, or passwords into URLs, localStorage, sessionStorage, analytics, or public logs. A reload loses this short-lived form state and explains how to request another code.
 
-Each step supports idle, pending, validation, safe API error, retry, and success. Disable duplicate submissions, preserve entered values for retryable failures, and focus the first invalid field. Clear the email code after successful verification. Missing or expired credentials offer a fresh request. Guard late async state updates and navigation after unmount. After reset, clear local signed-in state through the existing signOut contract and link to normal Login.
+Each step supports idle, pending, validation, safe API error, retry, and success. Disable duplicate submissions, preserve entered values for retryable failures, and focus the first invalid field. Clear the email code after successful verification. Missing or expired credentials offer a fresh request. Guard late page updates and navigation after unmount. A successful reset clears the local session captured when it was submitted, even if the form has since closed. It preserves a newer session. Keep a matching pending signup available for email verification without verifying it automatically. Other accounts follow normal Login after reset.
 
 ## Required verification
 

@@ -49,6 +49,11 @@ password login, expired and exhausted codes, expired permissions, reload, and
 late responses after navigation. Layout checks include narrow and short
 viewports and keyboard focus.
 
+An unverified student can also complete signup in the browser, reset their
+password, and return to the existing email-verification step. Reset never
+verifies the account. A late reset response clears its original local session
+while preserving a newer sign-in.
+
 ## Delivery evidence and limits
 
 The [provider setup record](../research/139-account-recovery.md#brevo-setup-verified-november-20-2026)
@@ -60,3 +65,14 @@ No live code email or password-change notice was sent during this
 implementation. A real recovery-email check needs separate send approval.
 Browser engines do not reproduce a physical phone's on-screen keyboard.
 Accounts, sessions, and recovery state still reset when the backend restarts.
+
+## Verified November 21, 2026
+
+- Backend: 375 tests passed. The configured coverage scope includes the app
+  and routes, with 99.3% statement and 96.92% branch coverage.
+- Frontend: 155 tests passed. Lint and production build passed.
+- Browser: all eight cases passed in Chromium and WebKit, with no skipped
+  cases. These include unverified signup and both late-response session cases.
+- Independent correctness and security reviews cover the recovery source.
+
+No additional live email was sent for these checks.
