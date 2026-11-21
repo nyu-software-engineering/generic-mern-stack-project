@@ -9,7 +9,7 @@ describe('DELETE /api/posts/:id', () => {
 	})
 
   it('rejects if no valid post id found', async () => {
-    const res = await request(app).delete('/api/posts/3')
+    const res = await request(app).delete('/api/posts/-1')
     expect(res.status).to.equal(404)
     expect(res.body).to.deep.equal({ error: 'Post id not found' })
   })

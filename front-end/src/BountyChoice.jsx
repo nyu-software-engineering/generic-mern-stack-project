@@ -37,12 +37,12 @@ const BountyChoice = props => {
     }
 
     // when submitting form button, save the user who was chosen to receive the bounty
-    const submitForm = e => {
+    const submitForm = async e => {
         e.preventDefault()
 
         // keep the post in the user's history before removing it from the feed
         const post = props.postsData[props.curr]
-        fetch('/api/posts/resolved', {
+        await fetch('/api/posts/resolved', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -58,11 +58,11 @@ const BountyChoice = props => {
 
         // resolving the post is equivalent to deleting the post, so same
         // code here
-        fetch(`/api/posts/${post.id}`, {
+        const res = await fetch(`/api/posts/${post.id}`, {
             method: 'DELETE'
         })
-        props.fetchPosts()
-        props.setCount(prev => prev - 1)
+        if (!res.ok) throw new Error('Failed to resolve post')
+        await props.fetchPosts()
     }
 
     return (
