@@ -14,6 +14,7 @@ import { communityRulesRouter, reportsRouter } from "./routes/reports.js";
 import { createRenterDashboardRouter } from "./routes/renterDashboard.js";
 import { createMockDataStore } from "./services/mockData.js";
 import { accountRouter } from "./routes/accounts.js";
+import { reviewsRouter } from "./routes/reviews.js";
 
 const frontendDist = fileURLToPath(new URL("../front-end/dist/", import.meta.url));
 const listingImages = fileURLToPath(
@@ -27,6 +28,7 @@ export function createApp({ store = createMockDataStore() } = {}) {
   app.use(express.json());
   app.use(currentUser);
   app.use("/api", accountRouter);
+  app.use("/api", reviewsRouter);
 
   app.get("/api/health", (_request, response) => {
     response.json({ status: "ok" });
