@@ -3,7 +3,6 @@ import conversationsMockData from "../data/conversationsMockData"
 
 router = express.Router()
 
-
 router.get("/", (req, res) => {
     const userConvos = []
 
@@ -17,21 +16,17 @@ router.get("/", (req, res) => {
 })
 
 router.get("/:conversationId/messages", (req, res) => {
-    const userConvo = null;
     const convoId = req.params.conversationId
 
     for (const convo of conversationsMockData){
         if (convo.conversationId == convoId){
-            userConvo = convo;
+            return res.json(convo)
         }
     }
 
-    if (userConvo === null){
-        return res.status(404).send("Conversation Id not found")
-    }
-
-    return res.json(userConvo.messages)
+    return res.status(404).send("Did not find conversation with this ID")
 })
+
 
 router.post("/", (req, res) => {
     const body = req.body
@@ -95,10 +90,10 @@ router.post("/:conversationId/messages", (req, res) => {
 })
 
 router.patch("/:conversationId/read", (req, res) => {
-
     if (!req.body.reader){
         return res.status(404).send("Reader not found")
     }
+
     const reader = req.body.reader
     const convoId = req.params.conversationId
 
