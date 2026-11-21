@@ -80,6 +80,7 @@ function Login() {
               onChange={() => setMessage('')}
               required
             />
+            <Link className="ds-text-link" to="/forgot-password">Forgot password?</Link>
           </div>
 
           <div className="ds-account-actions">
