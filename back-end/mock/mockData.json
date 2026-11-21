@@ -121,6 +121,9 @@
   "resolvedPosts": [
     { "title": "Lost AirPods", "category": "lost", "location": "Bobst Library", "date": "2026-10-20" },
     { "title": "Found Student ID", "category": "found", "location": "Kimmel Center", "date": "2026-10-12" }
+  ],
+  "users": [
+    {"fullName": "tester", "email": "test@gmail.com", "password": "blank"}
   ]
 }
 

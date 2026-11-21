@@ -4,12 +4,30 @@ import './SignUp.css'
 
 const SignUp = props => {
     const navigate = useNavigate()
+    const [errorText, setErrorText] = useState("")
 
     const signUp = e => {
         e.preventDefault()
 
-        navigate('/')
-        props.setIsLoggedIn(true)
+        fetch('/api/account/create', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                fullName: e.target.elements.name.value,
+                email: e.target.elements.email.value,
+                password: e.target.elements.password.value,
+            }),
+        }).then(response => {
+            if(response.ok){
+                navigate('/')
+                props.setIsLoggedIn(true)
+            }
+            else{
+                throw new Error('User with email already exists')
+            }
+    }).catch(err => {console.log(err)
+        setErrorText(err.toString())
+    })
     }
 
     return (
@@ -32,6 +50,7 @@ const SignUp = props => {
                     <input id='password' type="password" autoComplete='on' required />
                 </div>
 
+                <p className="error" >{errorText}</p>
                 <Link to='/login'>Log In</Link>
                 
                 <button className='submit' type='submit'>Sign Up</button>

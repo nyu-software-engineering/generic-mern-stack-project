@@ -17,6 +17,10 @@
     gap: 20px;
 }
 
+.error {
+    color: red;
+}
+
 #email, 
 #password, 
 #name {
