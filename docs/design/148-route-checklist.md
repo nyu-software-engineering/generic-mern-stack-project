@@ -1,6 +1,6 @@
 # Mobile route checklist
 
-Checked November 20, 2026 against the temporary combined snapshot `c94a69e` plus the shared CSS fix from this branch. This is not a merged-master result.
+Rechecked November 20, 2026 against merged master `9e83b384f9003967cf7e255e748d5dae47c8eff0`, after #157, #163, and #164 merged. Every result below passed again. See the [final merged-app verification](148-merged-verification.md).
 
 Each normal-width pass checks horizontal document bounds, one main landmark, the expected loaded heading, and field label presence. Full-page zoom uses the actual Chromium tab zoom. Text enlargement changes only the root font. Journey interactions are recorded in [148-verification.md](148-verification.md).
 
@@ -44,4 +44,4 @@ Each normal-width pass checks horizontal document bounds, one main landmark, the
 
 All 28 explicit routes are represented. The remaining seven entries cover conversation, request, extension-role, and handoff-role views. Bare `/requests` correctly redirects to the board.
 
-These are Chromium results. They do not establish every state of each route, physical keyboard behavior, or screen-reader conformance. See the separate iPhone Safari observations and pending checks in the verification note.
+These are Chromium results. They do not establish every state of each route, physical keyboard behavior, or screen-reader conformance. See the separate completed iPhone Safari observations and coverage limits in the final verification note.

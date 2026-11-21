@@ -1,5 +1,7 @@
 # Cross-app mobile verification
 
+Final update: #157, #163, and #164 have merged. The [final merged-app verification](148-merged-verification.md) passes on master `9e83b38` and completes #148. The original pre-merge record below is retained for traceability.
+
 Checked November 20, 2026 for #148. The app used local Express routes and synthetic fixtures. No live project records changed. This report is a regression record, not an accessibility conformance certificate.
 
 ## Versions and results

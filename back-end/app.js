@@ -5,6 +5,7 @@ import { currentUser } from "./middleware/currentUser.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 import { bookingsRouter } from "./routes/bookings.js";
 import { conversationsRouter } from "./routes/conversations.js";
+import { handoffRouter } from "./routes/handoff.js";
 import { mockDataRouter } from "./routes/mockData.js";
 import { ownerListingsRouter } from "./routes/ownerListings.js";
 import { ownerDashboardRouter } from "./routes/ownerDashboard.js";
@@ -13,6 +14,7 @@ import { communityRulesRouter, reportsRouter } from "./routes/reports.js";
 import { createRenterDashboardRouter } from "./routes/renterDashboard.js";
 import { createMockDataStore } from "./services/mockData.js";
 import { accountRouter } from "./routes/accounts.js";
+import { reviewsRouter } from "./routes/reviews.js";
 
 const frontendDist = fileURLToPath(new URL("../front-end/dist/", import.meta.url));
 const listingImages = fileURLToPath(
@@ -26,6 +28,7 @@ export function createApp({ store = createMockDataStore() } = {}) {
   app.use(express.json());
   app.use(currentUser);
   app.use("/api", accountRouter);
+  app.use("/api", reviewsRouter);
 
   app.get("/api/health", (_request, response) => {
     response.json({ status: "ok" });
@@ -33,6 +36,7 @@ export function createApp({ store = createMockDataStore() } = {}) {
   app.use("/api", mockDataRouter);
   app.use("/api", createRenterDashboardRouter());
   app.use("/api/bookings", bookingsRouter);
+  app.use("/api/handoff", handoffRouter);
   app.use("/api/listings", ownerListingsRouter);
   app.use("/api/listings", publicListingsRouter);
   app.use("/api/owner", ownerDashboardRouter);

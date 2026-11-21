@@ -301,6 +301,100 @@ Accepting returns 409 if the offer's dates have passed or the listing is no
 longer published.
 
 
+## Handoff routes (#113)
+
+`routes/handoff.js` handles pickup and return under `/api/handoff`:
+
+| Method | Path | Response |
+| --- | --- | --- |
+| GET | `/api/handoff/:rentalId` | The rental, with `pickupCheck` and `returnCheck` once they exist |
+| POST | `/api/handoff/:rentalId/pickup` | Rental with status `active` and a `pickupCheck` |
+| POST | `/api/handoff/:rentalId/return` | Rental with status `completed` and a `returnCheck` |
+
+The rental has the same fields as `POST /api/bookings`. Pickup adds `pickupCheck`
+and return adds `returnCheck`, each shaped like this:
+
+```json
+{
+  "condition": "Minor wear",
+  "accessoriesComplete": true,
+  "notes": "Small scratch.",
+  "confirmedBy": "owner-1",
+  "confirmedAt": "2026-11-20T15:00:00.000Z"
+}
+```
+
+POST accepts `{ "condition": "As described", "accessoriesComplete": true, "notes": "..." }`.
+`condition` is required and must be `As described`, `Minor wear`, or `Damaged`.
+`accessoriesComplete` must be true or false and defaults to false. `notes` must be
+text, is trimmed, and defaults to an empty string. The server sets `confirmedBy`
+and `confirmedAt`. Invalid bodies return 400.
+
+Only the borrower can confirm pickup, and only for a `confirmed` rental. Only the
+owner can confirm the return, and only for an `active` rental. The wrong person
+gets 403 and any other status gets 409, so confirming twice returns 409. Unknown
+rental IDs return 404, and people outside the rental get 403 on every route,
+including GET. Checks run in this order: rental (404, 403), body (400), role (403),
+status (409). Changes stay in the shared store until restart.
+
+
+## Reviews and reputation routes (#96)
+
+`routes/reviews.js` uses the existing shared mock-data store.
+
+| Method | Endpoint | Purpose |
+| --- | --- | --- |
+| GET | `/api/users/:id/reputation` | Public user reputation |
+| GET | `/api/bookings/:id/review` | Current user's review for a booking |
+| POST | `/api/reviews` | Create a review for a completed booking |
+
+### Reputation
+
+Returns `{ user, reviews, averageRating }`.
+
+Reviews are sorted by descending ID. `averageRating` is the mean of
+`overallRating`, or `null` when no reviews exist. Unknown users return 404.
+
+Public profiles expose only ID, display name and optional completed rental count.
+Newly registered accounts use the public name "DormShare student" rather than
+exposing private registration or profile details.
+
+### Booking review
+
+Returns the current user's review, or JSON `null` if none exists.
+
+Only booking participants may access this endpoint. Unknown bookings return
+404 and other users receive 403.
+
+### Submit review
+
+POST accepts:
+
+```json
+{
+  "bookingId": 101,
+  "communicationRating": 5,
+  "itemCareRating": 4,
+  "overallRating": 5,
+  "comment": "Great exchange."
+}
+```
+
+The booking must be completed, and the current user must be its owner or
+borrower. Each participant may submit one review per booking.
+
+Ratings must be integers from 1 to 5. Comments are optional and limited to
+500 characters after trimming. The server assigns the review ID, reviewer,
+reviewed participant and creation date.
+
+Invalid input returns 400, unknown bookings 404, nonparticipants 403,
+and incomplete bookings or duplicate reviews 409.
+
+Reviews remain in the shared in-memory store until the backend restarts.
+The existing no-token demo identity fallback remains unchanged.
+
+Frontend integration belongs to Issue #98.
+
 ## Account and sign-in routes (#92)
 
 | Method | Endpoint | Purpose |
