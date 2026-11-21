@@ -43,8 +43,11 @@ export async function getArea(areaId) {
 }
 
 export async function getRentTrend(areaId) {
-  const trends = await load('rent-trends.json')
-  return trends.find(trend => trend.areaId === areaId)
+  try {
+    return await request(`/rent-trends/${areaId}`)
+  } catch {
+    return null
+  }
 }
 
 export async function getFollowedAreas() {
