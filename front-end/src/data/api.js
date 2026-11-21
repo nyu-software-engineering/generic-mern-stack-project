@@ -113,16 +113,11 @@ export function saveShareLinks(links) {
   window.localStorage.setItem(shareLinksStorageKey, JSON.stringify(links))
 }
 
-export async function addShareLink(newLink) {
-  const links = await getShareLinks()
-
-  if (links.some(link => link.id === newLink.id)) {
-    return links
-  }
-
-  const updatedLinks = [newLink, ...links]
-  saveShareLinks(updatedLinks)
-  return updatedLinks
+export function addShareLink(newLink) {
+  return request('/share-links', {
+    method: 'POST',
+    body: newLink,
+  })
 }
 
 export async function getNotifications() {
