@@ -1,0 +1,72 @@
+.ListingDetails {
+    margin: 32px auto;
+    padding: 0 16px;
+    max-width: 640px;
+    font-size: 16px;
+    text-align: left;
+}
+
+.ListingDetails-back {
+    margin-bottom: 16px;
+    padding: 8px 12px;
+    font-size: 14px;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.ListingDetails-mainImg {
+    display: block;
+    width: 100%;
+    height: 360px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.ListingDetails-thumbs {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.ListingDetails-thumb {
+    width: 72px;
+    height: 54px;
+    object-fit: cover;
+    border: 2px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.ListingDetails-thumb.selected {
+    border-color: #202020;
+}
+
+.ListingDetails h1 {
+    margin: 20px 0 4px;
+    font-size: 26px;
+}
+
+.ListingDetails-price {
+    margin: 0 0 20px;
+    font-size: 20px;
+}
+
+.ListingDetails-section {
+    padding: 16px 0;
+    border-top: 1px solid #000000;
+}
+
+.ListingDetails-section h2 {
+    margin: 0 0 6px;
+    font-size: 14px;
+    color: #2a2a2a;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.ListingDetails-section p {
+    margin: 0;
+    line-height: 1.5;
+}

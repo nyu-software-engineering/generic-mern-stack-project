@@ -1,0 +1,34 @@
+.PostSubletPhoto-list {
+    list-style: none;
+    margin: 12px auto 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 240px);
+    gap: 12px;
+    max-width: 500px;
+    justify-content: center;
+}
+
+.PostSubletPhoto {
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.PostSubletPhoto-img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+}
+
+.PostSubletPhoto-controls {
+    display: flex;
+    gap: 4px;
+    padding: 6px;
+}
+
+.PostSubletPhoto-controls button {
+    flex: 1;
+    cursor: pointer;
+}

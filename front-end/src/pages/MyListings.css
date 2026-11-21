@@ -1,0 +1,26 @@
+.MyListings {
+    font-size: 20px;
+    margin: 20px 10px;
+  }
+  
+  .MyListings-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 240px);
+    gap: 16px;
+  }
+  
+  .MyListings-grid .listing-card {
+    margin-bottom: 0;
+  }
+  
+  .MyListings-remove {
+    width: 100%;
+    padding: 10px;
+    margin-top: 6px;
+    border-radius: 5px;
+    font-size: 12px;
+    cursor: pointer;
+    background-color: white;
+    color: #c0392b;
+    border: 1px solid #c0392b;
+  }
