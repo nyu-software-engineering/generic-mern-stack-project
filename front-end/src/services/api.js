@@ -1,9 +1,15 @@
-
- // Shared helper for calling the Express back-end. Services call api() instead of
- // fetch() so JSON bodies and errors work the same way everywhere.
- // Vite proxies '/api/...' during development; Express serves it in production.
+// Shared helper for calling the Express back-end.
+// Vite proxies /api during development; Express serves it in production.
 
 const NOT_RUNNING = 'Could not reach the back-end. Is it running?'
+
+let activeSessionToken = null
+let sessionRevision = 0
+
+export function setSessionToken(token) {
+  activeSessionToken = token || null
+  sessionRevision += 1
+}
 
 export class ApiError extends Error {
   constructor(message, status, errors) {
@@ -14,9 +20,26 @@ export class ApiError extends Error {
   }
 }
 
-// api('/listings/mine') or api('/users/me', { token })
+// Explicit token overrides the active session.
+// Public authentication routes never inherit an existing session.
 export async function api(path, { method = 'GET', body, token } = {}) {
-  const options = { method, signal: AbortSignal.timeout(15000) }
+  const inheritsSession = token === undefined && !path.startsWith('/auth/')
+  const requestToken = token === undefined
+    ? (inheritsSession ? activeSessionToken : null)
+    : token
+  const requestRevision = sessionRevision
+
+  const ensureCurrentSession = () => {
+    if (inheritsSession && requestRevision !== sessionRevision) {
+      throw new ApiError('Session changed. Please try again.', 401)
+    }
+  }
+
+  const options = {
+    method,
+    signal: AbortSignal.timeout(15000),
+  }
+
   const headers = {}
 
   if (body !== undefined) {
@@ -24,10 +47,16 @@ export async function api(path, { method = 'GET', body, token } = {}) {
     options.body = JSON.stringify(body)
   }
 
-  if (token) headers.Authorization = `Bearer ${token}`
-  if (Object.keys(headers).length) options.headers = headers
+  if (requestToken) {
+    headers.Authorization = `Bearer ${requestToken}`
+  }
+
+  if (Object.keys(headers).length) {
+    options.headers = headers
+  }
 
   let response
+
   try {
     response = await fetch(`/api${path}`, options)
   } catch {
@@ -36,15 +65,36 @@ export async function api(path, { method = 'GET', body, token } = {}) {
 
   if (!response.ok) {
     const data = await response.json().catch(() => null)
-    const fallback = response.status === 502 ? NOT_RUNNING : `Request failed (${response.status}).`
-    throw new ApiError(data?.error ?? fallback, response.status, data?.errors)
+    ensureCurrentSession()
+
+    const fallback = response.status === 502
+      ? NOT_RUNNING
+      : `Request failed (${response.status}).`
+
+    throw new ApiError(
+      data?.error ?? fallback,
+      response.status,
+      data?.errors,
+    )
   }
 
-  if (response.status === 204) return null
+  if (response.status === 204) {
+    ensureCurrentSession()
+    return null
+  }
+
+  let data
 
   try {
-    return await response.json()
+    data = await response.json()
   } catch {
-    throw new ApiError('Could not read the response from the back-end.', response.status)
+    ensureCurrentSession()
+    throw new ApiError(
+      'Could not read the response from the back-end.',
+      response.status,
+    )
   }
+
+  ensureCurrentSession()
+  return data
 }
