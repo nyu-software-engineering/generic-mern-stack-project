@@ -10,6 +10,8 @@ const cors = require("cors");
 const { stripPasswordsMiddleware } = require("./utils/stripPasswords");
 const configRoutes = require("./routes/configRoutes");
 const savedPlacesRoutes = require("./routes/savedPlacesRoutes");
+const createFlowRoutes = require("./routes/createFlowRoutes");
+const cityListRoutes = require("./routes/cityListRoutes");
 
 const app = express();
 
@@ -33,6 +35,8 @@ app.get("/", (req, res) => {
 
 app.use("/api", configRoutes);
 app.use("/api", savedPlacesRoutes);
+app.use("/api", createFlowRoutes);
+app.use("/api", cityListRoutes);
 
 // --- 404 for anything else ---
 app.use((req, res) => {
