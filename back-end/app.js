@@ -3,6 +3,7 @@ const bcrypt = require("bcryptjs")
 
 const app = express()
 const services = require("./services.json")
+const categories = require("./categories.json")
 const users = require("./users.json")
 
 app.use(express.json())
@@ -95,6 +96,10 @@ app.post("/api/auth/login", async (req, res) => {
     }
 
     res.status(200).json({ user: { email: normalizedEmail } })
+})
+
+app.get("/api/categories", (req, res) => {
+    res.json(categories)
 })
 
 module.exports = app
