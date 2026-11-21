@@ -5,6 +5,7 @@ import authRouter from './routes/auth.js'
 import landlordRouter from './routes/landlord.js'
 import apartmentChecksRouter from './routes/apartmentChecks.js'
 import rentTrendsRouter from './routes/rentTrends.js'
+import outcomesRouter from './routes/outcomes.js'
 const app = express()
 
 // log requests, but not during tests
@@ -21,5 +22,6 @@ app.use('/auth', authRouter)
 app.use('/landlord', landlordRouter)
 app.use('/apartment-checks', apartmentChecksRouter)
 app.use('/rent-trends', rentTrendsRouter)
+app.use('/outcomes', outcomesRouter)
 
 export default app
