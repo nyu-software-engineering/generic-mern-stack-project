@@ -1,6 +1,7 @@
 import { use, expect } from 'chai';
 import { default as chaiHttp, request } from 'chai-http';
 import app from '../app.js';
+import initialSearchHotels from '../mockData/hotelList.js';
 
 use(chaiHttp);
 
@@ -50,13 +51,23 @@ describe('Profile API', () => {
             expect(response.status).to.equal(200);
 
             response.body.forEach((stay) => {
-                expect(stay).to.have.all.keys('id', 'userId', 'hotel', 'city', 'date');
+                expect(stay).to.have.all.keys('id', 'userId', 'hotelId', 'hotel', 'city', 'date');
                 expect(stay.id).to.be.a('string');
                 expect(stay.userId).to.be.a('string');
+                expect(stay.hotelId).to.be.a('string');
                 expect(stay.hotel).to.be.a('string');
                 expect(stay.city).to.be.a('string');
                 expect(stay.date).to.be.a('string');
                 expect(stay.userId).to.equal('1');
+            });
+        });
+
+        it('should match each stay to a hotel from the hotel list', async () => {
+            const response = await agent.get('/api/profile/stays');
+            response.body.forEach((stay) => {
+                const hotel = initialSearchHotels.find((h) => h.id === stay.hotelId);
+                expect(hotel).to.exist;
+                expect(stay.hotel).to.equal(hotel.name);
             });
         });
 
