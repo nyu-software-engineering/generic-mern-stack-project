@@ -30,14 +30,40 @@ function MyHobbies() {
       .catch(error => console.error(error))
   }, [])
 
-  const leaveHobby = (id) => {
-    setJoinedHobbies(joinedHobbies.filter(hobby => hobby.id !== id))
-    setHobbyToLeave(null)
+  const leaveHobby = async (id) => {
+    try {
+      const response = await fetch(`/api/my-hobbies/${id}/leave`, {
+        method: "POST"
+      })
+
+      if (!response.ok) {
+        throw new Error("Failed to leave hobby")
+      }
+
+      setJoinedHobbies(joinedHobbies.filter(hobby => hobby.id !== id))
+      setHobbyToLeave(null)
+    } catch (error) {
+      console.error(error)
+      alert("Could not leave hobby. Please try again.")
+    }
   }
 
-  const leaveEvent = (id) => {
-    setUpcomingEvents(upcomingEvents.filter(event => event.id !== id))
-    setEventToLeave(null)
+  const leaveEvent = async (id) => {
+    try {
+      const response = await fetch(`/api/my-events/${id}/leave`, {
+        method: "POST"
+      })
+
+      if (!response.ok) {
+        throw new Error("Failed to leave event")
+      }
+
+      setUpcomingEvents(upcomingEvents.filter(event => event.id !== id))
+      setEventToLeave(null)
+    } catch (error) {
+      console.error(error)
+      alert("Could not leave event. Please try again.")
+    }
   }
 
   const deleteEvent = (id) => {
