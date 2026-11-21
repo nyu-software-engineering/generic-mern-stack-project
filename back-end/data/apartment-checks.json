@@ -1,0 +1,5 @@
+[
+  { "id": "chk-3", "address": "31-18 30th Ave, Apt 4B", "areaId": "astoria", "askingRent": 2650, "bedrooms": 2, "bathrooms": 1, "rangeLow": 2400, "rangeHigh": 2500, "localAverage": 2450, "percentVsAverage": 8.2, "checkedOn": "2026-10-30" },
+  { "id": "chk-2", "address": "455 Central Park West, Apt 9C", "areaId": "upper-west-side", "askingRent": 3800, "bedrooms": 1, "bathrooms": 1, "rangeLow": 3700, "rangeHigh": 4100, "localAverage": 3950, "percentVsAverage": -3.8, "checkedOn": "2026-10-21" },
+  { "id": "chk-1", "address": "1120 Myrtle Ave, Apt 3R", "areaId": "bushwick", "askingRent": 3100, "bedrooms": 2, "bathrooms": 1, "rangeLow": 2700, "rangeHigh": 2900, "localAverage": 2800, "percentVsAverage": 10.7, "checkedOn": "2026-10-12" }
+]
