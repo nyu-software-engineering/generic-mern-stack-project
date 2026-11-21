@@ -712,8 +712,8 @@ describe("Password recovery API (#139)", () => {
           advance(24_999);
           expectResponse(await forgot(details.email), 503, { error: unavailable });
           expectResponse(await forgot("another@nyu.edu"), 503, { error: unavailable });
-          expectResponse(await verifyCode("00000000"), 503, { error: unavailable });
-          expectResponse(await reset("a".repeat(64)), 503, { error: unavailable });
+          expectResponse(await verifyCode("bad"), 400, { error: badCode });
+          expectResponse(await reset("bad"), 400, { error: badGrant });
           advance(1);
           console.warn = (...args) => { warnings.push(args); };
           expectResponse(await forgot(other.email), 202, { message: confirmation });
@@ -731,6 +731,78 @@ describe("Password recovery API (#139)", () => {
       }, { recovery: { deliver, policy: { deliveryCapacity: 1 } } });
     }
     expect(JSON.stringify(warnings) === JSON.stringify([["Password reset delivery failed."]])).to.equal(true);
+  });
+
+  it("accepts an existing code and resets the password while public email reservations are full", () => withServer(
+    async ({ signup, forgot, verifyCode, reset, login, messages, advance, idle }) => {
+      await signup();
+      expectResponse(await forgot(), 202, { message: confirmation });
+      await idle();
+      const code = codeOf(messages[0]);
+      advance(25_000);
+      expectResponse(await forgot("unknown@nyu.edu"), 202, { message: confirmation });
+      await idle();
+      advance(24_999);
+      expectResponse(await forgot("another@nyu.edu"), 503, { error: unavailable });
+
+      const resetToken = grantOf(await verifyCode(code));
+      const warnings = [];
+      const warn = console.warn;
+      try {
+        console.warn = (...args) => { warnings.push(args); };
+        expectResponse(await reset(resetToken), 200, { message: updated });
+        await idle();
+      } finally {
+        console.warn = warn;
+      }
+      expect(warnings).to.deep.equal([["Password change notice failed."]]);
+      expect(messages.map(({ kind }) => kind)).to.deep.equal(["password-reset"]);
+      expect((await login()).status).to.equal(401);
+      expect((await login(details, newPassword)).status).to.equal(200);
+      advance(1);
+      expectResponse(await forgot("another@nyu.edu"), 202, { message: confirmation });
+    }, { recovery: { policy: { deliveryCapacity: 1 } } },
+  ));
+
+  it("uses an existing reset permission without reserving a notice while private delivery jobs are full", async () => {
+    const other = { ...details, email: "another@nyu.edu" };
+    const pending = deliveryGate();
+    const messages = [];
+    const deliver = async (message) => {
+      messages.push(message);
+      if (message.to === other.email) await pending.deliver(message);
+    };
+
+    await withServer(async ({ signup, forgot, verifyCode, reset, login, advance, idle }) => {
+      await signup();
+      await signup(other);
+      expectResponse(await forgot(), 202, { message: confirmation });
+      await idle();
+      advance(25_000);
+      const resetToken = grantOf(await verifyCode(codeOf(messages[0])));
+      expectResponse(await forgot(other.email), 202, { message: confirmation });
+      await pending.received;
+
+      const warnings = [];
+      const warn = console.warn;
+      try {
+        console.warn = (...args) => { warnings.push(args); };
+        advance(25_000);
+        expectResponse(await reset(resetToken), 200, { message: updated });
+        expect((await login()).status).to.equal(401);
+        expect((await login(details, newPassword)).status).to.equal(200);
+        expectResponse(await forgot("unknown@nyu.edu"), 202, { message: confirmation });
+      } finally {
+        console.warn = warn;
+        pending.complete();
+        await idle();
+      }
+      expect(warnings).to.deep.equal([
+        ["Password change notice failed."],
+        ["Password reset delivery failed."],
+      ]);
+      expect(messages.map(({ kind }) => kind)).to.deep.equal(["password-reset", "password-reset"]);
+    }, { recovery: { deliver, policy: { deliveryCapacity: 1 } } });
   });
 
   it("keeps accounts working without valid recovery configuration", () => withServer(

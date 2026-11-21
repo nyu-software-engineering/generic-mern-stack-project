@@ -29,7 +29,7 @@ Use the shared account backend and merged #167 frontend at master `e068ba5`. Pre
 | Verification and reset IP limit | At most ten parsed attempts per rolling 15 minutes, including malformed payloads. Invalid JSON retains the existing parser behavior. |
 | Limiter capacity | At most 10,000 live entries per map. Clean expired entries before insertion. Return a safe 503 at capacity; never evict active entries to admit new ones. |
 | Delivery capacity | At most 20 outstanding jobs, with no unbounded queue or automatic retry loop. |
-| Public admission capacity | At most 20 delivery reservations. An admitted email request or successful password reset holds its reservation for 25 seconds regardless of lookup or delivery outcome. The window covers the normal store and provider timeouts. |
+| Public admission capacity | At most 20 delivery reservations. An admitted email request or scheduled password-change notice holds its reservation for 25 seconds regardless of lookup or delivery outcome. The window covers the normal store and provider timeouts. |
 | Provider timeout | Ten seconds. |
 | Passwords | Keep the existing 8-128 character rule. Both password fields must match. |
 | Existing sessions | Revoke all sessions for the reset account after success. Preserve other accounts and their sessions. |
@@ -51,9 +51,9 @@ Normalize and validate email using the existing account rule. Unknown, expired, 
 
 No API response returns the email code, email payload, registered profile, or delivery status. The restricted reset permission is intentionally returned only after successful code proof. It is not a bearer login token and cannot access `/users/me` or any other protected route.
 
-Known and unknown email requests follow the same validation, limiter, configuration, capacity, and scheduling path. Account lookup and provider work happen privately after the generic response. Recipient-specific delivery failure cannot reveal whether an account exists. Global configuration or capacity failures return a safe 503. Rate limits return 429 with Retry-After.
+Known and unknown email requests follow the same validation, limiter, configuration, capacity, and scheduling path. Account lookup and provider work happen privately after the generic response. Recipient-specific delivery failure cannot reveal whether an account exists. Missing configuration, a full limiter map, or a full reservation pool for a new email request returns a safe 503. Rate limits return 429 with Retry-After.
 
-The public capacity check uses fixed reservations. Private work that is still running after its reservation ends continues to count toward the outstanding job limit. If the private pool stays full, newly admitted work is skipped and the public response stays the same. An unavailable password-change notice does not undo a successful reset.
+The public capacity check uses fixed reservations. Private work that is still running after its reservation ends continues to count toward the outstanding job limit. If the private pool stays full, newly admitted email work is skipped and the public response stays the same. Code proof and password reset can proceed while delivery is full. A password-change notice starts only when both limits have room. Otherwise, the service skips the notice and logs the same fixed failure category as for a failed notice.
 
 ## Ordering and atomic use
 
@@ -90,6 +90,7 @@ Each step supports idle, pending, validation, safe API error, retry, and success
 - Invalid password input does not consume a valid permission. Concurrent code verification and concurrent reset have one winner each.
 - Out-of-order delivery, newest failure, code proof while mail is pending, and password reset while mail is pending preserve revision rules.
 - Limits cover unknown addresses, exact boundaries, capacity, cleanup, and spoofed forwarded headers.
+- Valid codes and reset permissions work at delivery capacity. Notices respect both caps.
 - Other users, sessions, passwords, and unverified state remain unchanged.
 - Capture adapter and mocked Brevo tests cover success, failure, timeout, and secrecy without real keys or inboxes.
 - Full browser journey covers the three steps, mismatch, rejected codes, retry, old/new login, pending states, keyboard, short phone viewports, and representative widths from 320px through desktop.

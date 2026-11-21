@@ -118,9 +118,13 @@ export function createRecovery({ auth, store, deliver, now = Date.now, policy = 
   });
   const verificationAndResetIPs = rollingAttempts({ limit: 10, windowMs: resetWindowMs, capacity: metadataCapacity });
 
-  function ensureAvailable(time) {
+  function ensureConfigured() {
+    if (typeof deliver !== "function") throw unavailable();
+  }
+
+  function hasAdmissionCapacity(time) {
     while (admissions.length && admissions[0] <= time) admissions.shift();
-    if (typeof deliver !== "function" || admissions.length >= deliveryCapacity) throw unavailable();
+    return admissions.length < deliveryCapacity;
   }
 
   function reserveAdmission(time) {
@@ -147,7 +151,8 @@ export function createRecovery({ auth, store, deliver, now = Date.now, policy = 
 
     const time = clock();
     enforceLimit(requestIPs(ip, time));
-    ensureAvailable(time);
+    ensureConfigured();
+    if (!hasAdmissionCapacity(time)) throw unavailable();
 
     const { entry } = requestAddresses(digestOf(email), time);
     if (!entry) return { message: confirmation };
@@ -187,7 +192,7 @@ export function createRecovery({ auth, store, deliver, now = Date.now, policy = 
   async function verifyCode({ email: input, code, ip }) {
     const time = clock();
     enforceLimit(verificationAndResetIPs(ip, time));
-    ensureAvailable(time);
+    ensureConfigured();
 
     const email = emailOf(input);
     if (!validEmail(email)) throw invalidCode();
@@ -205,7 +210,6 @@ export function createRecovery({ auth, store, deliver, now = Date.now, policy = 
 
     const { users } = await store.load();
     const verifiedAt = clock();
-    ensureAvailable(verifiedAt);
     if (!accountFor(users, entry, active, verifiedAt)) throw invalidCode();
 
     const resetToken = randomBytes(32).toString("hex");
@@ -223,7 +227,7 @@ export function createRecovery({ auth, store, deliver, now = Date.now, policy = 
   async function resetPassword({ resetToken, password, ip }) {
     const time = clock();
     enforceLimit(verificationAndResetIPs(ip, time));
-    ensureAvailable(time);
+    ensureConfigured();
 
     if (typeof resetToken !== "string" || !/^[a-f0-9]{64}$/.test(resetToken)) throw invalidGrant();
     const entry = grants.get(digestOf(resetToken));
@@ -235,7 +239,6 @@ export function createRecovery({ auth, store, deliver, now = Date.now, policy = 
 
     const { users } = await store.load();
     const loadedAt = clock();
-    ensureAvailable(loadedAt);
     const user = accountFor(users, entry, active, loadedAt);
     if (!user) throw invalidGrant();
 
@@ -254,8 +257,13 @@ export function createRecovery({ auth, store, deliver, now = Date.now, policy = 
     for (const [session, ownerId] of auth.sessions) {
       if (ownerId === userId) auth.sessions.delete(session);
     }
-    reserveAdmission(resetAt);
-    schedule(() => deliver({ kind: "password-changed", to }), "Password change notice failed.");
+    const noticeFailure = "Password change notice failed.";
+    if (jobs.size < deliveryCapacity && hasAdmissionCapacity(resetAt)) {
+      reserveAdmission(resetAt);
+      schedule(() => deliver({ kind: "password-changed", to }), noticeFailure);
+    } else {
+      console.warn(noticeFailure);
+    }
     return { message: updated };
   }
 
