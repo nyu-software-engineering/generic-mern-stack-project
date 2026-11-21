@@ -59,8 +59,8 @@ accountRouter.post("/auth/signup", async (request, response) => {
 // Verify the six-digit demo code.
 accountRouter.post("/auth/verify", async (request, response) => {
   const email = emailOf(request.body?.email);
-  const account = request.app.locals.auth.credentials.get(email);
   const { users } = await request.app.locals.mockDataStore.load();
+  const account = request.app.locals.auth.credentials.get(email);
   const user = users.find((item) => emailOf(item.email) === email);
 
   if (!account || !user || typeof request.body?.code !== "string" ||
@@ -78,7 +78,8 @@ accountRouter.post("/auth/verify", async (request, response) => {
 accountRouter.post("/auth/login", async (request, response) => {
   const email = emailOf(request.body?.email);
   const password = request.body?.password;
-  const account = request.app.locals.auth.credentials.get(email);
+  const { credentials } = request.app.locals.auth;
+  const account = credentials.get(email);
 
   if (!account || typeof password !== "string" || password.length > 128 ||
       !timingSafeEqual(scryptSync(password, account.salt, 32), account.hash)) {
@@ -88,7 +89,7 @@ accountRouter.post("/auth/login", async (request, response) => {
   const { users } = await request.app.locals.mockDataStore.load();
   const user = users.find((item) => item.email === email);
 
-  if (!user) return fail(response, 401, "Invalid email or password.");
+  if (!user || credentials.get(email) !== account) return fail(response, 401, "Invalid email or password.");
   if (!user.emailVerified) return fail(response, 403, "Verify your email first.");
 
   response.json(session(request, user));

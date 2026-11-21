@@ -126,6 +126,32 @@ function deliveryGate() {
   };
 }
 
+function pausableStore() {
+  let pause;
+  return {
+    store: (data) => ({
+      async load() {
+        if (pause) {
+          const next = pause;
+          pause = undefined;
+          await next();
+        }
+        return data;
+      },
+    }),
+    pauseNextLoad() {
+      let release;
+      const started = new Promise((start) => {
+        pause = () => new Promise((resume) => {
+          release = resume;
+          start();
+        });
+      });
+      return { started, release: () => release() };
+    },
+  };
+}
+
 describe("Password recovery API (#139)", () => {
   it("changes the existing password after privately captured code proof", () => withServer(
     async ({ messages, login, signup, forgot, verifyCode, reset, idle }) => {
@@ -209,6 +235,54 @@ describe("Password recovery API (#139)", () => {
       expect(verified.body.user.id).to.equal(user.id);
     },
   ));
+
+  it("rejects an old-password login paused across a successful reset", async () => {
+    const { store, pauseNextLoad } = pausableStore();
+    await withServer(async ({ app, messages, signup, login, forgot, verifyCode, reset, idle }) => {
+      await signup();
+      expectResponse(await forgot(), 202, { message: confirmation });
+      await idle();
+      const resetToken = grantOf(await verifyCode(codeOf(messages[0])));
+
+      const pause = pauseNextLoad();
+      const signingIn = login();
+      await pause.started;
+      try {
+        expectResponse(await reset(resetToken), 200, { message: updated });
+      } finally {
+        pause.release();
+      }
+      expectResponse(await signingIn, 401, { error: "Invalid email or password." });
+      expect(app.locals.auth.sessions.size).to.equal(0);
+      expect((await login(details, newPassword)).status).to.equal(200);
+      await idle();
+    }, { store });
+  });
+
+  it("consumes the signup verification code when verification overlaps reset", async () => {
+    const { store, pauseNextLoad } = pausableStore();
+    await withServer(async ({ app, api, messages, signup, login, forgot, verifyCode, reset, idle }) => {
+      await signup(details, false);
+      const { code } = app.locals.auth.credentials.get(details.email);
+      expectResponse(await forgot(), 202, { message: confirmation });
+      await idle();
+      const resetToken = grantOf(await verifyCode(codeOf(messages[0])));
+
+      const pause = pauseNextLoad();
+      const verify = () => api("/auth/verify", { email: details.email, code });
+      const verifying = verify();
+      await pause.started;
+      try {
+        expectResponse(await reset(resetToken), 200, { message: updated });
+      } finally {
+        pause.release();
+      }
+      expect((await verifying).status).to.equal(200);
+      expectResponse(await verify(), 400, { error: "Invalid verification code." });
+      expect((await login(details, newPassword)).status).to.equal(200);
+      await idle();
+    }, { store });
+  });
 
   it("checks password length without consuming the grant and claims the grant once", () => withServer(
     async ({ api, messages, signup, forgot, verifyCode, reset, idle }) => {
