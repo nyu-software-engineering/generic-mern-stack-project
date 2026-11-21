@@ -3,7 +3,7 @@ import morgan from 'morgan'
 import cors from 'cors'
 import authRouter from './routes/auth.js'
 import landlordRouter from './routes/landlord.js'
-
+import apartmentChecksRouter from './routes/apartmentChecks.js'
 const app = express()
 
 // log requests, but not during tests
@@ -18,5 +18,6 @@ app.get('/', (req, res) => {
 
 app.use('/auth', authRouter)
 app.use('/landlord', landlordRouter)
+app.use('/apartment-checks', apartmentChecksRouter)
 
 export default app
