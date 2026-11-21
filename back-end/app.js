@@ -36,7 +36,13 @@ export const storage = multer.diskStorage({
 const upload = multer({ storage: storage })
 
 // new post testing
-let posts = JSON.parse(fs.readFileSync(mockDataPath, 'utf8')).posts
+export let posts = JSON.parse(fs.readFileSync(mockDataPath, 'utf8')).posts
+
+// reset array to be used before each test to avoid post tests from affecting
+// later tests in checking length of array
+export const resetPosts = () => {
+  posts = JSON.parse(fs.readFileSync(mockDataPath, 'utf8')).posts
+}
 
 app.get('/api/posts', (req, res) => {
   res.json(posts)
