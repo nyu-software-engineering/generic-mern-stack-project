@@ -1,6 +1,6 @@
 # Password recovery design for #139
 
-Status: proposed implementation settings, awaiting approval. November 21, 2026.
+Status: approved by the repository owner on November 21, 2026. Implementation is authorized. Live reset-link testing still requires a trusted HTTPS app origin and separate email approval.
 
 ## Baseline and decisions
 
