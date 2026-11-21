@@ -35,37 +35,29 @@ function getVerdict(percent) {
 
 export default function PriceResult() {
   const location = useLocation()
-  const typed = location.state
-  const [market, setMarket] = useState(null)
+  // the check just made on the Check apartment form, if the renter came from there
+  const newCheck = location.state
+  const [market, setMarket] = useState(newCheck)
   const [area, setArea] = useState(null)
 
-  // load the market numbers once when the screen opens
+  // load the result once when the screen opens
   useEffect(() => {
-    getLatestApartmentCheck().then(check => {
-      setMarket(check)
-      getArea(check.areaId).then(setArea)
-    })
-  }, [])
+    if (newCheck) {
+      getArea(newCheck.areaId).then(setArea)
+    } else {
+      // opened directly, so show the renter's last check
+      getLatestApartmentCheck().then(check => {
+        setMarket(check)
+        getArea(check.areaId).then(setArea)
+      })
+    }
+  }, [newCheck])
 
   if (!market) {
     return <p className="text-sm text-muted">Checking the price…</p>
   }
 
-  // use what the renter typed, if they opened this screen directly show their last check instead
-  let apartment = {
-    address: market.address,
-    askingRent: market.askingRent,
-    bedrooms: market.bedrooms,
-    bathrooms: market.bathrooms,
-  }
-  if (typed) {
-    apartment = {
-      address: typed.address,
-      askingRent: typed.askingRent,
-      bedrooms: typed.bedrooms ?? market.bedrooms,
-      bathrooms: typed.bathrooms ?? market.bathrooms,
-    }
-  }
+  const apartment = market
 
   const percent =
     ((apartment.askingRent - market.localAverage) / market.localAverage) * 100
@@ -75,7 +67,11 @@ export default function PriceResult() {
   if (area) {
     subtitle = `${subtitle} · ${area.name}`
   }
-
+  // a new check isn't saved yet, so the comparables page uses the last saved check
+  let comparablesLink = `/check/comparables?check=${market.id}`
+  if (newCheck) {
+    comparablesLink = '/check/comparables'
+  }
   return (
     <div>
       <ScreenTitle title={apartment.address} subtitle={subtitle} />
@@ -104,9 +100,7 @@ export default function PriceResult() {
       </Card>
 
       <div className="mt-6 space-y-3">
-        <Button to={`/check/comparables?check=${market.id}`}>
-          See comparable apartments
-        </Button>
+        <Button to={comparablesLink}>See comparable apartments</Button>
         <Button to={`/areas/${market.areaId}`} variant="secondary">
           See rent trends
         </Button>

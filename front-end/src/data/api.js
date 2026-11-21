@@ -76,6 +76,11 @@ export async function getLatestApartmentCheck() {
   return checks[0]
 }
 
+// sends a new apartment to the back-end and gets back its fair-price result
+export function createApartmentCheck(apartment) {
+  return request('/apartment-checks', { method: 'POST', body: apartment })
+}
+
 export async function getComparables(checkId) {
   const comparables = await load('comparables.json')
   return comparables.filter(comparable => comparable.checkId === checkId)
