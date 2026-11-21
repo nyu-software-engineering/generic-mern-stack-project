@@ -10,6 +10,13 @@ import {
 } from '../src/context/authSession.js'
 import { setSessionToken } from '../src/services/api.js'
 import { createListing, getMyListings } from '../src/services/listings.js'
+import { CURRENT_USER_ID } from '../src/services/mockDataService.js'
+import { canCancel } from '../src/services/bookings.js'
+import {
+  cancelBookingRequest,
+  fetchBooking,
+  requestBooking,
+} from '../src/services/bookingsApi.js'
 
 test('real signup, verification and login scope listings to the account', async (t) => {
   const data = mockData()
@@ -90,6 +97,7 @@ test('real signup, verification and login scope listings to the account', async 
 
   assert.equal(signedIn.id, signup.user.id)
   assert.equal(currentUser.id, signup.user.id)
+  assert.equal(CURRENT_USER_ID, signedIn.id)
 
   // The backend already has an owner-1 listing.
   // Our new account must not receive that owner's inventory.
@@ -98,6 +106,7 @@ test('real signup, verification and login scope listings to the account', async 
   )
 
   assert.ok(existingOwnerListing)
+  assert.notEqual(existingOwnerListing.ownerId, CURRENT_USER_ID)
 
   const initialListings = await getMyListings()
 
@@ -140,7 +149,33 @@ test('real signup, verification and login scope listings to the account', async 
     existingOwnerListing
   )
 
+  // The new account must be able to borrow owner-1's listing.
+  const booking = await requestBooking({
+    listingId: existingOwnerListing.id,
+    startDate: '2030-03-01',
+    endDate: '2030-03-03',
+  })
+
+  assert.equal(booking.borrowerId, signedIn.id)
+  assert.equal(booking.ownerId, 'owner-1')
+
+  // These role checks are used by the frontend booking screens.
+  assert.equal(booking.ownerId === CURRENT_USER_ID, false)
+  assert.equal(canCancel(booking, CURRENT_USER_ID), true)
+  assert.deepEqual(await fetchBooking(booking.id), booking)
+
+  // Withdrawal must work with the authenticated borrower's identity.
+  const cancelled = await cancelBookingRequest(booking.id)
+
+  assert.equal(cancelled.status, 'cancelled')
+  assert.equal(
+    data.rentals.find((rental) => rental.id === booking.id).status,
+    'cancelled'
+  )
+  assert.equal(canCancel(cancelled, CURRENT_USER_ID), false)
+
   restoredSession.signOut()
 
   assert.equal(currentUser, null)
+  assert.equal(CURRENT_USER_ID, 'owner-1')
 })

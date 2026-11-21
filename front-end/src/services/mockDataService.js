@@ -1,7 +1,11 @@
 import { validateMockData } from '../../../shared/validateMockData.mjs'
 import { api } from './api.js'
 
-export const CURRENT_USER_ID = 'owner-1'
+export let CURRENT_USER_ID = 'owner-1'
+
+export function setCurrentUserId(id) {
+  CURRENT_USER_ID = id || 'owner-1'
+}
 
 let users = []
 let listings = []
