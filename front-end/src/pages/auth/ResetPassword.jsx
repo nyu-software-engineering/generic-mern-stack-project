@@ -10,7 +10,7 @@ const passwordRule = 'Use 8 to 128 characters.'
 
 function ResetPassword() {
   const { state } = useLocation()
-  const { signOut } = useContext(AuthContext)
+  const { pendingSignup, signOut } = useContext(AuthContext)
   const [email, setEmail] = useState(state?.email ?? '')
   const [grant, setGrant] = useState(null)
   const [outcome, setOutcome] = useState('')
@@ -133,7 +133,7 @@ function ResetPassword() {
       passwordInput.value = ''
       confirmInput.value = ''
       setGrant(null)
-      signOut()
+      signOut({ preservePendingVerificationFor: email })
       setOutcome('success')
     } catch (error) {
       if (!mounted.current) return
@@ -158,6 +158,8 @@ function ResetPassword() {
   )
 
   if (outcome) {
+    const canContinueVerification = pendingSignup?.demoCode && pendingSignup.email === email
+
     return (
       <main className="ds-page ds-account ds-account--form">
         <section className="ds-account-surface">
@@ -166,8 +168,14 @@ function ResetPassword() {
           </h1>
           {outcome === 'success' ? (
             <>
-              <p className="ds-account-help">Password updated. Sign in with your new password.</p>
-              <Link className="ds-button ds-button--primary" to="/login">Sign in</Link>
+              <p className="ds-account-help">
+                {canContinueVerification
+                  ? 'Password updated. Finish verifying your email before signing in.'
+                  : 'Password updated. Sign in with your new password.'}
+              </p>
+              <Link className="ds-button ds-button--primary" to={canContinueVerification ? '/verify-email' : '/login'}>
+                {canContinueVerification ? 'Continue email verification' : 'Sign in'}
+              </Link>
             </>
           ) : (
             <>

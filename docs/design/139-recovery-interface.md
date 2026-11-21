@@ -28,7 +28,9 @@ Each handler requires `application/json`. Unsupported media types receive a safe
 
 `resetPassword(resetToken, password)` calls `/auth/reset-password`.
 
-All use the existing api helper. `ForgotPassword()` and `ResetPassword()` are public components without props. ResetPassword shows email and code first, then separate New password and Confirm new password fields. It holds the permission only in component memory. Success calls the existing signOut method and offers normal Login. Existing AuthProvider signatures are unchanged.
+All use the existing api helper. `ForgotPassword()` and `ResetPassword()` are public components without props. ResetPassword shows email and code first, then separate New password and Confirm new password fields. It holds the permission only in component memory.
+
+After a successful reset, ResetPassword calls `signOut({ preservePendingVerificationFor: email })` with the normalized email used for code proof. This clears the active session and keeps the existing pending signup only when the email matches and a demo verification code is present. The success screen offers Continue email verification in that case and Sign in otherwise. Verification and sign-in each require a separate user action. Calling `signOut()` without options clears both the session and pending signup.
 
 ## Invariants
 

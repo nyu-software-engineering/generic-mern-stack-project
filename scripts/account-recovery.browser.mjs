@@ -19,7 +19,7 @@ const newPassword = 'Synthetic-new-password'
 const minute = 60_000
 const genericConfirmation = 'If an account exists for this email, password reset instructions will be sent.'
 
-async function openFixture(t) {
+async function openFixture(t, { seedVerifiedAccount = true } = {}) {
   const messages = []
   const data = mockData()
   let now = Date.now()
@@ -42,13 +42,17 @@ async function openFixture(t) {
     })
   }
 
-  const signup = await api('/auth/signup', {
-    fullName: 'Recovery Browser Fixture', email, password: oldPassword,
-  })
-  assert.equal(signup.status, 201)
-  const { demoCode, user } = await signup.json()
-  const verification = await api('/auth/verify', { email, code: demoCode })
-  assert.equal(verification.status, 200)
+  let user
+  if (seedVerifiedAccount) {
+    const signup = await api('/auth/signup', {
+      fullName: 'Recovery Browser Fixture', email, password: oldPassword,
+    })
+    assert.equal(signup.status, 201)
+    const { demoCode, user: registeredUser } = await signup.json()
+    user = registeredUser
+    const verification = await api('/auth/verify', { email, code: demoCode })
+    assert.equal(verification.status, 200)
+  }
 
   const browser = await playwright[engine].launch()
   t.after(() => browser.close())
@@ -208,6 +212,60 @@ test('recovers an existing account through captured mail and clears the active s
   await signIn(page, newPassword)
   const { user: recoveredUser } = await (await newSignIn).json()
   assert.equal(recoveredUser.id, user.id)
+  await page.waitForURL('**/setup-profile')
+})
+
+test('a reset preserves the email verification path for an unverified signup', async (t) => {
+  const { page, origin, api, latestCode } = await openFixture(t, { seedVerifiedAccount: false })
+  await page.goto(`${origin}/signup`)
+  await page.getByLabel('Full name').fill('Recovery Browser Fixture')
+  await page.getByLabel('NYU email').fill(email)
+  await page.getByLabel('Password', { exact: true }).fill(oldPassword)
+  const signup = page.waitForResponse('**/api/auth/signup')
+  await page.getByRole('button', { name: 'Create account' }).click()
+  const created = await signup
+  assert.equal(created.status(), 201)
+  const { user, demoCode } = await created.json()
+  assert.equal(user.emailVerified, false)
+
+  const verificationHeading = page.getByRole('heading', { name: 'Verify your demo email' })
+  await verificationHeading.waitFor()
+  await page.getByRole('link', { name: 'Back', exact: true }).click()
+  await page.getByRole('link', { name: 'Sign in instead' }).click()
+  await page.getByRole('link', { name: 'Forgot password?' }).click()
+  await requestCode(page)
+  await page.getByLabel('NYU email').fill(email.toUpperCase())
+  assert.equal((await verifyCode(page, await latestCode())).status(), 200)
+
+  await page.getByLabel('New password', { exact: true }).fill(newPassword)
+  await page.getByLabel('Confirm new password', { exact: true }).fill(newPassword)
+  await page.getByRole('button', { name: 'Update password' }).click()
+  await page.getByRole('heading', { name: 'Password reset complete' }).waitFor()
+  assert.equal(await page.getByRole('button', { name: 'Sign out' }).count(), 0)
+  const unverifiedLogin = await api('/auth/login', { email, password: newPassword })
+  assert.equal(unverifiedLogin.status, 403)
+  assert.deepEqual(await unverifiedLogin.json(), { error: 'Verify your email first.' })
+
+  await page.getByRole('link', { name: 'Continue email verification' }).click()
+  await verificationHeading.waitFor()
+  await page.reload()
+  await verificationHeading.waitFor()
+  await page.getByLabel('Verification code').fill(demoCode)
+  const verification = page.waitForResponse('**/api/auth/verify')
+  await page.getByRole('button', { name: 'Confirm demo code' }).click()
+  assert.equal((await verification).status(), 200)
+  await page.waitForURL('**/login')
+  assert.equal(await page.getByRole('button', { name: 'Sign out' }).count(), 0)
+
+  const rejectedLogin = page.waitForResponse('**/api/auth/login')
+  await signIn(page, oldPassword)
+  assert.equal((await rejectedLogin).status(), 401)
+  await page.getByRole('alert').filter({ hasText: 'Invalid email or password.' }).waitFor()
+  const newSignIn = page.waitForResponse('**/api/auth/login')
+  await signIn(page, newPassword)
+  const { user: recoveredUser } = await (await newSignIn).json()
+  assert.equal(recoveredUser.id, user.id)
+  assert.equal(recoveredUser.emailVerified, true)
   await page.waitForURL('**/setup-profile')
 })
 

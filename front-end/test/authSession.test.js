@@ -223,6 +223,52 @@ test('login forwards identity to listing services and sign-out clears it', async
   )
 })
 
+test('reset sign-out preserves only matching pending email verification', async (t) => {
+  prepare(t)
+
+  const pending = { email: 'pending@nyu.edu', demoCode: '123456' }
+  let listingAuthorization
+  t.mock.method(globalThis, 'fetch', async (url, options) => {
+    if (url === '/api/auth/login') {
+      return Response.json({ token: 'a'.repeat(64), user: account })
+    }
+
+    if (url === '/api/users/me') {
+      return Response.json({ user: account })
+    }
+
+    if (url === '/api/auth/signup') {
+      return Response.json({ user: { email: pending.email }, demoCode: pending.demoCode }, { status: 201 })
+    }
+
+    assert.equal(url, '/api/listings/mine')
+    listingAuthorization = options.headers?.Authorization
+    return Response.json([])
+  })
+
+  const session = harness()
+  await session.actions.signIn(account.email, 'password123')
+  await session.actions.signUp('Pending Student', pending.email, 'password123')
+  assert.equal(session.user.id, account.id)
+
+  session.actions.signOut({ preservePendingVerificationFor: pending.email })
+
+  assert.equal(session.user, null)
+  await api('/listings/mine')
+  assert.equal(listingAuthorization, undefined)
+  assert.deepEqual(session.pending, pending)
+  assert.deepEqual(readPendingSignup(), pending)
+
+  session.actions.signOut()
+  assert.equal(session.pending, null)
+  assert.equal(readPendingSignup(), null)
+
+  await session.actions.signUp('Pending Student', pending.email, 'password123')
+  session.actions.signOut({ preservePendingVerificationFor: account.email })
+  assert.equal(session.pending, null)
+  assert.equal(readPendingSignup(), null)
+})
+
 test('a late profile response cannot restore a signed-out user', async (t) => {
   prepare(t)
 

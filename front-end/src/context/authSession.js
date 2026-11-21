@@ -160,14 +160,17 @@ export function createAuthSession({
     return user
   }
 
-  function signOut() {
+  function signOut({ preservePendingVerificationFor } = {}) {
     generation += 1
     token = null
 
     setSessionToken(null)
     setCurrentUserId(null)
     onCurrentUser(null)
-    updatePendingSignup(null)
+
+    if (!pendingSignup?.demoCode || pendingSignup.email !== preservePendingVerificationFor) {
+      updatePendingSignup(null)
+    }
   }
 
   return {
