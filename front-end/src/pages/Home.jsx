@@ -1,13 +1,23 @@
-import { useState } from 'react'
-import categories from '../categories.json'
+import { useState, useEffect } from 'react'
+import axios from 'axios'
+// import categories from '../categories.json'
 // import services from '../services.json'
 import ServiceCard from './ServiceCard'
 import Header from './Header'
 import './Home.css'
 
 export default function Home({services}) {
+  const [categories, setCategories] = useState([])
   const [showCategories, setShowCategories] = useState(false)
   const [selectedCategories, setSelectedCategories] = useState('All services')
+
+  useEffect(() => {
+    async function getCategories(){
+      const response = await axios("/api/categories")
+      setCategories(response.data)
+    }
+    getCategories()
+  }, [])
   return (
     <div className='home'>
       <Header />
