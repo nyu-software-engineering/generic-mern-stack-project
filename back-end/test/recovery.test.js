@@ -690,6 +690,8 @@ describe("Password recovery API (#139)", () => {
 
   it("gives known and unknown requests the same public capacity boundary", async () => {
     const other = { ...details, email: "another@nyu.edu" };
+    const warnings = [];
+    const warn = console.warn;
     for (const scenario of ["unknown", "finished", "pending"]) {
       const pending = deliveryGate();
       const deliveredTo = [];
@@ -713,8 +715,10 @@ describe("Password recovery API (#139)", () => {
           expectResponse(await verifyCode("00000000"), 503, { error: unavailable });
           expectResponse(await reset("a".repeat(64)), 503, { error: unavailable });
           advance(1);
+          console.warn = (...args) => { warnings.push(args); };
           expectResponse(await forgot(other.email), 202, { message: confirmation });
         } finally {
+          console.warn = warn;
           pending.complete();
         }
         await idle();
@@ -726,6 +730,7 @@ describe("Password recovery API (#139)", () => {
         expect(deliveredTo).to.deep.equal(expected[scenario]);
       }, { recovery: { deliver, policy: { deliveryCapacity: 1 } } });
     }
+    expect(JSON.stringify(warnings) === JSON.stringify([["Password reset delivery failed."]])).to.equal(true);
   });
 
   it("keeps accounts working without valid recovery configuration", () => withServer(
