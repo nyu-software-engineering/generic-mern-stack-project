@@ -1,27 +1,31 @@
 # Account recovery interface
 
-Approved design: [November 21 recovery design](../superpowers/specs/2026-11-21-account-recovery-design.md).
+Approved [code-based design](../superpowers/specs/2026-11-21-account-recovery-design.md), November 21, 2026. This supersedes the earlier reset-link interface.
 
 ## Backend
 
-`createApp({ store, recovery })` accepts an optional recovery dependency. `recovery` has `deliver(message)`, `now()`, `publicOrigin`, and `policy`. Existing calls stay valid. The app initializes `app.locals.recovery` with `createRecovery({ auth: app.locals.auth, store: app.locals.mockDataStore, ...recovery })`.
+`createApp({ store, recovery })` accepts optional recovery dependencies: `deliver(message)`, `now()`, and `policy`. Existing callers remain valid. It creates `app.locals.recovery` using the shared auth and data store.
 
-`createRecovery(options)` returns `requestReset({ email, ip })`, `resetPassword({ token, password, ip })`, and `idle()`. Both action methods return the approved safe message object. Expected failures throw an error with numeric `status`, safe `message`, and optional `retryAfter`. `idle()` is private and waits for outstanding delivery jobs. It is not an HTTP endpoint.
+`createRecovery({ auth, store, deliver, now, policy })` returns `requestReset({ email, ip })`, `verifyCode({ email, code, ip })`, `resetPassword({ resetToken, password, ip })`, and private `idle()`.
 
-`createRecoveryRouter(recovery)` returns an Express router with exactly the two POST recovery handlers. Mount at `/api/auth` after JSON parsing and before `currentUser`. Catch expected service errors and send `{ error: message }`; forward unexpected errors to the existing safe error handler.
+`requestReset` returns the generic confirmation and schedules private delivery. `verifyCode` returns `{ resetToken, expiresIn: 300 }` only after correct code proof. `resetPassword` returns the success message after changing the existing credential and revoking that account's sessions. Expected errors have numeric `status`, safe `message`, and optional `retryAfter`.
 
-`deliver(message)` returns a promise. The message has `kind` equal to `password-reset` or `password-changed`, registered recipient `to`, and reset-only `resetUrl` and `expiresAt`. A delivery failure rejects with a safe error. The recovery service catches it and never sends provider details to the client. Production delivery requires HTTPS. Capture tests may inject an explicit loopback origin.
+`createRecoveryRouter(recovery)` returns exactly three POST handlers: `/forgot-password`, `/verify-reset-code`, and `/reset-password`. Mount at `/api/auth` after JSON parsing and before currentUser. Safe service errors become `{ error: message }`. Unexpected errors use the existing error handler.
 
-`createBrevoDelivery({ apiKey, from, fromName, fetchImpl })` returns that delivery function. It sends through Brevo HTTPS with the configured registered sender and ten-second timeout. The injected fetch implementation allows tests without a key or network. `recoveryConfiguration(env)` returns delivery configuration only for valid real settings. `loadEnvironment({ directory, env })` loads synthetic-testable private files without replacing existing environment values.
+`deliver(message)` resolves when provider submission succeeds. A reset message is `{ kind: 'password-reset', to, code, expiresAt }`, where `code` is an eight-character decimal string and expiry is epoch milliseconds. A notice is `{ kind: 'password-changed', to }`.
+
+`createBrevoDelivery({ apiKey, from, fromName, fetchImpl })` returns the delivery function. Use HTTPS and a ten-second timeout. `recoveryConfiguration(env)` returns delivery configuration when the three Brevo settings are present and valid. It requires no public app origin. `loadEnvironment({ directory, env })` loads .env.local then .env while preserving existing environment values.
 
 ## Frontend
 
-`requestPasswordReset(email)` returns the generic confirmation from `POST /api/auth/forgot-password`.
+`requestPasswordReset(email)` calls `/auth/forgot-password`.
 
-`resetPassword(token, password)` returns the success message from `POST /api/auth/reset-password`.
+`verifyPasswordResetCode(email, code)` calls `/auth/verify-reset-code` and returns the restricted reset permission.
 
-Both call the existing `api()` helper. The merged helper excludes bearer inheritance for `/auth/` routes. `ForgotPassword()` and `ResetPassword()` are public route components without props. Login adds a recovery link. Successful reset calls the existing context `signOut()` and links to Login. Existing AuthProvider signatures are unchanged.
+`resetPassword(resetToken, password)` calls `/auth/reset-password`.
+
+All use the existing api helper. `ForgotPassword()` and `ResetPassword()` are public components without props. ResetPassword shows email and code first, then separate New password and Confirm new password fields. It holds the permission only in component memory. Success calls the existing signOut method and offers normal Login. Existing AuthProvider signatures are unchanged.
 
 ## Invariants
 
-Recovery updates the same salted credential entry and shared user. Tokens never enter public responses or shared data. Only the newest admitted delivery candidate can activate, and successful reset fences every earlier candidate. Concurrent valid reset has one winner. Rate and capacity limits are bounded and apply without revealing account existence. Missing recovery configuration does not disable existing account operations.
+No code is returned over HTTP. The reset permission is returned only after code verification and never authenticates a normal account request. Recovery does not create users or a second identity store. Code expiry is 15 minutes; five wrong attempts exhaust a code; permission expiry is five minutes. Code proof and reset each work once. Revisions fence older deliveries. Missing configuration does not stop existing account operations. No additional real email is authorized by implementation.

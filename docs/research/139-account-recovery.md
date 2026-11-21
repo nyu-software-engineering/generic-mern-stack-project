@@ -131,3 +131,8 @@ This is provider setup evidence. Recovery routes, reset credentials, private cap
 ## Implementation contract update, November 21, 2026
 
 Account integration #167 is merged at master `e068ba5`. Omer reviewed this proposal and supports the direction. His remaining requests cover concrete policy settings, out-of-order delivery, private environment loading, and a trusted HTTPS app origin. The [implementation design](../superpowers/specs/2026-11-21-account-recovery-design.md) gives concrete proposed values and behavior for approval. It supersedes the frontend-gap description above for new implementation work. No recovery code has been written.
+
+
+## Code-based direction approved November 21, 2026
+
+The owner selected emailed eight-digit codes instead of reset links, then a separate new-password and confirmation step. The [current design](../superpowers/specs/2026-11-21-account-recovery-design.md) supersedes the link proposal above. Code proof creates a five-minute reset-only permission; it does not sign in the account. Code mail needs no public app URL, so local testing no longer depends on deployment. Public use of the app still requires HTTPS. The earlier link implementation is being adapted; it is not the final contract.
