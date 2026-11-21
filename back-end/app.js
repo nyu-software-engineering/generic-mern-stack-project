@@ -38,19 +38,20 @@ app.post("/api/services", (req, res) => {
 })
 
 //Registration routes
+//Account store for now
 const accounts = new Map()
 
 app.post("/api/auth/register", async (req, res) => {
     const { email, password } = req.body ?? {}
 
-    if (!email || !password || typeof email !== "string" || typeof password !== "string") {
+    if (!email || !password || typeof email != "string" || typeof password != "string") {
         return res.status(400).json({ error: "Enter an email and password." })
     }
 
     const normalizedEmail = email.trim().toLowerCase()
 
     if (!/\.edu$/.test(normalizedEmail)) {
-        return res.status(400).json({ error: "Enter a university .edu email address." })
+        return res.status(400).json({ error: "Enter a .edu email address." })
     }
 
     if (password.length < 8 || bcrypt.truncates(password)) {
@@ -62,11 +63,39 @@ app.post("/api/auth/register", async (req, res) => {
     const passwordHash = await bcrypt.hash(password, 10)
 
     if (accounts.has(normalizedEmail)) {
-        return res.status(409).json({ error: "An account already exists for this email." })
+        return res.status(400).json({ error: "An account already exists for this email." })
     }
 
-    accounts.set(normalizedEmail, { passwordHash })
+    accounts.set(normalizedEmail, passwordHash)
     res.status(201).json({ user: { email: normalizedEmail } })
+})
+
+//Login routes
+app.post("/api/auth/login", async (req, res) => {
+    const { email, password } = req.body ?? {}
+
+    if (!email || !password || typeof email !== "string" || typeof password !== "string") {
+        res.status(400)
+        res.json({ error: "Enter an email and password." })
+        return
+    }
+
+    const normalizedEmail = email.trim().toLowerCase()
+    const passwordHash = accounts.get(normalizedEmail)
+
+    if (!accounts.has(normalizedEmail)){
+        res.status(401)
+        res.json({ error: "Invalid email or password"})
+        return
+    }
+    if (bcrypt.truncates(password) ||
+        !(await bcrypt.compare(password, passwordHash))) {
+        res.status(401)
+        res.json({ error: "Invalid email or password" })
+        return
+    }
+
+    res.status(200).json({ user: { email: normalizedEmail } })
 })
 
 app.get("/api/categories", (req, res) => {
