@@ -8,6 +8,7 @@ function Profile() {
     const [user, setUser] = useState(null);
     const [stays, setStays] = useState([]);
     const [selectedYear, setSelectedYear] = useState("All");
+    const [staysError, setStaysError] = useState("");
 
     useEffect(() => {
         fetch("/api/auth/me", { credentials: "include" })
@@ -15,9 +16,13 @@ function Profile() {
         .then((data) => setUser(data.user))
         .catch(() => navigate("/signin")); 
          fetch("/api/profile/stays", { credentials: "include" })
-        .then((res) => (res.ok ? res.json() : []))
-        .then((data) => setStays(data));
-    }, []);
+        .then((res) => {
+            if (!res.ok) throw new Error(`Server error ${res.status}`);
+            return res.json();
+        })
+        .then((data) => setStays(data))
+        .catch((error) => setStaysError(error.message));
+    }, [navigate]);
 
     async function handleSignOut() {
         await fetch("/api/auth/logout", { method: "POST", credentials: "include" });
@@ -56,10 +61,11 @@ function Profile() {
                 
 
                 <p>
-                    {selectedYear === "All" ? "Total hotel stays" : `Stays in ${selectedYear}`}: {visibleStays.length}
+                {selectedYear === "All" ? "Total hotel stays" : `Stays in ${selectedYear}`}: {visibleStays.length}
                 </p>
-
-                {visibleStays.length > 0 ? (
+                {staysError ? (
+                    <p className="error">Couldn't load stays: {staysError}</p>
+                ) : visibleStays.length > 0 ? (
                     <ul>
                         {visibleStays.map((stay) => (
                             <li key={stay.id}>

@@ -7,7 +7,7 @@ use(chaiHttp);
 
 describe('Profile API', () => {
     describe('GET /api/profile/stays without authentication', () => {
-        it('gets the list of hotel stays for the logged-in user', async () => {
+        it('returns 401 when the user is not logged in', async () => {
             const response = await request.execute(app).get("/api/profile/stays");
             expect(response.status).to.equal(401);
             expect(response.body.error).to.equal("Not authenticated");
