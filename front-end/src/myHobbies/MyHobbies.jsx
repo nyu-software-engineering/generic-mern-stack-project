@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import "./MyHobbies.css"
 
 function MyHobbies() {
@@ -10,37 +10,25 @@ function MyHobbies() {
   const [eventToEdit, setEventToEdit] = useState(null)
   const [eventToDelete, setEventToDelete] = useState(null)
 
-  const [joinedHobbies, setJoinedHobbies] = useState([
-    { id: 1, name: "Painting Club", members: 12 },
-    { id: 2, name: "Photography Group", members: 8 }
-  ])
+  const [joinedHobbies, setJoinedHobbies] = useState([])
+  const [upcomingEvents, setUpcomingEvents] = useState([])
+  const [hosting, setHosting] = useState([])
 
-  const [upcomingEvents, setUpcomingEvents] = useState([
-    {
-      id: 1,
-      name: "Weekend Art Workshop",
-      date: "November 14",
-      time: "2:00 PM",
-      location: "Manhattan"
-    },
-    {
-      id: 2,
-      name: "Photography Walk",
-      date: "November 20",
-      time: "11:00 AM",
-      location: "Brooklyn"
-    }
-  ])
-
-  const [hosting, setHosting] = useState([
-    {
-      id: 1,
-      name: "Beginner Yoga Meetup",
-      date: "November 22",
-      time: "10:00 AM",
-      location: "Manhattan"
-    }
-  ])
+  useEffect(() => {
+    fetch("/api/my-hobbies")
+      .then(response => {
+        if (!response.ok) {
+          throw new Error("Failed to load My Hobbies")
+        }
+        return response.json()
+      })
+      .then(data => {
+        setJoinedHobbies(data.joinedHobbies)
+        setUpcomingEvents(data.upcomingEvents)
+        setHosting(data.hosting)
+      })
+      .catch(error => console.error(error))
+  }, [])
 
   const leaveHobby = (id) => {
     setJoinedHobbies(joinedHobbies.filter(hobby => hobby.id !== id))
@@ -140,8 +128,8 @@ function MyHobbies() {
           ) : (
             upcomingEvents.map(event => (
               <div className="activity-card" key={event.id}>
-                <h3>{event.name}</h3>
-                <p>{event.date} at {event.time}</p>
+                <h3>{event.title}</h3>
+                <p>{event.time}</p>
                 <p>{event.location}</p>
 
                 <button
@@ -165,8 +153,8 @@ function MyHobbies() {
           ) : (
             hosting.map(event => (
               <div className="activity-card" key={event.id}>
-                <h3>{event.name}</h3>
-                <p>{event.date} at {event.time}</p>
+                <h3>{event.title}</h3>
+                <p>{event.time}</p>
                 <p>{event.location}</p>
                 <p>You are the host</p>
 
@@ -234,7 +222,7 @@ function MyHobbies() {
       {eventToLeave && (
         <div className="activities-overlay">
           <div className="activities-popup" role="dialog" aria-modal="true" aria-labelledby="leave-event-title">
-            <h2 id="leave-event-title">Leave {eventToLeave.name}?</h2>
+            <h2 id="leave-event-title">Leave {eventToLeave.title}?</h2>
             <p>Are you sure you want to leave this event?</p>
 
             <div className="activities-popup-buttons">
@@ -330,7 +318,7 @@ function MyHobbies() {
       {eventToDelete && (
         <div className="activities-overlay">
           <div className="activities-popup" role="dialog" aria-modal="true" aria-labelledby="delete-event-title">
-            <h2 id="delete-event-title">Delete {eventToDelete.name}?</h2>
+            <h2 id="delete-event-title">Delete {eventToDelete.title}?</h2>
             <p>Are you sure you want to delete this event?</p>
 
             <div className="activities-popup-buttons">
