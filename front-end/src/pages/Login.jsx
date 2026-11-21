@@ -13,12 +13,12 @@ export default function Login({ setUser }) {
     setError("")
     
     try{
-      const response = await axios.post("api/auth/login", {email, password})
+      const response = await axios.post("/api/auth/login", {email, password})
       //user is an email
       setUser(response.data.user)
     }
     catch(error){
-      setError(error.response.data?.error || "Could not login")
+      setError(error.response?.data?.error || "Could not login")
     }
   }
 
@@ -46,7 +46,7 @@ export default function Login({ setUser }) {
           />
         </label>
 
-        {error && <p>{error}</p>}
+        {error && <p className="error">{error}</p>}
         <button type="submit">Log In</button>
       </form>
 
