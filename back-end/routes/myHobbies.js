@@ -30,4 +30,31 @@ router.get("/my-hobbies", (req, res) => {
   })
 })
 
+
+ // Leave a hobby
+router.post("/my-hobbies/:id/leave", (req, res) => {
+  const id = Number(req.params.id)
+
+  if (!joinedHobbyIds.includes(id)) {
+    return res.status(404).json({ error: "Joined hobby not found" })
+  }
+
+  joinedHobbyIds.splice(joinedHobbyIds.indexOf(id), 1)
+
+  res.json({ hobbyId: id, left: true })
+})
+
+// Leave an event
+router.post("/my-events/:id/leave", (req, res) => {
+  const id = Number(req.params.id)
+
+  if (!joinedEventIds.includes(id)) {
+    return res.status(404).json({ error: "Joined event not found" })
+  }
+
+  joinedEventIds.splice(joinedEventIds.indexOf(id), 1)
+
+  res.json({ eventId: id, left: true })
+})
+
 export default router
