@@ -1,7 +1,7 @@
-// Shared helper for calling the Express back-end. Services call api() instead of
-// fetch() so JSON bodies and errors work the same way everywhere.
-// Paths are relative ('/api/...'): Vite proxies them to the back-end in
-// development, and Express serves the built app from the same origin.
+
+ // Shared helper for calling the Express back-end. Services call api() instead of
+ // fetch() so JSON bodies and errors work the same way everywhere.
+ // Vite proxies '/api/...' during development; Express serves it in production.
 
 const NOT_RUNNING = 'Could not reach the back-end. Is it running?'
 
@@ -10,18 +10,22 @@ export class ApiError extends Error {
     super(message)
     this.name = 'ApiError'
     this.status = status
-    // Per-field form errors, e.g. { title: 'Add a title.' }, when the route sends them.
     this.errors = errors
   }
 }
 
-// api('/listings/mine') or api('/listings', { method: 'POST', body: details })
-export async function api(path, { method = 'GET', body } = {}) {
+// api('/listings/mine') or api('/users/me', { token })
+export async function api(path, { method = 'GET', body, token } = {}) {
   const options = { method, signal: AbortSignal.timeout(15000) }
+  const headers = {}
+
   if (body !== undefined) {
-    options.headers = { 'Content-Type': 'application/json' }
+    headers['Content-Type'] = 'application/json'
     options.body = JSON.stringify(body)
   }
+
+  if (token) headers.Authorization = `Bearer ${token}`
+  if (Object.keys(headers).length) options.headers = headers
 
   let response
   try {
@@ -31,14 +35,13 @@ export async function api(path, { method = 'GET', body } = {}) {
   }
 
   if (!response.ok) {
-    // Back-end routes send { error }. Vite's proxy sends an empty 502 when Express is down.
     const data = await response.json().catch(() => null)
     const fallback = response.status === 502 ? NOT_RUNNING : `Request failed (${response.status}).`
     throw new ApiError(data?.error ?? fallback, response.status, data?.errors)
   }
+
   if (response.status === 204) return null
 
-  // A successful response must be readable JSON; callers should not get null by mistake.
   try {
     return await response.json()
   } catch {

@@ -82,3 +82,23 @@ test('says the back-end is not running when the proxy or network fails', async (
   t.mock.method(globalThis, 'fetch', async () => { throw new TypeError('fetch failed') })
   await assert.rejects(api('/mock-data'), { message: /Is it running\?/, status: 0 })
 })
+
+test('sends a bearer token with authenticated requests', async (t) => {
+  const fetchMock = t.mock.method(globalThis, 'fetch', async () =>
+    Response.json({ user: { id: 'account-1' } }))
+
+  await api('/users/me', {
+    method: 'PUT',
+    body: { displayName: 'Test Student', campusArea: 'Washington Square' },
+    token: 'session-token',
+  })
+
+  const [url, options] = fetchMock.mock.calls[0].arguments
+  assert.equal(url, '/api/users/me')
+  assert.equal(options.headers.Authorization, 'Bearer session-token')
+  assert.equal(options.headers['Content-Type'], 'application/json')
+  assert.equal(options.body, JSON.stringify({
+    displayName: 'Test Student',
+    campusArea: 'Washington Square',
+  }))
+})
