@@ -9,10 +9,12 @@ import { handoffRouter } from "./routes/handoff.js";
 import { mockDataRouter } from "./routes/mockData.js";
 import { ownerListingsRouter } from "./routes/ownerListings.js";
 import { ownerDashboardRouter } from "./routes/ownerDashboard.js";
+import { createRecoveryRouter } from "./routes/passwordRecovery.js";
 import { publicListingsRouter } from "./routes/publicListings.js";
 import { communityRulesRouter, reportsRouter } from "./routes/reports.js";
 import { createRenterDashboardRouter } from "./routes/renterDashboard.js";
 import { createMockDataStore } from "./services/mockData.js";
+import { createRecovery } from "./services/recovery.js";
 import { accountRouter } from "./routes/accounts.js";
 
 const frontendDist = fileURLToPath(new URL("../front-end/dist/", import.meta.url));
@@ -20,11 +22,13 @@ const listingImages = fileURLToPath(
   new URL("../front-end/public/listing-images/", import.meta.url),
 );
 
-export function createApp({ store = createMockDataStore() } = {}) {
+export function createApp({ store = createMockDataStore(), recovery } = {}) {
   const app = express();
   app.locals.mockDataStore = store;
   app.locals.auth = { credentials: new Map(), sessions: new Map() };
+  app.locals.recovery = createRecovery({ ...recovery, store, auth: app.locals.auth });
   app.use(express.json());
+  app.use("/api/auth", createRecoveryRouter(app.locals.recovery));
   app.use(currentUser);
   app.use("/api", accountRouter);
 
