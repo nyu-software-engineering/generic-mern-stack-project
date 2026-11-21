@@ -15,6 +15,11 @@ router.get('/', (req, res) => {
 
 // Simulate connecting to Chase.
 router.post('/', (req, res) => {
+  if (req.body?.connected === false) {
+    bankConnection = { connected: false }
+    return res.json({ connected: false })
+  }
+
   bankConnection = { connected: true, bankName: 'Chase' }
   res.json({ connected: true })
 })
