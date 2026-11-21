@@ -10,7 +10,7 @@ Approved [code-based design](../superpowers/specs/2026-11-21-account-recovery-de
 
 `requestReset` returns the generic confirmation and schedules private delivery. `verifyCode` returns `{ resetToken, expiresIn: 300 }` only after correct code proof. `resetPassword` returns the success message after changing the existing credential and revoking that account's sessions. Expected errors have numeric `status`, safe `message`, and optional `retryAfter`.
 
-Admitted email requests hold a fixed 25-second reservation. Lookup and provider completion do not release it early. Private jobs have their own cap, so a stalled job can cause a later delivery to be skipped without changing the public result. Code proof and password reset can proceed when delivery is full. A password-change notice reserves a slot only when both limits allow it. A skipped or failed notice logs a fixed failure category after the password change.
+Admitted email requests hold a fixed 25-second reservation. Lookup and provider completion do not release it early. Private jobs have their own cap, so a stalled job can cause a later delivery to be skipped without changing the public result. Code proof and password reset can proceed when delivery is full. A password-change notice holds a reservation when a public slot is available, even if the private job cap prevents delivery. A skipped or failed notice logs a fixed failure category after the password change.
 
 `createRecoveryRouter(recovery)` returns exactly three POST handlers: `/forgot-password`, `/verify-reset-code`, and `/reset-password`. Mount at `/api/auth` after JSON parsing and before currentUser. Safe service errors become `{ error: message }`. Unexpected errors use the existing error handler.
 

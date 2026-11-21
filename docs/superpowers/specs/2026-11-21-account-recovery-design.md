@@ -29,7 +29,7 @@ Use the shared account backend and merged #167 frontend at master `e068ba5`. Pre
 | Verification and reset IP limit | At most ten parsed attempts per rolling 15 minutes, including malformed payloads. Invalid JSON retains the existing parser behavior. |
 | Limiter capacity | At most 10,000 live entries per map. Clean expired entries before insertion. Return a safe 503 at capacity; never evict active entries to admit new ones. |
 | Delivery capacity | At most 20 outstanding jobs, with no unbounded queue or automatic retry loop. |
-| Public admission capacity | At most 20 delivery reservations. An admitted email request or scheduled password-change notice holds its reservation for 25 seconds regardless of lookup or delivery outcome. The window covers the normal store and provider timeouts. |
+| Public admission capacity | At most 20 delivery reservations. An admitted email request or password-change notice holds its reservation for 25 seconds regardless of lookup or delivery outcome. The window covers the normal store and provider timeouts. |
 | Provider timeout | Ten seconds. |
 | Passwords | Keep the existing 8-128 character rule. Both password fields must match. |
 | Existing sessions | Revoke all sessions for the reset account after success. Preserve other accounts and their sessions. |
@@ -55,7 +55,7 @@ No API response returns the email code, email payload, registered profile, or de
 
 Known and unknown email requests follow the same validation, limiter, configuration, capacity, and scheduling path. Account lookup and provider work happen privately after the generic response. Recipient-specific delivery failure cannot reveal whether an account exists. Missing configuration, a full limiter map, or a full reservation pool for a new email request returns a safe 503. Rate limits return 429 with Retry-After.
 
-The public capacity check uses fixed reservations. Private work that is still running after its reservation ends continues to count toward the outstanding job limit. If the private pool stays full, newly admitted email work is skipped and the public response stays the same. Code proof and password reset can proceed while delivery is full. A password-change notice starts only when both limits have room. Otherwise, the service skips the notice and logs the same fixed failure category as for a failed notice.
+The public capacity check uses fixed reservations. Private work that is still running after its reservation ends continues to count toward the outstanding job limit. If the private pool stays full, newly admitted email work is skipped and the public response stays the same. Code proof and password reset can proceed while delivery is full. A password-change notice reserves a slot whenever the public pool has room. It keeps that slot for 25 seconds even if the private job cap prevents delivery. The service logs the same fixed failure category for skipped and failed notices.
 
 ## Ordering and atomic use
 

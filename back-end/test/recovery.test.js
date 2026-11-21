@@ -791,45 +791,54 @@ describe("Password recovery API (#139)", () => {
     }, { recovery: { policy: { deliveryCapacity: 1 } } },
   ));
 
-  it("uses an existing reset permission without reserving a notice while private delivery jobs are full", async () => {
+  it("keeps reset and the notice reservation independent of private job capacity", async () => {
     const other = { ...details, email: "another@nyu.edu" };
-    const pending = deliveryGate();
-    const messages = [];
-    const deliver = async (message) => {
-      messages.push(message);
-      if (message.to === other.email) await pending.deliver(message);
-    };
+    for (const jobsFull of [false, true]) {
+      const pending = deliveryGate();
+      const messages = [];
+      const deliver = async (message) => {
+        messages.push(message);
+        if (jobsFull && message.to === other.email) await pending.deliver(message);
+      };
 
-    await withServer(async ({ signup, forgot, verifyCode, reset, login, advance, idle }) => {
-      await signup();
-      await signup(other);
-      expectResponse(await forgot(), 202, { message: confirmation });
-      await idle();
-      advance(25_000);
-      const resetToken = grantOf(await verifyCode(codeOf(messages[0])));
-      expectResponse(await forgot(other.email), 202, { message: confirmation });
-      await pending.received;
-
-      const warnings = [];
-      const warn = console.warn;
-      try {
-        console.warn = (...args) => { warnings.push(args); };
-        advance(25_000);
-        expectResponse(await reset(resetToken), 200, { message: updated });
-        expect((await login()).status).to.equal(401);
-        expect((await login(details, newPassword)).status).to.equal(200);
-        expectResponse(await forgot("unknown@nyu.edu"), 202, { message: confirmation });
-      } finally {
-        console.warn = warn;
-        pending.complete();
+      await withServer(async ({ signup, forgot, verifyCode, reset, login, advance, idle }) => {
+        await signup();
+        await signup(other);
+        expectResponse(await forgot(), 202, { message: confirmation });
         await idle();
-      }
-      expect(warnings).to.deep.equal([
-        ["Password change notice failed."],
-        ["Password reset delivery failed."],
-      ]);
-      expect(messages.map(({ kind }) => kind)).to.deep.equal(["password-reset", "password-reset"]);
-    }, { recovery: { deliver, policy: { deliveryCapacity: 1 } } });
+        advance(25_000);
+        const resetToken = grantOf(await verifyCode(codeOf(messages[0])));
+        expectResponse(await forgot(other.email), 202, { message: confirmation });
+        if (jobsFull) await pending.received;
+        else await idle();
+
+        const warnings = [];
+        const warn = console.warn;
+        try {
+          console.warn = (...args) => { warnings.push(args); };
+          advance(25_000);
+          expectResponse(await reset(resetToken), 200, { message: updated });
+          expect((await login()).status).to.equal(401);
+          expect((await login(details, newPassword)).status).to.equal(200);
+          advance(24_999);
+          expectResponse(await forgot("unknown@nyu.edu"), 503, { error: unavailable });
+          advance(1);
+          expectResponse(await forgot("unknown@nyu.edu"), 202, { message: confirmation });
+        } finally {
+          console.warn = warn;
+          pending.complete();
+          await idle();
+        }
+        const expectedWarnings = jobsFull ? [
+          ["Password change notice failed."],
+          ["Password reset delivery failed."],
+        ] : [];
+        const expectedMessages = ["password-reset", "password-reset"];
+        if (!jobsFull) expectedMessages.push("password-changed");
+        expect(warnings).to.deep.equal(expectedWarnings);
+        expect(messages.map(({ kind }) => kind)).to.deep.equal(expectedMessages);
+      }, { recovery: { deliver, policy: { deliveryCapacity: 1 } } });
+    }
   });
 
   it("keeps accounts working without valid recovery configuration", () => withServer(

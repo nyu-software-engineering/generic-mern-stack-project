@@ -258,7 +258,7 @@ export function createRecovery({ auth, store, deliver, now = Date.now, policy = 
       if (ownerId === userId) auth.sessions.delete(session);
     }
     const noticeFailure = "Password change notice failed.";
-    if (jobs.size < deliveryCapacity && hasAdmissionCapacity(resetAt)) {
+    if (hasAdmissionCapacity(resetAt)) {
       reserveAdmission(resetAt);
       schedule(() => deliver({ kind: "password-changed", to }), noticeFailure);
     } else {
