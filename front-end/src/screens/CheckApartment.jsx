@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router'
 import Button from '../components/ui/Button.jsx'
 import ScreenTitle from '../components/ui/ScreenTitle.jsx'
 import TextField from '../components/ui/TextField.jsx'
+import { createApartmentCheck } from '../data/api.js'
 
 const bedroomOptions = [
   { value: 0, label: 'Studio' },
@@ -55,6 +56,7 @@ export default function CheckApartment() {
   const [askingRent, setAskingRent] = useState('')
   const [bedrooms, setBedrooms] = useState(1)
   const [bathrooms, setBathrooms] = useState(1)
+  const [error, setError] = useState('')
 
   // the button only works once both fields are filled in
   let canSubmit = false
@@ -62,17 +64,23 @@ export default function CheckApartment() {
     canSubmit = true
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     // stop the browser from reloading the page
     event.preventDefault()
+    setError('')
     const apartment = {
       address: address.trim(),
       askingRent: Number(askingRent),
       bedrooms: bedrooms,
       bathrooms: bathrooms,
     }
-    // send what the renter typed to the result screen
-    navigate('/check/result', { state: apartment })
+    // send the apartment to the back-end, then show its result
+    try {
+      const check = await createApartmentCheck(apartment)
+      navigate('/check/result', { state: check })
+    } catch (requestError) {
+      setError(requestError.message)
+    }
   }
 
   return (
@@ -112,6 +120,11 @@ export default function CheckApartment() {
           value={bathrooms}
           onChange={setBathrooms}
         />
+        {error && (
+          <p className="text-sm text-negative" role="alert">
+            {error}
+          </p>
+        )}
         <div className="pt-2">
           <Button type="submit" disabled={!canSubmit}>
             Check price
