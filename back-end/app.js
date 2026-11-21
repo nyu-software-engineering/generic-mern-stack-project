@@ -4,6 +4,7 @@ import cors from 'cors'
 import authRouter from './routes/auth.js'
 import landlordRouter from './routes/landlord.js'
 import apartmentChecksRouter from './routes/apartmentChecks.js'
+import rentTrendsRouter from './routes/rentTrends.js'
 const app = express()
 
 // log requests, but not during tests
@@ -19,5 +20,6 @@ app.get('/', (req, res) => {
 app.use('/auth', authRouter)
 app.use('/landlord', landlordRouter)
 app.use('/apartment-checks', apartmentChecksRouter)
+app.use('/rent-trends', rentTrendsRouter)
 
 export default app
