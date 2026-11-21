@@ -1,3 +1,4 @@
+
 import { useContext, useState } from 'react'
 import { flushSync } from 'react-dom'
 import { Link, useNavigate } from 'react-router-dom'
@@ -5,16 +6,19 @@ import { AuthContext } from '../../context/AuthContext'
 import '../../styles/accounts.css'
 
 function Signup() {
-  const { signIn } = useContext(AuthContext)
+  const { signUp } = useContext(AuthContext)
   const [invalidField, setInvalidField] = useState('')
+  const [message, setMessage] = useState('')
+  const [submitting, setSubmitting] = useState(false)
   const navigate = useNavigate()
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault()
 
     const fields = event.currentTarget.elements
     const fullName = fields.fullName.value.trim()
     const email = fields.email.value.trim().toLowerCase()
+    const password = fields.password.value
 
     if (!fullName) {
       flushSync(() => setInvalidField('fullName'))
@@ -22,14 +26,23 @@ function Signup() {
       return
     }
 
-    if (!email.endsWith('@nyu.edu')) {
+    if (!/^[^\s@]+@nyu\.edu$/.test(email)) {
       flushSync(() => setInvalidField('email'))
       fields.email.focus()
       return
     }
 
-    signIn(email, fullName)
-    navigate('/verify-email')
+    setSubmitting(true)
+    setMessage('')
+
+    try {
+      await signUp(fullName, email, password)
+      navigate('/verify-email')
+    } catch (error) {
+      setMessage(error.message || 'Could not create your account.')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -38,10 +51,18 @@ function Signup() {
         <Link className="ds-text-link" to="/">Back</Link>
         <h1 className="ds-heading">Create an account</h1>
         <p className="ds-account-help">
-          You are creating a demo account. Account changes reset when you reload.
+          Create your NYU account. This Sprint 2 demo uses a verification code
+          shown on screen rather than sending an email.
         </p>
 
-        <form className="ds-account-form" onSubmit={handleSubmit} onChange={() => setInvalidField('')}>
+        <form
+          className="ds-account-form"
+          onSubmit={handleSubmit}
+          onChange={() => {
+            setInvalidField('')
+            setMessage('')
+          }}
+        >
           <div className="ds-account-field">
             <label htmlFor="fullName">Full name</label>
             <input
@@ -50,12 +71,15 @@ function Signup() {
               name="fullName"
               type="text"
               autoComplete="name"
+              maxLength={80}
               aria-invalid={invalidField === 'fullName' || undefined}
               aria-describedby={invalidField === 'fullName' ? 'signup-name-error' : undefined}
               required
             />
             {invalidField === 'fullName' && (
-              <p id="signup-name-error" className="ds-account-error" role="alert">Please enter your full name.</p>
+              <p id="signup-name-error" className="ds-account-error" role="alert">
+                Please enter your full name.
+              </p>
             )}
           </div>
 
@@ -73,7 +97,9 @@ function Signup() {
               required
             />
             {invalidField === 'email' && (
-              <p id="signup-email-error" className="ds-account-error" role="alert">Please use an NYU email address.</p>
+              <p id="signup-email-error" className="ds-account-error" role="alert">
+                Please use an NYU email address.
+              </p>
             )}
           </div>
 
@@ -87,13 +113,26 @@ function Signup() {
               autoComplete="new-password"
               aria-describedby="signup-password-help"
               minLength={8}
+              maxLength={128}
               required
             />
-            <p id="signup-password-help" className="ds-account-help">Use at least eight characters.</p>
+            <p id="signup-password-help" className="ds-account-help">
+              Use at least eight characters.
+            </p>
           </div>
 
+          {message && (
+            <p className="ds-account-error" role="alert">{message}</p>
+          )}
+
           <div className="ds-account-actions">
-            <button className="ds-button ds-button--primary" type="submit">Create account</button>
+            <button
+              className="ds-button ds-button--primary"
+              type="submit"
+              disabled={submitting}
+            >
+              {submitting ? 'Creating account...' : 'Create account'}
+            </button>
             <Link className="ds-text-link" to="/login">Sign in instead</Link>
           </div>
         </form>

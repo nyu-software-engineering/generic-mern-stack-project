@@ -1,0 +1,155 @@
+{
+  "checked_on": "2026-11-20",
+  "master": "9e83b384f9003967cf7e255e748d5dae47c8eff0",
+  "merged_prs": [
+    157,
+    163,
+    164
+  ],
+  "frontend": {
+    "tests_passed": 131,
+    "tests_failed": 0,
+    "lint": "pass",
+    "build": "pass"
+  },
+  "matrices": {
+    "matrix": {
+      "routes": 28,
+      "views": 35,
+      "checks": 210,
+      "failures": 0,
+      "runtime_errors": 0
+    },
+    "zoom400-matrix": {
+      "routes": 28,
+      "views": 35,
+      "checks": 35,
+      "failures": 0,
+      "runtime_errors": 0
+    },
+    "text200-matrix": {
+      "routes": 28,
+      "views": 35,
+      "checks": 70,
+      "failures": 0,
+      "runtime_errors": 0
+    }
+  },
+  "journeys": {
+    "flow-143": {
+      "passed": 7,
+      "checks": [
+        "Signup native constraints and custom errors retain values and focus the affected field",
+        "Profile edit and sign-out preserve same-session profiles and original destinations",
+        "Signed-out and unverified guards, email fallback and reload reset stay intact",
+        "Six account views fit six widths with long unbroken names, emails and areas",
+        "Enlarged text and short phone viewport keep account controls reachable",
+        "Profile shared-data failure stays readable and retry opens the signed-in profile",
+        "Desktop and phone screenshots and no uncaught browser errors"
+      ],
+      "runtimeErrors": []
+    },
+    "flow-146": {
+      "passed": 9,
+      "checks": [
+        "Six routes at six widths with long unbroken message and large price",
+        "Board filters and item request validation, creation, own request and closure",
+        "Message-only and free offer request responses open the correct conversation",
+        "Message send, modal validation, keyboard containment, cancel and backdrop",
+        "Counteroffer, decline and accept to local booking keep existing behavior",
+        "Quick Borrow whitespace validation, saved reset and refresh persistence",
+        "Quick Borrow storage failure retains all values",
+        "Missing and empty conversations and requests, no offerable listing branch",
+        "Signed-in phone composer and dialog short viewport, desktop and phone evidence"
+      ]
+    },
+    "flow-147": {
+      "passed": 10,
+      "checks": [
+        "Native required ratings, keyboard arrows, successful local review and duplicate guard",
+        "Ineligible and missing reviews, missing reputation, empty reviews and listing toggle",
+        "Reputation and review phone screenshots and navigation clearance",
+        "Report contexts, successful POST payloads, direct confirmation and exact return links",
+        "Report validation, unrelated edit retains error, failed file submission and pending retry",
+        "Conflicting report references rejected with retained fields",
+        "Rules loading/error/retry/empty and report missing/error/retry",
+        "Confirmation stale response ignored during route change",
+        "Empty notification list and zero bulk action",
+        "Final six-route matrix, 200 percent text, desktop screenshot"
+      ]
+    },
+    "journey-results": {
+      "passed": 7,
+      "checks": [
+        "Discovery search, save state across renter dashboard, date estimate and booking prefill",
+        "Listing failed save retains values, pending retry, preview, publish, pause and edit",
+        "Owner filter preserves totals, empty result, reset and booking navigation",
+        "Booking failed request retains dates and retry leads to summary and withdrawal",
+        "Owner confirmation uses native agreement; borrower and owner extension actions work",
+        "Local pickup and owner return retain native checks and show completion",
+        "Notification read state, unread filter, bulk action and refresh persistence"
+      ]
+    }
+  },
+  "focus": {
+    "observations": 324,
+    "native_keyboard_observations": 288,
+    "fully_obscured": 0,
+    "viewports": [
+      [
+        320,
+        500
+      ],
+      [
+        390,
+        500
+      ],
+      [
+        320,
+        203
+      ]
+    ],
+    "routes": 6,
+    "large_textareas_may_be_partially_visible": true
+  },
+  "zoom_proof": {
+    "zoom": 3.9999999999999996,
+    "before": {
+      "width": 1280,
+      "height": 813,
+      "outerWidth": 1280,
+      "devicePixelRatio": 1
+    },
+    "after": {
+      "width": 320,
+      "height": 203,
+      "outerWidth": 1280,
+      "devicePixelRatio": 4
+    },
+    "dialog": {
+      "x": 19,
+      "y": 10.1640625,
+      "width": 282,
+      "height": 182.921875
+    },
+    "cancel": {
+      "x": 44,
+      "y": 123.8125,
+      "width": 232,
+      "height": 44.3984375
+    },
+    "focusReturn": true
+  },
+  "physical_device": {
+    "browser": "iPhone Safari",
+    "run": "previous combined preview; screenshots preceded shared focus CSS fix, journey components unchanged",
+    "evidence": "user screenshots and confirmations",
+    "keyboard_message_send": "pass",
+    "offer_dialog": "pass",
+    "quick_borrow_save_with_keyboard": "pass",
+    "requests_and_quick_borrow_landscape": "pass",
+    "model_and_ios_version": "not supplied",
+    "new_physical_run_performed": false
+  },
+  "source_matches_combined_audit_with_focus_fix": true
+}

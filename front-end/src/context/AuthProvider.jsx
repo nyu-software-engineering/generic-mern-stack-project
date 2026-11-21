@@ -1,74 +1,27 @@
-
 import { useState } from 'react'
 import { AuthContext } from './AuthContext'
+import {
+  createAuthSession,
+  readPendingSignup,
+} from './authSession.js'
 
 function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null)
-  const [profiles, setProfiles] = useState({})
+  const [pendingSignup, setPendingSignup] = useState(readPendingSignup)
 
-  function signIn(email, displayName = '') {
-    const savedProfile = profiles[email]
-
-    const user = savedProfile || {
-      email,
-      displayName,
-      campusArea: '',
-      emailVerified: false,
-    }
-
-    setCurrentUser(user)
-
-    setProfiles((previous) => ({
-      ...previous,
-      [email]: user,
-    }))
-  }
-
-  function verifyEmail() {
-    if (!currentUser) return
-
-    const updatedUser = {
-      ...currentUser,
-      emailVerified: true,
-    }
-
-    setCurrentUser(updatedUser)
-
-    setProfiles((previous) => ({
-      ...previous,
-      [currentUser.email]: updatedUser,
-    }))
-  }
-
-  function updateProfile(displayName, campusArea) {
-    if (!currentUser) return
-
-    const updatedUser = {
-      ...currentUser,
-      displayName,
-      campusArea,
-    }
-
-    setCurrentUser(updatedUser)
-
-    setProfiles((previous) => ({
-      ...previous,
-      [currentUser.email]: updatedUser,
-    }))
-  }
-
-  function signOut() {
-    setCurrentUser(null)
-  }
+  const [authSession] = useState(() =>
+    createAuthSession({
+      onCurrentUser: setCurrentUser,
+      onPendingSignup: setPendingSignup,
+    })
+  )
 
   return (
     <AuthContext.Provider
       value={{
         currentUser,
-        signIn,
-        verifyEmail,
-        updateProfile,
-        signOut,
+        pendingSignup,
+        ...authSession,
       }}
     >
       {children}
