@@ -87,7 +87,14 @@ export async function getComparables(checkId) {
 }
 
 export function getReport() {
-  return load('report.json')
+  return request('/report')
+}
+
+export function saveReportSections(sections) {
+  return request('/report/sections', {
+    method: 'POST',
+    body: { sections },
+  })
 }
 
 export async function getShareLinks() {

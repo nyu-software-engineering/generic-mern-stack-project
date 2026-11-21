@@ -6,9 +6,9 @@ import ScreenTitle from '../components/ui/ScreenTitle.jsx'
 import SectionTitle from '../components/ui/SectionTitle.jsx'
 import Toggle from '../components/ui/Toggle.jsx'
 import SharePopup from '../components/SharePopup.jsx'
-import { getReport } from '../data/api.js'
 import { clearBankConnection, isBankConnected } from '../data/bankConnection.js'
 import { formatDate } from '../data/format.js'
+import { getReport, saveReportSections } from '../data/api.js'
 
 
 // Build the shareable sections from the report data.
@@ -70,12 +70,18 @@ if (!bankConnected) {
 
   // Update the preview when a switch changes.
   const setSectionShown = (sectionId, shown) => {
-    setHiddenSections(
-      shown
-        ? hiddenSections.filter(id => id !== sectionId)
-        : [...hiddenSections, sectionId],
-    )
-  }
+  const nextHiddenSections = shown
+    ? hiddenSections.filter(id => id !== sectionId)
+    : [...hiddenSections, sectionId]
+
+  setHiddenSections(nextHiddenSections)
+
+  const selectedSections = sections
+    .filter(section => !nextHiddenSections.includes(section.id))
+    .map(section => section.id)
+
+  saveReportSections(selectedSections)
+}
 
   // Clear the saved connection and return to Connect Bank.
   const handleDisconnect = async () => {
