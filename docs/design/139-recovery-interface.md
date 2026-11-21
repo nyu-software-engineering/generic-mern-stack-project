@@ -30,7 +30,7 @@ Each handler requires `application/json`. Unsupported media types receive a safe
 
 All use the existing api helper. `ForgotPassword()` and `ResetPassword()` are public components without props. ResetPassword shows email and code first, then separate New password and Confirm new password fields. It holds the permission only in component memory.
 
-After a successful reset, ResetPassword calls `signOut({ preservePendingVerificationFor: email })` with the normalized email used for code proof. This clears the active session and keeps the existing pending signup only when the email matches and a demo verification code is present. The success screen offers Continue email verification in that case and Sign in otherwise. Verification and sign-in each require a separate user action. Calling `signOut()` without options clears both the session and pending signup.
+Before submitting the reset, ResetPassword calls `prepareResetSignOut(email)` with the normalized email used for code proof. The returned function clears the original local session when the server confirms success, even if the form has closed. A newer session or pending signup keeps its own state. An existing pending signup survives when the email matches and a demo verification code is present. The success screen offers Continue email verification in that case and Sign in otherwise. Verification and sign-in each require a separate user action. Calling `signOut()` clears both the session and pending signup.
 
 ## Invariants
 

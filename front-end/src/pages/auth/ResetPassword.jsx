@@ -10,7 +10,7 @@ const passwordRule = 'Use 8 to 128 characters.'
 
 function ResetPassword() {
   const { state } = useLocation()
-  const { pendingSignup, signOut } = useContext(AuthContext)
+  const { pendingSignup, prepareResetSignOut } = useContext(AuthContext)
   const [email, setEmail] = useState(state?.email ?? '')
   const [grant, setGrant] = useState(null)
   const [outcome, setOutcome] = useState('')
@@ -127,13 +127,14 @@ function ResetPassword() {
     setSubmitting(true)
     clearErrors()
 
+    const signOutAfterReset = prepareResetSignOut(email)
     try {
       await resetPassword(grant.token, password)
+      signOutAfterReset()
       if (!mounted.current) return
       passwordInput.value = ''
       confirmInput.value = ''
       setGrant(null)
-      signOut({ preservePendingVerificationFor: email })
       setOutcome('success')
     } catch (error) {
       if (!mounted.current) return

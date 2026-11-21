@@ -223,13 +223,16 @@ test('login forwards identity to listing services and sign-out clears it', async
   )
 })
 
-test('reset sign-out preserves only matching pending email verification', async (t) => {
+test('reset sign-out keeps matching or newer pending email verification', async (t) => {
   prepare(t)
 
   const pending = { email: 'pending@nyu.edu', demoCode: '123456' }
   let listingAuthorization
   t.mock.method(globalThis, 'fetch', async (url, options) => {
     if (url === '/api/auth/login') {
+      if (JSON.parse(options.body).password === 'wrong-password') {
+        return Response.json({ error: 'Invalid email or password.' }, { status: 401 })
+      }
       return Response.json({ token: 'a'.repeat(64), user: account })
     }
 
@@ -251,7 +254,8 @@ test('reset sign-out preserves only matching pending email verification', async 
   await session.actions.signUp('Pending Student', pending.email, 'password123')
   assert.equal(session.user.id, account.id)
 
-  session.actions.signOut({ preservePendingVerificationFor: pending.email })
+  const signOutAfterMatchingReset = session.actions.prepareResetSignOut(pending.email)
+  signOutAfterMatchingReset()
 
   assert.equal(session.user, null)
   await api('/listings/mine')
@@ -264,9 +268,19 @@ test('reset sign-out preserves only matching pending email verification', async 
   assert.equal(readPendingSignup(), null)
 
   await session.actions.signUp('Pending Student', pending.email, 'password123')
-  session.actions.signOut({ preservePendingVerificationFor: account.email })
+  const signOutAfterOtherReset = session.actions.prepareResetSignOut(account.email)
+  signOutAfterOtherReset()
   assert.equal(session.pending, null)
   assert.equal(readPendingSignup(), null)
+
+  await session.actions.signIn(account.email, 'password123')
+  const signOutAfterOlderReset = session.actions.prepareResetSignOut(account.email)
+  await assert.rejects(session.actions.signIn(account.email, 'wrong-password'), /Invalid email or password/)
+  await session.actions.signUp('Pending Student', pending.email, 'password123')
+  signOutAfterOlderReset()
+  assert.equal(session.user, null)
+  assert.deepEqual(session.pending, pending)
+  assert.deepEqual(readPendingSignup(), pending)
 })
 
 test('a late profile response cannot restore a signed-out user', async (t) => {

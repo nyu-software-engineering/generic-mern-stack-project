@@ -390,7 +390,7 @@ test('offers a fresh code after an expired or exhausted code and an expired rese
   assert.equal(await page.getByLabel('NYU email').inputValue(), email)
 })
 
-test('a late reset response does not change the page or a newer session', { timeout: 15000 }, async (t) => {
+async function leavePendingReset(t) {
   const { page, origin, api, latestCode } = await openFixture(t)
   await page.goto(`${origin}/login`)
   const login = page.waitForResponse('**/api/auth/login')
@@ -404,6 +404,7 @@ test('a late reset response does not change the page or a newer session', { time
 
   const submitted = Promise.withResolvers()
   const release = Promise.withResolvers()
+  t.after(() => release.resolve())
   await page.route('**/api/auth/reset-password', async (route) => {
     const response = await route.fetch()
     submitted.resolve(response.status())
@@ -424,6 +425,29 @@ test('a late reset response does not change the page or a newer session', { time
   const requestHeading = page.getByRole('heading', { name: 'Forgot your password?' })
   await requestHeading.waitFor()
 
+  return {
+    page, api, token, requestHeading,
+    async finishReset() {
+      const finished = page.waitForResponse('**/api/auth/reset-password')
+      release.resolve()
+      const response = await finished
+      assert.equal(await response.finished(), null)
+    },
+  }
+}
+
+test('a late successful reset clears the original session after leaving the form', { timeout: 15000 }, async (t) => {
+  const { page, api, token, requestHeading, finishReset } = await leavePendingReset(t)
+  const signOut = page.getByRole('button', { name: 'Sign out' })
+  assert.equal(await signOut.isVisible(), true)
+  await finishReset()
+  assert.equal((await api('/users/me', undefined, token)).status, 401)
+  await signOut.waitFor({ state: 'hidden' })
+  assert.equal(await requestHeading.isVisible(), true)
+})
+
+test('a late reset response does not change the page or a newer session', { timeout: 15000 }, async (t) => {
+  const { page, api, token, requestHeading, finishReset } = await leavePendingReset(t)
   await page.getByRole('link', { name: 'Back to sign in' }).click()
   const newLogin = page.waitForResponse('**/api/auth/login')
   await signIn(page, newPassword)
@@ -433,10 +457,7 @@ test('a late reset response does not change the page or a newer session', { time
   await page.getByRole('link', { name: 'Forgot password?' }).click()
   await requestHeading.waitFor()
 
-  const finished = page.waitForResponse('**/api/auth/reset-password')
-  release.resolve()
-  const response = await finished
-  assert.equal(await response.finished(), null)
+  await finishReset()
   assert.equal((await api('/users/me', undefined, token)).status, 401)
   assert.equal((await api('/users/me', undefined, newToken)).status, 200)
   assert.equal(await requestHeading.isVisible(), true)

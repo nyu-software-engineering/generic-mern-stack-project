@@ -160,15 +160,33 @@ export function createAuthSession({
     return user
   }
 
-  function signOut({ preservePendingVerificationFor } = {}) {
+  function clearSignedInSession() {
     generation += 1
     token = null
 
     setSessionToken(null)
     setCurrentUserId(null)
     onCurrentUser(null)
+  }
 
-    if (!pendingSignup?.demoCode || pendingSignup.email !== preservePendingVerificationFor) {
+  function signOut() {
+    clearSignedInSession()
+    updatePendingSignup(null)
+  }
+
+  function prepareResetSignOut(email) {
+    const startedToken = token
+    const startedGeneration = generation
+    const startedSignup = pendingSignup
+
+    return () => {
+      if (token !== startedToken) return
+      // Without a token, the generation identifies the signed-out snapshot.
+      if (!startedToken && generation !== startedGeneration) return
+
+      clearSignedInSession()
+      if (pendingSignup !== startedSignup) return
+      if (pendingSignup?.demoCode && pendingSignup.email === email) return
       updatePendingSignup(null)
     }
   }
@@ -179,5 +197,6 @@ export function createAuthSession({
     signIn,
     updateProfile,
     signOut,
+    prepareResetSignOut,
   }
 }
