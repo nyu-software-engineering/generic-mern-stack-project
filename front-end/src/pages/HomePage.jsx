@@ -6,7 +6,7 @@ import { useCurBookings } from "../shared_content/SavedCurrentBookings";
 import BookingCard from "../components/BookingCard";
 
 function HomePage() {
-  const {curBookings, deleteBooking, updateBooking} = useCurBookings();
+  const {curBookings, loading, error, deleteBooking, updateBooking} = useCurBookings();
   const [currentView, setCurrentView] = useState('noEdit');
   const [activeItemEdit, setActiveItemEdit] = useState(null);
 
@@ -20,15 +20,23 @@ function HomePage() {
       setActiveItemEdit(null);
     }
 
-    const handleSave = (id, newDescription, newCheckIn, newCheckOut) => {
-      updateBooking(id, newDescription, newCheckIn, newCheckOut);
-      handleGoBack();
+    const handleSave = async (id, newDescription, newCheckIn, newCheckOut) => {
+      try {
+        await updateBooking(id, newDescription, newCheckIn, newCheckOut);
+        handleGoBack();
+      } catch (err) {
+        console.error(err.message);
+      }
     };
 
     {/*modify for data base later*/}
-    const handleDelete = (id) => {
-      deleteBooking(id);
-      handleGoBack();
+    const handleDelete = async (id) => {
+      try {
+        await deleteBooking(id);
+        handleGoBack();
+      } catch (err) {
+        console.error(err.message);
+      }
     };
 
     return currentView === 'noEdit' ? (
@@ -54,7 +62,11 @@ function HomePage() {
       </section>
 
       <div id='home-page-current-bookings'>
-      {curBookings.length === 0 ? (
+      {loading ? (
+        <p>Loading...</p>
+      ) : error ? (
+        <p>Couldn't load bookings: {error}</p>
+      ) : curBookings.length === 0 ? (
         <p>You dont have any current bookings yet!</p>
       ) : (
         <>

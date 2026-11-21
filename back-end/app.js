@@ -6,6 +6,7 @@ const app = express() // instantiate an Express object
 import initialSearchHotels from './mockData/hotelList.js';
 import initialSavedHotels from './mockData/savedHotels.js';
 import stayedHotels from './mockData/stayedHotels.js';
+import initialBookings from './mockData/currentBooking.js';
 
 // use express's builtin body-parser middleware to parse any data included in a request
 app.use(express.json()); // decode JSON-formatted incoming POST data
@@ -110,8 +111,10 @@ app.post("/api/auth/logout", (req, res) => {
 // ===== SAVED HOTELS =====
 
 // this is mock data, it is stored in the mock data folder
-let savedHotels = initialSavedHotels.map((hotel) => ({ ...hotel }));
-
+let savedHotels = initialSavedHotels.map((hotel) => ({ ...hotel })); //CURRENTLY CAN NOT CHANGE THE MOCK DATA ARRAY. WILL 
+                                                                   //DIRECTLY CHANGE DATABASE DATA WHEN GETTING A DATABASE 
+                                                                   //(this array will act as a temporary db, 
+                                                                   //but gets reset between backend server restarts)
 app.get('/api/saved', (req, res) => {
   //get all saved hotels
   res.json(savedHotels);
@@ -207,6 +210,86 @@ app.get('/api/profile/stays', (req, res) => {
   return res.json(userStays);
 });
 // ===== PROFILE END =====
+
+// ===== CURRENT BOOKINGS START =====
+let bookings = initialBookings.map((booking) => ({ ...booking })); //CURRENTLY CAN NOT CHANGE THE MOCK DATA ARRAY. WILL 
+                                                                   //DIRECTLY CHANGE DATABASE DATA WHEN GETTING A DATABASE 
+                                                                   //(this array will act as a temporary db, 
+                                                                   //but gets reset between backend server restarts)
+
+app.get('/api/bookings', (req, res) => {
+  res.json(bookings);
+});
+
+app.post('/api/bookings', (req, res) => {
+  //add to current booking
+  const hotel = req.body || {};
+  if (!hotel.id || !hotel.name) {
+    const body = { error: 'booking must have an id and name' };
+    res.status(400);
+    res.json(body);
+    return;
+  }
+
+  const alreadyBooked = bookings.find((b) => b.id === String(hotel.id));
+  if (alreadyBooked) {
+    res.json(alreadyBooked);
+    return;
+  }
+
+  const newBooking = {
+    id: String(hotel.id),
+    name: hotel.name || '',
+    location: hotel.location || '',
+    checkIn: hotel.checkIn || '',
+    checkOut: hotel.checkOut || '',
+    description: hotel.description || '',
+    imageSrc: hotel.imageSrc || '', //should change this later to match an image source for google places
+  };
+  bookings.push(newBooking);
+  res.status(200);
+  res.json(newBooking);
+});
+
+app.post('/api/bookings/:id', (req, res) => {
+  //update a booking's notes and dates
+  const booking = bookings.find((b) => b.id === req.params.id);
+  if (!booking) {
+    const body = { error: 'Booking not found' };
+    res.status(404);
+    res.json(body);
+    return;
+  }
+
+  const { description, checkIn, checkOut } = req.body || {};
+  if (typeof description !== 'string' || typeof checkIn !== 'string' || typeof checkOut !== 'string') {
+    const body = { error: 'description, checkIn, and checkOut must be string type' };
+    res.status(400);
+    res.json(body);
+    return;
+  }
+
+  booking.description = description;
+  booking.checkIn = checkIn;
+  booking.checkOut = checkOut;
+  res.json(booking);
+});
+
+app.delete('/api/bookings/:id', (req, res) => {
+  //remove a booking
+  const booking = bookings.find((b) => b.id === req.params.id);
+  if (!booking) {
+    const body = { error: 'Booking not found' };
+    res.status(404);
+    res.json(body);
+    return;
+  }
+
+  bookings = bookings.filter((b) => b.id !== req.params.id);
+  const body = { message: 'Deleted', id: req.params.id };
+  res.json(body);
+});
+// ===== CURRENT BOOKINGS END =====
 
 // export the express app we created to make it available to other modules
 export default app;
