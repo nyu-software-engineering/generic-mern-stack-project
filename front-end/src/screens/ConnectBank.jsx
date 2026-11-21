@@ -30,12 +30,17 @@ export default function ConnectBank() {
 
   // Sprint 1 simulates the connection; a real bank connection comes later.
   const handleConnect = () => {
-    setIsConnecting(true)
-    setTimeout(() => {
-      saveBankConnection()
+  setIsConnecting(true)
+  setTimeout(async () => {
+    try {
+      await saveBankConnection()
       navigate('/report')
-    }, connectDelayMs)
-  }
+   } catch (error) {
+  console.error('Bank connection failed:', error)
+  setIsConnecting(false)
+}
+  }, connectDelayMs)
+}
 
   // Render the screen title, privacy details, and connect action.
   return (

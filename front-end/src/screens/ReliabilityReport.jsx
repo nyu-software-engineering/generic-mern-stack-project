@@ -10,6 +10,7 @@ import { getReport } from '../data/api.js'
 import { clearBankConnection, isBankConnected } from '../data/bankConnection.js'
 import { formatDate } from '../data/format.js'
 
+
 // Build the shareable sections from the report data.
 function buildSections(report) {
   return [
@@ -37,17 +38,25 @@ export default function ReliabilityReport() {
   const [hiddenSections, setHiddenSections] = useState([])
   const [sharing, setSharing] = useState(false)
   const navigate = useNavigate()
+  const [bankConnected, setBankConnected] = useState(null)
 
   // Load the report when the screen opens.
   useEffect(() => {
-    if (isBankConnected()) {
-      getReport().then(setReport)
-    }
-  }, [])
+  isBankConnected()
+    .then((connected) => {
+      setBankConnected(connected)
+      if (connected) return getReport().then(setReport)
+    })
+    .catch(() => setBankConnected(false))
+}, [])
 
-  if (!isBankConnected()) {
-    return <Navigate to="/connect-bank" replace />
-  }
+  if (bankConnected === null) {
+  return <p className="text-sm text-muted">Checking your bank connection…</p>
+}
+
+if (!bankConnected) {
+  return <Navigate to="/connect-bank" replace />
+}
 
   // Wait until the report data is ready.
   if (!report) {
@@ -69,10 +78,10 @@ export default function ReliabilityReport() {
   }
 
   // Clear the saved connection and return to Connect Bank.
-  const handleDisconnect = () => {
-    clearBankConnection()
-    navigate('/connect-bank')
-  }
+  const handleDisconnect = async () => {
+  await clearBankConnection()
+  navigate('/connect-bank')
+}
 
   return (
     <div>

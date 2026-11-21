@@ -1,16 +1,20 @@
-const bankConnectionKey = 'leverage-bank-connected'
+import { request } from './api.js'
 
-// Check whether this browser remembers the connection.
-export function isBankConnected() {
-  return window.localStorage.getItem(bankConnectionKey) === 'true'
+// Check whether the bank is connected.
+export async function isBankConnected() {
+  const connection = await request('/bank-connection')
+  return connection.connected
 }
 
-// Save the demo connection after the button is clicked.
+// Connect to the demo bank.
 export function saveBankConnection() {
-  window.localStorage.setItem(bankConnectionKey, 'true')
+  return request('/bank-connection', { method: 'POST' })
 }
 
-// Clear it so the flow can be tried again.
+// Disconnect from the demo bank.
 export function clearBankConnection() {
-  window.localStorage.removeItem(bankConnectionKey)
+  return request('/bank-connection', {
+    method: 'POST',
+    body: { connected: false },
+  })
 }
