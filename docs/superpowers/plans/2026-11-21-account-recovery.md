@@ -17,7 +17,7 @@ Files: `back-end/services/recovery.js`, `back-end/routes/passwordRecovery.js`, `
 Contract:
 
 ```js
-createRecovery({ auth, store, deliver, now, publicOrigin, policy })
+createRecovery({ auth, store, deliver, now, policy })
 // returns { requestReset({email, ip}), verifyCode({email, code, ip}), resetPassword({resetToken, password, ip}), idle() }
 createRecoveryRouter(recovery)
 createApp({ store, recovery })
@@ -39,10 +39,10 @@ Contract:
 
 ```js
 createBrevoDelivery({ apiKey, from, fromName, fetchImpl })
-// returns async deliver({ kind, to, resetUrl, expiresAt })
+// returns async deliver({ kind, to, code, expiresAt })
 loadEnvironment({ directory, env })
 recoveryConfiguration(env)
-// returns { deliver, publicOrigin } only when the Brevo sender settings are valid; no public origin is needed
+// returns { deliver } only when the Brevo sender settings are valid; no public origin is needed
 ```
 
 - [ ] Write tests for HTTPS payloads, provider errors, timeout, no raw error leakage, and invalid sender configuration.
