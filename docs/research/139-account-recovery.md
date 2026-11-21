@@ -1,6 +1,6 @@
 # Account recovery research for #139
 
-Source audit: November 20, 2026. The assigned baseline is master `9e83b384f9003967cf7e255e748d5dae47c8eff0`. This note records current source behavior and a proposal for the owner and Omer. It does not approve an API, mail provider, security policy, or implementation. No application code or dependencies changed during this research.
+Source audit: November 20, 2026. The assigned baseline is master `9e83b384f9003967cf7e255e748d5dae47c8eff0`. This note records current source behavior and a recovery proposal for review with Omer. Brevo setup is now verified in the final section. The recovery API, security policy, and application integration remain proposals. No application code or dependencies changed.
 
 ## Current account system
 
@@ -81,7 +81,7 @@ These tests are proposed, not performed. Existing account tests cover signup, de
 
 ## Provider recommendation, researched November 20, 2026
 
-**Propose Brevo Free through its HTTPS API. The team has confirmed that it owns no domain.** Verify a project-controlled sender mailbox and obtain transactional activation before promising delivery. Resend is a later alternative if the team obtains a domain. These are recommendations, not completed account setup. No accounts, DNS records, payments, or emails were created during this research.
+**Propose Brevo Free through its HTTPS API. The team has confirmed that it owns no domain.** Verify a project-controlled sender mailbox and obtain transactional activation before promising delivery. Resend is a later alternative if the team obtains a domain. The comparison below records the research phase. The user later completed account setup, and the final section records the verified result. No domain purchase or DNS change was needed.
 
 The [deployment instructions](../../instructions-4-deployment.md), lines 5-11, require a DigitalOcean Droplet. The inspected README and deployment notes do not establish an owned domain or deployed HTTPS origin. DigitalOcean documents that SMTP ports 25, 465, and 587 are blocked by default. Use a provider's HTTPS API. This avoids a deployment dependency on SMTP access. See [DigitalOcean's SMTP restrictions](https://docs.digitalocean.com/support/why-is-smtp-blocked/).
 
@@ -105,4 +105,24 @@ Use the verified project mailbox through Brevo. Do not choose an `@nyu.edu` From
 4. Keep the private capture adapter as the normal local and CI test path. It proves the same-account reset and old/new password behavior without network access. Add provider tests with dummy content through the chosen service's official simulator or sandbox. Do not weaken the NYU signup rule to admit provider test addresses. A separate adapter test can call those addresses directly. Never send a live reset credential to a simulator.
 5. After setup is authorized, separately check real delivery to a consenting test recipient. A provider API success or sandbox response does not prove arrival in an NYU inbox. This check is distinct from the repeatable inbox-free test required by #139.
 
-The remaining setup facts are the account owner, a project-controlled sender mailbox, transactional activation, and a trusted public HTTPS origin. Domain ownership is settled for this plan: the team has none. The proposed API and #94 integration still need review with Omer. Numeric recovery settings can be proposed during that contract review rather than presented as a new list of user decisions now.
+The Brevo setup has since passed the checks below. Domain ownership is settled for this plan: the team has none. A trusted public HTTPS app origin is still unconfirmed. The proposed recovery API and #94 integration need review with Omer. Numeric recovery settings can be proposed during that contract review.
+
+
+## Brevo setup verified November 20, 2026
+
+The user created the DormShare account on the Free plan and completed the private onboarding fields. Brevo shows the existing DormShare sender as verified. Mailbox verification does not establish ownership of the NYU domain.
+
+The user generated an API key and saved it in `back-end/.env.local`. The file is ignored by Git and has owner-only permissions (`0600`). No key value, postal address, or recipient address is included in this record.
+
+| Check | Observed result |
+| --- | --- |
+| Account details, `GET /v3/account` | HTTP 403, `permission_denied`. No wider key permissions were granted. |
+| Non-delivering sandbox request, `POST /v3/smtp/email` | HTTP 201. The request used `X-Sib-Sandbox: drop` inside the JSON payload's `headers`. |
+| One user-approved plain test email | HTTP 201. It contained no reset link, password, or credential. |
+| Brevo transactional logs for that test | Sent and Delivered events appeared for the test recipient. |
+
+The live delivery event verifies this sender and test recipient path. It does not prove delivery to every student or placement in an inbox rather than spam. The sandbox validates the request format and does not deliver mail or create message logs. See the official [sandbox documentation](https://developers.brevo.com/docs/using-sandbox-mode).
+
+No sending activation hold was encountered in the successful live test. The account-details permission denial remains separate from the successful send tests. It was not used as a reason to broaden the key.
+
+This is provider setup evidence. Recovery routes, reset credentials, private capture tests, and the frontend flow are not implemented. The current server does not automatically load `.env.local`; the setup checks loaded it explicitly. The application integration must load its private environment on the backend, keep the key out of the browser, and use the reviewed account contract. A trusted HTTPS reset origin and coordination with #94 remain outstanding.
