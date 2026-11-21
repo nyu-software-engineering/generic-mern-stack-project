@@ -4,11 +4,18 @@ import events from "../data/events.js"
 
 const router = express.Router()
 
-// Mock hobbies and events for the current user
-const joinedHobbyIds = [1, 2]
-const joinedEventIds = [1, 4]
-const hostedEventIds = [3]
-const editedEvents = {}
+let joinedHobbyIds = [1, 2]
+let joinedEventIds = [1, 4]
+let hostedEventIds = [3]
+let editedEvents = {}
+
+// Reset mock data between tests
+export function resetMyHobbiesData() {
+  joinedHobbyIds = [1, 2]
+  joinedEventIds = [1, 4]
+  hostedEventIds = [3]
+  editedEvents = {}
+}
 
 // Get the user's joined hobbies and events
 router.get("/my-hobbies", (req, res) => {
@@ -30,7 +37,6 @@ router.get("/my-hobbies", (req, res) => {
     hosting
   })
 })
-
 
  // Leave a hobby
 router.post("/my-hobbies/:id/leave", (req, res) => {
