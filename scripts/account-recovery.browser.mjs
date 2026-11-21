@@ -211,6 +211,34 @@ test('recovers an existing account through captured mail and clears the active s
   await page.waitForURL('**/setup-profile')
 })
 
+test('a late sign-in response leaves the password recovery page open', { timeout: 15000 }, async (t) => {
+  const { page, origin } = await openFixture(t)
+  await page.goto(`${origin}/login`)
+
+  const submitted = Promise.withResolvers()
+  const release = Promise.withResolvers()
+  await page.route('**/api/auth/login', async (route) => {
+    const response = await route.fetch()
+    submitted.resolve(response.status())
+    await release.promise
+    await route.fulfill({ response })
+  }, { times: 1 })
+
+  const requestHeading = page.getByRole('heading', { name: 'Forgot your password?' })
+  try {
+    await signIn(page, oldPassword)
+    assert.equal(await submitted.promise, 200)
+    await page.getByRole('link', { name: 'Forgot password?' }).click()
+    await requestHeading.waitFor()
+  } finally {
+    release.resolve()
+  }
+
+  await page.getByRole('button', { name: 'Sign out' }).waitFor()
+  assert.equal(new URL(page.url()).pathname, '/forgot-password')
+  assert.equal(await requestHeading.isVisible(), true)
+})
+
 test('retries a failed request without duplicate submissions or revealing an unknown account', { timeout: 15000 }, async (t) => {
   const { page, origin, capturedMessages } = await openFixture(t)
   await page.goto(`${origin}/forgot-password`)
@@ -371,6 +399,9 @@ test('reloading loses a verified code and the password form also expires when id
   await code.waitFor()
   assert.equal(await code.inputValue(), '')
   assert.equal(await password.count(), 0)
+  assert.equal(await page.getByText('If you already verified your code, request a new one to continue.', {
+    exact: true,
+  }).isVisible(), true)
   assert.equal((await verifyCode(page, usedCode)).status(), 400)
   await assertFocusedError(page, code, /invalid or has expired/i)
 

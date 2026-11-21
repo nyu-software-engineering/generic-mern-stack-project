@@ -313,6 +313,7 @@ function ResetPassword() {
                 </button>
                 {freshCodeLink}
               </div>
+              <p className="ds-account-help">If you already verified your code, request a new one to continue.</p>
             </form>
           </>
         )}
