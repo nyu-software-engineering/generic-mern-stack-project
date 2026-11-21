@@ -3,9 +3,8 @@ import { useParams } from 'react-router'
 import Button from '../components/ui/Button.jsx'
 import ScreenTitle from '../components/ui/ScreenTitle.jsx'
 import TextField from '../components/ui/TextField.jsx'
-import { getApartmentCheck } from '../data/api.js'
 import { formatDate } from '../data/format.js'
-import { getOutcome, saveOutcome } from '../data/outcomes.js'
+import { getApartmentCheck, getOutcome, saveOutcome } from '../data/api.js'
 
 const OUTCOMES = [
   { value: 'rent-lowered', label: 'Rent lowered', asksForFinalRent: true },
@@ -35,16 +34,26 @@ const OUTCOMES = [
 export default function RecordOutcome() {
   const { checkId } = useParams()
   const [check, setCheck] = useState(undefined)
-  const [savedOutcome, setSavedOutcome] = useState(() => getOutcome(checkId))
-  const [outcome, setOutcome] = useState(savedOutcome?.outcome ?? '')
-  const [finalRent, setFinalRent] = useState(
-    savedOutcome?.finalRent ? String(savedOutcome.finalRent) : '',
-  )
-  const [note, setNote] = useState(savedOutcome?.note ?? '')
+  const [savedOutcome, setSavedOutcome] = useState(null)
+  const [outcome, setOutcome] = useState('')
+  const [finalRent, setFinalRent] = useState('')
+  const [note, setNote] = useState('')
   const [justSaved, setJustSaved] = useState(false)
+  const [saveError, setSaveError] = useState('')
 
   useEffect(() => {
     getApartmentCheck(checkId).then(found => setCheck(found ?? null))
+    // load any saved outcome from the back-end and fill in the form
+    getOutcome(checkId)
+      .then(saved => {
+        setSavedOutcome(saved)
+        if (saved) {
+          setOutcome(saved.outcome)
+          setFinalRent(saved.finalRent ? String(saved.finalRent) : '')
+          setNote(saved.note ?? '')
+        }
+      })
+      .catch(() => setSavedOutcome(null))
   }, [checkId])
 
   if (check === undefined) {
@@ -82,11 +91,17 @@ export default function RecordOutcome() {
     setJustSaved(false)
   }
 
-  const handleSave = event => {
+  const handleSave = async event => {
     event.preventDefault()
-    const saved = saveOutcome(checkId, draft)
-    setSavedOutcome(saved)
-    setJustSaved(true)
+    setSaveError('')
+
+    try {
+      const saved = await saveOutcome(checkId, draft)
+      setSavedOutcome(saved)
+      setJustSaved(true)
+    } catch (err) {
+      setSaveError(err.message)
+    }
   }
 
   return (
@@ -154,7 +169,11 @@ export default function RecordOutcome() {
             className="w-full border border-line bg-surface px-3 py-3 text-sm text-ink placeholder:text-muted focus:border-ink focus:outline-none"
           />
         </div>
-
+        {saveError && (
+          <p className="text-sm text-negative" role="alert">
+            {saveError}
+          </p>
+        )}
         {justSaved && (
           <p
             className="border border-positive px-3 py-2 text-sm font-semibold text-positive"

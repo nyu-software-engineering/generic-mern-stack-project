@@ -153,3 +153,11 @@ export function forgotPassword(email) {
 export function resetPassword(passwords) {
   return request('/auth/reset-password', { method: 'POST', body: passwords })
 }
+
+export function getOutcome(checkId) {
+  return request(`/outcomes/${checkId}`)
+}
+
+export function saveOutcome(checkId, outcome) {
+  return request(`/outcomes/${checkId}`, { method: 'POST', body: outcome })
+}
