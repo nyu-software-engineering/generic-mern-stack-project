@@ -1,5 +1,7 @@
 # Cross-app mobile audit plan
 
+Final update: #157, #163, and #164 have merged. The [final merged-app verification](148-merged-verification.md) passes on master `9e83b38` and completes #148. The original pre-merge record below is retained for traceability.
+
 ## Scope and baseline
 
 Audit #148 against master `306fc2a` and a temporary combined version at `c94a69e`, which includes pending #157 at `c6e3d9d` and #163 at `2454678`. Keep those PR changes out of this branch. Follow the [research](../research/148-mobile-audit.md), [shared shell contract](148-mobile-interface.md), and approved NYU design.
