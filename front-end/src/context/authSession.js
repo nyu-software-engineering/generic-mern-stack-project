@@ -1,4 +1,5 @@
 import { api, setSessionToken } from '../services/api.js'
+import { setCurrentUserId } from '../services/mockDataService.js'
 
 const PENDING_SIGNUP_KEY = 'dormshare-pending-verification'
 
@@ -126,6 +127,7 @@ export function createAuthSession({
 
     token = session.token
     setSessionToken(token)
+    setCurrentUserId(user.id)
 
     onCurrentUser(user)
     updatePendingSignup(null)
@@ -163,6 +165,7 @@ export function createAuthSession({
     token = null
 
     setSessionToken(null)
+    setCurrentUserId(null)
     onCurrentUser(null)
     updatePendingSignup(null)
   }
