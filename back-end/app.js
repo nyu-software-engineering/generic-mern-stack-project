@@ -283,13 +283,13 @@ app.get('/api/hotels/search', (req, res) => {
   }
 
   const keyword = q.trim().toLowerCase();
-  const hotel = hotelList.find(
+  const hotels = hotelList.filter(
     (hotel) =>
       hotel.name.toLowerCase().includes(keyword) ||
       hotel.location.toLowerCase().includes(keyword),
   );
 
-  return res.json({ hotel: hotel ?? null });
+  return res.json({ hotels });
 });
 
 // export the express app we created to make it available to other modules
