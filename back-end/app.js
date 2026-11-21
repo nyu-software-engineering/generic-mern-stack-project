@@ -8,6 +8,7 @@ import rentTrendsRouter from './routes/rentTrends.js'
 import outcomesRouter from './routes/outcomes.js'
 import bankConnectionRouter from './routes/bankConnection.js'
 import reportRouter from './routes/report.js'
+import shareLinksRouter from './routes/shareLinks.js'
 const app = express()
 
 // log requests, but not during tests
@@ -27,5 +28,6 @@ app.use('/rent-trends', rentTrendsRouter)
 app.use('/outcomes', outcomesRouter)
 app.use('/bank-connection', bankConnectionRouter)
 app.use('/report', reportRouter)
+app.use('/share-links', shareLinksRouter)
 
 export default app
