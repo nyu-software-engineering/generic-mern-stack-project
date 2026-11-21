@@ -6,10 +6,20 @@ import './Login.css'
 export default function Login({ setUser }) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [error, setError] = useState("")
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault()
-    setUser({ email: email.trim().toLowerCase() })
+    setError("")
+    
+    try{
+      const response = await axios.post("api/auth/login", {email, password})
+      //user is an email
+      setUser(response.data.user)
+    }
+    catch(error){
+      setError(error.response.data?.error || "Could not login")
+    }
   }
 
   return (
@@ -36,6 +46,7 @@ export default function Login({ setUser }) {
           />
         </label>
 
+        {error && <p>{error}</p>}
         <button type="submit">Log In</button>
       </form>
 

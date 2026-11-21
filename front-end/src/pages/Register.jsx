@@ -46,7 +46,7 @@ export default function Register() {
         </label>
 
         {/* display an error if could not create account */}
-        {error && <p role="alert">{error}</p>}
+        {error && <p>{error}</p>}
 
         <button type="submit">Create Account</button>
       </form>

@@ -71,10 +71,12 @@ app.post("/api/auth/register", async (req, res) => {
 
 //Login routes
 app.post("/api/auth/login", async (req, res) => {
-    const { email, password } = req.body
+    const { email, password } = req.body ?? {}
 
     if (!email || !password || typeof email !== "string" || typeof password !== "string") {
-        return res.status(400).json({ error: "Enter an email and password." })
+        res.status(400)
+        res.json({ error: "Enter an email and password." })
+        return
     }
 
     const normalizedEmail = email.trim().toLowerCase()
@@ -82,13 +84,13 @@ app.post("/api/auth/login", async (req, res) => {
 
     if (!accounts.has(normalizedEmail)){
         res.status(401)
-        res.json({ error: "Invalid email"})
+        res.json({ error: "Invalid email or password"})
         return
     }
     if (bcrypt.truncates(password) ||
         !(await bcrypt.compare(password, passwordHash))) {
         res.status(401)
-        res.json({ error: "Invalid password" })
+        res.json({ error: "Invalid email or password" })
         return
     }
 
