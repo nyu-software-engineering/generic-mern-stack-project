@@ -117,6 +117,26 @@ app.post('/api/profile', (req, res) => {
   res.json(profile)
 })
 
+let notifications = JSON.parse(fs.readFileSync(mockDataPath, 'utf8')).notifications
+
+app.get('/api/notifications', (req, res) => {
+  res.json(notifications)
+})
+
+app.patch('/api/notifications/read-all', (req, res) => {
+  notifications.forEach(n => { n.read = true })
+  res.json(notifications)
+})
+
+app.patch('/api/notifications/:id/read', (req, res) => {
+  const notification = notifications.find(n => String(n.id) === req.params.id)
+  if (!notification) {
+    return res.status(404).json({ error: 'Notification not found' })
+  }
+  notification.read = true
+  res.json(notification)
+})
+
 let conversations = JSON.parse(fs.readFileSync(mockDataPath, 'utf8')).conversations
 
 app.get('/api/conversations', (req, res) => {
@@ -184,6 +204,21 @@ app.post('/api/conversations/:id/messages', (req, res) => {
   }
   convo.messages.push(message)
   convo.read = message.sender === 'you'
+  
+  if (message.sender === 'other') {
+    notifications.unshift({
+      id: crypto.randomUUID(),
+      title: `New message • ${convo.username}`,
+      description: `About ${convo.item}: ${message.text}`,
+      time: `Today · ${message.time}`,
+      createdAt: message.createdAt,
+      read: false,
+      link: 'Open Conversation',
+      path: `/messages/${convo.id}`,
+      pfp: convo.pfp
+    })
+  }
+
   res.status(201).json(message)
 })
 

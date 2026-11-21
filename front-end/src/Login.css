@@ -16,3 +16,7 @@
     flex-direction: column;
     gap: 20px;
 }
+
+.login .field {
+    width: 40vw;
+}

@@ -17,6 +17,10 @@
     gap: 20px;
 }
 
+.signUp .field {
+    width: 40vw;
+}
+
 #email, 
 #password, 
 #name {
