@@ -6,6 +6,7 @@ import landlordRouter from './routes/landlord.js'
 import apartmentChecksRouter from './routes/apartmentChecks.js'
 import rentTrendsRouter from './routes/rentTrends.js'
 import outcomesRouter from './routes/outcomes.js'
+import bankConnectionRouter from './routes/bankConnection.js'
 const app = express()
 
 // log requests, but not during tests
@@ -23,5 +24,6 @@ app.use('/landlord', landlordRouter)
 app.use('/apartment-checks', apartmentChecksRouter)
 app.use('/rent-trends', rentTrendsRouter)
 app.use('/outcomes', outcomesRouter)
+app.use('/bank-connection', bankConnectionRouter)
 
 export default app
