@@ -1,9 +1,53 @@
 import HotelDetails from "../components/HotelDetails";
-import { Link } from "react-router-dom";
+
 import "./Home&ResultsPage.css";
-import initialSearchHotels from "../../../back-end/mockData/hotelList";
+import { useEffect, useState } from "react";
+import { Link, useSearchParams } from "react-router-dom";
 
 function ResultsPage() {
+
+  // this part is for the search feature
+  const [searchParams] = useSearchParams();
+const query = (searchParams.get("q") ?? "").trim();
+const [hotel, setHotel] = useState(null);
+const [loading, setLoading] = useState(false);
+const [error, setError] = useState("");
+
+useEffect(() => {
+  setHotel(null);
+  setError("");
+  setLoading(Boolean(query));
+
+  if (!query) return;
+
+  const controller = new AbortController();
+
+  async function searchHotels() {
+    try {
+      const params = new URLSearchParams({ q: query });
+      const response = await fetch(`/api/hotels/search?${params}`, {
+        signal: controller.signal,
+      });
+
+      if (!response.ok) throw new Error("Could not search hotels.");
+
+      const data = await response.json();
+      setHotel(data.hotel);
+    } catch (err) {
+      if (!controller.signal.aborted) setError(err.message);
+    } finally {
+      if (!controller.signal.aborted) setLoading(false);
+    }
+  }
+
+  searchHotels();
+  return () => controller.abort();
+}, [query]);
+
+// this is the end of search featur code
+
+
+
   return (
     <main className="homepage results-page">
         <header className="home-header">
@@ -42,9 +86,10 @@ function ResultsPage() {
   <h2 className="results-title">results</h2>
 
 <div className="results-cards">
-  {initialSearchHotels.map((hotel) => (
-    <HotelDetails key={hotel.id} hotel={hotel} />
-  ))}
+  {loading && <p>Searching...</p>}
+  {error && <p role="alert">{error}</p>}
+  {hotel && <HotelDetails hotel={hotel} />}
+  {query && !loading && !error && !hotel && <p>No hotels found.</p>}
 </div>
     </section>
 

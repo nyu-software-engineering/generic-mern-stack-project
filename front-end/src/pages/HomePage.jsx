@@ -5,10 +5,12 @@ import { Link } from "react-router-dom";
 import { useCurBookings } from "../shared_content/SavedCurrentBookings";
 import BookingCard from "../components/BookingCard";
 
+
 function HomePage() {
   const {curBookings, loading, error, deleteBooking, updateBooking} = useCurBookings();
   const [currentView, setCurrentView] = useState('noEdit');
   const [activeItemEdit, setActiveItemEdit] = useState(null);
+  const [searchText, setSearchText] = useState("");//this one is for search feature
 
   const handleEdit = (item) => {
       setCurrentView("edit");
@@ -46,20 +48,26 @@ function HomePage() {
       </header>
 
       <section className="home-search">
-        <label className="home-search-label">
-          search
-        </label>
+      <label className="home-search-label" htmlFor="home-search-input">
+        Search
+      </label>
 
-        <input
-          id="home-search-input"
-          className="home-search-input"
-          type="text"
-        />
+      <input
+        id="home-search-input"
+        className="home-search-input"
+        type="search"
+        placeholder="Hotel name or location"
+        value={searchText}
+        onChange={(event) => setSearchText(event.target.value)}
+      />
 
-        <Link to="/results" className="home-search-button">
-          search
-        </Link>
-      </section>
+      <Link
+        to={`/results?${new URLSearchParams({ q: searchText.trim() })}`}
+        className="home-search-button"
+      >
+        Search
+      </Link>
+    </section>
 
       <div id='home-page-current-bookings'>
       {loading ? (
