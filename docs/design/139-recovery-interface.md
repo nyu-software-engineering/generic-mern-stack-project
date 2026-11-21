@@ -14,6 +14,8 @@ Admitted email requests hold a fixed 25-second reservation. Lookup and provider 
 
 `createRecoveryRouter(recovery)` returns exactly three POST handlers: `/forgot-password`, `/verify-reset-code`, and `/reset-password`. Mount at `/api/auth` after JSON parsing and before currentUser. Safe service errors become `{ error: message }`. Unexpected errors use the existing error handler.
 
+Each handler requires `application/json`. Unsupported media types receive a safe 415 with `Cache-Control: no-store` before any recovery limits apply.
+
 `deliver(message)` resolves when provider submission succeeds. A reset message is `{ kind: 'password-reset', to, code, expiresAt }`, where `code` is an eight-character decimal string and expiry is epoch milliseconds. A notice is `{ kind: 'password-changed', to }`.
 
 `createBrevoDelivery({ apiKey, from, fromName, fetchImpl })` returns the delivery function. Use HTTPS and a ten-second timeout. `recoveryConfiguration(env)` returns delivery configuration when the three Brevo settings are present and valid. It requires no public app origin. `loadEnvironment({ directory, env })` loads .env.local then .env while preserving existing environment values.

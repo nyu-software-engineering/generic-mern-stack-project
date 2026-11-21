@@ -41,6 +41,8 @@ These numeric limits are project choices. An unverified account remains unverifi
 
 All three handlers are public POST routes mounted after JSON parsing and before `currentUser`. They work even when a caller supplies a stale bearer header. Other handlers retain their session checks. The existing frontend helper already excludes inherited bearer headers for `/auth/`.
 
+All three handlers require `application/json`. Other media types receive a safe 415 with `Cache-Control: no-store` before any recovery limits apply. Parsed JSON still counts toward the verification and reset attempt limit when fields are missing or invalid.
+
 | Route | Body | Success |
 | --- | --- | --- |
 | `/api/auth/forgot-password` | `{ email }` | `202 { message: "If an account exists for this email, password reset instructions will be sent." }` |
@@ -91,6 +93,7 @@ Each step supports idle, pending, validation, safe API error, retry, and success
 - Out-of-order delivery, newest failure, code proof while mail is pending, and password reset while mail is pending preserve revision rules.
 - Limits cover unknown addresses, exact boundaries, capacity, cleanup, and spoofed forwarded headers.
 - Valid codes and reset permissions work at delivery capacity. Notices respect both caps.
+- Unsupported media types leave recovery attempt allowances available for JSON requests.
 - Other users, sessions, passwords, and unverified state remain unchanged.
 - Capture adapter and mocked Brevo tests cover success, failure, timeout, and secrecy without real keys or inboxes.
 - Full browser journey covers the three steps, mismatch, rejected codes, retry, old/new login, pending states, keyboard, short phone viewports, and representative widths from 320px through desktop.

@@ -34,12 +34,8 @@ async function withServer(test, options = {}) {
   });
   const server = await startTestServer(app);
 
-  async function api(path, body, headers = {}) {
-    const response = await fetch(`${server.baseUrl}/api${path}`, {
-      method: body === undefined ? "GET" : "POST",
-      headers: { "content-type": "application/json", ...headers },
-      body: body === undefined ? undefined : JSON.stringify(body),
-    });
+  async function request(path, options) {
+    const response = await fetch(`${server.baseUrl}/api${path}`, options);
     return {
       status: response.status,
       body: await response.json(),
@@ -47,6 +43,12 @@ async function withServer(test, options = {}) {
       cacheControl: response.headers.get("cache-control"),
     };
   }
+
+  const api = (path, body, headers = {}) => request(path, {
+    method: body === undefined ? "GET" : "POST",
+    headers: { "content-type": "application/json", ...headers },
+    body: body === undefined ? undefined : JSON.stringify(body),
+  });
 
   const login = (account = details, password = account.password) =>
     api("/auth/login", { email: account.email, password });
@@ -70,7 +72,7 @@ async function withServer(test, options = {}) {
   const idle = () => app.locals.recovery.idle();
 
   try {
-    await test({ app, data, messages, api, login, signup, forgot, verifyCode, reset, advance, idle });
+    await test({ app, data, messages, request, api, login, signup, forgot, verifyCode, reset, advance, idle });
   } finally {
     await server.close();
   }
@@ -630,6 +632,31 @@ describe("Password recovery API (#139)", () => {
       expect(limited.retryAfter).to.equal("900");
       advance(15 * minute);
       expectResponse(await reset("bad"), 400, { error: badGrant });
+    },
+  ));
+
+  it("rejects non-JSON recovery requests before using the connection IP limits", () => withServer(
+    async ({ request, signup, forgot, verifyCode, reset, login, messages, idle }) => {
+      await signup();
+      const multipart = new FormData();
+      multipart.append("email", details.email);
+      const bodies = [new URLSearchParams({ email: details.email }), multipart, `email=${details.email}`];
+
+      for (const path of ["/auth/forgot-password", "/auth/verify-reset-code", "/auth/reset-password"]) {
+        for (let index = 0; index < 21; index += 1) {
+          const result = await request(path, { method: "POST", body: bodies[index % bodies.length] });
+          expectResponse(result, 415, { error: "Send recovery requests as application/json." });
+          expect(result.cacheControl).to.equal("no-store");
+          expect(result.retryAfter).to.equal(null);
+        }
+      }
+
+      expectResponse(await forgot(details.email, { "content-type": "application/json; charset=utf-8" }),
+        202, { message: confirmation });
+      await idle();
+      const resetToken = grantOf(await verifyCode(codeOf(messages[0])));
+      expectResponse(await reset(resetToken), 200, { message: updated });
+      expect((await login(details, newPassword)).status).to.equal(200);
     },
   ));
 

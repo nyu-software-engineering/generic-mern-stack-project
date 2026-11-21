@@ -7,6 +7,9 @@ export function createRecoveryRouter(recovery) {
   function reply(action, status) {
     return async (request, response, next) => {
       response.set("Cache-Control", "no-store");
+      if (!request.is("application/json")) {
+        return response.status(415).json({ error: "Send recovery requests as application/json." });
+      }
       try {
         const { email, code, resetToken, password } = request.body ?? {};
         const result = await action({ email, code, resetToken, password, ip: request.socket.remoteAddress });
