@@ -58,14 +58,17 @@ export async function getFollowedAreas() {
   return areas.filter(area => followedIds.includes(area.id))
 }
 
-export async function getApartmentChecks() {
-  const checks = await load('apartment-checks.json')
-  return [...checks].sort((a, b) => b.checkedOn.localeCompare(a.checkedOn))
+export function getApartmentChecks() {
+  return request('/apartment-checks')
 }
 
 export async function getApartmentCheck(checkId) {
-  const checks = await getApartmentChecks()
-  return checks.find(check => check.id === checkId)
+  // the server sends an error when no check has this id, so return nothing instead
+  try {
+    return await request(`/apartment-checks/${checkId}`)
+  } catch {
+    return undefined
+  }
 }
 
 export async function getLatestApartmentCheck() {
