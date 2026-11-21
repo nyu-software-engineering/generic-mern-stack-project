@@ -10,6 +10,8 @@ Approved [code-based design](../superpowers/specs/2026-11-21-account-recovery-de
 
 `requestReset` returns the generic confirmation and schedules private delivery. `verifyCode` returns `{ resetToken, expiresIn: 300 }` only after correct code proof. `resetPassword` returns the success message after changing the existing credential and revoking that account's sessions. Expected errors have numeric `status`, safe `message`, and optional `retryAfter`.
 
+The public admission check uses fixed 25-second reservations for admitted email requests and successful password resets. Lookup and provider completion do not release them early. Private work stays bounded separately, so a stalled job can cause a later delivery to be skipped without changing the public result.
+
 `createRecoveryRouter(recovery)` returns exactly three POST handlers: `/forgot-password`, `/verify-reset-code`, and `/reset-password`. Mount at `/api/auth` after JSON parsing and before currentUser. Safe service errors become `{ error: message }`. Unexpected errors use the existing error handler.
 
 `deliver(message)` resolves when provider submission succeeds. A reset message is `{ kind: 'password-reset', to, code, expiresAt }`, where `code` is an eight-character decimal string and expiry is epoch milliseconds. A notice is `{ kind: 'password-changed', to }`.

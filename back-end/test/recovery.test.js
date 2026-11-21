@@ -500,6 +500,35 @@ describe("Password recovery API (#139)", () => {
     }, { recovery: { deliver: pending.deliver } });
   });
 
+  it("does not send a code superseded while its account lookup is paused", async () => {
+    const { store, pauseNextLoad } = pausableStore();
+    const current = deliveryGate();
+    const messages = [];
+    const deliver = async (message) => {
+      messages.push(message);
+      if (messages.length === 1) await current.deliver(message);
+    };
+
+    await withServer(async ({ signup, forgot, verifyCode, advance, idle }) => {
+      await signup();
+      const earlierLookup = pauseNextLoad();
+      const older = await forgot();
+      await earlierLookup.started;
+      try {
+        expectResponse(older, 202, { message: confirmation });
+        advance(minute);
+        expectResponse(await forgot(), 202, { message: confirmation });
+        await current.received;
+        current.complete();
+      } finally {
+        earlierLookup.release();
+      }
+      await idle();
+      expect(messages.length).to.equal(1);
+      grantOf(await verifyCode(codeOf(messages[0])));
+    }, { recovery: { deliver }, store });
+  });
+
   it("does not issue a pending code to a replacement account identity", async () => {
     const pending = deliveryGate();
     await withServer(async ({ data, signup, forgot, verifyCode, idle }) => {
@@ -516,15 +545,7 @@ describe("Password recovery API (#139)", () => {
   it("rechecks grant ownership after the reset's store load completes", async () => {
     const pending = deliveryGate();
     const messages = [];
-    let holdNextLoad;
-    const store = (data) => ({
-      async load() {
-        const hold = holdNextLoad;
-        holdNextLoad = undefined;
-        if (hold) await hold();
-        return data;
-      },
-    });
+    const { store, pauseNextLoad } = pausableStore();
     const deliver = async (message) => {
       messages.push(message);
       if (messages.length === 2) await pending.deliver(message);
@@ -539,18 +560,15 @@ describe("Password recovery API (#139)", () => {
       await forgot();
       const newer = codeOf(await pending.received);
 
-      let release;
-      const loadStarted = new Promise((start) => {
-        holdNextLoad = () => new Promise((resolve) => {
-          release = resolve;
-          start();
-        });
-      });
+      const pause = pauseNextLoad();
       const resetting = reset(older);
-      await loadStarted;
-      pending.complete();
-      await idle();
-      release();
+      await pause.started;
+      try {
+        pending.complete();
+        await idle();
+      } finally {
+        pause.release();
+      }
       expectResponse(await resetting, 400, { error: badGrant });
       expectResponse(await reset(grantOf(await verifyCode(newer))), 200, { message: updated });
       await idle();
@@ -623,9 +641,10 @@ describe("Password recovery API (#139)", () => {
       const recovery = app.locals.recovery;
       const code = codeOf(messages[0]);
       const wrong = code === "00000000" ? "00000001" : "00000000";
-      for (let index = 1; index <= 5; index += 1) {
+      const guesses = [undefined, "1", 12345678, "wrong123", wrong];
+      for (const [index, guess] of guesses.entries()) {
         const failure = await expectFailure(recovery.verifyCode({
-          code: wrong, email: details.email, ip: `192.0.2.${index}`,
+          code: guess, email: details.email, ip: `192.0.2.${index + 1}`,
         }), 400);
         expect(failure.message).to.equal(badCode);
       }
@@ -669,22 +688,44 @@ describe("Password recovery API (#139)", () => {
     }, { recovery: { policy: { metadataCapacity: 1 } } },
   ));
 
-  it("rejects both known and unknown addresses while the delivery pool is full", async () => {
-    const pending = deliveryGate();
-    await withServer(async ({ signup, forgot, verifyCode, reset, advance, idle }) => {
-      await signup();
-      await forgot();
-      const code = codeOf(await pending.received);
-      advance(minute);
-      expectResponse(await forgot(), 503, { error: unavailable });
-      expectResponse(await forgot("unknown@nyu.edu"), 503, { error: unavailable });
-      expectResponse(await verifyCode(code), 503, { error: unavailable });
-      expectResponse(await reset("a".repeat(64)), 503, { error: unavailable });
-      pending.complete();
-      await idle();
-      expectResponse(await reset(grantOf(await verifyCode(code))), 200, { message: updated });
-      await idle();
-    }, { recovery: { deliver: pending.deliver, policy: { deliveryCapacity: 1 } } });
+  it("gives known and unknown requests the same public capacity boundary", async () => {
+    const other = { ...details, email: "another@nyu.edu" };
+    for (const scenario of ["unknown", "finished", "pending"]) {
+      const pending = deliveryGate();
+      const deliveredTo = [];
+      const deliver = async (message) => {
+        deliveredTo.push(message.to);
+        if (message.to === details.email && scenario === "pending") await pending.deliver(message);
+      };
+
+      await withServer(async ({ signup, forgot, verifyCode, reset, advance, idle }) => {
+        await signup();
+        await signup(other);
+        const first = await forgot(scenario === "unknown" ? "unknown@nyu.edu" : details.email);
+        if (scenario === "pending") await pending.received;
+        else await idle();
+
+        try {
+          expectResponse(first, 202, { message: confirmation });
+          advance(24_999);
+          expectResponse(await forgot(details.email), 503, { error: unavailable });
+          expectResponse(await forgot("another@nyu.edu"), 503, { error: unavailable });
+          expectResponse(await verifyCode("00000000"), 503, { error: unavailable });
+          expectResponse(await reset("a".repeat(64)), 503, { error: unavailable });
+          advance(1);
+          expectResponse(await forgot(other.email), 202, { message: confirmation });
+        } finally {
+          pending.complete();
+        }
+        await idle();
+        const expected = {
+          unknown: [other.email],
+          finished: [details.email, other.email],
+          pending: [details.email],
+        };
+        expect(deliveredTo).to.deep.equal(expected[scenario]);
+      }, { recovery: { deliver, policy: { deliveryCapacity: 1 } } });
+    }
   });
 
   it("keeps accounts working without valid recovery configuration", () => withServer(

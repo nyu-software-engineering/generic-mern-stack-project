@@ -5,6 +5,7 @@ const minute = 60_000;
 const hour = 60 * minute;
 const codeLifetime = 15 * minute;
 const grantLifetime = 5 * minute;
+const admissionLifetime = 25_000;
 const confirmation = "If an account exists for this email, password reset instructions will be sent.";
 const updated = "Password updated. Sign in with your new password.";
 const codeKey = randomBytes(32);
@@ -81,6 +82,7 @@ export function createRecovery({ auth, store, deliver, now = Date.now, policy = 
   const addresses = new Map();
   const grants = new Map();
   const jobs = new Set();
+  const admissions = [];
   let lastTime = -Infinity;
 
   function clock() {
@@ -116,11 +118,22 @@ export function createRecovery({ auth, store, deliver, now = Date.now, policy = 
   });
   const verificationAndResetIPs = rollingAttempts({ limit: 10, windowMs: resetWindowMs, capacity: metadataCapacity });
 
-  function ensureAvailable() {
-    if (typeof deliver !== "function" || jobs.size >= deliveryCapacity) throw unavailable();
+  function ensureAvailable(time) {
+    while (admissions.length && admissions[0] <= time) admissions.shift();
+    if (typeof deliver !== "function" || admissions.length >= deliveryCapacity) throw unavailable();
+  }
+
+  function reserveAdmission(time) {
+    // The public slot lasts through the normal store and provider deadlines.
+    // Releasing it when work finishes would expose account and delivery status.
+    admissions.push(time + admissionLifetime);
   }
 
   function schedule(work, failureCategory) {
+    if (jobs.size >= deliveryCapacity) {
+      console.warn(failureCategory);
+      return;
+    }
     const job = setImmediate()
       .then(work)
       .catch(() => { console.warn(failureCategory); })
@@ -134,10 +147,11 @@ export function createRecovery({ auth, store, deliver, now = Date.now, policy = 
 
     const time = clock();
     enforceLimit(requestIPs(ip, time));
-    ensureAvailable();
+    ensureAvailable(time);
 
     const { entry } = requestAddresses(digestOf(email), time);
     if (!entry) return { message: confirmation };
+    reserveAdmission(time);
 
     // Reserve the revision before lookup so store and provider completion order
     // cannot make an older request appear newer.
@@ -152,7 +166,8 @@ export function createRecovery({ auth, store, deliver, now = Date.now, policy = 
       const credentials = auth.credentials.get(email);
       const user = users.find((item) => emailOf(item.email) === email);
       const startedAt = clock();
-      if (!credentials || !user || entry.passwordRevision !== passwordRevision || startedAt >= expiresAt) return;
+      if (!credentials || !user || entry.requestRevision !== requestRevision ||
+          entry.passwordRevision !== passwordRevision || startedAt >= expiresAt) return;
 
       const { id: userId, email: to } = user;
       const { code, digest } = issueCode(entry, email, time, startedAt);
@@ -172,14 +187,15 @@ export function createRecovery({ auth, store, deliver, now = Date.now, policy = 
   async function verifyCode({ email: input, code, ip }) {
     const time = clock();
     enforceLimit(verificationAndResetIPs(ip, time));
-    ensureAvailable();
+    ensureAvailable(time);
 
     const email = emailOf(input);
-    if (!validEmail(email) || typeof code !== "string" || !/^[0-9]{8}$/.test(code)) throw invalidCode();
+    if (!validEmail(email)) throw invalidCode();
 
     const entry = addresses.get(digestOf(email));
     const active = activeFor(entry, "code", time);
-    const matches = timingSafeEqual(codeDigestOf(email, code), active?.digest ?? emptyDigest);
+    const wellFormed = typeof code === "string" && /^[0-9]{8}$/.test(code);
+    const matches = wellFormed && timingSafeEqual(codeDigestOf(email, code), active?.digest ?? emptyDigest);
     if (!active) throw invalidCode();
     if (!matches) {
       active.wrong += 1;
@@ -188,8 +204,8 @@ export function createRecovery({ auth, store, deliver, now = Date.now, policy = 
     }
 
     const { users } = await store.load();
-    ensureAvailable();
     const verifiedAt = clock();
+    ensureAvailable(verifiedAt);
     if (!accountFor(users, entry, active, verifiedAt)) throw invalidCode();
 
     const resetToken = randomBytes(32).toString("hex");
@@ -207,7 +223,7 @@ export function createRecovery({ auth, store, deliver, now = Date.now, policy = 
   async function resetPassword({ resetToken, password, ip }) {
     const time = clock();
     enforceLimit(verificationAndResetIPs(ip, time));
-    ensureAvailable();
+    ensureAvailable(time);
 
     if (typeof resetToken !== "string" || !/^[a-f0-9]{64}$/.test(resetToken)) throw invalidGrant();
     const entry = grants.get(digestOf(resetToken));
@@ -218,15 +234,17 @@ export function createRecovery({ auth, store, deliver, now = Date.now, policy = 
     }
 
     const { users } = await store.load();
-    ensureAvailable();
-    const user = accountFor(users, entry, active, clock());
+    const loadedAt = clock();
+    ensureAvailable(loadedAt);
+    const user = accountFor(users, entry, active, loadedAt);
     if (!user) throw invalidGrant();
 
     const { email, userId, credentials, expiresAt } = active;
     const to = user.email;
     const salt = randomBytes(16).toString("hex");
     const hash = scryptSync(password, salt, 32);
-    if (clock() >= expiresAt) throw invalidGrant();
+    const resetAt = clock();
+    if (resetAt >= expiresAt) throw invalidGrant();
 
     // Change the credential, consume the grant and fence pending requests together.
     clearActive(entry);
@@ -236,6 +254,7 @@ export function createRecovery({ auth, store, deliver, now = Date.now, policy = 
     for (const [session, ownerId] of auth.sessions) {
       if (ownerId === userId) auth.sessions.delete(session);
     }
+    reserveAdmission(resetAt);
     schedule(() => deliver({ kind: "password-changed", to }), "Password change notice failed.");
     return { message: updated };
   }
