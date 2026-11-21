@@ -1,11 +1,21 @@
 import Post from "./Post";
-import { posts } from "./mockData";
+import { useEffect, useState } from "react"
 import "./Feed.css"
 import { Link } from "react-router-dom"
 
 
 
 function Feed() {
+
+  const [posts, setPosts] = useState([])
+
+useEffect(() => {
+  fetch("http://localhost:3000/api/posts")
+    .then((response) => response.json())
+    .then((data) => setPosts(data))
+    .catch((error) => console.error("Error loading posts:", error))
+}, [])
+
   return (
     <div className="feed-page">
       <input
