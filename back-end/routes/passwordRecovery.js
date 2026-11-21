@@ -6,9 +6,10 @@ export function createRecoveryRouter(recovery) {
 
   function reply(action, status) {
     return async (request, response, next) => {
+      response.set("Cache-Control", "no-store");
       try {
-        const { email, token, password } = request.body ?? {};
-        const result = await action({ email, token, password, ip: request.socket.remoteAddress });
+        const { email, code, resetToken, password } = request.body ?? {};
+        const result = await action({ email, code, resetToken, password, ip: request.socket.remoteAddress });
         response.status(status).json(result);
       } catch (error) {
         if (!(error instanceof RecoveryError)) return next(error);
@@ -19,6 +20,7 @@ export function createRecoveryRouter(recovery) {
   }
 
   router.post("/forgot-password", reply(recovery.requestReset, 202));
+  router.post("/verify-reset-code", reply(recovery.verifyCode, 200));
   router.post("/reset-password", reply(recovery.resetPassword, 200));
   return router;
 }

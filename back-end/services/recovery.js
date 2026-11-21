@@ -1,11 +1,14 @@
-import { createHash, randomBytes, scryptSync } from "node:crypto";
+import { createHash, createHmac, randomBytes, randomInt, scryptSync, timingSafeEqual } from "node:crypto";
 import { setImmediate } from "node:timers/promises";
 
 const minute = 60_000;
 const hour = 60 * minute;
-const lifetime = 15 * minute;
+const codeLifetime = 15 * minute;
+const grantLifetime = 5 * minute;
 const confirmation = "If an account exists for this email, password reset instructions will be sent.";
 const updated = "Password updated. Sign in with your new password.";
+const codeKey = randomBytes(32);
+const emptyDigest = Buffer.alloc(32);
 
 export class RecoveryError extends Error {
   constructor(status, message, retryAfter) {
@@ -16,21 +19,28 @@ export class RecoveryError extends Error {
 }
 
 const unavailable = () => new RecoveryError(503, "Password recovery is temporarily unavailable. Try again later.");
-const invalidLink = () => new RecoveryError(400, "This reset link is invalid or has expired.");
+const invalidCode = () => new RecoveryError(400, "This recovery code is invalid or has expired.");
+const invalidGrant = () => new RecoveryError(400, "This password reset permission is invalid or has expired.");
 const emailOf = (value) => typeof value === "string" ? value.trim().toLowerCase() : "";
+const validEmail = (email) => /^[^\s@]+@nyu\.edu$/.test(email);
 const digestOf = (value) => createHash("sha256").update(value).digest("hex");
+const codeDigestOf = (email, code) => createHmac("sha256", codeKey).update(email).update("\0").update(code).digest();
 
-function trustedOrigin(value) {
-  if (typeof value !== "string" || !URL.canParse(value)) return undefined;
-  const url = new URL(value);
-  if (url.origin !== value) return undefined;
-  const loopback = ["localhost", "127.0.0.1", "[::1]"].includes(url.hostname);
-  if (url.protocol === "https:" || (url.protocol === "http:" && loopback)) return value;
+function issueCode(entry, email, requestedAt, time) {
+  // Skip repeats so a superseded message cannot prove a newer request.
+  const recent = (entry.recentCodes ?? []).filter((item) => item.requestedAt > time - hour);
+  let code;
+  let digest;
+  do {
+    code = randomInt(100_000_000).toString().padStart(8, "0");
+    digest = codeDigestOf(email, code);
+  } while (recent.some((item) => item.digest.equals(digest)));
+  recent.push({ digest, requestedAt });
+  entry.recentCodes = recent;
+  return { code, digest };
 }
 
-function rollingAttempts({ limit, windowMs, capacity, spacingMs = 0, onExpire }) {
-  const entries = new Map();
-
+function rollingAttempts({ limit, windowMs, capacity, spacingMs = 0, entries = new Map(), onExpire }) {
   return (key, time) => {
     const threshold = time - windowMs;
     // Accepted attempts move their entries to the end, keeping expiry in order.
@@ -62,14 +72,14 @@ function enforceLimit({ retryAfter }) {
   if (retryAfter) throw new RecoveryError(429, "Too many attempts. Try again later.", retryAfter);
 }
 
-export function createRecovery({ auth, store, deliver, now = Date.now, publicOrigin, policy = {} }) {
+export function createRecovery({ auth, store, deliver, now = Date.now, policy = {} }) {
   const {
     metadataCapacity = 10_000,
     deliveryCapacity = 20,
     resetWindowMs = 15 * minute,
   } = policy;
-  const origin = trustedOrigin(publicOrigin);
-  const activeTokens = new Map();
+  const addresses = new Map();
+  const grants = new Map();
   const jobs = new Set();
   let lastTime = -Infinity;
 
@@ -79,21 +89,35 @@ export function createRecovery({ auth, store, deliver, now = Date.now, publicOri
   }
 
   function clearActive(entry) {
-    if (!entry.active) return;
-    activeTokens.delete(entry.active.digest);
+    if (entry.active?.kind === "grant") grants.delete(entry.active.digest);
     entry.active = undefined;
+  }
+
+  function activeFor(entry, kind, time) {
+    const active = entry?.active;
+    if (!active) return undefined;
+    if (time >= active.expiresAt) {
+      clearActive(entry);
+      return undefined;
+    }
+    if (active.kind === kind) return active;
+  }
+
+  function accountFor(users, entry, active, time) {
+    const { email, userId, credentials, passwordRevision, expiresAt } = active;
+    if (entry.active !== active || entry.passwordRevision !== passwordRevision ||
+        auth.credentials.get(email) !== credentials || time >= expiresAt) return undefined;
+    return users.find((user) => user.id === userId && emailOf(user.email) === email);
   }
 
   const requestIPs = rollingAttempts({ limit: 20, windowMs: hour, capacity: metadataCapacity });
   const requestAddresses = rollingAttempts({
-    limit: 5, windowMs: hour, capacity: metadataCapacity, spacingMs: minute, onExpire: clearActive,
+    limit: 5, windowMs: hour, capacity: metadataCapacity, spacingMs: minute, entries: addresses, onExpire: clearActive,
   });
-  const resetLimits = { limit: 10, windowMs: resetWindowMs, capacity: metadataCapacity };
-  const resetIPs = rollingAttempts(resetLimits);
-  const resetTokens = rollingAttempts(resetLimits);
+  const verificationAndResetIPs = rollingAttempts({ limit: 10, windowMs: resetWindowMs, capacity: metadataCapacity });
 
   function ensureAvailable() {
-    if (!origin || typeof deliver !== "function" || jobs.size >= deliveryCapacity) throw unavailable();
+    if (typeof deliver !== "function" || jobs.size >= deliveryCapacity) throw unavailable();
   }
 
   function schedule(work, failureCategory) {
@@ -106,7 +130,7 @@ export function createRecovery({ auth, store, deliver, now = Date.now, publicOri
 
   async function requestReset({ email: input, ip }) {
     const email = emailOf(input);
-    if (!/^[^\s@]+@nyu\.edu$/.test(email)) throw new RecoveryError(400, "Enter a valid NYU email.");
+    if (!validEmail(email)) throw new RecoveryError(400, "Enter a valid NYU email.");
 
     const time = clock();
     enforceLimit(requestIPs(ip, time));
@@ -121,65 +145,90 @@ export function createRecovery({ auth, store, deliver, now = Date.now, publicOri
     entry.requestRevision = requestRevision;
     entry.passwordRevision ??= Symbol();
     const { passwordRevision } = entry;
-    const expiresAt = time + lifetime;
+    const expiresAt = time + codeLifetime;
 
     schedule(async () => {
       const { users } = await store.load();
       const credentials = auth.credentials.get(email);
       const user = users.find((item) => emailOf(item.email) === email);
-      if (!credentials || !user || entry.passwordRevision !== passwordRevision || clock() >= expiresAt) return;
+      const startedAt = clock();
+      if (!credentials || !user || entry.passwordRevision !== passwordRevision || startedAt >= expiresAt) return;
 
       const { id: userId, email: to } = user;
-      const token = randomBytes(32).toString("hex");
-      const digest = digestOf(token);
-      await deliver({
-        kind: "password-reset", to, resetUrl: `${origin}/reset-password#token=${token}`, expiresAt,
-      });
+      const { code, digest } = issueCode(entry, email, time, startedAt);
+      await deliver({ kind: "password-reset", to, code, expiresAt });
 
       if (entry.requestRevision !== requestRevision || entry.passwordRevision !== passwordRevision ||
           auth.credentials.get(email) !== credentials || user.id !== userId || user.email !== to ||
           clock() >= expiresAt) return;
 
       clearActive(entry);
-      const active = { digest, email, userId, credentials, expiresAt, passwordRevision, entry };
-      activeTokens.set(digest, active);
-      entry.active = active;
+      entry.active = { kind: "code", digest, email, userId, credentials, expiresAt, passwordRevision, wrong: 0 };
     }, "Password reset delivery failed.");
 
     return { message: confirmation };
   }
 
-  async function resetPassword({ token, password, ip }) {
+  async function verifyCode({ email: input, code, ip }) {
     const time = clock();
-    enforceLimit(resetIPs(ip, time));
-    const digest = typeof token === "string" && /^[a-f0-9]{64}$/i.test(token)
-      ? digestOf(token.toLowerCase()) : undefined;
-    if (digest) enforceLimit(resetTokens(digest, time));
+    enforceLimit(verificationAndResetIPs(ip, time));
     ensureAvailable();
 
-    const active = activeTokens.get(digest);
-    if (!active) throw invalidLink();
-    const { entry, email, userId, credentials, expiresAt, passwordRevision } = active;
-    if (time >= expiresAt) {
-      clearActive(entry);
-      throw invalidLink();
+    const email = emailOf(input);
+    if (!validEmail(email) || typeof code !== "string" || !/^[0-9]{8}$/.test(code)) throw invalidCode();
+
+    const entry = addresses.get(digestOf(email));
+    const active = activeFor(entry, "code", time);
+    const matches = timingSafeEqual(codeDigestOf(email, code), active?.digest ?? emptyDigest);
+    if (!active) throw invalidCode();
+    if (!matches) {
+      active.wrong += 1;
+      if (active.wrong >= 5) clearActive(entry);
+      throw invalidCode();
     }
+
+    const { users } = await store.load();
+    ensureAvailable();
+    const verifiedAt = clock();
+    if (!accountFor(users, entry, active, verifiedAt)) throw invalidCode();
+
+    const resetToken = randomBytes(32).toString("hex");
+    const digest = digestOf(resetToken);
+    const { userId, credentials, passwordRevision } = active;
+    // Replace the code and fence deliveries that were pending at proof time.
+    entry.requestRevision = undefined;
+    entry.active = {
+      kind: "grant", digest, email, userId, credentials, passwordRevision, expiresAt: verifiedAt + grantLifetime,
+    };
+    grants.set(digest, entry);
+    return { resetToken, expiresIn: grantLifetime / 1000 };
+  }
+
+  async function resetPassword({ resetToken, password, ip }) {
+    const time = clock();
+    enforceLimit(verificationAndResetIPs(ip, time));
+    ensureAvailable();
+
+    if (typeof resetToken !== "string" || !/^[a-f0-9]{64}$/.test(resetToken)) throw invalidGrant();
+    const entry = grants.get(digestOf(resetToken));
+    const active = activeFor(entry, "grant", time);
+    if (!active) throw invalidGrant();
     if (typeof password !== "string" || password.length < 8 || password.length > 128) {
       throw new RecoveryError(400, "Enter a password between 8 and 128 characters.");
     }
 
     const { users } = await store.load();
     ensureAvailable();
-    const user = users.find((item) => item.id === userId && emailOf(item.email) === email);
-    if (!user || activeTokens.get(digest) !== active || entry.passwordRevision !== passwordRevision ||
-        auth.credentials.get(email) !== credentials || clock() >= expiresAt) throw invalidLink();
+    const user = accountFor(users, entry, active, clock());
+    if (!user) throw invalidGrant();
 
+    const { email, userId, credentials, expiresAt } = active;
     const to = user.email;
     const salt = randomBytes(16).toString("hex");
     const hash = scryptSync(password, salt, 32);
-    if (clock() >= expiresAt) throw invalidLink();
+    if (clock() >= expiresAt) throw invalidGrant();
 
-    // Change the credential, claim the link and fence pending requests together.
+    // Change the credential, consume the grant and fence pending requests together.
     clearActive(entry);
     entry.passwordRevision = Symbol();
     entry.requestRevision = undefined;
@@ -195,5 +244,5 @@ export function createRecovery({ auth, store, deliver, now = Date.now, publicOri
     while (jobs.size) await Promise.all(jobs);
   }
 
-  return { requestReset, resetPassword, idle };
+  return { requestReset, verifyCode, resetPassword, idle };
 }

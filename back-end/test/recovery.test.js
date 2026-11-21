@@ -1,3 +1,5 @@
+import crypto from "node:crypto";
+import { syncBuiltinESMExports } from "node:module";
 import { describe, it } from "mocha";
 import { expect } from "chai";
 import { createApp } from "../app.js";
@@ -6,9 +8,9 @@ import { startTestServer } from "./helpers/server.js";
 
 const confirmation = "If an account exists for this email, password reset instructions will be sent.";
 const updated = "Password updated. Sign in with your new password.";
-const badLink = "This reset link is invalid or has expired.";
+const badCode = "This recovery code is invalid or has expired.";
+const badGrant = "This password reset permission is invalid or has expired.";
 const unavailable = "Password recovery is temporarily unavailable. Try again later.";
-const origin = "http://127.0.0.1:5173";
 const minute = 60_000;
 const details = {
   fullName: "Recovery Student",
@@ -24,7 +26,6 @@ async function withServer(test, options = {}) {
   const recovery = {
     deliver: async (message) => { messages.push(message); },
     now: () => time,
-    publicOrigin: origin,
     ...options.recovery,
   };
   const app = createApp({
@@ -43,6 +44,7 @@ async function withServer(test, options = {}) {
       status: response.status,
       body: await response.json(),
       retryAfter: response.headers.get("retry-after"),
+      cacheControl: response.headers.get("cache-control"),
     };
   }
 
@@ -60,27 +62,47 @@ async function withServer(test, options = {}) {
   }
 
   const forgot = (email = details.email, headers) => api("/auth/forgot-password", { email }, headers);
-  const reset = (token, password = newPassword, headers) =>
-    api("/auth/reset-password", { token, password }, headers);
+  const verifyCode = (code, email = details.email, headers) =>
+    api("/auth/verify-reset-code", { email, code }, headers);
+  const reset = (resetToken, password = newPassword, headers) =>
+    api("/auth/reset-password", { resetToken, password }, headers);
   const advance = (duration) => { time += duration; };
   const idle = () => app.locals.recovery.idle();
 
   try {
-    await test({ app, data, messages, api, login, signup, forgot, reset, advance, idle });
+    await test({ app, data, messages, api, login, signup, forgot, verifyCode, reset, advance, idle });
   } finally {
     await server.close();
   }
 }
 
-function tokenOf(message) {
+function codeOf(message) {
   expect(message?.kind).to.equal("password-reset");
-  expect(URL.canParse(message.resetUrl)).to.equal(true);
-  const url = new URL(message.resetUrl);
-  expect(url.origin === origin).to.equal(true);
-  expect(url.pathname === "/reset-password").to.equal(true);
-  expect(url.search === "").to.equal(true);
-  expect(/^#token=[a-f0-9]{64}$/.test(url.hash)).to.equal(true);
-  return url.hash.slice("#token=".length);
+  expect(typeof message.code === "string" && /^[0-9]{8}$/.test(message.code)).to.equal(true);
+  expect(Object.keys(message).sort()).to.deep.equal(["code", "expiresAt", "kind", "to"]);
+  return message.code;
+}
+
+function grantOf(result) {
+  expect(result.status).to.equal(200);
+  expect(Object.keys(result.body).sort()).to.deep.equal(["expiresIn", "resetToken"]);
+  expect(result.body.expiresIn).to.equal(300);
+  expect(/^[a-f0-9]{64}$/.test(result.body.resetToken)).to.equal(true);
+  expect(result.cacheControl).to.equal("no-store");
+  return result.body.resetToken;
+}
+
+async function withRandomCodes(values, callback) {
+  const randomInt = crypto.randomInt;
+  crypto.randomInt = (maximum, ...args) =>
+    maximum === 100_000_000 ? values.shift() : randomInt(maximum, ...args);
+  syncBuiltinESMExports();
+  try {
+    await callback();
+  } finally {
+    crypto.randomInt = randomInt;
+    syncBuiltinESMExports();
+  }
 }
 
 function expectResponse(result, status, body) {
@@ -99,14 +121,14 @@ function deliveryGate() {
     fail: () => settle(false),
     async deliver(message) {
       capture(message);
-      if (!(await result)) throw new Error(message.resetUrl);
+      if (!(await result)) throw new Error(message.code);
     },
   };
 }
 
 describe("Password recovery API (#139)", () => {
-  it("changes the existing password with a privately captured link", () => withServer(
-    async ({ messages, login, signup, forgot, reset, idle }) => {
+  it("changes the existing password after privately captured code proof", () => withServer(
+    async ({ messages, login, signup, forgot, verifyCode, reset, idle }) => {
       const user = await signup();
       expectResponse(await forgot(" RECOVERY@NYU.EDU "), 202, { message: confirmation });
       await idle();
@@ -114,8 +136,8 @@ describe("Password recovery API (#139)", () => {
       expect(messages.length).to.equal(1);
       expect(messages[0].to).to.equal(details.email);
       expect(messages[0].expiresAt).to.equal(Date.UTC(2026, 10, 21) + 15 * minute);
-      const token = tokenOf(messages[0]);
-      expectResponse(await reset(token), 200, { message: updated });
+      const resetToken = grantOf(await verifyCode(codeOf(messages[0]), " RECOVERY@NYU.EDU "));
+      expectResponse(await reset(resetToken), 200, { message: updated });
       expect((await login()).status).to.equal(401);
       const signedIn = await login(details, newPassword);
       expect(signedIn.status).to.equal(200);
@@ -124,14 +146,14 @@ describe("Password recovery API (#139)", () => {
   ));
 
   it("keeps confirmation generic and protects both accounts' privacy", () => withServer(
-    async ({ app, api, data, messages, signup, login, forgot, reset, idle }) => {
+    async ({ app, api, data, messages, signup, login, forgot, verifyCode, reset, idle }) => {
       const another = { ...details, email: "other@nyu.edu" };
       const user = await signup();
       await signup(another);
       const firstToken = (await login()).body.token;
       const secondToken = (await login()).body.token;
       const otherToken = (await login(another)).body.token;
-      const stale = { authorization: "Bearer stale", "x-forwarded-host": "elsewhere.test" };
+      const stale = { authorization: `Bearer ${"a".repeat(64)}` };
 
       expectResponse(await forgot(details.email, stale), 202, { message: confirmation });
       expectResponse(await forgot("unknown@nyu.edu", stale), 202, { message: confirmation });
@@ -140,13 +162,17 @@ describe("Password recovery API (#139)", () => {
       expect((await api("/auth/recovery/idle", {})).status).to.equal(404);
       await idle();
       expect(messages.length).to.equal(1);
-      const token = tokenOf(messages[0]);
-      expectResponse(await reset(token, newPassword, stale), 200, { message: updated });
+      const code = codeOf(messages[0]);
+      expectResponse(await verifyCode(code, "unknown@nyu.edu"), 400, { error: badCode });
+      const resetToken = grantOf(await verifyCode(code, details.email, stale));
+      expect((await api("/users/me", undefined, { authorization: `Bearer ${resetToken}` })).status)
+        .to.equal(401);
+      expectResponse(await reset(resetToken, newPassword, stale), 200, { message: updated });
       await idle();
       expect(JSON.stringify(messages[1]) === JSON.stringify({
         kind: "password-changed", to: details.email,
       })).to.equal(true);
-      expectResponse(await reset(token), 400, { error: badLink });
+      expectResponse(await reset(resetToken), 400, { error: badGrant });
 
       for (const revoked of [firstToken, secondToken]) {
         expect((await api("/users/me", undefined, { authorization: `Bearer ${revoked}` })).status)
@@ -158,19 +184,21 @@ describe("Password recovery API (#139)", () => {
       expect(data.users.some((entry) => entry.id === user.id)).to.equal(true);
       const publicData = await api("/mock-data");
       for (const record of [data, publicData.body]) {
-        expect(JSON.stringify(record).includes(token)).to.equal(false);
+        expect(JSON.stringify(record).includes(code)).to.equal(false);
+        expect(JSON.stringify(record).includes(resetToken)).to.equal(false);
         expect(JSON.stringify(record).includes(newPassword)).to.equal(false);
       }
     },
   ));
 
   it("preserves unverified accounts and the original verification code", () => withServer(
-    async ({ app, api, messages, signup, login, forgot, reset, idle }) => {
+    async ({ app, api, messages, signup, login, forgot, verifyCode, reset, idle }) => {
       const user = await signup(details, false);
       const previous = app.locals.auth.credentials.get(details.email);
       await forgot();
       await idle();
-      expectResponse(await reset(tokenOf(messages[0])), 200, { message: updated });
+      const resetToken = grantOf(await verifyCode(codeOf(messages[0])));
+      expectResponse(await reset(resetToken), 200, { message: updated });
       const current = app.locals.auth.credentials.get(details.email);
       expect(current.salt !== previous.salt).to.equal(true);
       expect(current.code === previous.code).to.equal(true);
@@ -182,37 +210,90 @@ describe("Password recovery API (#139)", () => {
     },
   ));
 
-  it("checks password length without consuming the link and claims the link once", () => withServer(
-    async ({ api, messages, signup, forgot, reset, idle }) => {
+  it("checks password length without consuming the grant and claims the grant once", () => withServer(
+    async ({ api, messages, signup, forgot, verifyCode, reset, idle }) => {
       await signup();
       await forgot();
       await idle();
-      const token = tokenOf(messages[0]);
+      const resetToken = grantOf(await verifyCode(codeOf(messages[0])));
       for (const password of [undefined, 12345678, "1234567", "x".repeat(129)]) {
-        expectResponse(await api("/auth/reset-password", { token, password }), 400, {
+        expectResponse(await api("/auth/reset-password", { resetToken, password }), 400, {
           error: "Enter a password between 8 and 128 characters.",
         });
       }
-      const results = await Promise.all([reset(token, "12345678"), reset(token, "x".repeat(128))]);
+      const results = await Promise.all([reset(resetToken, "12345678"), reset(resetToken, "x".repeat(128))]);
       expect(results.map((result) => result.status).sort()).to.deep.equal([200, 400]);
-      expectResponse(results.find((result) => result.status === 400), 400, { error: badLink });
+      expectResponse(results.find((result) => result.status === 400), 400, { error: badGrant });
       await idle();
       expect(messages.filter(({ kind }) => kind === "password-changed").length).to.equal(1);
     },
   ));
 
-  it("expires links at 15 minutes from request admission", () => withServer(
-    async ({ messages, signup, forgot, reset, advance, idle }) => {
+  it("expires codes at 15 minutes from request admission", () => withServer(
+    async ({ messages, signup, forgot, verifyCode, advance, idle }) => {
       await signup();
       await forgot();
       await idle();
       advance(15 * minute);
-      expectResponse(await reset(tokenOf(messages[0])), 400, { error: badLink });
+      expectResponse(await verifyCode(codeOf(messages[0])), 400, { error: badCode });
+    },
+  ));
+
+  it("preserves leading zeroes and allows only one concurrent proof", () => withServer(
+    async ({ app, messages, signup, forgot, verifyCode, idle }) => {
+      await signup();
+      await withRandomCodes([1234], async () => {
+        expectResponse(await forgot(), 202, { message: confirmation });
+        await idle();
+      });
+
+      expect(codeOf(messages[0]) === "00001234").to.equal(true);
+      expectResponse(await verifyCode(1234), 400, { error: badCode });
+      const results = await Promise.all([verifyCode("00001234"), verifyCode("00001234")]);
+      expect(results.map((result) => result.status).sort()).to.deep.equal([200, 400]);
+      grantOf(results.find((result) => result.status === 200));
+      expectResponse(results.find((result) => result.status === 400), 400, { error: badCode });
+      expectResponse(await verifyCode("00001234"), 400, { error: badCode });
+      expect(app.locals.auth.sessions.size).to.equal(0);
+    },
+  ));
+
+  it("does not reissue a recently delivered code when the generator repeats it", () => withServer(
+    async ({ messages, signup, forgot, verifyCode, advance, idle }) => {
+      await signup();
+      await withRandomCodes([1234, 1234, 5678], async () => {
+        expectResponse(await forgot(), 202, { message: confirmation });
+        await idle();
+        advance(minute);
+        expectResponse(await forgot(), 202, { message: confirmation });
+        await idle();
+      });
+      const older = codeOf(messages[0]);
+      const newer = codeOf(messages[1]);
+      expect(older !== newer).to.equal(true);
+      expectResponse(await verifyCode(older), 400, { error: badCode });
+      grantOf(await verifyCode(newer));
+    },
+  ));
+
+  it("expires a reset grant five minutes after proof near the code's expiry", () => withServer(
+    async ({ messages, signup, forgot, verifyCode, reset, advance, idle }) => {
+      await signup();
+      expectResponse(await forgot(), 202, { message: confirmation });
+      await idle();
+      advance(15 * minute - 1);
+      const resetToken = grantOf(await verifyCode(codeOf(messages[0])));
+      advance(5 * minute - 1);
+      expectResponse(await reset(resetToken, "weak"), 400, {
+        error: "Enter a password between 8 and 128 characters.",
+      });
+      advance(1);
+      expectResponse(await reset(resetToken), 400, { error: badGrant });
     },
   ));
 
   for (const newerCompletesFirst of [false, true]) {
-    it(`keeps the newest link when the ${newerCompletesFirst ? "newer" : "older"} delivery finishes first`, async () => {
+    it(`keeps the newest code when the ${newerCompletesFirst ? "newer" : "older"} delivery finishes first`, async () => {
       const first = deliveryGate();
       const second = deliveryGate();
       const gates = [first, second];
@@ -220,26 +301,26 @@ describe("Password recovery API (#139)", () => {
         if (message.kind === "password-reset") await gates.shift().deliver(message);
       };
 
-      await withServer(async ({ signup, forgot, reset, advance, idle }) => {
+      await withServer(async ({ signup, forgot, verifyCode, reset, advance, idle }) => {
         await signup();
         expectResponse(await forgot(), 202, { message: confirmation });
-        const older = tokenOf(await first.received);
+        const older = codeOf(await first.received);
         advance(minute);
         expectResponse(await forgot(), 202, { message: confirmation });
-        const newer = tokenOf(await second.received);
+        const newer = codeOf(await second.received);
 
         const [early, late] = newerCompletesFirst ? [second, first] : [first, second];
         early.complete();
-        expectResponse(await reset(older), 400, { error: badLink });
+        expectResponse(await verifyCode(older), 400, { error: badCode });
         late.complete();
         await idle();
-        expectResponse(await reset(older), 400, { error: badLink });
-        expectResponse(await reset(newer), 200, { message: updated });
+        expectResponse(await verifyCode(older), 400, { error: badCode });
+        expectResponse(await reset(grantOf(await verifyCode(newer))), 200, { message: updated });
       }, { recovery: { deliver } });
     });
   }
 
-  it("keeps the last active link when the latest delivery fails", async () => {
+  it("keeps the last active code when the latest delivery fails", async () => {
     const first = deliveryGate();
     const second = deliveryGate();
     const messages = [];
@@ -254,23 +335,23 @@ describe("Password recovery API (#139)", () => {
     const warn = console.warn;
     console.warn = (...args) => { warnings.push(args); };
     try {
-      await withServer(async ({ signup, login, forgot, reset, advance, idle }) => {
+      await withServer(async ({ signup, login, forgot, verifyCode, reset, advance, idle }) => {
         await signup();
         await forgot();
         await idle();
-        const active = tokenOf(messages[0]);
+        const active = codeOf(messages[0]);
         advance(minute);
         await forgot();
-        const olderPending = tokenOf(await first.received);
+        const olderPending = codeOf(await first.received);
         advance(minute);
         await forgot();
-        const newest = tokenOf(await second.received);
+        const newest = codeOf(await second.received);
         second.fail();
         first.complete();
         await idle();
-        expectResponse(await reset(olderPending), 400, { error: badLink });
-        expectResponse(await reset(newest), 400, { error: badLink });
-        expectResponse(await reset(active), 200, { message: updated });
+        expectResponse(await verifyCode(olderPending), 400, { error: badCode });
+        expectResponse(await verifyCode(newest), 400, { error: badCode });
+        expectResponse(await reset(grantOf(await verifyCode(active))), 200, { message: updated });
         await idle();
         expect((await login(details, newPassword)).status).to.equal(200);
       }, { recovery: { deliver } });
@@ -290,51 +371,75 @@ describe("Password recovery API (#139)", () => {
       if (messages.length === 2) await pending.deliver(message);
     };
 
-    await withServer(async ({ signup, forgot, reset, advance, idle }) => {
+    await withServer(async ({ signup, forgot, verifyCode, reset, advance, idle }) => {
       await signup();
       await forgot();
       await idle();
-      const active = tokenOf(messages[0]);
+      const resetToken = grantOf(await verifyCode(codeOf(messages[0])));
       advance(minute);
       await forgot();
-      const superseded = tokenOf(await pending.received);
-      expectResponse(await reset(active), 200, { message: updated });
+      const superseded = codeOf(await pending.received);
+      expectResponse(await reset(resetToken), 200, { message: updated });
       advance(minute);
       await forgot();
       pending.complete();
       await idle();
-      expectResponse(await reset(superseded), 400, { error: badLink });
-      expectResponse(await reset(tokenOf(messages[3])), 200, { message: updated });
+      expectResponse(await verifyCode(superseded), 400, { error: badCode });
+      expectResponse(await reset(grantOf(await verifyCode(codeOf(messages[3])))), 200, { message: updated });
     }, { recovery: { deliver } });
   });
 
-  it("does not activate a link that expires while delivery is pending", async () => {
+  it("fences pending mail on code proof and keeps the new grant usable", async () => {
     const pending = deliveryGate();
-    await withServer(async ({ signup, forgot, reset, advance, idle }) => {
+    const messages = [];
+    const deliver = async (message) => {
+      messages.push(message);
+      if (messages.length === 2) await pending.deliver(message);
+    };
+
+    await withServer(async ({ signup, forgot, verifyCode, reset, advance, idle }) => {
+      await signup();
+      expectResponse(await forgot(), 202, { message: confirmation });
+      await idle();
+      advance(minute);
+      expectResponse(await forgot(), 202, { message: confirmation });
+      const superseded = codeOf(await pending.received);
+      const resetToken = grantOf(await verifyCode(codeOf(messages[0])));
+      pending.complete();
+      await idle();
+      expectResponse(await verifyCode(superseded), 400, { error: badCode });
+      expectResponse(await reset(resetToken), 200, { message: updated });
+      await idle();
+    }, { recovery: { deliver } });
+  });
+
+  it("does not activate a code that expires while delivery is pending", async () => {
+    const pending = deliveryGate();
+    await withServer(async ({ signup, forgot, verifyCode, advance, idle }) => {
       await signup();
       await forgot();
-      const token = tokenOf(await pending.received);
+      const code = codeOf(await pending.received);
       advance(15 * minute);
       pending.complete();
       await idle();
-      expectResponse(await reset(token), 400, { error: badLink });
+      expectResponse(await verifyCode(code), 400, { error: badCode });
     }, { recovery: { deliver: pending.deliver } });
   });
 
-  it("does not issue a pending link to a replacement account identity", async () => {
+  it("does not issue a pending code to a replacement account identity", async () => {
     const pending = deliveryGate();
-    await withServer(async ({ data, signup, forgot, reset, idle }) => {
+    await withServer(async ({ data, signup, forgot, verifyCode, idle }) => {
       const original = await signup();
       expectResponse(await forgot(), 202, { message: confirmation });
-      const token = tokenOf(await pending.received);
+      const code = codeOf(await pending.received);
       data.users.find((user) => user.id === original.id).id = "account-replacement";
       pending.complete();
       await idle();
-      expectResponse(await reset(token), 400, { error: badLink });
+      expectResponse(await verifyCode(code), 400, { error: badCode });
     }, { recovery: { deliver: pending.deliver } });
   });
 
-  it("rechecks token ownership after the reset's store load completes", async () => {
+  it("rechecks grant ownership after the reset's store load completes", async () => {
     const pending = deliveryGate();
     const messages = [];
     let holdNextLoad;
@@ -351,14 +456,14 @@ describe("Password recovery API (#139)", () => {
       if (messages.length === 2) await pending.deliver(message);
     };
 
-    await withServer(async ({ signup, forgot, reset, advance, idle }) => {
+    await withServer(async ({ signup, forgot, verifyCode, reset, advance, idle }) => {
       await signup();
       await forgot();
       await idle();
-      const older = tokenOf(messages[0]);
+      const older = grantOf(await verifyCode(codeOf(messages[0])));
       advance(minute);
       await forgot();
-      const newer = tokenOf(await pending.received);
+      const newer = codeOf(await pending.received);
 
       let release;
       const loadStarted = new Promise((start) => {
@@ -372,8 +477,8 @@ describe("Password recovery API (#139)", () => {
       pending.complete();
       await idle();
       release();
-      expectResponse(await resetting, 400, { error: badLink });
-      expectResponse(await reset(newer), 200, { message: updated });
+      expectResponse(await resetting, 400, { error: badGrant });
+      expectResponse(await reset(grantOf(await verifyCode(newer))), 200, { message: updated });
       await idle();
     }, { recovery: { deliver }, store });
   });
@@ -422,46 +527,54 @@ describe("Password recovery API (#139)", () => {
     },
   ));
 
-  it("counts malformed reset payloads before accepting more attempts from one IP", () => withServer(
+  it("shares one direct IP limit across malformed verification and reset payloads", () => withServer(
     async ({ api, reset, advance }) => {
-      for (let index = 0; index < 10; index += 1) {
-        expectResponse(await api("/auth/reset-password", {}), 400, { error: badLink });
+      for (let index = 0; index < 5; index += 1) {
+        expectResponse(await api("/auth/verify-reset-code", {}), 400, { error: badCode });
+        expectResponse(await api("/auth/reset-password", {}), 400, { error: badGrant });
       }
       const limited = await reset("bad", newPassword, { "x-forwarded-for": "192.0.2.10" });
       expect(limited.status).to.equal(429);
       expect(limited.retryAfter).to.equal("900");
       advance(15 * minute);
-      expectResponse(await reset("bad"), 400, { error: badLink });
+      expectResponse(await reset("bad"), 400, { error: badGrant });
     },
   ));
 
-  it("limits the same token digest across IPs and keeps an active token intact", () => withServer(
-    async ({ app, messages, signup, forgot, advance, idle }) => {
+  it("exhausts an issued code on the fifth wrong attempt across IPs and keeps the account usable", () => withServer(
+    async ({ app, messages, signup, login, forgot, verifyCode, advance, idle }) => {
       await signup();
-      await forgot();
+      expectResponse(await forgot(), 202, { message: confirmation });
       await idle();
-      const token = tokenOf(messages[0]);
       const recovery = app.locals.recovery;
-      for (let index = 1; index <= 10; index += 1) {
-        await expectFailure(
-          recovery.resetPassword({ token, password: "weak", ip: `192.0.2.${index}` }), 400,
-        );
+      const code = codeOf(messages[0]);
+      const wrong = code === "00000000" ? "00000001" : "00000000";
+      for (let index = 1; index <= 5; index += 1) {
+        const failure = await expectFailure(recovery.verifyCode({
+          code: wrong, email: details.email, ip: `192.0.2.${index}`,
+        }), 400);
+        expect(failure.message).to.equal(badCode);
       }
-      const limited = await expectFailure(
-        recovery.resetPassword({ token: token.toUpperCase(), password: newPassword, ip: "192.0.2.11" }), 429,
-      );
-      expect(limited.retryAfter).to.equal(840);
-      // Move past the shorter test limiter window while the link is still valid.
-      advance(14 * minute);
-      const result = await recovery.resetPassword({ token, password: newPassword, ip: "192.0.2.11" });
-      expect(result).to.deep.equal({ message: updated });
-    }, { recovery: { policy: { resetWindowMs: 14 * minute } } },
+      expectResponse(await verifyCode(code), 400, { error: badCode });
+      expect((await login()).status).to.equal(200);
+      advance(minute);
+      expectResponse(await forgot(), 202, { message: confirmation });
+      await idle();
+      const replacement = codeOf(messages[1]);
+      const otherWrong = replacement === wrong ? "00000002" : wrong;
+      for (let index = 1; index <= 4; index += 1) {
+        await expectFailure(recovery.verifyCode({
+          code: otherWrong, email: details.email, ip: `192.0.2.${index}`,
+        }), 400);
+      }
+      grantOf(await verifyCode(replacement));
+    },
   ));
 
   it("fails closed at limiter capacity and reuses an expired entry's space", () => withServer(
     async ({ app, signup, advance, idle }) => {
       await signup();
-      const { requestReset, resetPassword } = app.locals.recovery;
+      const { requestReset, resetPassword, verifyCode } = app.locals.recovery;
       await requestReset({ email: "unknown@nyu.edu", ip: "192.0.2.1" });
       const full = await expectFailure(requestReset({ email: details.email, ip: "192.0.2.1" }), 503);
       expect(full.message).to.equal(unavailable);
@@ -473,41 +586,42 @@ describe("Password recovery API (#139)", () => {
       expect(await requestReset({ email: details.email, ip: "192.0.2.2" }))
         .to.deep.equal({ message: confirmation });
 
-      const attempt = { token: "a".repeat(64), password: newPassword, ip: "192.0.2.1" };
+      const attempt = { resetToken: "a".repeat(64), password: newPassword, ip: "192.0.2.1" };
       await expectFailure(resetPassword(attempt), 400);
-      await expectFailure(resetPassword({ ...attempt, token: "b".repeat(64) }), 503);
-      await expectFailure(resetPassword({ ...attempt, ip: "192.0.2.2" }), 503);
+      await expectFailure(verifyCode({ email: details.email, code: "00000000", ip: "192.0.2.2" }), 503);
       advance(15 * minute);
-      await expectFailure(resetPassword({ ...attempt, token: "b".repeat(64), ip: "192.0.2.2" }), 400);
+      await expectFailure(resetPassword({ ...attempt, ip: "192.0.2.2" }), 400);
       await idle();
     }, { recovery: { policy: { metadataCapacity: 1 } } },
   ));
 
   it("rejects both known and unknown addresses while the delivery pool is full", async () => {
     const pending = deliveryGate();
-    await withServer(async ({ signup, forgot, reset, advance, idle }) => {
+    await withServer(async ({ signup, forgot, verifyCode, reset, advance, idle }) => {
       await signup();
       await forgot();
-      const token = tokenOf(await pending.received);
+      const code = codeOf(await pending.received);
       advance(minute);
       expectResponse(await forgot(), 503, { error: unavailable });
       expectResponse(await forgot("unknown@nyu.edu"), 503, { error: unavailable });
-      expectResponse(await reset(token), 503, { error: unavailable });
+      expectResponse(await verifyCode(code), 503, { error: unavailable });
+      expectResponse(await reset("a".repeat(64)), 503, { error: unavailable });
       pending.complete();
       await idle();
-      expectResponse(await reset(token), 200, { message: updated });
+      expectResponse(await reset(grantOf(await verifyCode(code))), 200, { message: updated });
       await idle();
     }, { recovery: { deliver: pending.deliver, policy: { deliveryCapacity: 1 } } });
   });
 
   it("keeps accounts working without valid recovery configuration", () => withServer(
-    async ({ signup, login, forgot, reset }) => {
+    async ({ signup, login, forgot, verifyCode, reset }) => {
       await signup();
       expect((await login()).status).to.equal(200);
       expectResponse(await forgot(), 503, { error: unavailable });
       expectResponse(await forgot("unknown@nyu.edu"), 503, { error: unavailable });
+      expectResponse(await verifyCode("00000000"), 503, { error: unavailable });
       expectResponse(await reset("a".repeat(64)), 503, { error: unavailable });
-    }, { recovery: { publicOrigin: undefined } },
+    }, { recovery: { deliver: undefined } },
   ));
 });
 
