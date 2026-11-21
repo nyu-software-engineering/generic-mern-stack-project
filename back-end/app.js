@@ -5,6 +5,7 @@ const app = express() // instantiate an Express object
 
 import initialSavedHotels from './mockData/savedHotels.js';
 import initialBookings from './mockData/currentBooking.js';
+import hotelList from "./mockData/hotelList.js";
 
 // use express's builtin body-parser middleware to parse any data included in a request
 app.use(express.json()); // decode JSON-formatted incoming POST data
@@ -263,6 +264,28 @@ app.delete('/api/bookings/:id', (req, res) => {
   res.json(body);
 });
 // ===== CURRENT BOOKINGS END =====
+
+
+
+
+
+//this function is for the search feature 
+app.get("/api/hotels/search", (req, res) => {
+  const q = req.query.q;
+
+  if (typeof q !== "string" || !q.trim()) {
+    return res.status(400).json({ error: "Enter a hotel name or location" });
+  }
+
+  const keyword = q.trim().toLowerCase();
+  const hotel = hotelList.find((hotel) =>
+    hotel.name.toLowerCase().includes(keyword) ||
+    hotel.location.toLowerCase().includes(keyword)
+  );
+
+  return res.json({ hotel: hotel ?? null });
+}
+);
 
 // export the express app we created to make it available to other modules
 export default app;
