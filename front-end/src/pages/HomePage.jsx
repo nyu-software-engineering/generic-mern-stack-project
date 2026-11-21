@@ -4,7 +4,6 @@ import "./Home&ResultsPage.css";
 import { HotelSearchResults } from "./ResultsPage";
 import { useCurBookings } from "../shared_content/SavedCurrentBookings";
 import BookingCard from "../components/BookingCard";
-<main className="homepage home-with-search"></main>
 
 function HomePage() {
   const { curBookings, loading, error, deleteBooking, updateBooking } =
@@ -53,7 +52,7 @@ function HomePage() {
   };
 
   return currentView === "noEdit" ? (
-    <main className="homepage">
+    <main className="homepage home-with-search">
       <header className="home-header">
         <img src="https://picsum.photos/340/180" className="logo" />
       </header>

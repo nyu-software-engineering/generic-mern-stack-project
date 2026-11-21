@@ -8,7 +8,7 @@ import "./Home&ResultsPage.css";
 // this updat will make us to stay at home page afte clicking search while search results wil pop up
 
 export function HotelSearchResults({ query }) {
-  const [hotel, setHotel] = useState(null);
+  const [hotels, setHotels] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -25,7 +25,7 @@ export function HotelSearchResults({ query }) {
         if (!response.ok) throw new Error("Could not search hotels.");
 
         const data = await response.json();
-        setHotel(data.hotel);
+        setHotels(data.hotels);
       } catch (err) {
         if (!controller.signal.aborted) setError(err.message);
       } finally {
@@ -45,8 +45,10 @@ export function HotelSearchResults({ query }) {
 
       {loading && <p role="status">Searching...</p>}
       {error && <p role="alert">{error}</p>}
-      {hotel && <HotelDetails hotel={hotel} />}
-      {!loading && !error && !hotel && <p>No hotels found.</p>}
+      {hotels.map((hotel) => (
+        <HotelDetails key={hotel.id} hotel={hotel} />
+      ))}
+      {!loading && !error && hotels.length === 0 && <p>No hotels found.</p>}
     </section>
   );
 }

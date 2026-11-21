@@ -10,7 +10,7 @@ function HotelDetails() {
   const hotel = initialSearchHotels.find((item) => item.id === id);
 
   const { isSaved, toggleSaved } = useSaved();
-  const { isBookingSaved, toggleBookingSaved} = useCurBookings();
+  const { isBookingSaved, toggleBookingSaved } = useCurBookings();
 
   if (!hotel) {
     return (
@@ -38,14 +38,14 @@ function HotelDetails() {
       location: hotel.location,
       description: "",
       imageSrc: hotel.image,
-      checkIn:"",
+      checkIn: "",
       checkOut: "",
     });
   }
 
   const saved = isSaved(hotel.id);
   const bookingSaved = isBookingSaved(hotel.id);
-  
+
   return (
     <main className="hotel-details-page">
       <header className="hotel-details-header">
@@ -67,9 +67,7 @@ function HotelDetails() {
         <p className="hotel-rating">★ {hotel.rating} / 5</p>
 
         <h3>About this hotel</h3>
-        <p className="hotel-description">
-          {hotel.description}
-        </p>
+        <p className="hotel-description">{hotel.description}</p>
 
         <h3>Amenities</h3>
         <ul className="hotel-amenities">
