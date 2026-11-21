@@ -1,10 +1,8 @@
-import { useState } from 'react'
+
+import { useContext, useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import {
-  CURRENT_USER_ID,
-  getListings,
-  getUser,
-} from '../../services/mockDataService.js'
+import { AuthContext } from '../../context/AuthContext'
+import { getListings, getUser } from '../../services/mockDataService.js'
 import {
   getReputation,
   getReviewTarget,
@@ -15,34 +13,158 @@ import './reviews.css'
 
 function Reputation() {
   const { userId } = useParams()
-  const [showListings, setShowListings] = useState(false)
-  const reputation = getReputation(userId)
 
-  if (!reputation) {
+  return <ReputationContent key={userId} userId={userId} />
+}
+
+function ReputationContent({ userId }) {
+  const { currentUser } = useContext(AuthContext)
+  const [showListings, setShowListings] = useState(false)
+  const [retry, setRetry] = useState(0)
+  const [reviewRetry, setReviewRetry] = useState(0)
+
+  const [result, setResult] = useState({
+    status: 'loading',
+    reputation: null,
+    error: '',
+  })
+
+  const [reviewableResult, setReviewableResult] = useState({
+    status: 'loading',
+    rentals: [],
+    error: '',
+  })
+
+  const isOwnProfile = Boolean(
+    currentUser && String(currentUser.id) === String(userId)
+  )
+
+  useEffect(() => {
+    let active = true
+
+    getReputation(userId).then(
+      (reputation) => {
+        if (!active) return
+        setResult({
+          status: 'ready',
+          reputation,
+          error: '',
+        })
+      },
+      (error) => {
+        if (!active) return
+        setResult({
+          status: error.status === 404 ? 'not-found' : 'error',
+          reputation: null,
+          error: error.message,
+        })
+      }
+    )
+
+    return () => { active = false }
+  }, [userId, retry])
+
+  useEffect(() => {
+    if (!isOwnProfile) return undefined
+
+    let active = true
+
+    getReviewableRentals(userId).then(
+      (rentals) => {
+        if (!active) return
+        setReviewableResult({
+          status: 'ready',
+          rentals,
+          error: '',
+        })
+      },
+      (error) => {
+        if (!active) return
+        setReviewableResult({
+          status: 'error',
+          rentals: [],
+          error: error.message,
+        })
+      }
+    )
+
+    return () => { active = false }
+  }, [userId, isOwnProfile, reviewRetry])
+
+  function retryReputation() {
+    setResult({
+      status: 'loading',
+      reputation: null,
+      error: '',
+    })
+    setRetry((value) => value + 1)
+  }
+
+  function retryReviewable() {
+    setReviewableResult({
+      status: 'loading',
+      rentals: [],
+      error: '',
+    })
+    setReviewRetry((value) => value + 1)
+  }
+
+  if (result.status === 'loading') {
+    return (
+      <main className="ds-page ds-trust review-page">
+        <p role="status">Loading reputation...</p>
+      </main>
+    )
+  }
+
+  if (result.status === 'not-found') {
     return (
       <main className="ds-page ds-trust review-page">
         <header className="trust-header review-header">
           <h1 className="ds-heading">Student not found</h1>
-          <Link to="/browse" className="ds-text-link">Back to Browse</Link>
+          <Link to="/browse" className="ds-text-link">
+            Back to Browse
+          </Link>
         </header>
       </main>
     )
   }
 
-  const { user, reviews, averageRating } = reputation
-  const isOwnProfile = userId === CURRENT_USER_ID
-  const initials = user.name.trim().split(/\s+/).slice(0, 2)
-    .map((part) => part[0]).join('').toUpperCase()
+  if (result.status === 'error') {
+    return (
+      <main className="ds-page ds-trust review-page">
+        <h1 className="ds-heading">Could not load reputation</h1>
+        <p className="ds-feedback ds-feedback--error" role="alert">
+          {result.error}
+        </p>
+        <button
+          type="button"
+          className="ds-button ds-button--secondary"
+          onClick={retryReputation}
+        >
+          Try again
+        </button>
+      </main>
+    )
+  }
 
-  const reviewable = isOwnProfile
-    ? getReviewableRentals(CURRENT_USER_ID)
-    : []
+  const { user, reviews, averageRating } = result.reputation
+
+  const initials = (user.name || 'Student')
+    .trim()
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((part) => part[0])
+    .join('')
+    .toUpperCase()
 
   const listings = getListings().filter(
     (listing) =>
       String(listing.ownerId) === String(userId) &&
       listing.status === 'published'
   )
+
+  const reviewable = reviewableResult.rentals
 
   return (
     <main className="ds-page ds-trust review-page">
@@ -60,13 +182,16 @@ function Reputation() {
               {user.completedRentals != null && (
                 <>
                   {' · '}
-                  {user.completedRentals} completed {user.completedRentals === 1 ? 'rental' : 'rentals'}
+                  {user.completedRentals} completed{' '}
+                  {user.completedRentals === 1 ? 'rental' : 'rentals'}
                 </>
               )}
             </p>
           </div>
         </div>
-        <Link to="/browse" className="ds-text-link">Back to Browse</Link>
+        <Link to="/browse" className="ds-text-link">
+          Back to Browse
+        </Link>
       </header>
 
       <div className="review-content">
@@ -74,12 +199,18 @@ function Reputation() {
           <h2>Reviews received ({reviews.length})</h2>
 
           {reviews.length === 0 ? (
-            <p className="trust-surface trust-empty">No reviews yet.</p>
+            <p className="trust-surface trust-empty">
+              No reviews yet.
+            </p>
           ) : (
             reviews.map((review) => (
-              <article className="trust-surface review-card" key={review.id}>
+              <article
+                className="trust-surface review-card"
+                key={review.id}
+              >
                 <h3>
-                  Review from {getUser(review.reviewerId)?.name ?? 'Student'}
+                  Review from{' '}
+                  {getUser(review.reviewerId)?.name ?? 'Student'}
                 </h3>
                 <p>Overall: {review.overallRating} / 5</p>
                 <p className="trust-meta">
@@ -106,11 +237,19 @@ function Reputation() {
         <section id="reputation-listings" hidden={!showListings}>
           <h2>Available listings</h2>
           {listings.length === 0 ? (
-            <p className="trust-surface trust-empty">No published listings.</p>
+            <p className="trust-surface trust-empty">
+              No published listings.
+            </p>
           ) : (
             listings.map((listing) => (
-              <div className="trust-surface review-card" key={listing.id}>
-                <Link to={`/browse/${listing.id}`} className="ds-text-link">
+              <div
+                className="trust-surface review-card"
+                key={listing.id}
+              >
+                <Link
+                  to={`/browse/${listing.id}`}
+                  className="ds-text-link"
+                >
                   {listing.title}
                 </Link>
               </div>
@@ -122,27 +261,55 @@ function Reputation() {
           <section>
             <h2>Rentals you can review</h2>
 
-            {reviewable.length === 0 ? (
-              <p className="trust-surface trust-empty">No completed rentals waiting for review.</p>
-            ) : (
-              reviewable.map((rental) => {
-                const otherId = getReviewTarget(
-                  rental,
-                  CURRENT_USER_ID
-                )
-                const other = getUser(otherId)
+            {reviewableResult.status === 'loading' && (
+              <p role="status">Loading completed rentals...</p>
+            )}
 
-                return (
-                  <div className="trust-surface review-card" key={rental.id}>
-                    <p>
-                      Booking #{rental.id} with {other?.name ?? 'Student'}
-                    </p>
-                    <Link to={`/bookings/${rental.id}/review`} className="ds-text-link">
-                      Write review
-                    </Link>
-                  </div>
-                )
-              })
+            {reviewableResult.status === 'error' && (
+              <div className="trust-surface review-card">
+                <p role="alert">{reviewableResult.error}</p>
+                <button
+                  type="button"
+                  className="ds-button ds-button--secondary"
+                  onClick={retryReviewable}
+                >
+                  Try again
+                </button>
+              </div>
+            )}
+
+            {reviewableResult.status === 'ready' && (
+              reviewable.length === 0 ? (
+                <p className="trust-surface trust-empty">
+                  No completed rentals waiting for review.
+                </p>
+              ) : (
+                reviewable.map((rental) => {
+                  const otherId = getReviewTarget(
+                    rental,
+                    currentUser.id
+                  )
+                  const other = getUser(otherId)
+
+                  return (
+                    <div
+                      className="trust-surface review-card"
+                      key={rental.id}
+                    >
+                      <p>
+                        Booking #{rental.id} with{' '}
+                        {other?.name ?? 'Student'}
+                      </p>
+                      <Link
+                        to={`/bookings/${rental.id}/review`}
+                        className="ds-text-link"
+                      >
+                        Write review
+                      </Link>
+                    </div>
+                  )
+                })
+              )
             )}
           </section>
         )}

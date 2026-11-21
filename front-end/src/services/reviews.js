@@ -1,16 +1,13 @@
-import {
-  CURRENT_USER_ID,
-  createReview,
-  getRental,
-  getRentals,
-  getReviews,
-  getUser,
-} from './mockDataService.js'
+
+import { api, ApiError } from './api.js'
 
 const sameId = (a, b) => String(a) === String(b)
 
+// Keep the participant-selection logic pure and independent of the API.
 export function getReviewTarget(rental, reviewerId) {
-  if (!rental || rental.status !== 'completed') return null
+  if (!rental || rental.status !== 'completed' || !reviewerId) {
+    return null
+  }
 
   if (sameId(rental.ownerId, reviewerId)) return rental.borrowerId
   if (sameId(rental.borrowerId, reviewerId)) return rental.ownerId
@@ -18,92 +15,75 @@ export function getReviewTarget(rental, reviewerId) {
   return null
 }
 
-export function getReviewsForUser(userId) {
-  return getReviews()
-    .filter((review) => sameId(review.reviewedUserId, userId))
-    .sort((a, b) => b.id - a.id)
-}
-
-export function getReviewForBooking(bookingId, reviewerId) {
-  return getReviews().find(
-    (item) =>
-      sameId(item.bookingId, bookingId) &&
-      sameId(item.reviewerId, reviewerId)
-  ) ?? null
-}
-
+// Reputation and received reviews come directly from Express.
 export function getReputation(userId) {
-  const user = getUser(userId)
-  if (!user) return null
+  return api(`/users/${encodeURIComponent(userId)}/reputation`)
+}
 
-  const userReviews = getReviewsForUser(userId)
-  const total = userReviews.reduce(
-    (sum, review) => sum + review.overallRating,
-    0
+// Return the current signed-in user's review, or null.
+// The backend derives the reviewer from the session.
+export function getReviewForBooking(bookingId) {
+  return api(`/bookings/${encodeURIComponent(bookingId)}/review`)
+}
+
+// Collect completed rentals from both owner and borrower roles.
+// Check the backend to exclude bookings already reviewed.
+export async function getReviewableRentals(userId) {
+  if (!userId) return []
+
+  const [ownerDashboard, borrowedRentals] = await Promise.all([
+    api('/owner/dashboard'),
+    api('/rentals/mine'),
+  ])
+
+  const byId = new Map()
+
+  for (const rental of [
+    ...ownerDashboard.rentals,
+    ...borrowedRentals,
+  ]) {
+    if (getReviewTarget(rental, userId)) {
+      byId.set(String(rental.id), rental)
+    }
+  }
+
+  const rentals = [...byId.values()].sort(
+    (a, b) => Number(b.id) - Number(a.id)
   )
 
-  return {
-    user,
-    reviews: userReviews,
-    averageRating: userReviews.length
-      ? total / userReviews.length
-      : null,
-  }
+  const existingReviews = await Promise.all(
+    rentals.map((rental) => getReviewForBooking(rental.id))
+  )
+
+  return rentals.filter((_, index) => !existingReviews[index])
 }
 
-export function getReviewableRentals(userId = CURRENT_USER_ID) {
-  return getRentals()
-    .filter(
-      (rental) =>
-        getReviewTarget(rental, userId) &&
-        !getReviewForBooking(rental.id, userId)
-    )
-    .sort((a, b) => b.id - a.id)
-}
-
+// POST only editable review fields.
+// Reviewer, reviewed user, ID, and date are server-controlled.
 export function submitReview({
   bookingId,
-  reviewerId = CURRENT_USER_ID,
   communicationRating,
   itemCareRating,
   overallRating,
   comment = '',
 }) {
-  const rental = getRental(bookingId)
-  const reviewedUserId = getReviewTarget(rental, reviewerId)
+  const id = typeof bookingId === 'string' &&
+    /^[1-9]\d*$/.test(bookingId)
+    ? Number(bookingId)
+    : bookingId
 
-  if (!reviewedUserId) {
-    throw new Error('Only completed rental participants can submit reviews.')
+  if (!Number.isSafeInteger(id) || id < 1) {
+    throw new ApiError('A valid bookingId is required.', 400)
   }
 
-  if (getReviewForBooking(bookingId, reviewerId)) {
-    throw new Error('You have already reviewed this participant.')
-  }
-
-  const ratings = [
-    communicationRating,
-    itemCareRating,
-    overallRating,
-  ]
-
-  if (ratings.some(
-    (rating) => !Number.isInteger(rating) || rating < 1 || rating > 5
-  )) {
-    throw new Error('Select a rating from 1 to 5 for each category.')
-  }
-
-  if (typeof comment !== 'string' || comment.trim().length > 500) {
-    throw new Error('Written feedback must be 500 characters or less.')
-  }
-
-  return createReview({
-    bookingId: rental.id,
-    reviewerId,
-    reviewedUserId,
-    communicationRating,
-    itemCareRating,
-    overallRating,
-    comment: comment.trim(),
-    createdAt: new Date().toISOString().slice(0, 10),
+  return api('/reviews', {
+    method: 'POST',
+    body: {
+      bookingId: id,
+      communicationRating,
+      itemCareRating,
+      overallRating,
+      comment,
+    },
   })
 }
