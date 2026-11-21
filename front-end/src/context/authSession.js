@@ -46,25 +46,28 @@ export function createAuthSession({
   onCurrentUser,
   onPendingSignup,
 }) {
-  let generation = 0
+  let lastRequestId = 0
+  let invalidatedThrough = 0
+  let verificationRequestId = 0
   let token = null
   let pendingSignup = readPendingSignup()
 
   function updatePendingSignup(value) {
     pendingSignup = value
+    verificationRequestId = 0
     savePendingSignup(value)
     onPendingSignup(value)
   }
 
   async function signUp(fullName, email, password) {
-    const startedGeneration = generation
+    const requestId = ++lastRequestId
 
     const result = await api('/auth/signup', {
       method: 'POST',
       body: { fullName, email, password },
     })
 
-    if (generation !== startedGeneration) {
+    if (requestId <= invalidatedThrough) {
       throw new Error('Session changed. Please try again.')
     }
 
@@ -78,11 +81,13 @@ export function createAuthSession({
 
   async function verifyEmail(code) {
     const pending = pendingSignup
-    const startedGeneration = generation
 
     if (!pending?.demoCode) {
       throw new Error('Please create an account first.')
     }
+
+    const requestId = ++lastRequestId
+    verificationRequestId = requestId
 
     const result = await api('/auth/verify', {
       method: 'POST',
@@ -93,7 +98,7 @@ export function createAuthSession({
     })
 
     if (
-      generation !== startedGeneration ||
+      requestId <= invalidatedThrough ||
       pendingSignup !== pending
     ) {
       throw new Error('Session changed. Please try again.')
@@ -110,7 +115,8 @@ export function createAuthSession({
   }
 
   async function signIn(email, password) {
-    const startedGeneration = ++generation
+    invalidatedThrough = lastRequestId
+    const requestId = ++lastRequestId
 
     const session = await api('/auth/login', {
       method: 'POST',
@@ -121,7 +127,7 @@ export function createAuthSession({
       token: session.token,
     })
 
-    if (generation !== startedGeneration) {
+    if (requestId <= invalidatedThrough) {
       throw new Error('Session changed. Please sign in again.')
     }
 
@@ -137,12 +143,12 @@ export function createAuthSession({
 
   async function updateProfile(displayName, campusArea) {
     const requestToken = token
-    const startedGeneration = generation
 
     if (!requestToken) {
       throw new Error('Please sign in again.')
     }
 
+    const requestId = ++lastRequestId
     const { user } = await api('/users/me', {
       method: 'PUT',
       body: { displayName, campusArea },
@@ -150,7 +156,7 @@ export function createAuthSession({
     })
 
     if (
-      generation !== startedGeneration ||
+      requestId <= invalidatedThrough ||
       token !== requestToken
     ) {
       throw new Error('Session changed. Please sign in again.')
@@ -161,7 +167,6 @@ export function createAuthSession({
   }
 
   function clearSignedInSession() {
-    generation += 1
     token = null
 
     setSessionToken(null)
@@ -170,22 +175,23 @@ export function createAuthSession({
   }
 
   function signOut() {
+    invalidatedThrough = ++lastRequestId
     clearSignedInSession()
     updatePendingSignup(null)
   }
 
   function prepareResetSignOut(email) {
     const startedToken = token
-    const startedGeneration = generation
+    const startedRequestId = lastRequestId
     const startedSignup = pendingSignup
 
     return () => {
       if (token !== startedToken) return
-      // Without a token, the generation identifies the signed-out snapshot.
-      if (!startedToken && generation !== startedGeneration) return
+      if (!startedToken && invalidatedThrough > startedRequestId) return
 
+      invalidatedThrough = Math.max(invalidatedThrough, startedRequestId)
       clearSignedInSession()
-      if (pendingSignup !== startedSignup) return
+      if (pendingSignup !== startedSignup || verificationRequestId > invalidatedThrough) return
       if (pendingSignup?.demoCode && pendingSignup.email === email) return
       updatePendingSignup(null)
     }
