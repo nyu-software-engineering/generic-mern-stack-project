@@ -32,15 +32,12 @@ function App() {
     fetch('/api/mockData')
       .then(res => res.json())
       .then(data => {
-        // console.log('Mock posts:', data.posts)
-
-        // setPostsData (prev => [...prev, ...data.posts])
-        // setCount(prev => prev + data.posts.length)
         setConversations(data.conversations)
         setNotifications(data.notifications)
       })
   }, [])
 
+  // used so that bountyChoice can update back-end of posts
   const fetchPosts = () => {
     fetch('/api/posts')
       .then(res => {
@@ -115,7 +112,6 @@ function App() {
     ))
   }
 
-  // beware inevitable merge conflict
   return (
     <>
       <Router>

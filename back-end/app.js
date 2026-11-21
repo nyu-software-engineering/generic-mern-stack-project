@@ -61,6 +61,8 @@ app.post('/api/posts', upload.single('image'), (req, res) => {
   res.status(201).json(newPost)
 })
 
+// used to resolve posts, i.e. delete from back-end... should also be used in the 
+// delete for edit posts
 app.delete('/api/posts/:id', (req, res) => {
   const id = parseInt(req.params.id)
   const index = posts.findIndex(post => parseInt(post.id) === id)

@@ -57,7 +57,7 @@ const PostElement = props => {
 
 const Home = props => {
   const navigate = useNavigate()
-    const [showAllOptions, setShowAllOptions] = useState(false)
+  const [showAllOptions, setShowAllOptions] = useState(false)
 
   useEffect(() => {
     if (!props.isLoggedIn) {
