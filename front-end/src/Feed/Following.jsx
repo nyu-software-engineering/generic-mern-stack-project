@@ -1,8 +1,21 @@
+import { useEffect, useState } from "react"
 import Post from "./Post"
-import { posts } from "./mockData"
 import "./Feed.css"
 
 function Following() {
+  const [posts, setPosts] = useState([])
+  const [updates, setUpdates] = useState([])
+
+  useEffect(() => {
+    fetch("http://localhost:3000/api/following")
+      .then((response) => response.json())
+      .then((data) => {
+        setPosts(data.posts)
+        setUpdates(data.updates)
+      })
+      .catch((error) => console.error("Error loading following:", error))
+  }, [])
+
   return (
     <div className="feed-page">
       <input
@@ -12,20 +25,12 @@ function Following() {
       />
 
       <div className="updates-banner">
-        <div className="update-card">
-          <strong>Myapyke</strong>
-          <span>New pottery class posted</span>
-        </div>
-
-        <div className="update-card">
-          <strong>Alyshoe</strong>
-          <span>Added a new Pilates event</span>
-        </div>
-
-        <div className="update-card">
-          <strong>JordanLee</strong>
-          <span>Climbing meetup tonight</span>
-        </div>
+        {updates.map((update) => (
+          <div className="update-card" key={update.id}>
+            <strong>{update.username}</strong>
+            <span>{update.message}</span>
+          </div>
+        ))}
       </div>
 
       {posts.map((post) => (
