@@ -8,6 +8,7 @@ const router = express.Router()
 const joinedHobbyIds = [1, 2]
 const joinedEventIds = [1, 4]
 const hostedEventIds = [3]
+const editedEvents = {}
 
 // Get the user's joined hobbies and events
 router.get("/my-hobbies", (req, res) => {
@@ -18,10 +19,10 @@ router.get("/my-hobbies", (req, res) => {
   const upcomingEvents = events.filter(event =>
     joinedEventIds.includes(event.id)
   )
-
-  const hosting = events.filter(event =>
-    hostedEventIds.includes(event.id)
-  )
+  
+  const hosting = events
+    .filter(event => hostedEventIds.includes(event.id))
+    .map(event => editedEvents[event.id] || event)
 
   res.json({
     joinedHobbies,
@@ -56,5 +57,41 @@ router.post("/my-events/:id/leave", (req, res) => {
 
   res.json({ eventId: id, left: true })
 })
+
+
+ // Edit a hosted event
+router.post("/my-events/:id/edit", (req, res) => {
+  const id = Number(req.params.id)
+
+  if (!hostedEventIds.includes(id)) {
+    return res.status(404).json({ error: "Hosted event not found" })
+  }
+
+  const event = editedEvents[id] || events.find(item => item.id === id)
+
+  editedEvents[id] = {
+    ...event,
+    ...req.body,
+    id
+  }
+
+  res.json(editedEvents[id])
+})
+
+
+// Delete a hosted event
+router.post("/my-events/:id/delete", (req, res) => {
+  const id = Number(req.params.id)
+
+  if (!hostedEventIds.includes(id)) {
+    return res.status(404).json({ error: "Hosted event not found" })
+  }
+
+  hostedEventIds.splice(hostedEventIds.indexOf(id), 1)
+  delete editedEvents[id]
+
+  res.json({ eventId: id, deleted: true })
+})
+
 
 export default router
