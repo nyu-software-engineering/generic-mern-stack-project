@@ -29,9 +29,9 @@ export const getIncomingRequests = (ownerId) =>
 export const listingImage = () => '/listing-images/placeholder.png'
 
 // Bookings changed only in this browser by features that aren't connected to the
-// back-end yet: accepting a chat offer (#104) and pickup/return (#113). The booking
-// pages use the local copy for these instead of the API, so the changes aren't lost.
-// Remove once chat and handoff save through the API.
+// back-end yet: accepting a chat offer (#104). Pickup and return go through the API
+// (#111), but fall back to the local copy for these bookings, which the server has
+// never seen. Remove once chat saves through the API.
 const localOnlyBookingIds = new Set()
 export const isLocalOnlyBooking = (id) => localOnlyBookingIds.has(String(id))
 export const clearLocalOnlyBooking = (id) => { localOnlyBookingIds.delete(String(id)) }
