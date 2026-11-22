@@ -28,7 +28,8 @@ const initialSearchHotels = [
     name: 'The Maple Inn',
     location: 'Burlington, Vermont',
     date: '2027-02-06',
-    description: 'A cozy countryside inn with a fireplace lounge and hiking trails.',
+    description:
+      'A cozy countryside inn with a fireplace lounge and hiking trails.',
     imageSrc: '',
   },
   {
@@ -36,7 +37,8 @@ const initialSearchHotels = [
     name: 'Casa del Sol',
     location: 'Barcelona, Spain',
     date: '2026-12-20',
-    description: 'A bright, modern hotel near the beach with a pool and a tapas bar.',
+    description:
+      'A bright, modern hotel near the beach with a pool and a tapas bar.',
     imageSrc: '',
   },
   {
@@ -44,7 +46,8 @@ const initialSearchHotels = [
     name: 'Harbor View Suites',
     location: 'Sydney, Australia',
     date: '2027-03-08',
-    description: 'Spacious suites overlooking the harbor, close to ferries and the city center.',
+    description:
+      'Spacious suites overlooking the harbor, close to ferries and the city center.',
     imageSrc: '',
   },
   {
@@ -64,7 +67,7 @@ const initialSearchHotels = [
     location: 'Manhattan, New York',
     date: '2027-01-10',
     description: 'A luxury hotel near Fifth Avenue shopping.',
-    imageSrc:'',
+    imageSrc: '',
   },
   {
     id: '9',
@@ -72,7 +75,7 @@ const initialSearchHotels = [
     location: 'Manhattan, New York',
     date: '2027-01-18',
     description: 'Elegant rooms overlooking Central Park.',
-    imageSrc:'',
+    imageSrc: '',
   },
   {
     id: '10',
@@ -80,7 +83,7 @@ const initialSearchHotels = [
     location: 'Manhattan, New York',
     date: '2027-02-03',
     description: 'Luxury suites in the heart of Midtown.',
-    imageSrc:'',
+    imageSrc: '',
   },
   {
     id: '11',
@@ -88,7 +91,7 @@ const initialSearchHotels = [
     location: 'Manhattan, New York',
     date: '2027-02-14',
     description: 'Upscale rooms with Hudson River views.',
-    imageSrc:'',
+    imageSrc: '',
   },
   {
     id: '12',
@@ -96,7 +99,7 @@ const initialSearchHotels = [
     location: 'Manhattan, New York',
     date: '2027-03-02',
     description: 'A refined stay near museums and galleries.',
-    imageSrc:'',
+    imageSrc: '',
   },
   {
     id: '13',
@@ -104,7 +107,7 @@ const initialSearchHotels = [
     location: 'Manhattan, New York',
     date: '2027-03-12',
     description: 'Spacious suites near Central Park.',
-    imageSrc:'',
+    imageSrc: '',
   },
   {
     id: '14',
@@ -112,7 +115,7 @@ const initialSearchHotels = [
     location: 'Manhattan, New York',
     date: '2027-03-20',
     description: 'A luxury boutique hotel in Tribeca.',
-    imageSrc:'',
+    imageSrc: '',
   },
   {
     id: '15',
@@ -120,7 +123,7 @@ const initialSearchHotels = [
     location: 'Manhattan, New York',
     date: '2027-04-05',
     description: 'An upscale stay near SoHo boutiques.',
-    imageSrc:'',
+    imageSrc: '',
   },
   {
     id: '16',
@@ -128,7 +131,7 @@ const initialSearchHotels = [
     location: 'Manhattan, New York',
     date: '2027-04-18',
     description: 'Elegant accommodations near Bryant Park.',
-    imageSrc:'',
+    imageSrc: '',
   },
   {
     id: '17',
@@ -136,7 +139,7 @@ const initialSearchHotels = [
     location: 'Manhattan, New York',
     date: '2027-05-01',
     description: 'Luxury rooms near Madison Avenue.',
-    imageSrc:'',
+    imageSrc: '',
   },
   {
     id: '18',
@@ -144,7 +147,7 @@ const initialSearchHotels = [
     location: 'Manhattan, New York',
     date: '2027-05-12',
     description: 'A quiet luxury hotel in Greenwich Village.',
-    imageSrc:'',
+    imageSrc: '',
   },
   {
     id: '19',
@@ -152,7 +155,7 @@ const initialSearchHotels = [
     location: 'Manhattan, New York',
     date: '2027-05-25',
     description: 'An upscale stay near Broadway theaters.',
-    imageSrc:'',
+    imageSrc: '',
   },
   {
     id: '20',
@@ -160,7 +163,7 @@ const initialSearchHotels = [
     location: 'Manhattan, New York',
     date: '2027-06-03',
     description: 'Luxury suites near Columbus Circle.',
-    imageSrc:'',
+    imageSrc: '',
   },
   {
     id: '21',
@@ -168,7 +171,7 @@ const initialSearchHotels = [
     location: 'Brooklyn, New York',
     date: '2027-06-15',
     description: 'A boutique luxury hotel near the promenade.',
-    imageSrc:'',
+    imageSrc: '',
   },
   {
     id: '22',
@@ -176,7 +179,7 @@ const initialSearchHotels = [
     location: 'Brooklyn, New York',
     date: '2027-06-27',
     description: 'An elegant stay near local restaurants.',
-    imageSrc:'',
+    imageSrc: '',
   },
   {
     id: '23',
@@ -184,7 +187,7 @@ const initialSearchHotels = [
     location: 'Brooklyn, New York',
     date: '2027-07-08',
     description: 'Luxury rooms overlooking the East River.',
-    imageSrc:'',
+    imageSrc: '',
   },
   {
     id: '24',
@@ -192,7 +195,7 @@ const initialSearchHotels = [
     location: 'Queens, New York',
     date: '2027-07-20',
     description: 'A refined hotel in Astoria.',
-    imageSrc:'',
+    imageSrc: '',
   },
   {
     id: '25',
@@ -200,7 +203,7 @@ const initialSearchHotels = [
     location: 'Manhattan, New York',
     date: '2027-08-02',
     description: 'Upscale accommodations near Riverside Park.',
-    imageSrc:'',
+    imageSrc: '',
   },
   {
     id: '26',
@@ -208,7 +211,7 @@ const initialSearchHotels = [
     location: 'Manhattan, New York',
     date: '2027-08-14',
     description: 'A luxury stay near Chelsea galleries.',
-    imageSrc:'',
+    imageSrc: '',
   },
   {
     id: '27',
@@ -216,7 +219,7 @@ const initialSearchHotels = [
     location: 'Manhattan, New York',
     date: '2027-08-26',
     description: 'Elegant rooms near Gramercy Park.',
-    imageSrc:'',
+    imageSrc: '',
   },
 
   // hotels referenced by past stays in stayedHotels.js

@@ -1,10 +1,10 @@
-.homepage{
+.homepage {
   display: flex;
   flex-direction: column;
   height: 100%;
 }
 
-.logo{
+.logo {
   width: 230px;
   height: 80px;
   object-fit: cover;
@@ -18,7 +18,7 @@
   padding: 1rem;
 }
 
-#home-page-current-bookings{
+#home-page-current-bookings {
   flex: 5;
   padding: 5%;
 }
@@ -82,4 +82,18 @@
 
 .results-page .results-title {
   padding: 0 16px;
+}
+
+.home-with-search {
+  height: auto;
+  min-height: 100%;
+}
+
+.home-with-search .home-header,
+.home-with-search .home-search {
+  flex: 0 0 auto;
+}
+
+.home-with-search .results-content {
+  padding: 1rem;
 }

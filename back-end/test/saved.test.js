@@ -7,7 +7,6 @@ use(chaiHttp);
 describe('Saved hotels routes', () => {
   describe('GET /api/saved', () => {
     it('gets the list of hotel', (done) => {
-
       request
         .execute(app)
         .get('/api/saved')
@@ -17,7 +16,13 @@ describe('Saved hotels routes', () => {
           expect(res).to.be.json;
           expect(res.body).to.be.an('array');
           res.body.forEach((hotel) => {
-            expect(hotel).to.include.keys('id', 'name', 'location', 'date', 'description');
+            expect(hotel).to.include.keys(
+              'id',
+              'name',
+              'location',
+              'date',
+              'description',
+            );
           });
           done();
         });
@@ -26,7 +31,11 @@ describe('Saved hotels routes', () => {
 
   describe('POST /api/saved', () => {
     it('add new hotel to the saved list', (done) => {
-      const newHotel = { id: 'testy-tester-hotel', name: 'The Big Egg', location: 'Smallville, Kansas' };
+      const newHotel = {
+        id: 'testy-tester-hotel',
+        name: 'The Big Egg',
+        location: 'Smallville, Kansas',
+      };
       request
         .execute(app)
         .post('/api/saved')
@@ -34,7 +43,10 @@ describe('Saved hotels routes', () => {
         .end((err, res) => {
           expect(err).to.be.null;
           expect(res).to.have.status(200);
-          expect(res.body).to.include({ id: 'testy-tester-hotel', name: 'The Big Egg' });
+          expect(res.body).to.include({
+            id: 'testy-tester-hotel',
+            name: 'The Big Egg',
+          });
 
           //check if add is successfull
           request
@@ -49,7 +61,11 @@ describe('Saved hotels routes', () => {
     });
 
     it('doesnt add same hotel twice', (done) => {
-      const newHotel = { id: 'SUPERCHURRO', name: 'Churrovania', location: 'New York, New York' };
+      const newHotel = {
+        id: 'SUPERCHURRO',
+        name: 'Churrovania',
+        location: 'New York, New York',
+      };
       request
         .execute(app)
         .post('/api/saved')
@@ -67,7 +83,9 @@ describe('Saved hotels routes', () => {
                 .execute(app)
                 .get('/api/saved')
                 .end((err2, list) => {
-                  const matches = list.body.filter((h) => h.id === 'SUPERCHURRO');
+                  const matches = list.body.filter(
+                    (h) => h.id === 'SUPERCHURRO',
+                  );
                   expect(matches).to.have.length(1);
                   done();
                 });
@@ -90,13 +108,16 @@ describe('Saved hotels routes', () => {
 
   describe('POST /api/saved/:id', () => {
     it('updates the description of a saved hotel', (done) => {
-      const testHotel = { id: 'UPDATE-ME', name: 'Update test motel', location: 'Testville' };
+      const testHotel = {
+        id: 'UPDATE-ME',
+        name: 'Update test motel',
+        location: 'Testville',
+      };
       request
         .execute(app)
         .post('/api/saved')
         .send(testHotel)
         .end(() => {
-
           request
             .execute(app)
             .post('/api/saved/UPDATE-ME')
@@ -104,7 +125,10 @@ describe('Saved hotels routes', () => {
             .end((err, res) => {
               expect(err).to.be.null;
               expect(res).to.have.status(200);
-              expect(res.body).to.have.property('description', 'Updated by a test');
+              expect(res.body).to.have.property(
+                'description',
+                'Updated by a test',
+              );
 
               request
                 .execute(app)
@@ -143,7 +167,11 @@ describe('Saved hotels routes', () => {
 
   describe('DELETE /api/saved/:id', () => {
     it('removes a saved hotel', (done) => {
-      const testHotel = { id: 'DELETE-ME', name: 'Delete Test Inn', location: 'Testville' };
+      const testHotel = {
+        id: 'DELETE-ME',
+        name: 'Delete Test Inn',
+        location: 'Testville',
+      };
       request
         .execute(app)
         .post('/api/saved')

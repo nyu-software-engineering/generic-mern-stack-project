@@ -16,7 +16,14 @@ describe('Current bookings routes', () => {
           expect(res).to.be.json;
           expect(res.body).to.be.an('array');
           res.body.forEach((booking) => {
-            expect(booking).to.include.keys('id', 'name', 'location', 'checkIn', 'checkOut', 'description');
+            expect(booking).to.include.keys(
+              'id',
+              'name',
+              'location',
+              'checkIn',
+              'checkOut',
+              'description',
+            );
           });
           done();
         });
@@ -25,7 +32,11 @@ describe('Current bookings routes', () => {
 
   describe('POST /api/bookings', () => {
     it('add new hotel to the bookings list', (done) => {
-      const newBooking = { id: 'BOOK-TEST', name: 'Test Booking Hotel', location: 'Testville' };
+      const newBooking = {
+        id: 'BOOK-TEST',
+        name: 'Test Booking Hotel',
+        location: 'Testville',
+      };
       request
         .execute(app)
         .post('/api/bookings')
@@ -33,7 +44,10 @@ describe('Current bookings routes', () => {
         .end((err, res) => {
           expect(err).to.be.null;
           expect(res).to.have.status(200);
-          expect(res.body).to.include({ id: 'BOOK-TEST', name: 'Test Booking Hotel' });
+          expect(res.body).to.include({
+            id: 'BOOK-TEST',
+            name: 'Test Booking Hotel',
+          });
 
           request
             .execute(app)
@@ -47,7 +61,11 @@ describe('Current bookings routes', () => {
     });
 
     it('doesnt book same hotel twice', (done) => {
-      const newBooking = { id: 'BOOK-TWICE', name: 'Double Booked Inn', location: 'Testville' };
+      const newBooking = {
+        id: 'BOOK-TWICE',
+        name: 'Double Booked Inn',
+        location: 'Testville',
+      };
       request
         .execute(app)
         .post('/api/bookings')
@@ -66,7 +84,9 @@ describe('Current bookings routes', () => {
                 .execute(app)
                 .get('/api/bookings')
                 .end((err2, list) => {
-                  const matches = list.body.filter((b) => b.id === 'BOOK-TWICE');
+                  const matches = list.body.filter(
+                    (b) => b.id === 'BOOK-TWICE',
+                  );
                   expect(matches).to.have.length(1);
                   done();
                 });
@@ -89,8 +109,16 @@ describe('Current bookings routes', () => {
 
   describe('POST /api/bookings/:id', () => {
     it('updates the notes and dates of a booking', (done) => {
-      const testBooking = { id: 'UPDATE-BOOKING', name: 'Update Test Hotel', location: 'Testville' };
-      const changes = { description: 'Late check-in', checkIn: '2027-01-10', checkOut: '2027-01-14' };
+      const testBooking = {
+        id: 'UPDATE-BOOKING',
+        name: 'Update Test Hotel',
+        location: 'Testville',
+      };
+      const changes = {
+        description: 'Late check-in',
+        checkIn: '2027-01-10',
+        checkOut: '2027-01-14',
+      };
       request
         .execute(app)
         .post('/api/bookings')
@@ -109,7 +137,9 @@ describe('Current bookings routes', () => {
                 .execute(app)
                 .get('/api/bookings')
                 .end((err2, list) => {
-                  const booking = list.body.find((b) => b.id === 'UPDATE-BOOKING');
+                  const booking = list.body.find(
+                    (b) => b.id === 'UPDATE-BOOKING',
+                  );
                   expect(booking).to.include(changes);
                   done();
                 });
@@ -142,7 +172,11 @@ describe('Current bookings routes', () => {
 
   describe('DELETE /api/bookings/:id', () => {
     it('removes a booking', (done) => {
-      const testBooking = { id: 'DELETE-BOOKING', name: 'Delete Test Hotel', location: 'Testville' };
+      const testBooking = {
+        id: 'DELETE-BOOKING',
+        name: 'Delete Test Hotel',
+        location: 'Testville',
+      };
       request
         .execute(app)
         .post('/api/bookings')
