@@ -27,3 +27,7 @@ describe("GET /api/profile/:id", () => {
         expect(Object.hasOwn(response.body, "error")).to.equal(true)
     })
 })
+
+describe("PUT /api/profile/:id", () => {
+
+})
