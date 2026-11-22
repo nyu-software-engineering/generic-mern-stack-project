@@ -61,10 +61,24 @@ records a successful Brevo sandbox request and delivery of one approved plain
 test email. Adapter tests validate the code and notice payloads, safe errors,
 and timeout with a fake provider.
 
-No live code email or password-change notice was sent during this
-implementation. A real recovery-email check needs separate send approval.
 Browser engines do not reproduce a physical phone's on-screen keyboard.
 Accounts, sessions, and recovery state still reset when the backend restarts.
+
+The owner authorized a live recovery check on November 21, 2026. A temporary
+loopback app used synthetic account data and the configured Brevo adapter.
+Brevo accepted the code messages, and a code reached the test recipient's NYU
+inbox. The received code successfully opened the password step. The owner
+entered the new password and confirmed that reset and normal sign-in worked.
+The original password returned 401. Brevo also accepted the password-change
+notice; inbox delivery of that notice was not independently checked.
+
+NYU added `[Failed NYU Email Security Check]` to the code email subject. The
+received headers show NYU's gateway accepted Brevo's SPF and DKIM but recorded
+`dmarc=fail header.from=nyu.edu`. The visible NYU sender did not align with the
+authenticated Brevo domain. This delivery test does not establish a clean
+sender-authentication setup. Use a sender domain controlled by the team and
+authenticate it through [Brevo's domain setup](https://help.brevo.com/hc/en-us/articles/12163873383186-Authenticate-your-domain-with-Brevo-Brevo-code-DKIM-DMARC).
+No password, code, API key, or raw message header is retained in this record.
 
 ## Verified November 21, 2026
 
@@ -75,4 +89,5 @@ Accounts, sessions, and recovery state still reset when the backend restarts.
   cases. These include unverified signup and both late-response session cases.
 - Independent correctness and security reviews cover the recovery source.
 
-No additional live email was sent for these checks.
+Automated checks used private capture. The separately authorized live check
+and its sender-authentication limitation are recorded above.
