@@ -31,6 +31,30 @@ app.get("/api/profile/:id", (req, res) => {
     res.json(profile)
 })
 
+app.put("/api/profile/:id", (req, res) => {
+    const body = req.body ?? {}
+    const id = Number(req.params.id)
+    const profile = users.find(p => p.id === id)
+
+    if (!profile) {
+        return res.status(404).json({ error: "Profile not found"})
+    }
+
+    if (!Object.hasOwn(body, "full_name") || typeof body.full_name  !== "string"
+        || body.full_name.trim() === "" || !Object.hasOwn(body, "email")
+        || typeof body.email !== "string" || !body.email.includes("@")) {
+        return res.status(400).json({ error: "Profile has missing/invalid fields"})       
+    }
+
+    profile.full_name = body.full_name
+    if (body.bio !== undefined) profile["bio"] = body["bio"]
+    if (body.university !== undefined) profile["university"] = body["university"]
+    if (body.email !== undefined) profile["email"] = body["email"]
+    if (body.profile_picture !== undefined) profile["profile_picture"] = body["profile_picture"]
+
+    res.json(profile)
+})
+
 app.post("/api/services", (req, res) => {
     const newService = req.body
 
