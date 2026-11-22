@@ -10,21 +10,27 @@ function SignUp() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
-    // Demo account validation
-    if (
-      email.trim() !== "test@hotelplanner.com" ||
-      password !== "password123"
-    ) {
-      setError("Please use the demo account to sign up.");
-      return;
-    }
+    try {
+      const response = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await response.json();
 
-    // Demo signup successful
-    navigate("/signin");
+      if (!response.ok) {
+        setError(data.error || "Sign up failed.");
+        return;
+      }
+
+      navigate("/signin");
+    } catch (err) {
+      console.error(err.message);
+    }
   };
 
   return (
@@ -68,4 +74,3 @@ function SignUp() {
 }
 
 export default SignUp;
-
