@@ -10,6 +10,7 @@ const cors = require("cors");
 const { stripPasswordsMiddleware } = require("./utils/stripPasswords");
 const configRoutes = require("./routes/configRoutes");
 const usersRoutes = require("./routes/usersRoutes");
+const inviteRoutes = require("./routes/inviteRoutes");
 const savedPlacesRoutes = require("./routes/savedPlacesRoutes");
 const createFlowRoutes = require("./routes/createFlowRoutes");
 const cityListRoutes = require("./routes/cityListRoutes");
@@ -36,6 +37,7 @@ app.get("/", (req, res) => {
 
 app.use("/api", configRoutes);
 app.use("/api", usersRoutes);
+app.use("/api", inviteRoutes);
 app.use("/api", savedPlacesRoutes);
 app.use("/api", createFlowRoutes);
 app.use("/api", cityListRoutes);
