@@ -57,7 +57,7 @@ function HotelDetails() {
 
       <img
         className="hotel-main-image"
-        src={hotel.image}
+        src={hotel.imageSrc || "https://picsum.photos/400/225"}
         alt={`${hotel.name} hotel`}
       />
 
@@ -71,7 +71,7 @@ function HotelDetails() {
 
         <h3>Amenities</h3>
         <ul className="hotel-amenities">
-          {hotel.amenities.map((amenity) => (
+          {hotel.amenities?.map((amenity) => (
             <li key={amenity}>{amenity}</li>
           ))}
         </ul>
