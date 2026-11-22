@@ -1,4 +1,5 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import BackButton from '../Back_Button';
 
 // Placeholder page for stakeholder demos
 export default function Intermediate() {
@@ -25,6 +26,9 @@ export default function Intermediate() {
             My Dashboard
             </a>
             </header>
+            <section className="mt-2 mx-4 flex justify-start">
+                <BackButton />
+            </section>
 
             <main className="mx-auto w-full max-w-4xl px-6 py-10">
                 <div className="flex-1 mb-4 grid grid-cols-2">

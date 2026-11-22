@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import BackButton from "./Back_Button";
 
 
 export default function Article() {
@@ -98,6 +99,9 @@ export default function Article() {
             My Dashboard
             </a>
             </header>
+            <section className="mt-2 mx-4 flex justify-start">
+                <BackButton />
+            </section>
 
             <main className="mx-auto w-full max-w-4xl px-6 py-10">
                 <div className="mb-2 grid grid-cols-2">
