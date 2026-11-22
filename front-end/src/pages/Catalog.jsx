@@ -2,6 +2,7 @@ import { useState, useEffect } from "react"
 import { Link, useSearchParams } from 'react-router-dom'
 import { fetchArticles, searchArticles } from './mock_data'
 import ArticleCard from './ArticleCard'
+import BackButton from './Back_Button'
 
 const topics = ['All', 'AI/ML', 'Cybersecurity', 'Algorithms', 'Computer Vision']
 const numArticles = 10
@@ -61,6 +62,9 @@ const Catalog = () => {
         <h2 className="text-xl font-bold text-purple-600"><Link to="/mainpage">Jargonot</Link></h2>
         <Link to="/dashboard" className="font-semibold text-purple-600 hover:underline">My Dashboard</Link>
       </header>
+      <section className="mt-2 mx-4 flex justify-start">
+        <BackButton />
+      </section>
     <div className="w-full p-8">
       <h1 className="text-3xl font-bold text-center">Article Catalog</h1>
 
