@@ -33,7 +33,7 @@
   --ds-form-width: 600px;
   --ds-reading-width: 720px;
   --ds-gutter: 16px;
-  --ds-nav-height: 4.5rem;
+  --ds-nav-height: 5.5rem;
   --ds-layer-navigation: 20;
   --ds-layer-modal: 30;
 }
@@ -202,6 +202,10 @@ body {
 }
 
 @media (max-width: 767px) {
+  html:has(.ds-mobile-nav) {
+    scroll-padding-block-end: calc(var(--ds-nav-height) + env(safe-area-inset-bottom, 0px) + var(--ds-space-4));
+  }
+
   #root:has(.ds-mobile-nav) {
     padding-bottom: calc(var(--ds-nav-height) + env(safe-area-inset-bottom, 0px));
   }

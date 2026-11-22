@@ -1,58 +1,7 @@
-/* Reporting screens (M33-M35). Cards and page layout come from the shared styles in index.css. */
-.report-page {
-  max-width: 560px;
-}
-
-.report-form {
-  display: grid;
-  gap: 16px;
-  margin: 20px 0;
-}
-
-.report-form label {
-  display: block;
-  margin-bottom: 6px;
-  font-weight: 500;
-}
-
-.report-form select,
-.report-form textarea,
-.report-form input[type='file'] {
-  display: block;
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #cbd0d8;
-  border-radius: 6px;
-  background: white;
-}
-
-.report-form textarea {
-  min-height: 120px;
-  resize: vertical;
-}
-
-.report-button,
-.report-link {
-  display: block;
-  padding: 10px;
-  border: 1px solid #222;
-  border-radius: 6px;
-  text-align: center;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.report-button {
-  background: #222;
-  color: white;
-}
-
-.report-link {
-  margin-top: 12px;
-  background: white;
-  color: #222;
-}
-
-.report-error {
-  color: #b42318;
-}
+.ds-trust .report-form { display: grid; gap: 24px; }
+.ds-trust .report-form label { display: block; margin-bottom: 8px; font-size: 14px; font-weight: 700; }
+.ds-trust .report-form textarea { min-height: 144px; resize: vertical; }
+.ds-trust .report-form .trust-meta { margin: 8px 0 0; }
+.ds-trust .report-form input[type='file'] { max-width: 100%; font-size: 14px; }
+.ds-trust .report-form input::file-selector-button { min-height: 44px; padding: 8px 12px; margin-right: 8px; border: 1px solid var(--ds-control-border); border-radius: var(--ds-radius); background: var(--ds-surface); color: var(--ds-violet); font: inherit; cursor: pointer; }
+.ds-trust .report-error { color: var(--ds-error); }

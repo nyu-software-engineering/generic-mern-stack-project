@@ -2,7 +2,7 @@ import { useContext } from 'react'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { AuthContext } from '../../context/AuthContext'
 import { CURRENT_USER_ID } from '../../services/mockDataService.js'
-import '../booking/booking.css'
+import '../../styles/accounts.css'
 import './profile.css'
 
 // Profile (M29): identity card for the signed-in user plus links to their own screens.
@@ -18,53 +18,51 @@ function Profile() {
   if (!currentUser) return <Navigate to="/login" replace />
 
   return (
-    <main className="booking-page">
-      <h1>Profile</h1>
+    <main className="ds-page ds-account ds-account--profile">
+      <h1 className="ds-heading">Profile</h1>
 
-      <div className="booking-card">
-        <h2>
+      <section className="ds-account-surface" aria-labelledby="profile-identity-heading">
+        <h2 id="profile-identity-heading">
           {currentUser.displayName || currentUser.email}
-          {' · '}
-          {currentUser.emailVerified ? 'Verified NYU' : 'Email not verified'}
         </h2>
-        {/* Ratings and rental counts live in the shared mock data, which has no record for new accounts. */}
-        <p>Not rated yet · 0 completed rentals</p>
+        <p><span className="ds-status">{currentUser.emailVerified ? 'Demo email confirmed' : 'Demo email not confirmed'}</span></p>
         <p>{currentUser.email}</p>
         {currentUser.campusArea && <p>{currentUser.campusArea}</p>}
-      </div>
+        <p className="ds-account-help">This profile is part of the account demo. Account changes reset when you reload.</p>
+      </section>
 
-      <section className="profile-section">
-        <h2>As a renter</h2>
-        <p className="booking-note">Borrow items from other students.</p>
-        <div className="booking-actions">
-          <Link to="/requests-board" className="booking-btn booking-btn--primary">My requests</Link>
-          <Link to="/renter-dashboard" className="booking-btn">Renter dashboard</Link>
+      <section className="profile-section" aria-labelledby="profile-renter-heading">
+        <h2 id="profile-renter-heading">As a renter</h2>
+        <p className="ds-account-help">Borrow items from other students.</p>
+        <div className="ds-account-actions">
+          <Link to="/requests-board" className="ds-button ds-button--secondary">Requests board</Link>
+          <Link to="/renter-dashboard" className="ds-button ds-button--secondary">Renter dashboard</Link>
         </div>
       </section>
 
-      <section className="profile-section">
-        <h2>As an owner</h2>
-        <p className="booking-note">Lend your items to other students.</p>
-        <div className="booking-actions">
-          <Link to="/listings" className="booking-btn booking-btn--primary">My listings</Link>
-          <Link to="/owner-dashboard" className="booking-btn">Owner dashboard</Link>
+      <section className="profile-section" aria-labelledby="profile-owner-heading">
+        <h2 id="profile-owner-heading">As an owner</h2>
+        <p className="ds-account-help">Lend your items to other students.</p>
+        <div className="ds-account-actions">
+          <Link to="/listings" className="ds-button ds-button--secondary">My listings</Link>
+          <Link to="/owner-dashboard" className="ds-button ds-button--secondary">Owner dashboard</Link>
         </div>
       </section>
 
-      <section className="profile-section">
-        <h2>Account</h2>
-        <div className="booking-actions">
-          <Link to={`/users/${CURRENT_USER_ID}/reputation`} className="booking-btn">
+      <section className="profile-section" aria-labelledby="profile-account-heading">
+        <h2 id="profile-account-heading">Account</h2>
+        <div className="ds-account-actions">
+          <Link to={`/users/${CURRENT_USER_ID}/reputation`} className="ds-button ds-button--secondary">
             View demo reputation
           </Link>
         </div>
-        <p className="profile-links">
-          <Link to="/inbox">Messages</Link>{' · '}
-          <Link to="/community-rules">Community rules</Link>{' · '}
-          <Link to="/report">Report a problem</Link>{' · '}
-          <Link to="/setup-profile">Edit profile</Link>{' · '}
-          <button type="button" className="profile-signout" onClick={handleSignOut}>Sign out</button>
-        </p>
+        <nav className="profile-links" aria-label="Profile tools">
+          <Link to="/inbox" className="ds-text-link">Messages</Link>
+          <Link to="/community-rules" className="ds-text-link">Community rules</Link>
+          <Link to="/report" className="ds-text-link">Report a problem</Link>
+          <Link to="/setup-profile" className="ds-text-link">Edit profile</Link>
+        </nav>
+        <button type="button" className="ds-button profile-signout" onClick={handleSignOut}>Sign out</button>
       </section>
     </main>
   )

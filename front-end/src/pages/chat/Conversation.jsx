@@ -14,7 +14,7 @@ const OFFER_STATUS_LABELS = {
   countered: 'Replaced by a new offer',
 }
 
-// One conversation with messages and rental offers (prototype m19, offer overlay m20).
+// One conversation with messages and rental offers (prototype m19, offer dialog m20).
 function Conversation({ conversationId }) {
   const navigate = useNavigate()
   const [conversation, setConversation] = useState(() => getConversation(conversationId))
@@ -23,9 +23,10 @@ function Conversation({ conversationId }) {
 
   if (!conversation) {
     return (
-      <main className="chat-page">
-        <p>Conversation not found.</p>
-        <Link to="/inbox" className="chat-btn">Back to messages</Link>
+      <main className="ds-page ds-messages chat-page">
+        <h1 className="ds-heading">Conversation</h1>
+        <p className="ds-feedback">Conversation not found.</p>
+        <Link to="/inbox" className="ds-text-link">Back to messages</Link>
       </main>
     )
   }
@@ -55,15 +56,19 @@ function Conversation({ conversationId }) {
   }
 
   return (
-    <main className="chat-page">
-      <Link to="/inbox" className="chat-back">← Messages</Link>
+    <main className="ds-page ds-messages chat-page">
+      <Link to="/inbox" className="ds-text-link">← Messages</Link>
+      <h1 className="ds-heading">Conversation</h1>
 
-      <div className="chat-card chat-row">
+      <div className="ds-message-surface chat-card chat-row">
         <img src={listingImage(listing.id, 96)} alt={listing.title} />
         <div className="chat-row-text">
           <h2>{other?.name}</h2>
           <p className="chat-item-title">{listing.title}</p>
-          <p>Verified NYU · {other?.completedRentals ?? 0} completed rentals · ${listing.price}/day</p>
+          <p className="chat-time">
+            {other?.completedRentals != null && <>{other.completedRentals} completed rentals · </>}
+            ${listing.price}/day
+          </p>
         </div>
       </div>
 
@@ -73,13 +78,13 @@ function Conversation({ conversationId }) {
           return (
             <li key={m.id} className={mine ? 'chat-message chat-message--mine' : 'chat-message'}>
               {m.type === 'offer' ? (
-                <div className={`chat-offer chat-offer--${m.status}`}>
+                <div className={`ds-message-surface chat-offer chat-offer--${m.status}`}>
                   <h3>Rental offer · ${m.totalPrice} total</h3>
                   <p>{formatDate(m.startDate)} – {formatDate(m.endDate)}</p>
-                  <p className="chat-offer-status">
-                    {OFFER_STATUS_LABELS[m.status]}
-                    {m.bookingId && <> · <Link to={`/bookings/${m.bookingId}`}>View booking</Link></>}
-                  </p>
+                  <div className="chat-offer-status">
+                    <span className="ds-status">{OFFER_STATUS_LABELS[m.status]}</span>
+                    {m.bookingId && <Link to={`/bookings/${m.bookingId}`} className="ds-text-link">View booking</Link>}
+                  </div>
                 </div>
               ) : (
                 <p className="chat-bubble">{m.text}</p>
@@ -92,17 +97,20 @@ function Conversation({ conversationId }) {
 
       <div className="chat-actions">
         {canRespond && (
-          <button type="button" className="chat-btn chat-btn--primary" onClick={handleAccept}>
+          <button type="button" className="ds-button ds-button--primary" onClick={handleAccept}>
             Accept and view booking
           </button>
         )}
-        <button type="button" className="chat-btn" onClick={() => setOfferFormOpen(true)}>
+        <button type="button" className="ds-button ds-button--secondary" onClick={(e) => {
+          e.currentTarget.focus()
+          setOfferFormOpen(true)
+        }}>
           {latestOffer ? 'Make / counter offer' : 'Make an offer'}
         </button>
         {canRespond && (
           <button
             type="button"
-            className="chat-btn chat-btn--link"
+            className="ds-button ds-button--secondary ds-message-danger"
             onClick={() => setConversation(declineOffer(conversation.id, pendingOffer.id))}
           >
             Decline offer
@@ -115,17 +123,18 @@ function Conversation({ conversationId }) {
         <div className="chat-send-row">
           <input
             id="chat-message"
+            className="ds-field"
             placeholder="Write a message"
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
           />
-          <button type="submit" className="chat-btn chat-btn--primary" disabled={!draft.trim()}>
+          <button type="submit" className="ds-button ds-button--primary" disabled={!draft.trim()}>
             Send
           </button>
         </div>
       </form>
 
-      <Link to={`/report?conversationId=${conversation.id}`} className="chat-report">Report conversation</Link>
+      <Link to={`/report?conversationId=${conversation.id}`} className="ds-text-link">Report conversation</Link>
 
       {offerFormOpen && (
         <OfferForm

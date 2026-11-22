@@ -1,24 +1,8 @@
-/* Profile screen extras. Cards and buttons come from booking.css. */
-.profile-links {
-  margin-top: 20px;
-  line-height: 2;
-}
-
-.profile-signout {
-  padding: 0;
-  border: 0;
-  background: none;
-  color: #c81e1e;
-  font: inherit;
-  cursor: pointer;
-  text-decoration: underline;
-}
-
-.profile-section {
-  margin-top: 24px;
-}
-
-.profile-section h2 {
-  margin: 0 0 4px;
-  font-size: 18px;
+.ds-account .profile-section { padding-block: 24px; border-top: 1px solid var(--ds-line); }
+.ds-account .profile-links { display: flex; flex-wrap: wrap; gap: 8px 24px; margin-block: 16px; }
+.ds-account .profile-signout { border-color: var(--ds-error); color: var(--ds-error); }
+.ds-account .profile-signout:hover { background: #fff0ee; }
+@media (max-width: 767px) {
+  .ds-account .profile-links { display: grid; }
+  .ds-account .profile-signout { width: 100%; }
 }
