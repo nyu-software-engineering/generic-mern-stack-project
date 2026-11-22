@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.mjs",
+    "test": "mocha \"test/**/*.test.mjs\"",
+    "coverage": "c8 npm test"
   },
   "keywords": [],
   "author": "",
