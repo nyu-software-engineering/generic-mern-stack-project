@@ -303,6 +303,48 @@ dates and total. The borrower is the participant who does not own the listing.
 Accepting returns 409 if the offer's dates have passed or the listing is no
 longer published.
 
+Message and offer creation lives in `services/conversations.js`, shared with item
+request responses, so both create messages the same way.
+
+## Item request routes (#105)
+
+`routes/itemRequests.js` handles #105 under `/api/item-requests`:
+
+| Method | Path | Response |
+| --- | --- | --- |
+| GET | `/api/item-requests` | Open requests, newest first |
+| GET | `/api/item-requests/:id` | One request, open or closed |
+| POST | `/api/item-requests` | Created open request, status 201 |
+| POST | `/api/item-requests/:id/responses` | `{ request, conversation }`, status 201 |
+| PATCH | `/api/item-requests/:id/close` | Closed request |
+
+The open list uses `getOpenItemRequests()` from `services/itemRequests.js`, the
+same helper as the requests board.
+
+POST accepts `itemName`, `neededBy`, `neededUntil`, `approximateArea`, and
+optional `targetPrice` and `details`. Text is trimmed. Dates are real
+`YYYY-MM-DD` dates, `neededBy` is not in the past, and `neededUntil` is after
+`neededBy`. `targetPrice` is null or a number of 0 or more, rounded to cents.
+Invalid requests return 400 with `{ error, errors }`, where `errors` maps each
+field to the same message the create form shows. The server sets the ID,
+requester, status, responses, and creation time.
+
+Responses accept `{ "listingId": 4, "message": "I have one.", "totalPrice": 12 }`.
+Send a message, an offer, or both. The listing must be one of your published
+listings. The route continues your conversation with the requester about that
+listing, or creates one, then adds the message and an offer for the request's
+dates. The response records the IDs of the messages it sent. Your own request
+returns 403, a closed request returns 409, and an offer after the request's dates
+have passed returns 409. Other invalid input returns 400.
+
+Only the requester can close a request (403), and closing it twice returns 409.
+Unknown request IDs return 404. Frontend integration remains in #109.
+
+Only the requester sees every entry in `responses`. Other students see just their
+own responses, so they can't tell who else replied. Text is limited after
+trimming: `itemName` and `approximateArea` to 100 characters, `details` and a
+response `message` to 1000. Longer text returns 400.
+
 ## Quick Borrow and requests board routes (#114)
 
 `routes/quickBorrow.js` and `routes/requestsBoard.js` read and add requests in the

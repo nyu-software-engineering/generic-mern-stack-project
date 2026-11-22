@@ -1,15 +1,10 @@
 import { Router } from "express";
 import { earliestToday, isDate } from "./bookings.js";
+import { addOffer, addTextMessage, roundCents } from "../services/conversations.js";
 
 export const conversationsRouter = Router();
 
-const roundCents = (amount) => Math.round(amount * 100) / 100;
-
 const lastSentAt = (conversation) => Date.parse(conversation.messages.at(-1)?.sentAt) || 0;
-
-// Message IDs are unique across all conversations, matching the frontend.
-const nextMessageId = (conversations) =>
-  Math.max(0, ...conversations.flatMap((conversation) => conversation.messages.map((message) => message.id))) + 1;
 
 conversationsRouter.param("id", async (request, response, next, id) => {
   const data = await request.app.locals.mockDataStore.load();
@@ -42,18 +37,10 @@ conversationsRouter.post("/:id/messages", async (request, response) => {
   }
 
   const data = await request.app.locals.mockDataStore.load();
-  const message = {
-    id: nextMessageId(data.conversations),
-    senderId: request.currentUserId,
-    type: "text",
-    text: text.trim(),
-    sentAt: new Date().toISOString(),
-  };
-  request.conversation.messages.push(message);
+  const message = addTextMessage(data, request.conversation, request.currentUserId, text.trim());
   response.status(201).json(message);
 });
 
-// A new offer replaces any offer that is still waiting for an answer.
 conversationsRouter.post("/:id/offers", async (request, response) => {
   const { totalPrice, startDate, endDate } = request.body ?? {};
   if (!Number.isFinite(totalPrice) || totalPrice < 0) {
@@ -72,20 +59,7 @@ conversationsRouter.post("/:id/offers", async (request, response) => {
   if (!Number.isFinite(total)) return response.status(400).json({ error: "Offer total is too large." });
 
   const data = await request.app.locals.mockDataStore.load();
-  for (const message of request.conversation.messages) {
-    if (message.type === "offer" && message.status === "pending") message.status = "countered";
-  }
-  const offer = {
-    id: nextMessageId(data.conversations),
-    senderId: request.currentUserId,
-    type: "offer",
-    totalPrice: total,
-    startDate,
-    endDate,
-    status: "pending",
-    sentAt: new Date().toISOString(),
-  };
-  request.conversation.messages.push(offer);
+  const offer = addOffer(data, request.conversation, request.currentUserId, { totalPrice: total, startDate, endDate });
   response.status(201).json(offer);
 });
 

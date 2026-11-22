@@ -6,6 +6,7 @@ import { errorHandler } from "./middleware/errorHandler.js";
 import { bookingsRouter } from "./routes/bookings.js";
 import { conversationsRouter } from "./routes/conversations.js";
 import { handoffRouter } from "./routes/handoff.js";
+import { itemRequestsRouter } from "./routes/itemRequests.js";
 import { mockDataRouter } from "./routes/mockData.js";
 import { ownerListingsRouter } from "./routes/ownerListings.js";
 import { ownerDashboardRouter } from "./routes/ownerDashboard.js";
@@ -47,6 +48,7 @@ export function createApp({ store = createMockDataStore(), recovery } = {}) {
   app.use("/api/listings", publicListingsRouter);
   app.use("/api/owner", ownerDashboardRouter);
   app.use("/api/conversations", conversationsRouter);
+  app.use("/api/item-requests", itemRequestsRouter);
   app.use("/api/quick-borrow", quickBorrowRouter);
   app.use("/api/requests-board", requestsBoardRouter);
   app.use("/api/reports", reportsRouter);
