@@ -1,0 +1,133 @@
+.profile {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  text-align: left;
+  padding: 0.5rem;
+  gap: 0.5rem;
+  height: 100%;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+/* Profile Header */
+.profile-header {
+  background-color: #f2f2f2;
+  border: 1x solid #ddd;
+  border-radius: var(--border-radius);
+  padding: 1rem;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+.profile-header h2 {
+  font-size: 1.5rem;
+  margin: 0;
+}
+.profile-header p {
+  margin: 0.2rem 0;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+/* Stats Section */
+.profile-statistics {
+  background-color: #f2f2f2;
+  border: 1x solid #ddd;
+  border-radius: var(--border-radius);
+  padding: 1rem;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+.profile-statistics h3 {
+  font-size: 1.2rem;
+  margin: 0 0 0.5rem 0;
+}
+.profile-statistics p {
+  margin: 0.2rem 0;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+/* Year Slider */
+.year-slider ::-webkit-scrollbar {
+  display: none;
+}
+.year-slider {
+  display: flex;
+  overflow-x: auto;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+}
+.year-button {
+  flex-shrink: 0;
+  padding: 0.5rem 1rem;
+  border: 1px solid #ddd;
+  border-radius: var(--border-radius);
+  background-color: white;
+  cursor: pointer;
+}
+.year-button:hover {
+  background-color: #f0f0f0;
+}
+.year-button:active {
+  background-color: #b0b0b0;
+  transform: scale(0.98);
+}
+.year-button.active {
+  background-color: #333;
+  color: white;
+  border-color: #333;
+}
+
+/* Stays List */
+.profile-statistics ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.profile-statistics li {
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: var(--border-radius);
+  padding: 0.5rem;
+  font-size: 0.9rem;
+}
+
+/* Actions */
+.profile-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: auto;
+}
+.profile-actions button {
+  width: 100%;
+  padding: 0.5rem;
+  font-size: 0.875rem;
+  background-color: lightgray;
+  border: none;
+  border-radius: var(--input-radius);
+  cursor: pointer;
+}
+.profile-actions button:hover {
+  background-color: #c8c8c8;
+}
+.profile-actions button:active {
+  background-color: #b0b0b0;
+  transform: scale(0.98);
+}
+.profile-actions .sign-out {
+  background-color: white;
+  color: #c0392b;
+  border: 1px solid #c0392b;
+}
+.profile-actions .sign-out:hover {
+  background-color: #eaa3a3;
+}
+.profile-actions .sign-out:active {
+  background-color: rgb(187, 27, 27);
+  transform: scale(0.98);
+}

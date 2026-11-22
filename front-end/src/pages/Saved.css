@@ -1,0 +1,35 @@
+.page-wrapper {
+  flex: 1;
+  min-height: 0;
+  height: 100%;
+  padding: 5%;
+}
+
+.saved-header {
+  display: flex;
+  flex-direction: row;
+  height: 7%;
+  width: 100%;
+}
+
+.list-end-spacer {
+  height: 0.5vh;
+  flex-shrink: 0;
+}
+
+.saved-header-info {
+  flex: 5;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.25rem;
+  padding: 0 1rem;
+}
+
+.saved-filter-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.5rem;
+  font-size: 16px;
+  border: 1px solid #ddd;
+}

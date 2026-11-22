@@ -1,0 +1,83 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  aspect-ratio: 4 / 3;
+  width: 100%;
+  margin: 1rem 0;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.image-and-edit {
+  position: relative;
+  flex: 3;
+  min-height: 0;
+}
+
+.card-image {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: #eee;
+}
+
+.card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.Saved-EditBtn {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.875rem;
+  background-color: rgba(255, 255, 255, 0.9);
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.Saved-EditBtn:hover {
+  background-color: #fff;
+  border-color: #aaa;
+}
+
+.Saved-EditBtn:focus-visible {
+  outline: 2px solid #555;
+  outline-offset: 2px;
+}
+
+.card-info {
+  flex: 2;
+  min-height: 0;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  border-top: 1px solid #ddd;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.card-name {
+  margin: 0 0 0.25rem;
+  font-size: 1rem;
+}
+
+.card-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.75rem;
+  color: #666;
+}
+
+.card-description {
+  margin: 0;
+}
