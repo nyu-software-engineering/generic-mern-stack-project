@@ -4,8 +4,7 @@ const sinon = require("sinon");
 const axios = require("axios");
 
 const { expect } = chai;
-chai.use(chaiHttp.default);
-const { request } = chaiHttp;
+chai.use(chaiHttp);
 
 process.env.API_MEMBERS_URL = "http://fake-api.test/members";
 process.env.API_ASSETS_URL = "http://fake-api.test/assets";
@@ -21,6 +20,8 @@ const axiosStub = sinon.stub(axios, "get").callsFake(async (url) => {
   return { data: [] };
 });
 
+delete require.cache[require.resolve("../app")];
+delete require.cache[require.resolve("../services/purchase_asset")];
 const app = require("../app");
 
 const validAsset = () => ({
@@ -30,7 +31,7 @@ const validAsset = () => ({
   paidBy: "Alice",
 });
 
-const postAsset = (body) => request.execute(app).post("/api/assets").send(body);
+const postAsset = (body) => chai.request(app).post("/api/assets").send(body);
 
 describe("POST /api/assets", () => {
   after(() => axiosStub.restore());

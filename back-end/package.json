@@ -8,25 +8,25 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "test": "c8 mocha --timeout=3000 'tests/**/*_test.js'"
+    "test": "c8 mocha --timeout=3000 \"tests/**/*.test.js\""
   },
   "dependencies": {
     "axios": "^1.21.1",
-    "chai": "^6.3.0",
     "dotenv": "^18.0.10",
     "express": "^5.3.0",
-    "mocha": "^12.0.3",
     "morgan": "^1.12.1",
     "multer": "^2.5.0"
   },
   "devDependencies": {
     "c8": "^12.0.0",
-    "chai-http": "^5.2.1",
+    "chai": "^4.5.0",
+    "chai-http": "^4.4.0",
     "eslint": "^10.15.0",
     "eslint-config-node": "^4.1.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^5.5.7",
+    "mocha": "^12.0.3",
     "nodemon": "^3.1.14",
     "prettier": "^3.10.1",
     "sinon": "^22.1.0"
