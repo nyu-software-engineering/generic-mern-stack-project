@@ -7,6 +7,51 @@ let nextId = Math.max(0, ...bookings.map(booking => Number(booking.id) || 0)) + 
 const editable = ['requested', 'confirmed']
 const validStatuses = ['requested', 'confirmed', 'completed', 'cancelled', 'declined']
 
+// Sprint 2: use each listing's provider-managed availability (mock data, no database).
+const services = require('./services.json')
+const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+const minutes = value => { const [h, m] = value.split(':').map(Number); return h * 60 + m }
+const timeLabel = value => `${String(Math.floor(value / 60)).padStart(2, '0')}:${String(value % 60).padStart(2, '0')}`
+const getService = id => services.find(service => String(service.id) === String(id))
+const offeredSlots = (serviceId, date) => {
+  const service = getService(serviceId)
+  if (!service || service.status !== 'Active' || !service.availability) return []
+  const { days, startTime, endTime } = service.availability
+  if (!Array.isArray(days) || !days.includes(weekdays[new Date(`${date}T00:00:00Z`).getUTCDay()])) return []
+  if (!/^\d{2}:\d{2}$/.test(startTime || '') || !/^\d{2}:\d{2}$/.test(endTime || '')) return []
+  const slots = []
+  for (let t = minutes(startTime); t + 30 <= minutes(endTime); t += 30) slots.push(timeLabel(t))
+  return slots
+}
+// Allow the existing Edit Listing page to update availability in mock server memory.
+router.patch('/services/:serviceId/availability', (req, res) => {
+  const service = getService(req.params.serviceId)
+  if (!service) return res.status(404).json({ error: 'Service not found.' })
+  const { days, startTime, endTime } = req.body || {}
+  if (!Array.isArray(days) || !days.length || days.some(day => !weekdays.includes(day)) ||
+      !/^\d{2}:\d{2}$/.test(startTime || '') || !/^\d{2}:\d{2}$/.test(endTime || '') ||
+      minutes(startTime) >= minutes(endTime) || minutes(endTime) > 1440) {
+    return res.status(400).json({ error: 'Invalid service availability.' })
+  }
+  service.availability = { days, startTime, endTime }
+  res.json(service.availability)
+})
+const isValidDate = value => typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value) && !Number.isNaN(Date.parse(`${value}T00:00:00Z`)) && new Date(`${value}T00:00:00Z`).toISOString().slice(0, 10) === value
+const isTaken = (serviceId, date, time, excludeId) => bookings.some(booking =>
+  booking.id !== excludeId && String(booking.serviceId) === String(serviceId) &&
+  booking.date === date && booking.time === time &&
+  ['requested', 'confirmed'].includes(booking.status)
+)
+
+// Keep this route before /:id, so 'availability' is not interpreted as a booking ID.
+router.get('/availability', (req, res) => {
+  const { serviceId, date, excludeBookingId } = req.query
+  if (!serviceId || !isValidDate(date)) return res.status(400).json({ error: 'Valid serviceId and date (YYYY-MM-DD) are required.' })
+  if (!getService(serviceId)) return res.status(404).json({ error: 'Service not found.' })
+  res.json({ serviceId: String(serviceId), date, slots: offeredSlots(serviceId, date).filter(time => !isTaken(serviceId, date, time, excludeBookingId)) })
+})
+
+
 router.get('/', (req, res) => res.json(bookings))
 router.get('/:id', (req, res) => {
   const booking = bookings.find(item => item.id === req.params.id)
@@ -15,9 +60,11 @@ router.get('/:id', (req, res) => {
 })
 router.post('/', (req, res) => {
   const { serviceId, date, time, notes = '' } = req.body || {}
-  if (!serviceId || !/^\d{4}-\d{2}-\d{2}$/.test(date || '') || !/^\d{2}:\d{2}$/.test(time || '') || typeof notes !== 'string') {
+  if (!serviceId || !isValidDate(date) || !/^\d{2}:\d{2}$/.test(time || '') || typeof notes !== 'string') {
     return res.status(400).json({ error: 'Valid serviceId, date (YYYY-MM-DD), time (HH:MM), and notes are required.' })
   }
+  if (!offeredSlots(serviceId, date).includes(time)) return res.status(400).json({ error: 'Time is not an offered slot.' })
+  if (isTaken(serviceId, date, time)) return res.status(409).json({ error: 'This time slot is already booked.' })
   const booking = { id: String(nextId++), serviceId: String(serviceId), status: 'requested', date, time, notes }
   bookings.push(booking)
   res.status(201).json(booking)
@@ -32,10 +79,12 @@ router.patch('/:id', (req, res) => {
   }
   if (!editable.includes(booking.status)) return res.status(409).json({ error: 'This booking cannot be changed.' })
   if (changes.status !== undefined && !validStatuses.includes(changes.status)) return res.status(400).json({ error: 'Invalid status.' })
-  if (changes.date !== undefined && (typeof changes.date !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(changes.date))) return res.status(400).json({ error: 'Invalid date.' })
+  if (changes.date !== undefined && (typeof changes.date !== 'string' || !isValidDate(changes.date))) return res.status(400).json({ error: 'Invalid date.' })
   if (changes.time !== undefined && (typeof changes.time !== 'string' || !/^\d{2}:\d{2}$/.test(changes.time))) return res.status(400).json({ error: 'Invalid time.' })
   if (changes.notes !== undefined && typeof changes.notes !== 'string') return res.status(400).json({ error: 'Invalid notes.' })
   if ((changes.date !== undefined || changes.time !== undefined || changes.notes !== undefined) && changes.status && changes.status !== 'requested') return res.status(400).json({ error: 'Rescheduling must set status to requested.' })
+  if ((changes.date !== undefined || changes.time !== undefined) && !offeredSlots(booking.serviceId, changes.date ?? booking.date).includes(changes.time ?? booking.time)) return res.status(400).json({ error: 'Time is not an offered slot.' })
+  if ((changes.date !== undefined || changes.time !== undefined) && isTaken(booking.serviceId, changes.date ?? booking.date, changes.time ?? booking.time, booking.id)) return res.status(409).json({ error: 'This time slot is already booked.' })
   Object.assign(booking, changes)
   res.json(booking)
 })

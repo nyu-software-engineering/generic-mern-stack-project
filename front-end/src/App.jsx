@@ -31,7 +31,12 @@ function App() {
     getServices()
   }, [])
 
-  const updateService = (id, changes) => setServices(services.map(s => s.id === id ? { ...s, ...changes } : s))
+  const updateService = (id, changes) => {
+    setServices(previous => previous.map(s => s.id === id ? { ...s, ...changes } : s))
+    if (changes.availability) {
+      axios.patch(`/api/bookings/services/${id}/availability`, changes.availability).catch(console.error)
+    }
+  }
   const removeService = id => setServices(services.filter(s => s.id !== id))
   const [bookings, setBookings] = useState([])
   useEffect(() => {
