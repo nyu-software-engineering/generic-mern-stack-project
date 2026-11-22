@@ -3,7 +3,9 @@ import express from 'express'; // ES module import style
 import session from 'express-session';
 const app = express(); // instantiate an Express object
 
+import initialSearchHotels from './mockData/hotelList.js';
 import initialSavedHotels from './mockData/savedHotels.js';
+import stayedHotels from './mockData/stayedHotels.js';
 import initialBookings from './mockData/currentBooking.js';
 import hotelList from './mockData/hotelList.js';
 
@@ -187,6 +189,31 @@ app.delete('/api/saved/:id', (req, res) => {
   res.json(body);
 });
 // ===== SAVED HOTELS END =====
+
+// ===== PROFILE =====
+app.get('/api/profile/stays', (req, res) => {
+  if (!req.session.userId) {
+    return res.status(401).json({
+      error: "Not authenticated"
+    });
+  }
+  
+  const userStays = stayedHotels
+    .filter((stay) => stay.userId === req.session.userId)
+    .map((stay) => {
+        const hotel = initialSearchHotels.find((h) => h.id === stay.hotelId);
+        return {
+            id: stay.id,
+            userId: stay.userId,
+            hotelId: stay.hotelId,
+            hotel: hotel ? hotel.name : 'Unknown hotel',
+            city: hotel ? hotel.location : '',
+            date: stay.date,
+        };
+  });
+  return res.json(userStays);
+});
+// ===== PROFILE END =====
 
 // ===== CURRENT BOOKINGS START =====
 let bookings = initialBookings.map((booking) => ({ ...booking })); //CURRENTLY CAN NOT CHANGE THE MOCK DATA ARRAY. WILL

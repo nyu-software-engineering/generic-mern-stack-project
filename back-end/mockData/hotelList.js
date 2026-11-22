@@ -221,6 +221,41 @@ const initialSearchHotels = [
     description: 'Elegant rooms near Gramercy Park.',
     imageSrc: '',
   },
+
+  // hotels referenced by past stays in stayedHotels.js
+
+  {
+    id: '28',
+    name: 'Waldorf Astoria DC',
+    location: 'Washington D.C., USA',
+    date: '2026-10-15',
+    description: 'Historic luxury hotel near the National Mall.',
+    imageSrc:'',
+  },
+  {
+    id: '29',
+    name: 'Ritz Carlton Half Moon Bay',
+    location: 'Half Moon Bay, USA',
+    date: '2024-02-20',
+    description: 'Oceanfront resort on the California coast.',
+    imageSrc:'',
+  },
+  {
+    id: '30',
+    name: 'Park Hyatt Tokyo',
+    location: 'Tokyo, Japan',
+    date: '2025-03-10',
+    description: 'Skyline views from the top floors of Shinjuku Park Tower.',
+    imageSrc:'',
+  },
+  {
+    id: '31',
+    name: 'The Savoy',
+    location: 'London, UK',
+    date: '2025-07-04',
+    description: 'Iconic hotel on the Strand by the River Thames.',
+    imageSrc:'',
+  },
 ];
 
 export default initialSearchHotels;
