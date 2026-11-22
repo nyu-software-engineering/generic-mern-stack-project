@@ -29,5 +29,5 @@ describe("GET /api/profile/:id", () => {
 })
 
 describe("PUT /api/profile/:id", () => {
-
+    const response = null;
 })
