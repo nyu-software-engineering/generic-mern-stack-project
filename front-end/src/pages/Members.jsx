@@ -1,3 +1,4 @@
+import Badge from '../components/Badge.jsx'
 import { useMemo } from 'react'
 import { Link, useParams } from 'react-router'
 import Avatar from '../components/Avatar'
@@ -68,7 +69,7 @@ export default function Members() {
               <p className="truncate text-sm text-muted">@{member.username}</p>
             </div>
             {member.id === ownerId && (
-              <span className="rounded-pill bg-sage px-3 py-1 text-xs font-semibold text-ink">Owner</span>
+              <Badge className="bg-sage px-3 py-1 font-semibold">Owner</Badge>
             )}
           </li>
         ))}

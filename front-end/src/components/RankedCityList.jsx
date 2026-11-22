@@ -1,3 +1,4 @@
+import CategoryTag from './CategoryTag.jsx'
 import { useState } from 'react'
 import { Link } from 'react-router'
 import './RankedCityList.css'
@@ -39,7 +40,7 @@ export default function RankedCityList({ places }) {
               <Link className="ranked-place-card" to={`/place/${place.id}`} aria-label={`View ${place.name}`}>
                 <PlacePhoto place={place} />
                 <div className="ranked-place-content">
-                  <p className="ranked-place-category">{place.categoryLabel}</p>
+                  <CategoryTag categoryId={place.categoryId} label={place.categoryLabel} />
                   <h3>{place.name}</h3>
                   <p className="ranked-place-neighborhood">{place.neighborhood}</p>
                   {totalVotes === 0 ? <p className="ranked-place-no-votes">No votes yet</p> : (

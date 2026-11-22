@@ -1,3 +1,4 @@
+import Badge from './Badge.jsx'
 // Small colored pill that shows a place's category, e.g. "Food" (#14).
 // Tailwind only keeps classes it can see written out in full, so each color is spelled out here.
 const CATEGORY_COLORS = {
@@ -14,8 +15,8 @@ export default function CategoryTag({ categoryId, label }) {
   const color = CATEGORY_COLORS[categoryId] ?? 'border border-border bg-surface'
 
   return (
-    <span className={`inline-flex items-center rounded-pill px-2.5 py-0.5 text-xs font-medium text-ink ${color}`}>
+    <Badge className={`px-2.5 py-0.5 font-medium ${color}`}>
       {label}
-    </span>
+    </Badge>
   )
 }

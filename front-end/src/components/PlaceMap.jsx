@@ -1,3 +1,4 @@
+import CategoryTag from './CategoryTag.jsx'
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router'
 import L from 'leaflet'
@@ -106,7 +107,7 @@ export default function PlaceMap({ places, center, label }) {
       {selected && (
         <section ref={previewRef} className="place-map-preview" aria-label="Selected place" aria-live="polite">
           <div className="place-map-preview-top">
-            <p className="place-map-category">{selected.categoryLabel}</p>
+            <CategoryTag categoryId={selected.categoryId} label={selected.categoryLabel} />
             <button type="button" aria-label="Close place preview" onClick={() => setSelectedId(null)}>×</button>
           </div>
           <h2>{selected.name}</h2>

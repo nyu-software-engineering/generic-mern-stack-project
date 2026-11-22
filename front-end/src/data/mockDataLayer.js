@@ -473,6 +473,9 @@ export function getAmbiguousCandidates(lookup) {
       placeId: place.id,
       name: place.name,
       subtitle: `${getCategoryLabel(place.categoryId)} - ${place.neighborhood}`,
+      categoryId: place.categoryId,
+      categoryLabel: getCategoryLabel(place.categoryId),
+      neighborhood: place.neighborhood,
       photoUrl: place.photoUrl,
       bestMatch: candidate.bestMatch === true,
     }
@@ -507,6 +510,9 @@ export function searchPlacesInCity(cityId, query) {
       placeId: place.id,
       name: place.name,
       subtitle: `${getCategoryLabel(place.categoryId)} - ${place.neighborhood}`,
+      categoryId: place.categoryId,
+      categoryLabel: getCategoryLabel(place.categoryId),
+      neighborhood: place.neighborhood,
       photoUrl: place.photoUrl,
       bestMatch: false,
     }))

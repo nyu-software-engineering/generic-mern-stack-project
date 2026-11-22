@@ -1,3 +1,4 @@
+import CategoryTag from './CategoryTag.jsx'
 /**
  * Place preview card used on Place Found and Did you mean rows.
  */
@@ -5,6 +6,7 @@ export default function PlaceConfirmCard({
   thumbnailUrl,
   name,
   subtitle,
+  categoryId,
   categoryLabel,
   sourceTag,
   bestMatch = false,
@@ -14,7 +16,7 @@ export default function PlaceConfirmCard({
 }) {
   const TagRow = (
     <div className="flow-tags">
-      {categoryLabel && <span className="flow-tag">{categoryLabel}</span>}
+      {categoryLabel && <CategoryTag categoryId={categoryId} label={categoryLabel} />}
       {sourceTag && <span className="flow-tag">{sourceTag}</span>}
     </div>
   )
@@ -33,7 +35,11 @@ export default function PlaceConfirmCard({
         </span>
         <span className="flow-place-row-text">
           <span className="flow-place-name">{name}</span>
-          <span className="flow-place-subtitle">{subtitle}</span>
+          <span className="flow-place-subtitle">
+            {categoryLabel && <CategoryTag categoryId={categoryId} label={categoryLabel} />}
+            {categoryLabel && subtitle && ' · '}
+            {subtitle}
+          </span>
         </span>
         {bestMatch && <span className="flow-best-label">Best Match</span>}
       </button>

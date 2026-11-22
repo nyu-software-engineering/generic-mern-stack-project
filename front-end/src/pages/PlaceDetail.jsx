@@ -1,3 +1,4 @@
+import CategoryTag from '../components/CategoryTag.jsx'
 import { useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router'
 import VoteChips from '../components/VoteChips'
@@ -60,7 +61,6 @@ export default function PlaceDetail() {
 
   // "Food · East Village · saved by Siyona from TikTok". Parts we don't have are left out.
   const details = [
-    place.categoryLabel,
     place.neighborhood,
     place.savedBy &&
     `saved by ${firstName(place.savedBy.name)}${place.sourcePlatform ? ` from ${place.sourcePlatform}` : ''}`,
@@ -88,7 +88,12 @@ export default function PlaceDetail() {
 
       <div className="px-5 py-5">
         <h1 className="text-3xl font-semibold tracking-tight">{place.name}</h1>
-        <p className="mt-1 text-sm text-muted">{details.join(' · ')}</p>
+        <div className="mt-1 flex flex-wrap items-center gap-2">
+          {place.categoryLabel && (
+            <CategoryTag categoryId={place.categoryId} label={place.categoryLabel} />
+          )}
+          {details.length > 0 && <span className="text-sm text-muted">{details.join(' · ')}</span>}
+        </div>
 
         <div className="mt-4 flex flex-wrap gap-2">
           {/* Places that haven't been saved from a post yet have no original link */}

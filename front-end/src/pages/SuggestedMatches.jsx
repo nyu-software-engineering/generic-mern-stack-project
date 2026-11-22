@@ -101,7 +101,9 @@ export default function SuggestedMatches() {
               key={row.placeId}
               thumbnailUrl={row.photoUrl}
               name={row.name}
-              subtitle={row.subtitle}
+              subtitle={row.neighborhood}
+              categoryId={row.categoryId}
+              categoryLabel={row.categoryLabel}
               bestMatch={row.bestMatch}
               isSelected={row.placeId === selectedPlaceId}
               selectable
