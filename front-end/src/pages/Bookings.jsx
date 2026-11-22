@@ -1,10 +1,9 @@
 import { useState } from 'react'
 import { Link } from 'react-router'
-import services from '../services.json'
 import Header from './Header'
 import './Booking.css'
 
-export default function Bookings({ bookings }) {
+export default function Bookings({ bookings, services = [] }) {
   const [period, setPeriod] = useState('upcoming')
   const visible = bookings.filter(b => period === 'upcoming' ? ['requested', 'confirmed'].includes(b.status) : ['completed', 'cancelled'].includes(b.status))
   return (

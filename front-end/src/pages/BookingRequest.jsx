@@ -1,9 +1,8 @@
 import { useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router'
-import services from '../services.json'
 import './Booking.css'
 
-export default function BookingRequest({ bookings = [], addBooking, updateBooking }) {
+export default function BookingRequest({ bookings = [], addBooking, updateBooking, services = [] }) {
   const { serviceId, bookingId } = useParams()
   const previous = bookings.find(b => b.id === bookingId)
   const service = services.find(s => String(s.id) === (previous?.serviceId || serviceId))
@@ -12,17 +11,24 @@ export default function BookingRequest({ bookings = [], addBooking, updateBookin
   const [time, setTime] = useState(previous?.time || '15:00')
   const [notes, setNotes] = useState(previous?.notes || '')
   const [showTimes, setShowTimes] = useState(false)
+  const [error, setError] = useState('')
   if (bookingId && (!previous || !['requested', 'confirmed'].includes(previous.status))) return <p>This booking cannot be rescheduled.</p>
   if (!service) return <p>Service not found.</p>
-  function submit(e) {
+  async function submit(e) {
     e.preventDefault()
-    if (previous) updateBooking(previous.id, { date, time, notes, status: 'requested' })
-    else addBooking({ serviceId: String(service.id), date, time, notes })
-    navigate('/bookings')
+    setError('')
+    try {
+      if (previous) await updateBooking(previous.id, { date, time, notes, status: 'requested' })
+      else await addBooking({ serviceId: String(service.id), date, time, notes })
+      navigate('/bookings')
+    } catch (err) {
+      setError(err.response?.data?.error || 'Unable to save booking. Please try again.')
+    }
   }
   return <div className="booking-content">
     <h1>{previous ? 'Reschedule booking' : 'Request a booking'}</h1>
     <div className="booking-summary">{service.title}<br />{service.provider}<br />${service.price} / {service.priceUnit}</div>
+    {error && <p role="alert">{error}</p>}
     <form onSubmit={submit}>
       <label className="booking-form-field"><span>Date</span><input className="booking-input" type="date" required value={date} onChange={e => setDate(e.target.value)} /></label>
       <div className="booking-form-field"><span>Time</span><button className="booking-button" type="button" onClick={() => setShowTimes(true)}>{time}</button></div>
