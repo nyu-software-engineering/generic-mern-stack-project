@@ -223,6 +223,241 @@ test('login forwards identity to listing services and sign-out clears it', async
   )
 })
 
+test('reset sign-out keeps matching or newer pending email verification', async (t) => {
+  prepare(t)
+
+  const pending = { email: 'pending@nyu.edu', demoCode: '123456' }
+  let listingAuthorization
+  t.mock.method(globalThis, 'fetch', async (url, options) => {
+    if (url === '/api/auth/login') {
+      if (JSON.parse(options.body).password === 'wrong-password') {
+        return Response.json({ error: 'Invalid email or password.' }, { status: 401 })
+      }
+      return Response.json({ token: 'a'.repeat(64), user: account })
+    }
+
+    if (url === '/api/users/me') {
+      return Response.json({ user: account })
+    }
+
+    if (url === '/api/auth/signup') {
+      return Response.json({ user: { email: pending.email }, demoCode: pending.demoCode }, { status: 201 })
+    }
+
+    assert.equal(url, '/api/listings/mine')
+    listingAuthorization = options.headers?.Authorization
+    return Response.json([])
+  })
+
+  const session = harness()
+  await session.actions.signIn(account.email, 'password123')
+  await session.actions.signUp('Pending Student', pending.email, 'password123')
+  assert.equal(session.user.id, account.id)
+
+  const signOutAfterMatchingReset = session.actions.prepareResetSignOut(pending.email)
+  signOutAfterMatchingReset()
+
+  assert.equal(session.user, null)
+  await api('/listings/mine')
+  assert.equal(listingAuthorization, undefined)
+  assert.deepEqual(session.pending, pending)
+  assert.deepEqual(readPendingSignup(), pending)
+
+  session.actions.signOut()
+  assert.equal(session.pending, null)
+  assert.equal(readPendingSignup(), null)
+
+  await session.actions.signUp('Pending Student', pending.email, 'password123')
+  const signOutAfterOtherReset = session.actions.prepareResetSignOut(account.email)
+  signOutAfterOtherReset()
+  assert.equal(session.pending, null)
+  assert.equal(readPendingSignup(), null)
+
+  await session.actions.signIn(account.email, 'password123')
+  const signOutAfterOlderReset = session.actions.prepareResetSignOut(account.email)
+  await assert.rejects(session.actions.signIn(account.email, 'wrong-password'), /Invalid email or password/)
+  await session.actions.signUp('Pending Student', pending.email, 'password123')
+  signOutAfterOlderReset()
+  assert.equal(session.user, null)
+  assert.deepEqual(session.pending, pending)
+  assert.deepEqual(readPendingSignup(), pending)
+})
+
+test('late reset preserves a newer sign-in waiting for its profile', async (t) => {
+  prepare(t)
+
+  const oldToken = 'a'.repeat(64)
+  const newToken = 'b'.repeat(64)
+  const newProfileRequested = Promise.withResolvers()
+  const newProfile = Promise.withResolvers()
+  let authorization
+
+  t.mock.method(globalThis, 'fetch', async (url, options) => {
+    if (url === '/api/auth/login') {
+      const { password } = JSON.parse(options.body)
+      return Response.json({ token: password === 'old-password' ? oldToken : newToken })
+    }
+    if (url === '/api/users/me') {
+      if (options.headers.Authorization === `Bearer ${newToken}`) {
+        newProfileRequested.resolve()
+        return newProfile.promise
+      }
+      return Response.json({ user: account })
+    }
+    assert.equal(url, '/api/listings/mine')
+    authorization = options.headers?.Authorization
+    return Response.json([])
+  })
+
+  const session = harness()
+  await session.actions.signIn(account.email, 'old-password')
+  const finishReset = session.actions.prepareResetSignOut(account.email)
+  const newerSignIn = session.actions.signIn(account.email, 'new-password')
+  await newProfileRequested.promise
+
+  finishReset()
+  assert.equal(session.user, null)
+  await api('/listings/mine')
+  assert.equal(authorization, undefined)
+
+  newProfile.resolve(Response.json({ user: account }))
+  assert.deepEqual(await newerSignIn, account)
+  assert.deepEqual(session.user, account)
+  await api('/listings/mine')
+  assert.equal(authorization, `Bearer ${newToken}`)
+})
+
+test('late reset clears a session installed by an earlier sign-in request', async (t) => {
+  prepare(t)
+
+  const loginResponse = Promise.withResolvers()
+  const token = 'a'.repeat(64)
+  let authorization
+
+  t.mock.method(globalThis, 'fetch', async (url, options) => {
+    if (url === '/api/auth/login') return loginResponse.promise
+    if (url === '/api/users/me') return Response.json({ user: account })
+    assert.equal(url, '/api/listings/mine')
+    authorization = options.headers?.Authorization
+    return Response.json([])
+  })
+
+  const session = harness()
+  const olderSignIn = session.actions.signIn(account.email, 'old-password')
+  const finishReset = session.actions.prepareResetSignOut(account.email)
+
+  loginResponse.resolve(Response.json({ token }))
+  await olderSignIn
+  assert.deepEqual(session.user, account)
+  await api('/listings/mine')
+  assert.equal(authorization, `Bearer ${token}`)
+
+  finishReset()
+  assert.equal(session.user, null)
+  await api('/listings/mine')
+  assert.equal(authorization, undefined)
+})
+
+test('late reset clears unrelated verification installed by an earlier signup request', async (t) => {
+  prepare(t)
+
+  const signupResponse = Promise.withResolvers()
+  const pending = { email: 'pending@nyu.edu', demoCode: '123456' }
+
+  t.mock.method(globalThis, 'fetch', async (url) => {
+    assert.equal(url, '/api/auth/signup')
+    return signupResponse.promise
+  })
+
+  const session = harness()
+  const olderSignup = session.actions.signUp('Pending Student', pending.email, 'password123')
+  const finishReset = session.actions.prepareResetSignOut(account.email)
+
+  signupResponse.resolve(Response.json({ user: { email: pending.email }, demoCode: pending.demoCode }, { status: 201 }))
+  await olderSignup
+  assert.deepEqual(readPendingSignup(), pending)
+
+  finishReset()
+  assert.equal(session.pending, null)
+  assert.equal(readPendingSignup(), null)
+})
+
+test('late reset clears unrelated pending signup after two newer sign-in failures', async (t) => {
+  const storage = prepare(t)
+  const pending = { email: 'pending@nyu.edu', demoCode: '123456' }
+  storage.setItem('dormshare-pending-verification', JSON.stringify(pending))
+
+  t.mock.method(globalThis, 'fetch', async (url) => {
+    assert.equal(url, '/api/auth/login')
+    return Response.json({ error: 'Invalid email or password.' }, { status: 401 })
+  })
+
+  const session = harness()
+  const finishReset = session.actions.prepareResetSignOut(account.email)
+  for (let attempt = 0; attempt < 2; attempt += 1) {
+    await assert.rejects(session.actions.signIn(account.email, 'wrong-password'), /Invalid email or password/)
+  }
+
+  finishReset()
+  assert.equal(session.pending, null)
+  assert.equal(readPendingSignup(), null)
+})
+
+test('late reset preserves a newer signup and still invalidates an earlier sign-in', async (t) => {
+  prepare(t)
+
+  const loginResponse = Promise.withResolvers()
+  const signupResponse = Promise.withResolvers()
+  const pending = { email: 'pending@nyu.edu', demoCode: '123456' }
+
+  t.mock.method(globalThis, 'fetch', async (url) => {
+    if (url === '/api/auth/login') return loginResponse.promise
+    if (url === '/api/auth/signup') return signupResponse.promise
+    assert.equal(url, '/api/users/me')
+    return Response.json({ user: account })
+  })
+
+  const session = harness()
+  const olderSignIn = session.actions.signIn(account.email, 'old-password')
+  const finishReset = session.actions.prepareResetSignOut(account.email)
+  const newerSignup = session.actions.signUp('Pending Student', pending.email, 'password123')
+  finishReset()
+
+  loginResponse.resolve(Response.json({ token: 'a'.repeat(64) }))
+  await assert.rejects(olderSignIn, /Session changed/)
+
+  signupResponse.resolve(Response.json({ user: { email: pending.email }, demoCode: pending.demoCode }, { status: 201 }))
+  await newerSignup
+  assert.equal(session.user, null)
+  assert.deepEqual(session.pending, pending)
+  assert.deepEqual(readPendingSignup(), pending)
+})
+
+test('late reset preserves newer verification for a different email', async (t) => {
+  const storage = prepare(t)
+  const verificationResponse = Promise.withResolvers()
+  const pending = { email: 'pending@nyu.edu', demoCode: '123456' }
+  storage.setItem('dormshare-pending-verification', JSON.stringify(pending))
+
+  t.mock.method(globalThis, 'fetch', async (url, options) => {
+    assert.equal(url, '/api/auth/verify')
+    assert.deepEqual(JSON.parse(options.body), { email: pending.email, code: pending.demoCode })
+    return verificationResponse.promise
+  })
+
+  const session = harness()
+  const finishReset = session.actions.prepareResetSignOut(account.email)
+  const newerVerification = session.actions.verifyEmail(pending.demoCode)
+  finishReset()
+
+  const verified = { ...account, email: pending.email }
+  verificationResponse.resolve(Response.json({ user: verified }))
+  assert.deepEqual(await newerVerification, verified)
+  assert.deepEqual(session.pending, { email: pending.email, demoCode: '' })
+  assert.equal(readPendingSignup(), null)
+  assert.equal(session.user, null)
+})
+
 test('a late profile response cannot restore a signed-out user', async (t) => {
   prepare(t)
 

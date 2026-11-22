@@ -49,6 +49,23 @@ For features whose existing readers still use the shared client cache:
 
 Follow the same pattern as other feature APIs replace their local data operations.
 
+## Password recovery
+
+Choose **Forgot password?** on the sign-in page. Request a code using the
+registered NYU email, then enter that email and the eight-digit emailed code.
+After verification, enter **New password** and **Confirm new password**.
+Return to normal sign-in after a successful reset.
+
+The code expires after 15 minutes. Five wrong attempts exhaust it. The password
+step expires five minutes after verification. Request a new code if either
+step expires or the page reloads. The app keeps recovery secrets only in memory.
+
+Recovery requires the backend's [Brevo configuration](../back-end/README.md#password-recovery-139).
+It works with a local app and needs no deployed reset URL. Request and code
+pages are public and do not depend on shared mock-data loading.
+See the [recovery test guide](../docs/testing/139-account-recovery.md) for
+repeatable checks with synthetic data and no inbox.
+
 ## Scripts
 
 | Command           | What it does                            |

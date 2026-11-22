@@ -23,7 +23,9 @@ Set `MOCKAROO_API_KEY` in the new `.env` using the team's private key. Then run:
 npm run dev
 ```
 
-The server uses `http://127.0.0.1:3001`. Restart it after changing `.env`.
+The server uses `http://127.0.0.1:3001`. Restart it after changing environment files.
+Exported environment values take priority, followed by `back-end/.env.local`,
+then `back-end/.env`. These files are resolved relative to the backend server.
 MongoDB is not required for the Sprint 2 mock API.
 
 - `GET /api/health` returns `{ "status": "ok" }` without loading data.
@@ -56,8 +58,9 @@ IDs are numbers. Bookings use the `rentals` array and its `borrowerId`, `ownerId
 `listingId`, `terms`, and `extensionRequest` fields. A missing optional
 `quickBorrowRequests` collection becomes an empty array.
 
-`currentUser` sets `request.currentUserId` to `owner-1`. It ignores identity
-headers. This is the placeholder for #92, not a login system.
+`currentUser` resolves valid bearer sessions. Without a bearer, existing
+non-account features retain the `owner-1` fallback. Account profile routes
+require a real session.
 
 Validation and option values live in `../shared/`. The frontend imports the same
 rules through its existing service and option paths.
@@ -469,6 +472,52 @@ signup responses rather than emailed. Accounts and sessions reset on restart.
 Existing non-account routes retain the `owner-1` fallback without a token.
 This is not production authentication.
 
+
+## Password recovery (#139)
+
+Keep these settings in the backend environment only:
+
+```dotenv
+BREVO_API_KEY=
+RECOVERY_FROM=
+RECOVERY_FROM_NAME=DormShare
+```
+
+Use a Brevo API key and a sender mailbox verified in that account. Never put
+the key in a `VITE_` setting or commit private environment files. Missing or
+invalid recovery configuration returns a safe 503 without disabling signup
+or login. Brevo requests use HTTPS, a ten-second timeout, and no automatic retry.
+
+| Method | Endpoint | Body |
+| --- | --- | --- |
+| POST | `/api/auth/forgot-password` | `{ email }` |
+| POST | `/api/auth/verify-reset-code` | `{ email, code }` |
+| POST | `/api/auth/reset-password` | `{ resetToken, password }` |
+
+A valid email request receives the same 202 confirmation for registered and
+unknown addresses. An emailed eight-digit code expires after 15 minutes. Five
+wrong submissions exhaust that code without locking the account. Correct proof
+consumes the code and returns a single-use reset permission that expires after
+five minutes. It cannot authenticate other account requests.
+
+The password must follow the existing 8-128 character rule. A successful reset
+keeps the user and verification state, revokes that user's sessions, and sends
+a separate password-change notice. It does not sign the user in. Codes,
+permissions, and registered credentials remain in memory and are lost when the
+backend restarts.
+
+Email requests are limited per address and direct socket IP. Verification and
+reset share an IP attempt limit. Delivery work and metadata are bounded. See
+the [recovery design](../docs/superpowers/specs/2026-11-21-account-recovery-design.md)
+for exact limits and delivery ordering rules. A recipient-specific delivery
+failure does not change the public confirmation. Notice failure cannot undo a
+password change.
+
+Local use needs no public app URL: read the code from the email and enter it
+in the running app. Public deployment still needs HTTPS. Normal automated
+tests inject a private capture adapter and synthetic data. They do not contact
+Brevo or require an inbox. Any live email check needs an agreed recipient and
+send approval.
 
 ## Tests
 

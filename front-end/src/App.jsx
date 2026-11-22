@@ -7,6 +7,8 @@ import SavedItemsProvider from './context/SavedItemsProvider.jsx'
 
 import Welcome from './pages/auth/Welcome'
 import Login from './pages/auth/Login'
+import ForgotPassword from './pages/auth/ForgotPassword'
+import ResetPassword from './pages/auth/ResetPassword'
 import Signup from './pages/auth/Signup'
 import VerifyEmail from './pages/auth/VerifyEmail'
 import SetupProfile from './pages/auth/SetupProfile'
@@ -49,6 +51,8 @@ function App() {
         {/* Authentication */}
         <Route path="/" element={<Welcome />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="/setup-profile" element={<SetupProfile />} />

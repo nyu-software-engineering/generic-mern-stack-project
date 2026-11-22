@@ -1,5 +1,5 @@
 
-import { useContext, useState } from 'react'
+import { useContext, useLayoutEffect, useRef, useState } from 'react'
 import { flushSync } from 'react-dom'
 import { Link, useNavigate } from 'react-router-dom'
 import { AuthContext } from '../../context/AuthContext'
@@ -9,7 +9,13 @@ function Login() {
   const { signIn, pendingSignup } = useContext(AuthContext)
   const [message, setMessage] = useState('')
   const [submitting, setSubmitting] = useState(false)
+  const mounted = useRef(false)
   const navigate = useNavigate()
+
+  useLayoutEffect(() => {
+    mounted.current = true
+    return () => { mounted.current = false }
+  }, [])
 
   async function handleSubmit(event) {
     event.preventDefault()
@@ -30,11 +36,11 @@ function Login() {
 
     try {
       const user = await signIn(email, password)
-      navigate(user.campusArea ? '/browse' : '/setup-profile')
+      if (mounted.current) navigate(user.campusArea ? '/browse' : '/setup-profile')
     } catch (error) {
-      setMessage(error.message || 'Could not sign in.')
+      if (mounted.current) setMessage(error.message || 'Could not sign in.')
     } finally {
-      setSubmitting(false)
+      if (mounted.current) setSubmitting(false)
     }
   }
 
@@ -80,6 +86,7 @@ function Login() {
               onChange={() => setMessage('')}
               required
             />
+            <Link className="ds-text-link" to="/forgot-password">Forgot password?</Link>
           </div>
 
           <div className="ds-account-actions">
