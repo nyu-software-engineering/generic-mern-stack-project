@@ -6,6 +6,7 @@ import { mockData } from '../../back-end/test/fixtures.js'
 import { startTestServer } from '../../back-end/test/helpers/server.js'
 import { createAuthSession } from '../src/context/authSession.js'
 import { setSessionToken } from '../src/services/api.js'
+import { confirmReturnRequest } from '../src/services/bookingsApi.js'
 import {
   canReviewCompletedHandoff,
   getReputation,
@@ -138,4 +139,17 @@ test('authenticated student reviews a completed rental through Express', async (
 
   session.signOut()
   assert.equal(currentUser, null)
+
+  // Complete a real server handoff, then review as its owner.
+  data.rentals.push({ ...data.rentals[0], id: 203, status: 'active' })
+  const returned = await confirmReturnRequest(203, {
+    condition: 'As described', accessoriesComplete: true, notes: '',
+  })
+  assert.equal(returned.status, 'completed')
+  assert.equal(await canReviewCompletedHandoff(returned, 'owner-1'), true)
+  await submitReview({
+    bookingId: 203, communicationRating: 5, itemCareRating: 4,
+    overallRating: 4, comment: '',
+  })
+  assert.equal(await canReviewCompletedHandoff(returned, 'owner-1'), false)
 })
