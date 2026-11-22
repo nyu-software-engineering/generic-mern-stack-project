@@ -2,29 +2,20 @@ import axios from "axios";
 
 const CURRENT_USER_KEY = "splitleaseCurrentUser";
 
-// Checks the email and password against the members table from the mock API (set in .env).
-// Returns the matching member, or null if nothing matches.
+// Sends the email and password to the back-end, which checks them against the members list.
+// Returns the logged-in user, or null if the email or password is wrong.
 export const login = async (email, password) => {
-  const { data: members } = await axios.get(
-    import.meta.env.VITE_MEMBERS_API_URL,
-  );
-  const match = members.find(
-    (m) =>
-      m.email.toLowerCase() === email.trim().toLowerCase() &&
-      m.password === password,
-  );
-  return match || null;
+  try {
+    const { data } = await axios.post("/api/login", { email, password });
+    return data.user;
+  } catch (error) {
+    if (error.response && error.response.status === 401) return null;
+    throw error;
+  }
 };
 
 // Remembers who is logged in so other pages can use it (the password is never saved).
-export const saveCurrentUser = (member) => {
-  const user = {
-    id: member.id,
-    firstName: member.first_name,
-    lastName: member.last_name,
-    email: member.email,
-    householdId: member.household_id,
-  };
+export const saveCurrentUser = (user) => {
   try {
     localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user));
   } catch {
