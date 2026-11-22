@@ -3,5 +3,38 @@
     "university":"Texas Lutheran University",
     "profile_picture": "https://picsum.photos/200/200",
     "email":"caartsen0@statcounter.com",
-    "bio": "Student tailor. Small clothing fixes with careful finishing."
+    "bio": "Student tailor. Small clothing fixes with careful finishing.",
+    "services": [1]
+},
+{
+  "id": 2,"full_name": "Gaston Tinham",
+  "university": "NYU",
+  "profile_picture": "https://picsum.photos/200/200",
+  "email": "gaston.tinham@nyu.edu",
+  "bio": "Student tutor. Programming and math help with clear explanations.",
+  "services": [2, 3]
+},
+{
+  "id": 3,"full_name": "Cristian Aliman",
+  "university": "NYU",
+  "profile_picture": "https://picsum.photos/200/200",
+  "email": "cristian.aliman@nyu.edu",
+  "bio": "Student offering tutoring and alterations. Careful help for schoolwork and clothing.",
+  "services": [5, 6, 7]
+},
+{
+  "id": 4,"full_name": "Kahlil Lunney",
+  "university": "NYU",
+  "profile_picture": "https://picsum.photos/200/200",
+  "email": "kahlil.lunney@nyu.edu",
+  "bio": "Student tailor. Clothing repairs with careful finishing.",
+  "services": [8]
+},
+{
+  "id": 5,"full_name": "Timi Frankowski",
+  "university": "NYU",
+  "profile_picture": "https://picsum.photos/200/200",
+  "email": "timi.frankowski@nyu.edu",
+  "bio": "Student creator. Bicycle repairs and photography with attention to detail.",
+  "services": [9, 10]
 }]

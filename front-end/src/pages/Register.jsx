@@ -1,15 +1,24 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router'
+import axios from "axios"
 import './Register.css'
 
 export default function Register() {
   const navigate = useNavigate();
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [error, setError] = useState("")
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault()
-    navigate("/login")
+    setError('')
+
+    try {
+      await axios.post('/api/auth/register', { email, password })
+      navigate('/login')
+    } catch (error) {
+      setError(error.response?.data?.error || "Could not create your account.")
+    }
   }
 
   return (
@@ -35,6 +44,9 @@ export default function Register() {
             required
           />
         </label>
+
+        {/* display an error if could not create account */}
+        {error && <p className="error">{error}</p>}
 
         <button type="submit">Create Account</button>
       </form>
