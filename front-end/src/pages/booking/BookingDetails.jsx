@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import { AuthContext } from '../../context/AuthContext'
 import StatusBadge from '../../components/StatusBadge'
 import BookingLoadState from './BookingLoadState'
 import ListingSummary from './ListingSummary'
@@ -29,6 +30,24 @@ function BookingDetails() {
 function BookingSummary({ bookingId }) {
   const { booking, loadError, retry, pending, actionError, run } = useBooking(bookingId)
   const [agreed, setAgreed] = useState(false)
+  const { currentUser } = useContext(AuthContext)
+  const reviewerId = currentUser?.id
+  const [reviewStatus, setReviewStatus] = useState(null)
+
+  useEffect(() => {
+    if (!getReviewTarget(booking, reviewerId)) return undefined
+
+    let active = true
+    getReviewForBooking(booking.id).then(
+      (review) => {
+        if (active) setReviewStatus({ id: booking.id, reviewerId, available: !review })
+      },
+      () => {
+        if (active) setReviewStatus({ id: booking.id, reviewerId, available: false })
+      },
+    )
+    return () => { active = false }
+  }, [booking, reviewerId])
 
   if (!booking) return <BookingLoadState loadError={loadError} retry={retry} />
 
@@ -37,8 +56,10 @@ function BookingSummary({ bookingId }) {
   const isOwner = booking.ownerId === CURRENT_USER_ID
   const other = getUser(isOwner ? booking.borrowerId : booking.ownerId)
   const canRespond = isOwner && booking.status === 'requested'
-  const canWriteReview = Boolean(getReviewTarget(booking, CURRENT_USER_ID)) &&
-    !getReviewForBooking(booking.id, CURRENT_USER_ID)
+  const canWriteReview = Boolean(getReviewTarget(booking, reviewerId)) &&
+    reviewStatus?.id === booking.id &&
+    reviewStatus.reviewerId === reviewerId &&
+    reviewStatus.available
 
   const respond = (status) => run(() => answerBookingRequest(booking.id, status))
 

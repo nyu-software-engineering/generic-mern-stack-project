@@ -1,10 +1,9 @@
-import { useState } from 'react'
+
+import { useContext, useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import {
-  CURRENT_USER_ID,
-  getRental,
-  getUser,
-} from '../../services/mockDataService.js'
+import { AuthContext } from '../../context/AuthContext'
+import { api } from '../../services/api.js'
+import { getUser } from '../../services/mockDataService.js'
 import {
   getReviewForBooking,
   getReviewTarget,
@@ -21,7 +20,27 @@ const ratingFields = [
 
 function ReviewParticipant() {
   const { bookingId } = useParams()
+
+  return (
+    <ReviewParticipantContent
+      key={bookingId}
+      bookingId={bookingId}
+    />
+  )
+}
+
+function ReviewParticipantContent({ bookingId }) {
+  const { currentUser } = useContext(AuthContext)
   const navigate = useNavigate()
+
+  const [result, setResult] = useState({
+    status: 'loading',
+    rental: null,
+    existingReview: null,
+    error: '',
+  })
+  const [retry, setRetry] = useState(0)
+  const [submitting, setSubmitting] = useState(false)
 
   const [ratings, setRatings] = useState({
     communicationRating: 0,
@@ -31,11 +50,93 @@ function ReviewParticipant() {
   const [comment, setComment] = useState('')
   const [error, setError] = useState('')
 
-  const rental = getRental(bookingId)
-  const reviewedUserId = getReviewTarget(rental, CURRENT_USER_ID)
-  const existingReview = getReviewForBooking(
-    bookingId,
-    CURRENT_USER_ID
+  useEffect(() => {
+    if (!currentUser) return undefined
+
+    let active = true
+
+    Promise.all([
+      api(`/bookings/${encodeURIComponent(bookingId)}`),
+      getReviewForBooking(bookingId),
+    ]).then(
+      ([rental, existingReview]) => {
+        if (!active) return
+
+        setResult({
+          status: 'ready',
+          rental,
+          existingReview,
+          error: '',
+        })
+      },
+      (loadError) => {
+        if (!active) return
+
+        setResult({
+          status: 'error',
+          rental: null,
+          existingReview: null,
+          error: loadError.message,
+        })
+      }
+    )
+
+    return () => { active = false }
+  }, [bookingId, currentUser, retry])
+
+  if (!currentUser) {
+    return (
+      <main className="ds-page ds-trust review-page">
+        <header className="trust-header review-header">
+          <div>
+            <h1 className="ds-heading">Sign in to review</h1>
+            <p>You must sign in before submitting a review.</p>
+          </div>
+          <Link to="/login" className="ds-text-link">
+            Sign in
+          </Link>
+        </header>
+      </main>
+    )
+  }
+
+  if (result.status === 'loading') {
+    return (
+      <main className="ds-page ds-trust review-page">
+        <p role="status">Loading booking and review...</p>
+      </main>
+    )
+  }
+
+  if (result.status === 'error') {
+    return (
+      <main className="ds-page ds-trust review-page">
+        <h1 className="ds-heading">Review unavailable</h1>
+        <p className="ds-feedback ds-feedback--error" role="alert">
+          {result.error}
+        </p>
+        <button
+          type="button"
+          className="ds-button ds-button--secondary"
+          onClick={() => {
+            setResult({
+              status: 'loading',
+              rental: null,
+              existingReview: null,
+              error: '',
+            })
+            setRetry((value) => value + 1)
+          }}
+        >
+          Try again
+        </button>
+      </main>
+    )
+  }
+
+  const reviewedUserId = getReviewTarget(
+    result.rental,
+    currentUser.id
   )
 
   if (!reviewedUserId) {
@@ -44,15 +145,19 @@ function ReviewParticipant() {
         <header className="trust-header review-header">
           <div>
             <h1 className="ds-heading">Review unavailable</h1>
-            <p>Only completed rental participants can submit reviews.</p>
+            <p>
+              Only completed rental participants can submit reviews.
+            </p>
           </div>
-          <Link to="/browse" className="ds-text-link">Back to Browse</Link>
+          <Link to="/browse" className="ds-text-link">
+            Back to Browse
+          </Link>
         </header>
       </main>
     )
   }
 
-  if (existingReview) {
+  if (result.existingReview) {
     return (
       <main className="ds-page ds-trust review-page">
         <header className="trust-header review-header">
@@ -60,7 +165,10 @@ function ReviewParticipant() {
             <h1 className="ds-heading">Review already submitted</h1>
             <p>You have already reviewed this participant.</p>
           </div>
-          <Link to={`/users/${reviewedUserId}/reputation`} className="ds-text-link">
+          <Link
+            to={`/users/${reviewedUserId}/reputation`}
+            className="ds-text-link"
+          >
             View reputation
           </Link>
         </header>
@@ -69,22 +177,42 @@ function ReviewParticipant() {
   }
 
   const otherUser = getUser(reviewedUserId)
-  const hasCommentError = error === 'Written feedback must be 500 characters or less.'
 
-  function handleSubmit(event) {
+  const hasCommentError =
+    error === 'Written feedback must be 500 characters or less.'
+
+  async function handleSubmit(event) {
     event.preventDefault()
 
+    if (submitting) return
+
+    setSubmitting(true)
+    setError('')
+
     try {
-      submitReview({
+      await submitReview({
         bookingId,
-        reviewerId: CURRENT_USER_ID,
         ...ratings,
         comment,
       })
 
       navigate(`/users/${reviewedUserId}/reputation`)
-    } catch (err) {
-      setError(err.message)
+    } catch (submitError) {
+      if (
+        submitError.status === 409 &&
+        /already reviewed/i.test(submitError.message)
+      ) {
+        setResult((previous) => ({
+          ...previous,
+          existingReview: { alreadySubmitted: true },
+        }))
+      } else {
+        setError(
+          submitError.message || 'Could not submit your review.'
+        )
+      }
+    } finally {
+      setSubmitting(false)
     }
   }
 
@@ -92,18 +220,28 @@ function ReviewParticipant() {
     <main className="ds-page ds-trust review-page">
       <header className="trust-header review-header">
         <h1 className="ds-heading">Review participant</h1>
-        <Link to={`/bookings/${bookingId}`} className="ds-text-link">Back to rental</Link>
+        <Link
+          to={`/bookings/${bookingId}`}
+          className="ds-text-link"
+        >
+          Back to rental
+        </Link>
       </header>
 
       <div className="review-content">
         <article className="trust-surface review-card">
           <h2>Completed rental #{bookingId}</h2>
           <p>
-            Review your exchange with {otherUser?.name ?? 'Student'}.
+            Review your exchange with{' '}
+            {otherUser?.name ?? 'Student'}.
           </p>
         </article>
 
-        <form className="trust-surface review-form" onSubmit={handleSubmit}>
+        <form
+          className="trust-surface review-form"
+          onSubmit={handleSubmit}
+          aria-busy={submitting}
+        >
           {ratingFields.map(({ key, label }) => (
             <fieldset className="review-fieldset" key={key}>
               <legend>{label}</legend>
@@ -115,6 +253,7 @@ function ReviewParticipant() {
                       name={key}
                       value={value}
                       checked={ratings[key] === value}
+                      disabled={submitting}
                       onChange={() => {
                         setRatings((previous) => ({
                           ...previous,
@@ -140,26 +279,41 @@ function ReviewParticipant() {
               className="ds-field"
               rows={3}
               maxLength={500}
+              disabled={submitting}
               value={comment}
               aria-invalid={hasCommentError || undefined}
-              aria-describedby={hasCommentError ? 'reviewCommentCount reviewFormError' : 'reviewCommentCount'}
+              aria-describedby={
+                hasCommentError
+                  ? 'reviewCommentCount reviewFormError'
+                  : 'reviewCommentCount'
+              }
               onChange={(event) => {
                 setComment(event.target.value)
                 setError('')
               }}
               placeholder="Share your experience"
             />
-            <p id="reviewCommentCount" className="trust-meta">{comment.length} / 500 characters</p>
+            <p id="reviewCommentCount" className="trust-meta">
+              {comment.length} / 500 characters
+            </p>
           </div>
 
           {error && (
-            <p id="reviewFormError" className="ds-feedback ds-feedback--error review-error" role="alert">
+            <p
+              id="reviewFormError"
+              className="ds-feedback ds-feedback--error review-error"
+              role="alert"
+            >
               {error}
             </p>
           )}
 
-          <button className="ds-button ds-button--primary review-button" type="submit">
-            Submit review
+          <button
+            className="ds-button ds-button--primary review-button"
+            type="submit"
+            disabled={submitting}
+          >
+            {submitting ? 'Submitting...' : 'Submit review'}
           </button>
         </form>
       </div>

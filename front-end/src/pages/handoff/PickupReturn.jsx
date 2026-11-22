@@ -1,4 +1,6 @@
+import { useContext, useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import { AuthContext } from '../../context/AuthContext'
 import StatusBadge from '../../components/StatusBadge'
 import ListingSummary from '../booking/ListingSummary'
 import BookingLoadState from '../booking/BookingLoadState'
@@ -9,7 +11,7 @@ import {
   dailyRate, displayStatus, formatDate, formatMoney, getListing, getUser,
 } from '../../services/bookings'
 import { confirmPickupRequest, confirmReturnRequest } from '../../services/bookingsApi'
-import { getReviewForBooking, getReviewTarget } from '../../services/reviews.js'
+import { canReviewCompletedHandoff, getReviewTarget } from '../../services/reviews.js'
 import '../booking/booking.css'
 import '../booking/booking-nyu.css'
 
@@ -36,14 +38,29 @@ function CheckSummary({ title, check }) {
 
 function Handoff({ rentalId }) {
   const { booking, loadError, retry, pending, actionError, run } = useBooking(rentalId)
+  const { currentUser } = useContext(AuthContext)
+  const reviewerId = currentUser?.id
+  const [reviewStatus, setReviewStatus] = useState(null)
+
+  useEffect(() => {
+    if (!getReviewTarget(booking, reviewerId)) return undefined
+    let active = true
+    canReviewCompletedHandoff(booking, reviewerId).then(
+      (available) => { if (active) setReviewStatus({ id: booking.id, reviewerId, available }) },
+      () => { if (active) setReviewStatus({ id: booking.id, reviewerId, error: true }) },
+    )
+    return () => { active = false }
+  }, [booking, reviewerId])
 
   if (!booking) return <BookingLoadState loadError={loadError} retry={retry} />
 
   const listing = getListing(booking.listingId)
   const isOwner = booking.ownerId === CURRENT_USER_ID
   const other = getUser(isOwner ? booking.borrowerId : booking.ownerId)
-  const canWriteReview = Boolean(getReviewTarget(booking, CURRENT_USER_ID)) &&
-    !getReviewForBooking(booking.id, CURRENT_USER_ID)
+  const currentReviewStatus = reviewStatus?.id === booking.id &&
+    reviewStatus.reviewerId === reviewerId ? reviewStatus : null
+  const canWriteReview = Boolean(getReviewTarget(booking, reviewerId)) &&
+    currentReviewStatus?.available
 
   let title = 'Pickup and return'
   let body
@@ -82,6 +99,12 @@ function Handoff({ rentalId }) {
         </p>
         <CheckSummary title="Pickup check" check={booking.pickupCheck} />
         <CheckSummary title="Return check" check={booking.returnCheck} />
+        {getReviewTarget(booking, reviewerId) && !currentReviewStatus && (
+          <p className="booking-note" role="status">Checking review availability...</p>
+        )}
+        {currentReviewStatus?.error && (
+          <p className="booking-note" role="alert">Could not check review status. Try the booking summary.</p>
+        )}
         {canWriteReview && (
           <div className="booking-actions">
             <Link to={`/bookings/${booking.id}/review`} className="ds-button ds-button--primary">
