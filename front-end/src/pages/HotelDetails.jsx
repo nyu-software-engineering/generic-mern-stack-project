@@ -49,7 +49,7 @@ function HotelDetails() {
   return (
     <main className="hotel-details-page">
       <header className="hotel-details-header">
-        <Link to="/results" className="hotel-back">
+        <Link to="/" className="hotel-back">
           ← Back
         </Link>
         <h1>Hotel Details</h1>
