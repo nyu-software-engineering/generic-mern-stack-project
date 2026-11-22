@@ -382,6 +382,7 @@ gets 403 and any other status gets 409, so confirming twice returns 409. Unknown
 rental IDs return 404, and people outside the rental get 403 on every route,
 including GET. Checks run in this order: rental (404, 403), body (400), role (403),
 status (409). Changes stay in the shared store until restart.
+The frontend pickup and return screen uses these routes (#111).
 
 
 ## Reviews and reputation routes (#96)

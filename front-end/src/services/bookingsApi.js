@@ -1,4 +1,4 @@
-// Booking, extension and cancellation requests to the back-end (#93, #97, #100).
+// Booking, extension, cancellation and handoff requests to the back-end (#93, #97, #100, #111).
 // Every booking the API returns is also copied into the shared rental cache, so
 // pages that still read it synchronously (chat, handoff, reporting) see the change.
 // The route contracts are documented in back-end/README.md.
@@ -10,7 +10,7 @@
 import { ApiError, api } from './api.js'
 import { cacheRentals } from './mockDataService.js'
 import {
-  CURRENT_USER_ID, cancelBooking, getBooking, isLocalOnlyBooking,
+  CURRENT_USER_ID, cancelBooking, confirmPickup, confirmReturn, getBooking, isLocalOnlyBooking,
   requestExtension, respondToExtension, updateBookingStatus,
 } from './bookings.js'
 
@@ -105,4 +105,22 @@ export async function cancelBookingRequest(id) {
     return local(id, () => cancelBooking(id, CURRENT_USER_ID), 'This booking cannot be cancelled.')
   }
   return cached(await api(`/bookings/${encodeURIComponent(id)}/cancel`, { method: 'POST' }))
+}
+
+// ---- Pickup and return (#111) ----
+
+// checks is { condition, accessoriesComplete, notes }. The server records who
+// confirmed and when. The borrower confirms pickup; the owner confirms return.
+export async function confirmPickupRequest(id, checks) {
+  if (isLocalOnlyBooking(id)) {
+    return local(id, () => confirmPickup(id, CURRENT_USER_ID, checks), 'This booking cannot be picked up.')
+  }
+  return cached(await api(`/handoff/${encodeURIComponent(id)}/pickup`, { method: 'POST', body: checks }))
+}
+
+export async function confirmReturnRequest(id, checks) {
+  if (isLocalOnlyBooking(id)) {
+    return local(id, () => confirmReturn(id, CURRENT_USER_ID, checks), 'This booking cannot be returned.')
+  }
+  return cached(await api(`/handoff/${encodeURIComponent(id)}/return`, { method: 'POST', body: checks }))
 }
