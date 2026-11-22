@@ -11,11 +11,14 @@ import { ownerListingsRouter } from "./routes/ownerListings.js";
 import { ownerDashboardRouter } from "./routes/ownerDashboard.js";
 import { createRecoveryRouter } from "./routes/passwordRecovery.js";
 import { publicListingsRouter } from "./routes/publicListings.js";
+import { quickBorrowRouter } from "./routes/quickBorrow.js";
+import { requestsBoardRouter } from "./routes/requestsBoard.js";
 import { communityRulesRouter, reportsRouter } from "./routes/reports.js";
 import { createRenterDashboardRouter } from "./routes/renterDashboard.js";
 import { createMockDataStore } from "./services/mockData.js";
 import { createRecovery } from "./services/recovery.js";
 import { accountRouter } from "./routes/accounts.js";
+import { reviewsRouter } from "./routes/reviews.js";
 
 const frontendDist = fileURLToPath(new URL("../front-end/dist/", import.meta.url));
 const listingImages = fileURLToPath(
@@ -31,6 +34,7 @@ export function createApp({ store = createMockDataStore(), recovery } = {}) {
   app.use("/api/auth", createRecoveryRouter(app.locals.recovery));
   app.use(currentUser);
   app.use("/api", accountRouter);
+  app.use("/api", reviewsRouter);
 
   app.get("/api/health", (_request, response) => {
     response.json({ status: "ok" });
@@ -43,6 +47,8 @@ export function createApp({ store = createMockDataStore(), recovery } = {}) {
   app.use("/api/listings", publicListingsRouter);
   app.use("/api/owner", ownerDashboardRouter);
   app.use("/api/conversations", conversationsRouter);
+  app.use("/api/quick-borrow", quickBorrowRouter);
+  app.use("/api/requests-board", requestsBoardRouter);
   app.use("/api/reports", reportsRouter);
   app.use("/api/community-rules", communityRulesRouter);
   app.use("/api", (_request, response) => {

@@ -3,7 +3,7 @@ import { flushSync } from 'react-dom'
 import { ITEM_CONDITIONS } from '../../services/bookings'
 
 // Condition, accessories and notes recorded when an item changes hands (#54).
-function HandoffCheckForm({ conditionLabel, accessoriesLabel, submitLabel, onSubmit }) {
+function HandoffCheckForm({ conditionLabel, accessoriesLabel, submitLabel, onSubmit, pending = false }) {
   const [error, setError] = useState('')
 
   const handleSubmit = (e) => {
@@ -46,7 +46,9 @@ function HandoffCheckForm({ conditionLabel, accessoriesLabel, submitLabel, onSub
           placeholder="Anything to note about the item" />
       </label>
 
-      <button type="submit" className="ds-button ds-button--primary">{submitLabel}</button>
+      <button type="submit" className="ds-button ds-button--primary" disabled={pending}>
+        {pending ? 'Saving...' : submitLabel}
+      </button>
     </form>
   )
 }
