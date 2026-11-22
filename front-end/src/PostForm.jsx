@@ -73,6 +73,17 @@ const PostForm = props => {
         }
         else if (props.origin === 'edit') {
             props.setPostsData(prev => prev.map((post, index) => index === props.curr ? formData : post))
+            fetch('/api/posts/edit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData),
+            })
+            .then(res => res.json())
+            .then(saved => {
+                props.setPostsData(prev => [saved, ...prev])
+                props.setCount(prev => prev + 1)
+            })
+            .catch(err => console.error(err))
         }
 
         props.setIsSubmitted(true)

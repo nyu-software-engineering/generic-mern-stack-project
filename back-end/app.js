@@ -69,6 +69,34 @@ app.post('/api/posts', upload.single('image'), (req, res) => {
   res.status(201).json(newPost)
 })
 
+app.post('/api/posts/edit', upload.single('image'), (req, res) => {
+  const { id, username, pfp, category, title, desc, date, time, location, image, 
+    includeBounty, bounty } = req.body
+  if (!title || !title.trim() || !desc || !desc.trim()) {
+    return res.status(400).json({ error: 'Title and description are required' })
+  }
+  if (includeBounty && (!bounty || !bounty.trim())) {
+    return res.status(400).json({ error: 'If including bounty, bounty is required' })
+  }
+  if (includeBounty && (!bounty || !bounty.trim())) {
+    return res.status(400).json({ error: 'If including bounty, bounty is required' })
+  }
+  const existing = posts.some(p => String(p.id) === String(id))
+  if (!existing) {
+    return res.status(400).json({ error: 'Trying to edit a non existing post' })
+  }
+  const editedPost = {
+    id, username, pfp, category: category || 'lost', title: title.trim(), desc: desc.trim(), date, time, 
+    location, ...(req.file && { image: `/uploads/${req.file.filename}` }), 
+    includeBounty, bounty
+  }
+  const targetPost = posts.find(p => String(p.id) === String(id))
+  posts[posts.indexOf(targetPost)] = editedPost
+  console.log(posts)
+  updateMockData("posts", posts)
+  res.status(201).json(editedPost)
+})
+
 // resolved posts start from the mock data and new ones are added when a post is resolved
 let resolvedPosts = JSON.parse(fs.readFileSync(mockDataPath, 'utf8')).resolvedPosts
 
