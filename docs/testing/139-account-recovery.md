@@ -75,10 +75,31 @@ notice; inbox delivery of that notice was not independently checked.
 NYU added `[Failed NYU Email Security Check]` to the code email subject. The
 received headers show NYU's gateway accepted Brevo's SPF and DKIM but recorded
 `dmarc=fail header.from=nyu.edu`. The visible NYU sender did not align with the
-authenticated Brevo domain. This delivery test does not establish a clean
-sender-authentication setup. Use a sender domain controlled by the team and
-authenticate it through [Brevo's domain setup](https://help.brevo.com/hc/en-us/articles/12163873383186-Authenticate-your-domain-with-Brevo-Brevo-code-DKIM-DMARC).
+authenticated Brevo domain. That test did not establish a clean
+sender-authentication setup. The later project mailbox check below resolved
+this warning for the tested NYU recipient.
 No password, code, API key, or raw message header is retained in this record.
+
+### Project mailbox and replacement sender
+
+On November 21, the owner created a dedicated DormShare Gmail mailbox and
+authorized its setup in Brevo. The sender was verified through that mailbox.
+One plain sender-authentication test was accepted by Brevo and reached the
+NYU inbox in three seconds without the security-warning subject prefix.
+
+Brevo replaced the visible From address with its account-specific
+`brevosend.com` address and set Reply-To to the project mailbox. The received
+headers show SPF and DKIM passing. NYU's gateway also recorded DMARC passing
+for the replacement From domain. This verifies the observed recipient path,
+not universal inbox placement or permanent availability of Brevo's replacement
+service.
+
+The local ignored backend sender setting now uses the verified project
+mailbox. Keep `RECOVERY_FROM` set to that mailbox rather than manually copying
+the generated replacement address. Restart the backend after changing it.
+The private key was preserved and no application source change was required.
+Brevo describes replacement as a temporary delivery measure in its
+[sender requirements](https://help.brevo.com/hc/en-us/articles/14925263522578-Comply-with-Gmail-Yahoo-and-Microsoft-s-requirements-for-email-senders).
 
 ## Verified November 21, 2026
 
