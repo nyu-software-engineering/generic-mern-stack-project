@@ -1,4 +1,6 @@
-const express = require("express")
-const app = express()
+const express = require("express");
+const app = express();
+const purchaseAssetRouter = require("./projects/purchase_asset");
 
-module.exports = app
+app.use(purchaseAssetRouter);
+module.exports = app;
