@@ -5,7 +5,7 @@
 .place-category-dot { width: 9px; height: 9px; border-radius: 50%; outline: 1px solid #ffffffb3; flex-shrink: 0; }
 .place-map { width: 100%; min-width: 0; }
 .place-map-hint { margin: 0 0 10px; font-size: 12px; color: var(--color-muted); }
-.place-map-canvas { height: clamp(300px, 46vh, 440px); width: 100%; border: 1px solid var(--color-border); border-radius: 16px; background: #edf0e9; isolation: isolate; z-index: 0; }
+.place-map-canvas { height: clamp(300px, 46vh, 440px); width: 100%; border: 1px solid var(--color-border); border-radius: 16px; background: var(--color-map-background); isolation: isolate; z-index: 0; }
 .place-map-marker { background: transparent; border: 0; }
 .place-map-pin { display: flex; width: 36px; height: 36px; align-items: center; justify-content: center; border: 3px solid white; border-radius: 50% 50% 50% 5px; transform: rotate(-45deg); box-shadow: 0 2px 6px #0005; color: transparent; font-size: 0; }
 .place-map-pin::after { content: ''; width: 9px; height: 9px; border: 2px solid white; border-radius: 50%; }
@@ -17,7 +17,7 @@
 .place-map-preview h2 { font-size: 20px; overflow-wrap: anywhere; }
 .place-map-preview > p { margin-top: 6px; color: var(--color-muted); font-size: 14px; }
 .place-map-preview .place-map-detail { display: inline-flex; align-items: center; min-height: 44px; margin-top: 8px; color: var(--color-brand-dark); font-weight: 600; }
-.place-map-warning, .place-map-message, .place-filter-empty { margin-top: 12px; padding: 16px; background: var(--color-subtle, #F5F3EF); border-radius: 12px; font-size: 14px; line-height: 1.6; }
+.place-map-warning, .place-map-message, .place-filter-empty { margin-top: 12px; padding: 16px; background: var(--color-subtle); border-radius: 12px; font-size: 14px; line-height: 1.6; }
 .place-map-warning a { display: block; min-height: 44px; padding-top: 8px; color: var(--color-brand); font-weight: 600; }
 .place-map-warning button, .place-filter-empty button, .map-tab-content > button { min-height: 44px; color: var(--color-brand); font-weight: 600; }
 .place-map-warning a:hover, .place-map-warning button:hover, .place-filter-empty button:hover, .map-tab-content > button:hover { color: var(--color-brand-dark); }

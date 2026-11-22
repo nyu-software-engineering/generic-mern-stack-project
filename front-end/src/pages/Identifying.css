@@ -87,8 +87,8 @@
 }
 
 .flow-duplicate {
-  background: #fff3cd;
-  border: 1px solid #e0c060;
+  background: var(--color-warning);
+  border: 1px solid var(--color-warning-border);
   padding: 0.75rem;
   margin: 0 0 1rem;
   font-size: 0.875rem;

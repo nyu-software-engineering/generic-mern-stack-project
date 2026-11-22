@@ -44,6 +44,10 @@
   --radius-card: 1rem;
   --radius-pill: 9999px;
 
+  --color-error: #b00020;
+  --color-warning: #fff3cd;
+  --color-warning-border: #e0c060;
+  --color-map-background: #edf0e9;
 }
 
 /* GLOBAL BASE STYLES

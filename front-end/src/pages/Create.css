@@ -56,6 +56,6 @@
 
 .add-place-error {
   margin: 0;
-  color: #b00020;
+  color: var(--color-error);
   font-size: 0.875rem;
 }
