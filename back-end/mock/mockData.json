@@ -98,32 +98,28 @@
   },
   "users": [
     {
-      "id": "1",
-      "username": "Alice A.",
-      "pfp": "https://picsum.photos/200?random=1"
+      "fullName": "tester",
+      "email": "test@gmail.com",
+      "password": "blank"
     },
     {
-      "id": "2",
-      "username": "Bob B.",
-      "pfp": "https://picsum.photos/200?random=3"
-    },
-    {
-      "id": "3",
-      "username": "Carol C.",
-      "pfp": "https://picsum.photos/200?random=4"
-    },
-    {
-      "id": "4",
-      "username": "Dave D.",
-      "pfp": "https://picsum.photos/200?random=5"
+      "fullName": "tt",
+      "email": "tt@gmail.com",
+      "password": "$2b$10$nbeCTCdfqf71dh2i6fVdtu4fuVDZ9/Y8jzMfssCiTOehjTXHv5Aaq"
     }
   ],
   "resolvedPosts": [
-    { "title": "Lost AirPods", "category": "lost", "location": "Bobst Library", "date": "2026-10-20" },
-    { "title": "Found Student ID", "category": "found", "location": "Kimmel Center", "date": "2026-10-12" }
-  ],
-  "users": [
-    {"fullName": "tester", "email": "test@gmail.com", "password": "blank"}
+    {
+      "title": "Lost AirPods",
+      "category": "lost",
+      "location": "Bobst Library",
+      "date": "2026-10-20"
+    },
+    {
+      "title": "Found Student ID",
+      "category": "found",
+      "location": "Kimmel Center",
+      "date": "2026-10-12"
+    }
   ]
 }
-

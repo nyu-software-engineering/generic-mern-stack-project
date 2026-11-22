@@ -17,6 +17,13 @@ app.get('/api/mockData', (req, res) => {
   res.json(data)
 })
 
+//So that data can persist between sessions
+const updateMockData = (item, newData) => {
+  const data = JSON.parse(fs.readFileSync(mockDataPath, 'utf8'))
+  data[item] = newData
+  fs.writeFileSync(mockDataPath, JSON.stringify(data, null, 2));
+}
+
 // taken from express lecture notes
 // enable file uploads saved to disk in a directory named 'public/uploads'
 // creates functions storage.getDestination and storage.getFilename
@@ -82,6 +89,7 @@ app.post('/api/posts/resolved', (req, res) => {
 // profile starts from the mock data and is kept in memory until the database exists
 let profile = JSON.parse(fs.readFileSync(mockDataPath, 'utf8')).profile
 
+//use as a backup
 app.get('/api/profile', (req, res) => {
   res.json(profile)
 })
@@ -210,6 +218,7 @@ let currentUser = ""
 const generateHash = async (password) => {
   const salt = await bcrypt.genSalt(10);
   const hash = await bcrypt.hash(password, salt);
+  return hash
 }
 
 const checkPassword = async (password, hash) => {
@@ -244,12 +253,14 @@ app.post('/api/account/create', async (req, res) => {
     return res.status(401).json({ error: 'Account with email already exists.' })
   }
   const hash = await generateHash(password)
+  console.log(hash)
   const newUser = {
     "fullName": fullName,
-    "email": "email",
+    "email": email,
     "password": hash
   }
   users.push(newUser)
+  updateMockData("users", users)
   res.json({ message: 'Account created' })
 })
 
