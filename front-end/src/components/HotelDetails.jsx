@@ -1,28 +1,26 @@
-
 import { Link } from "react-router-dom";
-import "./HotelDetails.css";
+import "./Card.css";
 
-function HotelDetails({ hotel }) {
+export default function HotelDetails({ hotel }) {
   return (
-    <article className="hotel-details">
-      <Link
-        to={`/hotel/${hotel.id}`}
-        aria-label={`View details for ${hotel.name}`}
-      >
-        <img
-          src={hotel.image}
-          alt={hotel.name}
-          className="hotel-details-image"
-        />
-      </Link>
+    <article className="card">
+      <div className="image-and-edit">
+        <Link
+          className="card-image"
+          to={`/hotel/${hotel.id}`}
+          aria-label={`View details for ${hotel.name}`}
+        >
+          <img src={hotel.imageSrc || "https://picsum.photos/400/225"} alt="" />
+        </Link>
+      </div>
 
-      <div className="hotel-details-info">
-        <h3>{hotel.name}</h3>
-        <p>{hotel.location}</p>
-        <p>★ {hotel.rating} / 5</p>
+      <div className="card-info">
+        <h3 className="card-name">{hotel.name}</h3>
+        <div className="card-meta">
+          <span>{hotel.location}</span>
+        </div>
+        <p className="card-description">{hotel.description}</p>
       </div>
     </article>
   );
 }
-
-export default HotelDetails;

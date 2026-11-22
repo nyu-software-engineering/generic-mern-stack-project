@@ -36,10 +36,16 @@ function EditSaved(props) {
       </div>
 
       <div id="edit-card-actions-container">
-        <button className="EditSaved-Btn" onClick={() => props.onDelete(props.id)}>
+        <button
+          className="EditSaved-Btn"
+          onClick={() => props.onDelete(props.id)}
+        >
           Delete
         </button>
-        <button className="EditSaved-Btn" onClick={() => props.onSave(props.id, draft)}>
+        <button
+          className="EditSaved-Btn"
+          onClick={() => props.onSave(props.id, draft)}
+        >
           Save Changes
         </button>
       </div>

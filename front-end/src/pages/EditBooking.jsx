@@ -28,41 +28,49 @@ function EditBooking(props) {
               {props.location && <span>{props.location}</span>}
             </div>
             <div>
-                <label htmlFor="edit-check-in">Check In:</label>
-                <input
-                    id = 'edit-check-in'
-                    className="edit-date-input"
-                    type="text"
-                    value={checkInDraft}
-                    onChange={(e) => setCheckInDraft(e.target.value)}
-                />
+              <label htmlFor="edit-check-in">Check In:</label>
+              <input
+                id="edit-check-in"
+                className="edit-date-input"
+                type="text"
+                value={checkInDraft}
+                onChange={(e) => setCheckInDraft(e.target.value)}
+              />
             </div>
             <div>
-                <label htmlFor="edit-check-out">Check Out:</label>
-                <input
-                    id="edit-check-out"
-                    className="edit-date-input"
-                    type="text"
-                    value={checkOutDraft}
-                    onChange={(e) => setCheckOutDraft(e.target.value)}
-                />
+              <label htmlFor="edit-check-out">Check Out:</label>
+              <input
+                id="edit-check-out"
+                className="edit-date-input"
+                type="text"
+                value={checkOutDraft}
+                onChange={(e) => setCheckOutDraft(e.target.value)}
+              />
             </div>
             <label htmlFor="booking-notes">Notes</label>
             <textarea
-                id='booking-notes'
-                className="edit-card-textarea"
-                value={draft}
-                onChange={(e) => setDraft(e.target.value)}
+              id="booking-notes"
+              className="edit-card-textarea"
+              value={draft}
+              onChange={(e) => setDraft(e.target.value)}
             />
           </div>
         </article>
       </div>
 
       <div id="edit-card-actions-container">
-        <button className="EditSaved-Btn" onClick={() => props.onDelete(props.id)}>
+        <button
+          className="EditSaved-Btn"
+          onClick={() => props.onDelete(props.id)}
+        >
           Delete
         </button>
-        <button className="EditSaved-Btn" onClick={() => {props.onSave(props.id, draft, checkInDraft, checkOutDraft)}}>
+        <button
+          className="EditSaved-Btn"
+          onClick={() => {
+            props.onSave(props.id, draft, checkInDraft, checkOutDraft);
+          }}
+        >
           Save Changes
         </button>
       </div>

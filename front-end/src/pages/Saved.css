@@ -5,7 +5,7 @@
   padding: 5%;
 }
 
-.saved-header{
+.saved-header {
   display: flex;
   flex-direction: row;
   height: 7%;
@@ -13,7 +13,7 @@
 }
 
 .list-end-spacer {
-  height: .5vh;
+  height: 0.5vh;
   flex-shrink: 0;
 }
 
