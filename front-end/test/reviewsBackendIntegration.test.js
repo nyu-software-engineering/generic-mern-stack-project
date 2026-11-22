@@ -7,6 +7,7 @@ import { startTestServer } from '../../back-end/test/helpers/server.js'
 import { createAuthSession } from '../src/context/authSession.js'
 import { setSessionToken } from '../src/services/api.js'
 import {
+  canReviewCompletedHandoff,
   getReputation,
   getReviewForBooking,
   getReviewableRentals,
@@ -84,6 +85,10 @@ test('authenticated student reviews a completed rental through Express', async (
   const initial = await getReviewForBooking(202)
   assert.equal(initial, null)
 
+  const completed = data.rentals.find((rental) => rental.id === 202)
+  assert.equal(await canReviewCompletedHandoff(completed, user.id), true)
+  assert.equal(await canReviewCompletedHandoff(completed, 'outsider'), false)
+
   const reviewableBefore = await getReviewableRentals(user.id)
   assert.deepEqual(
     reviewableBefore.map((rental) => rental.id),
@@ -107,6 +112,7 @@ test('authenticated student reviews a completed rental through Express', async (
 
   const submitted = await getReviewForBooking(202)
   assert.deepEqual(submitted, review)
+  assert.equal(await canReviewCompletedHandoff(completed, user.id), false)
 
   const reputation = await getReputation('owner-1')
   assert.equal(reputation.reviews.length, 2)

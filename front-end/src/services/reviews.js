@@ -26,6 +26,12 @@ export function getReviewForBooking(bookingId) {
   return api(`/bookings/${encodeURIComponent(bookingId)}/review`)
 }
 
+// Used by the completed-handoff review action.
+export async function canReviewCompletedHandoff(booking, reviewerId) {
+  return Boolean(getReviewTarget(booking, reviewerId)) &&
+    !(await getReviewForBooking(booking.id))
+}
+
 // Collect completed rentals from both owner and borrower roles.
 // Check the backend to exclude bookings already reviewed.
 export async function getReviewableRentals(userId) {
