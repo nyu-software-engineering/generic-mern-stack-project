@@ -8,6 +8,7 @@ import initialSavedHotels from './mockData/savedHotels.js';
 import stayedHotels from './mockData/stayedHotels.js';
 import initialBookings from './mockData/currentBooking.js';
 import hotelList from './mockData/hotelList.js';
+import initialUsers from './mockData/users.js';
 
 // use express's builtin body-parser middleware to parse any data included in a request
 app.use(express.json()); // decode JSON-formatted incoming POST data
@@ -17,6 +18,46 @@ app.use(express.urlencoded({ extended: true })); // decode url-encoded incoming 
 app.use('/static', express.static('public'));
 
 //NOTE: Above code is taken from SWE sample/example code from https://github.com/nyu-software-engineering/express-js-starter-app/blob/master/app.js
+
+
+// =====Sign Up and Sign In ======
+let users = initialUsers.map((user) => ({ ...user })); //temporary Data base
+let highestId = 0;
+for (const u of users) {
+  if (Number(u.id) > highestId) {
+    highestId = Number(u.id);
+  }
+}
+
+app.post('/api/auth/signup', (req, res) => {
+  const user = req.body || {};
+  if (!user.email || !user.password) {
+    const body = { error: 'Email and password are required' };
+    res.status(400);
+    res.json(body);
+    return;
+  }
+
+  const alreadyExists = users.find((u) => u.email === user.email);
+  if (alreadyExists) {
+    const body = { error: 'An account with that email already exists' };
+    res.status(400);
+    res.json(body);
+    return;
+  }
+
+  highestId+=1;
+  const newUser = {
+    id: String(highestId), //WILL CHANGE USER ID TO BE EMAIL LATER INSTEAD OF JUST A NUMBER
+    email: user.email,
+    password: user.password,
+  };
+  users.push(newUser);
+  const body = { message: 'Sign up successful', user: { id: newUser.id, email: newUser.email } };
+  res.status(201);
+  res.json(body);
+});
+// =====Sign Up Sign In End=====
 
 // ===== USER AUTHENTICATION =====
 
@@ -36,11 +77,7 @@ app.use(
 );
 
 // Mock user for development and testing only
-const mockUser = {
-  id: '1',
-  email: 'test@hotelplanner.com',
-  password: 'password123',
-};
+//let users = initialUsers.map((user) => ({ ...user })); //temporary Data base
 
 // Login API
 app.post('/api/auth/login', (req, res) => {
@@ -52,7 +89,8 @@ app.post('/api/auth/login', (req, res) => {
     });
   }
 
-  if (email !== mockUser.email || password !== mockUser.password) {
+  const user = users.find((u) => u.email === email);
+  if (!user || user.password !== password) {
     return res.status(401).json({
       error: 'Invalid email or password',
     });
@@ -65,13 +103,13 @@ app.post('/api/auth/login', (req, res) => {
       });
     }
 
-    req.session.userId = mockUser.id;
+    req.session.userId = user.id;
 
     return res.json({
       message: 'Login successful',
       user: {
-        id: mockUser.id,
-        email: mockUser.email,
+        id: user.id,
+        email: user.email,
       },
     });
   });
@@ -88,8 +126,8 @@ app.get('/api/auth/me', (req, res) => {
   return res.json({
     authenticated: true,
     user: {
-      id: mockUser.id,
-      email: mockUser.email,
+      id: req.session.userId,
+      email: users.find((u) => u.id === req.session.userId)?.email,
     },
   });
 });
