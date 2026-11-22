@@ -66,21 +66,70 @@ function MyHobbies() {
     }
   }
 
-  const deleteEvent = (id) => {
-    setHosting(hosting.filter(event => event.id !== id))
-    setEventToDelete(null)
+  const deleteEvent = async (id) => {
+    try {
+      const response = await fetch(`/api/my-events/${id}/delete`, {
+        method: "POST"
+      })
+
+      if (!response.ok) {
+        throw new Error("Failed to delete event")
+      }
+
+      setHosting(hosting.filter(event => event.id !== id))
+      setEventToDelete(null)
+    } catch (error) {
+      console.error(error)
+      alert("Could not delete event. Please try again.")
+    }
   }
 
-  const saveEvent = () => {
-    if (!eventToEdit.name.trim() || !eventToEdit.date.trim()) {
+  const saveEvent = async () => {
+    if (!eventToEdit.title.trim() || !eventToEdit.date) {
       return
     }
 
-    setHosting(hosting.map(event =>
-      event.id === eventToEdit.id ? eventToEdit : event
-    ))
+    try {
+      const response = await fetch(`/api/my-events/${eventToEdit.id}/edit`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
 
-    setEventToEdit(null)
+        body: JSON.stringify({
+          title: eventToEdit.title,
+          date: eventToEdit.date,
+          day: new Date(eventToEdit.date).toLocaleDateString("en-US", {
+            weekday: "short"
+          }),
+
+          time: new Date(eventToEdit.date).toLocaleString("en-US", {
+            weekday: "short",
+            month: "short",
+            day: "numeric",
+            hour: "numeric",
+            minute: "2-digit"
+          }).replace(", ", ", ").replace(/, (?=\d{1,2}:\d{2})/, " at "),
+          
+          location: eventToEdit.location
+        })
+      })
+
+      if (!response.ok) {
+        throw new Error("Failed to update event")
+      }
+
+      const updatedEvent = await response.json()
+
+      setHosting(hosting.map(event =>
+        event.id === updatedEvent.id ? updatedEvent : event
+      ))
+
+      setEventToEdit(null)
+    } catch (error) {
+      console.error(error)
+      alert("Could not update event. Please try again.")
+    }
   }
 
   return (
@@ -282,31 +331,21 @@ function MyHobbies() {
               <input
                 type="text"
                 required
-                value={eventToEdit.name}
+                value={eventToEdit.title}
                 onChange={(e) => setEventToEdit({
                   ...eventToEdit,
-                  name: e.target.value
+                  title: e.target.value
                 })}
               />
 
-              <label>Date</label>
+              <label>Date & Time</label>
               <input
-                type="text"
+                type="datetime-local"
                 required
-                value={eventToEdit.date}
+                value={eventToEdit.date || ""}
                 onChange={(e) => setEventToEdit({
                   ...eventToEdit,
                   date: e.target.value
-                })}
-              />
-
-              <label>Time</label>
-              <input
-                type="text"
-                value={eventToEdit.time}
-                onChange={(e) => setEventToEdit({
-                  ...eventToEdit,
-                  time: e.target.value
                 })}
               />
 
