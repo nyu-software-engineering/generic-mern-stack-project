@@ -14,7 +14,6 @@ import Bookings from './pages/Bookings.jsx'
 import Login from './pages/Login.jsx'
 import Register from './pages/Register.jsx'
 import BookingDetails from './pages/BookingDetails.jsx'
-import initialBookings from './data/bookings.json'
 import profileData from './users.json'
 // import initialServices from './services.json'
 import './App.css'
@@ -34,9 +33,20 @@ function App() {
 
   const updateService = (id, changes) => setServices(services.map(s => s.id === id ? { ...s, ...changes } : s))
   const removeService = id => setServices(services.filter(s => s.id !== id))
-  const [bookings, setBookings] = useState(initialBookings)
-  const addBooking = booking => setBookings([...bookings, { ...booking, id: String(Date.now()), status: 'requested' }])
-  const updateBooking = (id, changes) => setBookings(bookings.map(b => b.id === id ? { ...b, ...changes } : b))
+  const [bookings, setBookings] = useState([])
+  useEffect(() => {
+    axios.get('/api/bookings').then(response => setBookings(response.data)).catch(console.error)
+  }, [])
+  const addBooking = async booking => {
+    const response = await axios.post('/api/bookings', booking)
+    setBookings(previous => [...previous, response.data])
+    return response.data
+  }
+  const updateBooking = async (id, changes) => {
+    const response = await axios.patch(`/api/bookings/${id}`, changes)
+    setBookings(previous => previous.map(b => b.id === id ? response.data : b))
+    return response.data
+  }
 
   //not logged in
   if(!user){
@@ -67,10 +77,10 @@ function App() {
             
             {/* Booking page */}
             <Route path="/services/:serviceId" element={<ServiceDetails services={services} />} />
-            <Route path="/services/:serviceId/request" element={<BookingRequest addBooking={addBooking} />} />
-            <Route path="/bookings" element={<Bookings bookings={bookings} />} />
-            <Route path="/bookings/:bookingId" element={<BookingDetails bookings={bookings} updateBooking={updateBooking} />} />
-            <Route path="/bookings/:bookingId/reschedule" element={<BookingRequest bookings={bookings} updateBooking={updateBooking} />} />
+            <Route path="/services/:serviceId/request" element={<BookingRequest addBooking={addBooking} services={services} />} />
+            <Route path="/bookings" element={<Bookings bookings={bookings} services={services} />} />
+            <Route path="/bookings/:bookingId" element={<BookingDetails bookings={bookings} updateBooking={updateBooking} services={services} />} />
+            <Route path="/bookings/:bookingId/reschedule" element={<BookingRequest bookings={bookings} updateBooking={updateBooking} services={services} />} />
 
             {/* Profile page */}
             <Route path="/profile" element={<Profile setUser={setUser} profile={profile} services={services}/>} />

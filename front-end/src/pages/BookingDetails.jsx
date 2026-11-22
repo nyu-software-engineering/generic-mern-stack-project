@@ -1,17 +1,19 @@
 import { Link, useNavigate, useParams } from 'react-router'
-import services from '../services.json'
 import './Booking.css'
 
-export default function BookingDetails({ bookings, updateBooking }) {
+export default function BookingDetails({ bookings, updateBooking, services = [] }) {
   const { bookingId } = useParams()
   const booking = bookings.find(b => b.id === bookingId)
   const navigate = useNavigate()
   if (!booking) return <p>Booking not found.</p>
   const service = services.find(s => String(s.id) === booking.serviceId)
-  function cancel() {
-    if (window.confirm('Cancel this booking?')) {
-      updateBooking(booking.id, { status: 'cancelled' })
+  async function cancel() {
+    if (!window.confirm('Cancel this booking?')) return
+    try {
+      await updateBooking(booking.id, { status: 'cancelled' })
       navigate('/bookings')
+    } catch (err) {
+      window.alert(err.response?.data?.error || 'Unable to cancel booking.')
     }
   }
   return <div className="booking-content">

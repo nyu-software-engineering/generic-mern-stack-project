@@ -126,4 +126,6 @@ app.get("/api/categories", (req, res) => {
     res.json(categories)
 })
 
+app.use("/api/bookings", require("./bookingRoutes"))
+
 module.exports = app
