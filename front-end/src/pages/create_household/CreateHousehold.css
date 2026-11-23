@@ -28,3 +28,24 @@
   justify-self: start;
   padding: 10px;
 }
+.createHouseholdError {
+  color: #b3261e;
+  font-size: 0.9rem;
+  margin: 6px 0 0;
+}
+.createButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.inviteCodeBox {
+  font-size: 2rem;
+  font-weight: bold;
+  letter-spacing: 6px;
+  background-color: #ffffff;
+  color: #576490;
+  border: 3px dashed #576490;
+  border-radius: 10px;
+  padding: 12px 20px;
+  margin: 10px auto 20px;
+  width: fit-content;
+}
