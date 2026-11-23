@@ -14,13 +14,12 @@ import Bookings from './pages/Bookings.jsx'
 import Login from './pages/Login.jsx'
 import Register from './pages/Register.jsx'
 import BookingDetails from './pages/BookingDetails.jsx'
-import profileData from './users.json'
 // import initialServices from './services.json'
 import './App.css'
 
 function App() {
   const [user, setUser] = useState(null)
-  const [profile, setProfile] = useState(profileData[0])
+  const [profile, setProfile] = useState(null)
   const [services, setServices] = useState([])
 
   useEffect(() => {
@@ -29,6 +28,12 @@ function App() {
       setServices(response.data)
     }
     getServices()
+  }, [])
+
+  useEffect(() => {
+    axios.get("/api/profile/1")
+      .then(response => setProfile(response.data))
+      .catch(console.error)
   }, [])
 
   const updateService = (id, changes) => {
@@ -88,10 +93,10 @@ function App() {
             <Route path="/bookings/:bookingId/reschedule" element={<BookingRequest bookings={bookings} updateBooking={updateBooking} services={services} />} />
 
             {/* Profile page */}
-            <Route path="/profile" element={<Profile setUser={setUser} profile={profile} services={services}/>} />
-            <Route path="/profile/edit" element={<EditProfile profile={profile} setProfile={setProfile}/>}/>
-            <Route path="/profile/services" element={<MyServices profile={profile} setProfile={setProfile} services={services} updateService={updateService} removeService={removeService}/>}/>
-            <Route path="/profile/services/:serviceId/edit" element={<EditListing profile={profile} services={services} updateService={updateService} removeService={removeService}/>}/>
+            <Route path="/profile" element={profile ? <Profile setUser={setUser} profile={profile} services={services}/> : <p>Loading...</p>} />
+            <Route path="/profile/edit" element={profile ? <EditProfile profile={profile} setProfile={setProfile}/> : <p>Loading...</p>}/>
+            <Route path="/profile/services" element={profile ? <MyServices profile={profile} setProfile={setProfile} services={services} updateService={updateService} removeService={removeService}/> : <p>Loading...</p>}/>
+            <Route path="/profile/services/:serviceId/edit" element={profile ? <EditListing profile={profile} services={services} updateService={updateService} removeService={removeService}/> : <p>Loading...</p>}/>
 
             {/* Other */}
             <Route path="/login" element={<Navigate to="/" replace />}/>

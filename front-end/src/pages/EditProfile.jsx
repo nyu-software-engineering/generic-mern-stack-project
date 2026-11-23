@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import axios from 'axios'
 import { Link, useNavigate } from 'react-router'
 import './Profile.css'
 import './EditProfile.css'
@@ -13,6 +14,7 @@ export default function EditProfile(props) {
     const [university, setUniversity] = useState(props.profile.university)
     const [email, setEmail] = useState(props.profile.email)
     const [photo, setPhoto] = useState(props.profile.profile_picture)
+    const [error, setError] = useState(null)
 
     function handlePhotoChange(event) {
         const file = event.target.files[0]
@@ -21,22 +23,29 @@ export default function EditProfile(props) {
         }
     }
 
-    function handleSubmit(event) {
+    async function handleSubmit(event) {
         event.preventDefault()
-        props.setProfile({
-            ...props.profile,
-            full_name: fullName.trim(),
-            bio: bio.trim(),
-            university: university.trim(),
-            email: email.trim().toLowerCase(),
-            profile_picture: photo,
-        })
-        navigate('/profile')
+        try {
+            const response = await axios.put(`/api/profile/${props.profile.id}`,{
+                ...props.profile,
+                full_name: fullName.trim(),
+                bio: bio.trim(),
+                university: university.trim(),
+                email: email.trim().toLowerCase(),
+                profile_picture: photo,
+            })
+            props.setProfile(response.data)
+            navigate('/profile')
+        } catch (err) {
+            setError(err.response?.data?.error ?? "Couldn't save your profile.")
+        }
+       
     }
 
     return (
         <form className="edit-profile" onSubmit={handleSubmit}>
             <h1>Edit Profile</h1>
+            {error && <p className="edit-profile-error">{error}</p>}
             <img className="edit-profile-photo" src={photo} alt="Profile" />
 
             <div className="profile-button-row">
