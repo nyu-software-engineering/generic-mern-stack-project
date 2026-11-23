@@ -1,12 +1,27 @@
 const express = require("express")
 const bcrypt = require("bcryptjs")
+const multer = require("multer")
 
 const app = express()
 const services = require("./services.json")
 const categories = require("./categories.json")
 const users = require("./users.json")
 
+const path = require("path")
+
+const storage = multer.diskStorage({
+    destination: function (req,file, cb) {
+        cb(null, "uploads")
+    },
+    filename: function (req,file,cb) {
+        cb(null, `${Date.now()}${path.extname(file.originalname)}`)
+    }
+})
+
+const upload = multer({storage: storage})
+
 app.use(express.json())
+app.use("/api/uploads", express.static("uploads"))
 
 app.get("/api/services", (req, res) => {
     // res.send("CampusMart Server is Running!")
@@ -56,7 +71,7 @@ app.put("/api/profile/:id", (req, res) => {
     res.json(profile)
 })
 
-app.post("/api/services", (req, res) => {
+app.post("/api/services", upload.array("photos", 1), (req, res) => {
     const newService = req.body
 
     if (!newService.title){
@@ -76,7 +91,17 @@ app.post("/api/services", (req, res) => {
     if (typeof newService.price !== "number" || newService.price < 0) {
         return res.status(400).json({error: "Price should be a nonnegative number"})
     }
+    
+    let nextId = 1
+    for (const service of services) {
+        if (service.id >= nextId) {
+            nextId = service.id + 1
+        }
+    }
+    newService.id = nextId
+    services.push(newService)
     res.json(newService)
+    // console.log(req.files)
 })
 
 //Registration routes

@@ -24,6 +24,14 @@ describe("POST /api/services", () => {
 
         expect(response.status).to.equal(200)
         expect(response.body.title).to.equal("Calculus tutoring")
+
+        expect(response.body.id).to.be.a("number")
+
+        const list = await request.execute(app).get("/api/services")
+        expect(list.status).to.equal(200)
+
+        const savedService = list.body.find(service => service.id === response.body.id)
+        expect(savedService).to.exist
     })
 
     it("rejects a service without a title", async () => {
