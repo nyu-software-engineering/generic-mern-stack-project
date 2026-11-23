@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router'
+import axios from 'axios'
 import categories from '../categories.json'
 import Header from './Header'
 import ServiceCard from './ServiceCard'
@@ -50,18 +51,6 @@ function matchesFilters(service, filters) {
   return true
 }
 
-function compareByRating(a, b) {
-  return (b.rating ?? 0) - (a.rating ?? 0)
-}
-
-function compareServices(sort) {
-  if (sort === 'price-low') return (a, b) => a.price - b.price
-  if (sort === 'price-high') return (a, b) => b.price - a.price
-  if (sort === 'rating') return compareByRating
-  if (sort === 'newest') return (a, b) => b.createdAt.localeCompare(a.createdAt)
-  return (a, b) => b.featured - a.featured || compareByRating(a, b) || b.numReviews - a.numReviews
-}
-
 function describeFilters(filters) {
   const descriptions = []
   if (filters.category) descriptions.push(filters.category)
@@ -78,6 +67,7 @@ export default function Search({ services }) {
   const [openMenu, setOpenMenu] = useState(null)
   const [draftFilters, setDraftFilters] = useState(EMPTY_FILTERS)
   const [draftSort, setDraftSort] = useState('recommended')
+  const [sortedServiceIds, setSortedServiceIds] = useState([])
 
   const keyword = searchParams.get('q') ?? ''
   const sortParam = searchParams.get('sort')
@@ -92,10 +82,22 @@ export default function Search({ services }) {
     time: TIME_OPTIONS.some(option => option.value === timeParam) ? timeParam : '',
   }
 
+  useEffect(() => {
+    axios.get('/api/services', { params: { sort } })
+      .then(response => setSortedServiceIds(response.data.map(service => service.id)))
+      .catch(console.error)
+  }, [sort])
+
+  // the back-end decides the order, while the services prop keeps changes made elsewhere in the app, such as paused listings
+  function sortPosition(service) {
+    const position = sortedServiceIds.indexOf(service.id)
+    return position === -1 ? sortedServiceIds.length : position
+  }
+
   const results = services
     .filter(service => service.status !== 'Paused')
     .filter(service => matchesKeyword(service, keyword) && matchesFilters(service, filters))
-    .sort(compareServices(sort))
+    .sort((a, b) => sortPosition(a) - sortPosition(b))
 
   function updateSearchParams(changes) {
     setSearchParams(currentParams => {
