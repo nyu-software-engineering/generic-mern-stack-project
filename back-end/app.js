@@ -66,7 +66,7 @@ app.post('/api/posts', upload.single('image'), (req, res) => {
     return res.status(400).json({ error: 'If including bounty, bounty is required' })
   }
   const newPost = {
-    id, username, pfp, category: category || 'lost', title: title.trim(), desc: desc.trim(), date, time, 
+    id: parseInt(id), username, pfp, category: category || 'lost', title: title.trim(), desc: desc.trim(), date, time, 
     location, ...(req.file && { image: `/uploads/${req.file.filename}` }), 
     includeBounty, bounty
   }
@@ -89,8 +89,8 @@ app.post('/api/posts/edit', upload.single('image'), (req, res) => {
     return res.status(400).json({ error: 'Trying to edit a non existing post' })
   }
   const editedPost = {
-    id, username, pfp, category: category || 'lost', title: title.trim(), desc: desc.trim(), date, time, 
-    location, ...(req.file && { image: `/uploads/${req.file.filename}` }), 
+    id: parseInt(id), username, pfp, category: category || 'lost', title: title.trim(), desc: desc.trim(), date, time, 
+    location, image: req.file ? `/uploads/${req.file.filename}` : image, 
     includeBounty, bounty
   }
   const targetPost = posts.find(p => String(p.id) === String(id))
@@ -104,7 +104,7 @@ app.post('/api/posts/edit', upload.single('image'), (req, res) => {
 // delete for edit posts
 app.delete('/api/posts/:id', (req, res) => {
   const id = parseInt(req.params.id)
-  const index = posts.findIndex(post => parseInt(post.id) === id)
+  const index = posts.findIndex(post => post.id === id)
 
   if (index === -1) {
     return res.status(404).json({ error: 'Post id not found' })
