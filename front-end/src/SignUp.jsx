@@ -16,6 +16,8 @@ const SignUp = props => {
                 fullName: e.target.elements.name.value,
                 email: e.target.elements.email.value,
                 password: e.target.elements.password.value,
+                securityQuestion: e.target.elements.securityQuestion.value,
+                securityAnswer: e.target.elements.securityAnswer.value
             }),
         }).then(response => {
             if(response.ok){
@@ -48,6 +50,16 @@ const SignUp = props => {
                 <div className='field'>
                     <label htmlFor="password">Password</label>
                     <input id='password' type="password" autoComplete='on' required />
+                </div>
+
+                <div className='field'>
+                    <label htmlFor="security">Security Question</label>
+                    <select name="securityQuestion" id="securityQuestion" type="securityQuestion">
+                        <option value="What was your first pet's name?">What was your first pet's name?</option>
+                        <option value="test1">test1</option>
+                        <option value="test2">test2</option>
+                    </select>
+                    <input id='securityAnswer' type="securityAnswer" autoComplete='on' required />
                 </div>
 
                 <p className="error" >{errorText}</p>

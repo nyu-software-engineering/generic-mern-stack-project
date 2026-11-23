@@ -48,6 +48,7 @@ const Login = props => {
                 </div>
 
                 <p className="error">{errorText}</p>
+                <Link to='/forgotpassword'>Forgot Password?</Link>
                 <Link to='/signup'>Sign Up</Link>
                 
                 <button className='submit' type='submit'>Log In</button>

@@ -14,6 +14,7 @@ import PostHistory from './profile/PostHistory'
 import AccountSettings from './profile/AccountSettings'
 import Login from './Login'
 import SignUp from './SignUp'
+import ForgotPassword from "./ForgotPassword"
 
 function App() {
   const [openMenu, setOpenMenu] = useState(false)
@@ -143,6 +144,7 @@ function App() {
           <Route path='/profile/settings' element={<AccountSettings />} />
           <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
           <Route path="/signup" element={<SignUp setIsLoggedIn={setIsLoggedIn} />} />
+          <Route path="/forgotpassword" element={<ForgotPassword setIsLoggedIn={setIsLoggedIn} />} />
         </Routes>
       </Router>
     </>

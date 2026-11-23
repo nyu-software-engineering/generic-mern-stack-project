@@ -52,6 +52,9 @@ export const resetPosts = () => {
   posts = JSON.parse(fs.readFileSync(mockDataPath, 'utf8')).posts
 }
 
+//Current session user
+let currentUser = null
+
 app.get('/api/posts', (req, res) => {
   res.json(posts)
 })
@@ -142,21 +145,26 @@ app.post('/api/posts/resolved', (req, res) => {
   res.status(201).json(post)
 })
 
-// profile starts from the mock data and is kept in memory until the database exists
+// Default profile
 let profile = JSON.parse(fs.readFileSync(mockDataPath, 'utf8')).profile
 
 //use as a backup
 app.get('/api/profile', (req, res) => {
+  profile = currentUser.profile
   res.json(profile)
 })
 
-app.post('/api/profile', (req, res) => {
+app.post('/api/profile', upload.single('image'), (req, res) => {
   const { name, bio, picture } = req.body
   if (!name || !name.trim()) {
     return res.status(400).json({ error: 'Name is required' })
   }
-  profile = { name: name.trim(), bio: (bio || '').trim(), picture: picture ?? profile.picture }
-  res.json(profile)
+  profile = { name: name.trim(), bio: (bio || '').trim(),
+    picture: ((req.file && { image: `/uploads/${req.file.filename}` })).image }
+  const temp = currentUser
+  temp.profile = profile
+  users[currentUser] = temp
+  updateMockData("users", users)
 })
 
 let notifications = JSON.parse(fs.readFileSync(mockDataPath, 'utf8')).notifications
@@ -269,7 +277,6 @@ app.post('/api/conversations/:id/messages', (req, res) => {
 
 //User testing. Using salting and hasing methods learned in AIT
 let users = JSON.parse(fs.readFileSync(mockDataPath, 'utf8')).users
-let currentUser = ""
 
 const generateHash = async (password) => {
   const salt = await bcrypt.genSalt(10);
@@ -284,7 +291,7 @@ const checkPassword = async (password, hash) => {
 
 app.post('/api/account/password', (req, res) => {
   const { currentPassword, newPassword } = req.body
-  const user = users.find(u => String(u.email) === currentUser)
+  const user = users.find(u => String(u.email) === currentUser.email)
   const password = user["password"]
   if (currentPassword !== password) {
     return res.status(401).json({ error: 'Current password is incorrect.' })
@@ -302,21 +309,43 @@ app.post('/api/account/password', (req, res) => {
   res.json({ message: 'Password updated' })
 })
 
+app.get('/api/profile/security/:email', (req, res) => {
+  const existing = users.some(u => String(u.email) === req.params.email)
+  if (!existing) {
+    return res.status(401).json({ error: 'Account with email does not exists.' })
+  }
+  const user = users.find(u => String(u.email) === req.params.email)
+  res.json(user.securityQuestion)
+})
+
+
+//To be assigned to a profile by default
+const defaultProfile = {
+    "name": "Username A",
+    "bio": "Lorem ipsum dolor sit amet",
+    "picture": "https://picsum.photos/200?random=2"
+  }
+
 app.post('/api/account/create', async (req, res) => {
-  const {fullName, email, password} = req.body
+  const {fullName, email, password, securityQuestion, securityAnswer} = req.body
   const existing = users.some(u => String(u.email) === email)
   if (existing) {
     return res.status(401).json({ error: 'Account with email already exists.' })
   }
   const hash = await generateHash(password)
-  console.log(hash)
+  const hash2 = await generateHash(securityAnswer)
   const newUser = {
     "fullName": fullName,
     "email": email,
-    "password": hash
+    "password": hash,
+    "securityQuestion": securityQuestion,
+    "securityAnswer": hash2,
+    "profile": defaultProfile
   }
   users.push(newUser)
   updateMockData("users", users)
+  currentUser = newUser
+  profile = currentUser.profile
   res.json({ message: 'Account created' })
 })
 
@@ -331,6 +360,27 @@ app.post('/api/account/login', async (req, res) => {
   if(!checkPass){
     return res.status(401).json({ error: 'Password is incorrect' })
   }
+  currentUser = user
+  profile = currentUser.profile
+  res.json({ message: 'Logged in' })
+})
+
+app.post('/api/account/recovery', async (req, res) => {
+  const {email, answer, password} = req.body
+  const existing = users.some(u => String(u.email) === email)
+  if (!existing) {
+    return res.status(400).json({ error: 'Account with email address does not exist.' })
+  }
+  const user = users.find(u => String(u.email) === email)
+  const checkPass = await checkPassword(answer, user["securityAnswer"])
+  if(!checkPass){
+    return res.status(401).json({ error: 'Password is incorrect' })
+  }
+  const hash = await generateHash(password)
+  const modification = user
+  modification["password"] = hash
+  users[user] = modification
+  updateMockData("users", users)
   res.json({ message: 'Logged in' })
 })
 

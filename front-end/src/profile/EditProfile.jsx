@@ -1,29 +1,53 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import ProfilePicture from './ProfilePicture'
 
-function EditProfile({ profile, onSave, onCancel }) {
+function EditProfile({ profile, onSave, onCancel, callProfile }) {
   const [name, setName] = useState(profile.name)
   const [bio, setBio] = useState(profile.bio)
+  const [pictureFile, setPictureFile] = useState(undefined)
   const [picture, setPicture] = useState(profile.picture)
   const fileInput = useRef(null)
 
+
+  const updateProfileData = (e) => {
+    const formData = new FormData()
+    formData.append('name', name.trim())
+    formData.append('bio', bio.trim())
+    if(pictureFile){
+      formData.append('image', pictureFile)
+    }
+      fetch('/api/profile', {
+      method: 'POST',
+      body: formData,
+    })
+      .then(async (res) => {
+        const data = await res.json()
+        await callProfile()
+        onSave(updatedProfile)
+      })
+      .catch(() => setError('Could not reach the server. Try again.'))
+  }
   // free a preview that was never saved
   function discardPreview() {
-    if (picture && picture !== profile.picture) URL.revokeObjectURL(picture)
+    if (typeof picture === 'string' && picture.startsWith('blob:')) {
+      URL.revokeObjectURL(picture)
+    }
   }
 
-  // not uploaded anywhere yet, just previewed locally
-  function handlePictureChange(e) {
+  // Upload picture locally for display but save file for uploading to back-end
+  async function handlePictureChange(e) {
     const file = e.target.files[0]
     if (!file || !file.type.startsWith('image/')) return
     discardPreview()
+    setPictureFile(file)
     setPicture(URL.createObjectURL(file))
   }
 
   function handleSubmit(e) {
     e.preventDefault()
     if (!name.trim()) return
-    onSave({ name: name.trim(), bio: bio.trim(), picture })
+    console.log("submitting")
+    updateProfileData()
   }
 
   function handleCancel() {
