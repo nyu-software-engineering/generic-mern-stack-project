@@ -1,7 +1,6 @@
 #bg {
   background-color: rgb(232, 232, 232);
-  min-height: 90vh;
-  height: 90%;
+  min-height: calc(100vh - 51px);
 }
 
 .btn {
@@ -55,12 +54,10 @@
   padding: 0;
 }
 
-.header > .settings {
+.header > .settings, 
+.header > .closeSettings {
   border: none;
   height: 50%;
-}
-
-.header > .settings {
   cursor: pointer;
 }
 
@@ -117,10 +114,34 @@
   align-items: center;
 }
 
+.settings {
+  z-index: 2;
+}
+
+.closeSettings {
+  z-index: 0;
+}
+
 .buttons {
   display: flex;
   justify-content: space-around;
+  z-index: 2;
+}
 
+.docs #menu {
+  border: none;
+  background-color: #8C68C4;
+  color: white;
+}
+
+.closeOptions {
+  display: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  z-index: 1;
 }
 
 #search {
