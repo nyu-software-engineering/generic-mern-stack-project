@@ -2,6 +2,7 @@ import express from 'express'
 import fs from 'node:fs'
 import path from 'node:path'
 import multer from 'multer'
+import bcrypt from "bcrypt"
 
 const app = express()
 const mockDataPath = path.join(import.meta.dirname, 'mock', 'mockData.json')
@@ -15,6 +16,13 @@ app.get('/api/mockData', (req, res) => {
   const data = JSON.parse(fs.readFileSync(mockDataPath, 'utf8'))
   res.json(data)
 })
+
+//So that data can persist between sessions
+const updateMockData = (item, newData) => {
+  const data = JSON.parse(fs.readFileSync(mockDataPath, 'utf8'))
+  data[item] = newData
+  fs.writeFileSync(mockDataPath, JSON.stringify(data, null, 2));
+}
 
 // taken from express lecture notes
 // enable file uploads saved to disk in a directory named 'public/uploads'
@@ -112,6 +120,7 @@ app.post('/api/posts/resolved', (req, res) => {
 // profile starts from the mock data and is kept in memory until the database exists
 let profile = JSON.parse(fs.readFileSync(mockDataPath, 'utf8')).profile
 
+//use as a backup
 app.get('/api/profile', (req, res) => {
   res.json(profile)
 })
@@ -231,10 +240,27 @@ app.post('/api/conversations/:id/messages', (req, res) => {
 })
 
 // mock password kept in memory until real accounts are set up with the database
-let password = 'password123'
+//let password = 'password123'
+
+//User testing. Using salting and hasing methods learned in AIT
+let users = JSON.parse(fs.readFileSync(mockDataPath, 'utf8')).users
+let currentUser = ""
+
+const generateHash = async (password) => {
+  const salt = await bcrypt.genSalt(10);
+  const hash = await bcrypt.hash(password, salt);
+  return hash
+}
+
+const checkPassword = async (password, hash) => {
+  const passCheck = await bcrypt.compare(password, hash)
+  return passCheck
+}
 
 app.post('/api/account/password', (req, res) => {
   const { currentPassword, newPassword } = req.body
+  const user = users.find(u => String(u.email) === currentUser)
+  const password = user["password"]
   if (currentPassword !== password) {
     return res.status(401).json({ error: 'Current password is incorrect.' })
   }
@@ -244,7 +270,46 @@ app.post('/api/account/password', (req, res) => {
   if (newPassword === currentPassword) {
     return res.status(400).json({ error: 'New password must be different from your current one.' })
   }
-  password = newPassword
+  const hash = generateHash(newPassword)
+  const modification = user
+  modification["password"] = hash
+  users[user] = modification
+  res.json({ message: 'Password updated' })
+})
+
+app.post('/api/account/create', async (req, res) => {
+  const {fullName, email, password} = req.body
+  const existing = users.some(u => String(u.email) === email)
+  if (existing) {
+    return res.status(401).json({ error: 'Account with email already exists.' })
+  }
+  const hash = await generateHash(password)
+  console.log(hash)
+  const newUser = {
+    "fullName": fullName,
+    "email": email,
+    "password": hash
+  }
+  users.push(newUser)
+  updateMockData("users", users)
+  res.json({ message: 'Account created' })
+})
+
+app.post('/api/account/login', async (req, res) => {
+  const {email, password} = req.body
+  const existing = users.some(u => String(u.email) === email)
+  if (!existing) {
+    return res.status(400).json({ error: 'Account with email address does not exist.' })
+  }
+  const user = users.find(u => String(u.email) === email)
+  const checkPass = await checkPassword(password, user["password"])
+  if(!checkPass){
+    return res.status(401).json({ error: 'Password is incorrect' })
+  }
+  res.json({ message: 'Logged in' })
+})
+
+app.post('/api/account/exists', (req, res) => {
   res.json({ message: 'Password updated' })
 })
 

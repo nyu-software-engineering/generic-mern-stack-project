@@ -21,6 +21,10 @@
     width: 40vw;
 }
 
+.error {
+    color: red;
+}
+
 #email, 
 #password, 
 #name {

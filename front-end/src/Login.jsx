@@ -4,12 +4,32 @@ import './Login.css'
 
 const Login = props => {
     const navigate = useNavigate()
+    const [errorText, setErrorText] = useState("")
 
     const login = e => {
         e.preventDefault()
 
-        navigate('/')
-        props.setIsLoggedIn(true)
+        fetch('/api/account/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                email: e.target.elements.email.value,
+                password: e.target.elements.password.value,
+            }),
+        }).then(response => {
+            if(response.ok){
+                navigate('/')
+                props.setIsLoggedIn(true)
+            }
+            else{
+                if(response.status === 400){
+                    throw new Error("Account with emaill address does not exist")
+                }
+                throw new Error("Password incorrect")
+            }
+    }).catch(err => {
+        console.error(err)
+        setErrorText(err.toString())})
     }
 
     return (
@@ -27,6 +47,7 @@ const Login = props => {
                     <input id='password' type="password" autoComplete='on' required />
                 </div>
 
+                <p className="error">{errorText}</p>
                 <Link to='/signup'>Sign Up</Link>
                 
                 <button className='submit' type='submit'>Log In</button>
