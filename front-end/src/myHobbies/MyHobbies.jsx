@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import "./MyHobbies.css"
 
 function MyHobbies() {
@@ -10,63 +10,126 @@ function MyHobbies() {
   const [eventToEdit, setEventToEdit] = useState(null)
   const [eventToDelete, setEventToDelete] = useState(null)
 
-  const [joinedHobbies, setJoinedHobbies] = useState([
-    { id: 1, name: "Painting Club", members: 12 },
-    { id: 2, name: "Photography Group", members: 8 }
-  ])
+  const [joinedHobbies, setJoinedHobbies] = useState([])
+  const [upcomingEvents, setUpcomingEvents] = useState([])
+  const [hosting, setHosting] = useState([])
 
-  const [upcomingEvents, setUpcomingEvents] = useState([
-    {
-      id: 1,
-      name: "Weekend Art Workshop",
-      date: "November 14",
-      time: "2:00 PM",
-      location: "Manhattan"
-    },
-    {
-      id: 2,
-      name: "Photography Walk",
-      date: "November 20",
-      time: "11:00 AM",
-      location: "Brooklyn"
+  useEffect(() => {
+    fetch("/api/my-hobbies")
+      .then(response => {
+        if (!response.ok) {
+          throw new Error("Failed to load My Hobbies")
+        }
+        return response.json()
+      })
+      .then(data => {
+        setJoinedHobbies(data.joinedHobbies)
+        setUpcomingEvents(data.upcomingEvents)
+        setHosting(data.hosting)
+      })
+      .catch(error => console.error(error))
+  }, [])
+
+  const leaveHobby = async (id) => {
+    try {
+      const response = await fetch(`/api/my-hobbies/${id}/leave`, {
+        method: "POST"
+      })
+
+      if (!response.ok) {
+        throw new Error("Failed to leave hobby")
+      }
+
+      setJoinedHobbies(joinedHobbies.filter(hobby => hobby.id !== id))
+      setHobbyToLeave(null)
+    } catch (error) {
+      console.error(error)
+      alert("Could not leave hobby. Please try again.")
     }
-  ])
+  }
 
-  const [hosting, setHosting] = useState([
-    {
-      id: 1,
-      name: "Beginner Yoga Meetup",
-      date: "November 22",
-      time: "10:00 AM",
-      location: "Manhattan"
+  const leaveEvent = async (id) => {
+    try {
+      const response = await fetch(`/api/my-events/${id}/leave`, {
+        method: "POST"
+      })
+
+      if (!response.ok) {
+        throw new Error("Failed to leave event")
+      }
+
+      setUpcomingEvents(upcomingEvents.filter(event => event.id !== id))
+      setEventToLeave(null)
+    } catch (error) {
+      console.error(error)
+      alert("Could not leave event. Please try again.")
     }
-  ])
-
-  const leaveHobby = (id) => {
-    setJoinedHobbies(joinedHobbies.filter(hobby => hobby.id !== id))
-    setHobbyToLeave(null)
   }
 
-  const leaveEvent = (id) => {
-    setUpcomingEvents(upcomingEvents.filter(event => event.id !== id))
-    setEventToLeave(null)
+  const deleteEvent = async (id) => {
+    try {
+      const response = await fetch(`/api/my-events/${id}/delete`, {
+        method: "POST"
+      })
+
+      if (!response.ok) {
+        throw new Error("Failed to delete event")
+      }
+
+      setHosting(hosting.filter(event => event.id !== id))
+      setEventToDelete(null)
+    } catch (error) {
+      console.error(error)
+      alert("Could not delete event. Please try again.")
+    }
   }
 
-  const deleteEvent = (id) => {
-    setHosting(hosting.filter(event => event.id !== id))
-    setEventToDelete(null)
-  }
-
-  const saveEvent = () => {
-    if (!eventToEdit.name.trim() || !eventToEdit.date.trim()) {
+  const saveEvent = async () => {
+    if (!eventToEdit.title.trim() || !eventToEdit.date) {
       return
     }
 
-    setHosting(hosting.map(event =>
-      event.id === eventToEdit.id ? eventToEdit : event
-    ))
+    try {
+      const response = await fetch(`/api/my-events/${eventToEdit.id}/edit`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
 
-    setEventToEdit(null)
+        body: JSON.stringify({
+          title: eventToEdit.title,
+          date: eventToEdit.date,
+          day: new Date(eventToEdit.date).toLocaleDateString("en-US", {
+            weekday: "short"
+          }),
+
+          time: new Date(eventToEdit.date).toLocaleString("en-US", {
+            weekday: "short",
+            month: "short",
+            day: "numeric",
+            hour: "numeric",
+            minute: "2-digit"
+          }).replace(", ", ", ").replace(/, (?=\d{1,2}:\d{2})/, " at "),
+          
+          location: eventToEdit.location
+        })
+      })
+
+      if (!response.ok) {
+        throw new Error("Failed to update event")
+      }
+
+      const updatedEvent = await response.json()
+
+      setHosting(hosting.map(event =>
+        event.id === updatedEvent.id ? updatedEvent : event
+      ))
+
+      setEventToEdit(null)
+    } catch (error) {
+      console.error(error)
+      alert("Could not update event. Please try again.")
+    }
   }
 
   return (
@@ -140,8 +203,8 @@ function MyHobbies() {
           ) : (
             upcomingEvents.map(event => (
               <div className="activity-card" key={event.id}>
-                <h3>{event.name}</h3>
-                <p>{event.date} at {event.time}</p>
+                <h3>{event.title}</h3>
+                <p>{event.time}</p>
                 <p>{event.location}</p>
 
                 <button
@@ -165,8 +228,8 @@ function MyHobbies() {
           ) : (
             hosting.map(event => (
               <div className="activity-card" key={event.id}>
-                <h3>{event.name}</h3>
-                <p>{event.date} at {event.time}</p>
+                <h3>{event.title}</h3>
+                <p>{event.time}</p>
                 <p>{event.location}</p>
                 <p>You are the host</p>
 
@@ -234,7 +297,7 @@ function MyHobbies() {
       {eventToLeave && (
         <div className="activities-overlay">
           <div className="activities-popup" role="dialog" aria-modal="true" aria-labelledby="leave-event-title">
-            <h2 id="leave-event-title">Leave {eventToLeave.name}?</h2>
+            <h2 id="leave-event-title">Leave {eventToLeave.title}?</h2>
             <p>Are you sure you want to leave this event?</p>
 
             <div className="activities-popup-buttons">
@@ -268,31 +331,21 @@ function MyHobbies() {
               <input
                 type="text"
                 required
-                value={eventToEdit.name}
+                value={eventToEdit.title}
                 onChange={(e) => setEventToEdit({
                   ...eventToEdit,
-                  name: e.target.value
+                  title: e.target.value
                 })}
               />
 
-              <label>Date</label>
+              <label>Date & Time</label>
               <input
-                type="text"
+                type="datetime-local"
                 required
-                value={eventToEdit.date}
+                value={eventToEdit.date || ""}
                 onChange={(e) => setEventToEdit({
                   ...eventToEdit,
                   date: e.target.value
-                })}
-              />
-
-              <label>Time</label>
-              <input
-                type="text"
-                value={eventToEdit.time}
-                onChange={(e) => setEventToEdit({
-                  ...eventToEdit,
-                  time: e.target.value
                 })}
               />
 
@@ -330,7 +383,7 @@ function MyHobbies() {
       {eventToDelete && (
         <div className="activities-overlay">
           <div className="activities-popup" role="dialog" aria-modal="true" aria-labelledby="delete-event-title">
-            <h2 id="delete-event-title">Delete {eventToDelete.name}?</h2>
+            <h2 id="delete-event-title">Delete {eventToDelete.title}?</h2>
             <p>Are you sure you want to delete this event?</p>
 
             <div className="activities-popup-buttons">
