@@ -32,7 +32,7 @@ const PostElement = props => {
           {showOptions && <div className='buttons'>
             {(props.username === 'You') && <Link className="option" to={`/edit-post/${props.id}`} style={{textDecoration: 'none'}}>Edit</Link>}
             {(props.username === 'You') && <Link className="option" to={`/resolve-post/${props.id}`} style={{textDecoration: 'none'}}>Resolve</Link>}
-            {(props.username !== 'You') && <Link className="option" to={`/messages/${props.id}`} style={{textDecoration: 'none'}}>Message</Link>}
+            {(props.username !== 'You') && <Link className="option" to="/messages" onClick={e => { e.preventDefault(); closeOptions(); props.onMessage() }} style={{textDecoration: 'none'}}>Message</Link>}         
           </div>}
           {showOptions && <div className='closeOptions' onClick={closeOptions}></div>}
           <div className='content'>
@@ -64,6 +64,12 @@ const Home = props => {
       navigate('/login')
     }
   }, [])
+
+  const openChat = post => {
+    props.startConversation(post)
+      .then(id => navigate(`/messages/${id}`))
+      .catch(err => console.error(err))
+  }
 
   const [titleFilter, setTitleFilter] = useState("")
   const [categoryFilter, setCategoryFilter] = useState("all")
@@ -124,6 +130,7 @@ const Home = props => {
               count={props.count}
               showAllOptions={showAllOptions}
               setShowAllOptions={setShowAllOptions}
+              onMessage={() => openChat(element)}
             />
           )
         })}
