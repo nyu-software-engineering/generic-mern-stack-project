@@ -54,6 +54,26 @@ app.post("/api/login", async (req, res, next) => {
   }
 })
 
+app.post("/api/register", async (req, res, next) => {
+  try {
+    const result = await authService.registerUser(req.body || {})
+
+    if (result.errors) {
+      // 409 means the email is already used, 400 means the form has mistakes
+      const status = result.emailTaken ? 409 : 400
+
+      return res.status(status).json({ errors: result.errors })
+    }
+
+    return res.status(201).json({
+      user: result.user,
+      token: `mock-token-${result.user.id}`,
+    })
+  } catch (error) {
+    return next(error)
+  }
+})
+
 app.use((error, req, res, next) => {
   console.error(error);
 

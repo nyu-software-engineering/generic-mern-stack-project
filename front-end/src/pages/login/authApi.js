@@ -14,6 +14,19 @@ export const login = async (email, password) => {
   }
 };
 
+// Sends the sign-up form to the back-end.
+// Returns { user } when the account is created, or { errors } describing what to fix.
+export const register = async (form) => {
+  try {
+    const { data } = await axios.post("/api/register", form);
+    return { user: data.user };
+  } catch (error) {
+    const errors = error.response && error.response.data && error.response.data.errors;
+    if (errors) return { errors };
+    throw error;
+  }
+};
+
 // Remembers who is logged in so other pages can use it (the password is never saved).
 export const saveCurrentUser = (user) => {
   try {
