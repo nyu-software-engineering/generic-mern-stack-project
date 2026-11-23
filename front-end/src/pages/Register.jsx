@@ -1,5 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import axios from "axios";
+
 function Register() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -31,7 +33,25 @@ function Register() {
     }
 
     //all checks passed
-    navigate("/login");
+    // send the new account to the back-end
+    axios
+      .post("/api/register", {
+        username: name,
+        email: email,
+        password: password,
+      })
+      .then(() => {
+        navigate("/login");
+      })
+      .catch((err) => {
+        console.error(err);
+
+        if (err.response && err.response.data && err.response.data.message) {
+          setError(err.response.data.message);
+        } else {
+          setError("Could not reach the server. Is the back-end running?");
+        }
+      });
   }
   return (
     <div className="min-h-screen bg-white flex items-center justify-center">
