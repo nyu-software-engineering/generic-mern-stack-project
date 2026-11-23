@@ -1,0 +1,79 @@
+import express from "express";
+
+const router = express.Router();
+
+const mockUser = {
+  username: "John Smith",
+  email: "johnsmith@example.com",
+  password: "password",
+};
+const users = [mockUser];
+
+router.post("/login", (req, res) => {
+  const body = req.body || {};
+  const email = body.email;
+  const password = body.password;
+
+  const foundUser = users.find((user) => user.email === email);
+  if (foundUser && foundUser.password === password) {
+    // TODO connect to db
+    res.json({
+      success: true,
+      message: "Logged in",
+      username: mockUser.username,
+      email: mockUser.email,
+    });
+  } else {
+    res.status(401).json({
+      success: false,
+      message: "Invalid email or password",
+    });
+  }
+});
+
+router.post("/register", (req, res) => {
+  // TODO connect registration to db
+  const body = req.body || {};
+  const username = body.username;
+  const email = body.email;
+  const password = body.password;
+
+  if (!username || !email || !password) {
+    res.status(400).json({
+      success: false,
+      message: "Username, email and password are required",
+    });
+  } else {
+    users.push({
+      username: username,
+      email: email,
+      password: password,
+    });
+
+    res.json({
+      success: true,
+      message: "Registration received",
+      username: username,
+      email: email,
+    });
+  }
+});
+
+router.post("/logout", (req, res) => {
+  // TODO connect logout to db
+  res.json({
+    success: true,
+    message: "Logged out successfully",
+  });
+});
+
+router.get("/users/me", (req, res) => {
+  // TODO connect logged in user to db
+  res.json({
+    success: true,
+    username: mockUser.username,
+    email: mockUser.email,
+  });
+});
+
+export default router;

@@ -1,8 +1,26 @@
 import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 function Settings() {
   const navigate = useNavigate();
+  const [user, setUser] = useState({ username: "", email: "" });
+
+  useEffect(() => {
+    axios
+      .get("/api/users/me")
+      .then((response) => {
+        setUser(response.data);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }, []);
+
   function handleLogout() {
+    axios.post("/api/logout").catch((err) => {
+      console.error(err);
+    });
     localStorage.removeItem("user");
     navigate("/login");
   }
@@ -19,7 +37,7 @@ function Settings() {
             <label className="block text-sm font-medium mb-2">Full Name</label>
             <input
               type="text"
-              defaultValue="Jameson Winchester"
+              value={user.username}
               readOnly
               className="w-full border border-gray-300 rounded-lg p-3"
             />
@@ -30,7 +48,7 @@ function Settings() {
             </label>
             <input
               type="email"
-              defaultValue="jameswin@example.com"
+              value={user.email}
               readOnly
               className="w-full border border-gray-300 rounde-lg p-3"
             />

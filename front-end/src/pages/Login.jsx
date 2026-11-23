@@ -1,5 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import axios from "axios";
+
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -15,11 +17,23 @@ function Login() {
       return setError("Email and password are required");
     }
     
-    navigate("/mainpage");
+    axios
+      .post("/api/login", { email: email, password: password })
+      .then((response) => {
+        // logged in: save the user as JSON text then navigate
+        localStorage.setItem("user", JSON.stringify(response.data));
+        navigate("/mainpage");
+      })
+      .catch((err) => {
+        console.error(err);
+        // show the back-end's reason, e.g. "Invalid email or password"
+        if (err.response && err.response.data && err.response.data.message) {
+          setError(err.response.data.message);
+        } else {
+          setError("Could not reach the server.");
+        }
+      });
   }
-
-  //later have to verify using credentials using mock authentication
-  console.log("Login form validation passed");
 
   return (
     <div className="min-h-screen bg-white flex items-center justify-center">
