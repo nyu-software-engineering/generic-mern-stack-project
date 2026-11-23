@@ -22,38 +22,21 @@ const EditPost = props => {
 
     useEffect(() => {
         setFormData(props.postsData[props.curr])
+        console.log(props.curr)
     }, [props.curr])
 
     // remove post data; later shows confirmation screen
     const deletePost = async () => {
-        // show confirmation notice afterwards
+        
+        // delete specific post
+        const post = props.postsData[props.curr]
         const res = await fetch(`/api/posts/${post.id}`, {
             method: 'DELETE'
         })
         if (!res.ok) throw new Error('Failed to delete post')
         await props.fetchPosts()
+        // show confirmation notice afterwards
         setIsDeleted(true)
-
-        // delete specific post
-        // props.setPostsData(prev => {
-        //     return prev
-        //         .filter(post => post.id !== (props.count - props.curr - 1))
-        //         .map(post => {
-        //             if (post.id > (props.count - props.curr - 1)) {
-        //                 return {
-        //                     ...post, 
-        //                     id: post.id - 1
-        //                 }
-        //             }
-        //             return post;
-        //         })
-        // })
-        // props.setCount(prev => prev - 1)
-        // const res = await fetch(`/api/posts/${post.id}`, {
-        //     method: 'DELETE'
-        // })
-        // if (!res.ok) throw new Error('Failed to delete post')
-        // await props.fetchPosts()
     }
 
     return (
@@ -70,6 +53,7 @@ const EditPost = props => {
                 setIsSubmitted={setIsSubmitted} 
                 curr={props.curr} 
                 fetchPosts={props.fetchPosts} 
+                setCount={props.setCount}
             />}
             {(!isSubmitted && !isDeleted) && <Link className='link' id='cancel' to='/'>Cancel</Link>}
             {(!isSubmitted && !isDeleted) && <button className='link' id='delete' onClick={deletePost}>Delete</button>}

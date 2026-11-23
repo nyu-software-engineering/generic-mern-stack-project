@@ -9,6 +9,7 @@ const PostElement = props => {
     props.setCurr(props.count - 1 - props.id)
     props.setShowAllOptions(prev => !prev)
     setShowOptions(prev => !prev)
+    console.log(props.count - 1 - props.id)
   }
 
   const closeOptions = () => {
@@ -126,6 +127,7 @@ const Home = props => {
               includeBounty={element.includeBounty} 
               bounty={element.category === 'found' ? '' : element.bounty} 
               setCurr={props.setCurr}
+              curr={props.curr}
               postsData={props.postsData}
               count={props.count}
               showAllOptions={showAllOptions}

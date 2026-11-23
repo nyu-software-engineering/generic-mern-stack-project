@@ -30,6 +30,7 @@ const PostForm = props => {
         }
     }, [formData.includeBounty, formData.title, formData.desc, formData.bounty])
 
+    // lowkey doesn't work now but wtv
     useEffect(() => {
         setIsEdited(
             formData.category !== props.category ||
@@ -53,11 +54,6 @@ const PostForm = props => {
         post.append('pfp', formData.pfp)
 
         if (props.origin === 'publish') {
-            // const post = new FormData(e.currentTarget)
-            // post.append("id", formData.id)
-            // post.append('username', formData.username)
-            // post.append('pfp', formData.pfp)
-
             fetch('/api/posts', {
                 method: 'POST',
                 body: post
@@ -70,11 +66,8 @@ const PostForm = props => {
             .catch(err => console.error(err))
         }
         else if (props.origin === 'edit') {
-            // const post = new FormData(e.currentTarget)
-            // post.append("id", formData.id)
-            // post.append('username', formData.username)
-            // post.append('pfp', formData.pfp)
-
+            // keep image if edit doesn't change it
+            if (post.image !== props.image) post.append('image', props.image)
             await fetch('/api/posts/edit', {
                 method: 'POST',
                 body: post,
