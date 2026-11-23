@@ -44,14 +44,19 @@ const PostForm = props => {
         )
     }, [formData])
 
-    const submitForm = e => {
+    const submitForm = async e => {
         e.preventDefault() // prevent normal browser submit behavior
 
+        const post = new FormData(e.currentTarget)
+        post.append("id", formData.id)
+        post.append('username', formData.username)
+        post.append('pfp', formData.pfp)
+
         if (props.origin === 'publish') {
-            const post = new FormData(e.currentTarget)
-            post.append("id", formData.id)
-            post.append('username', formData.username)
-            post.append('pfp', formData.pfp)
+            // const post = new FormData(e.currentTarget)
+            // post.append("id", formData.id)
+            // post.append('username', formData.username)
+            // post.append('pfp', formData.pfp)
 
             fetch('/api/posts', {
                 method: 'POST',
@@ -65,11 +70,14 @@ const PostForm = props => {
             .catch(err => console.error(err))
         }
         else if (props.origin === 'edit') {
-            props.setPostsData(prev => prev.map((post, index) => index === props.curr ? formData : post))
-            fetch('/api/posts/edit', {
+            // const post = new FormData(e.currentTarget)
+            // post.append("id", formData.id)
+            // post.append('username', formData.username)
+            // post.append('pfp', formData.pfp)
+
+            await fetch('/api/posts/edit', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData),
+                body: post,
             })
             .then(res => res.json())
             .then(saved => {
@@ -77,6 +85,7 @@ const PostForm = props => {
                 props.setCount(prev => prev + 1)
             })
             .catch(err => console.error(err))
+            await props.fetchPosts()
         }
 
         props.setIsSubmitted(true)
