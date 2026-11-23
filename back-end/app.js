@@ -122,6 +122,13 @@ app.post("/api/auth/login", async (req, res) => {
     res.status(200).json({ user: { email: normalizedEmail } })
 })
 
+//Logout routes
+app.post("/api/auth/logout", (req, res) => {
+    res.status(200)
+    res.json({success: true})
+    return
+})
+
 app.get("/api/categories", (req, res) => {
     res.json(categories)
 })

@@ -1,5 +1,6 @@
 import ProfileServiceCard from './ProfileServiceCard'
 import { Link } from 'react-router'
+import axios from "axios"
 import './Profile.css'
 import './Header.css'
 
@@ -10,11 +11,16 @@ export default function Profile(props) {
   const userServices = props.services.filter(service => service.userId === profile1.id)
   const numListings = userServices.length
 
+  async function handleLogOut(){
+    await axios.post("/api/auth/logout")
+    props.setUser(null)
+  }
+
   return (
     <>
       <header className="site-header">
         <strong>CampusMart</strong>
-        <button className="logout-button" type="button" onClick={() => props.setUser(null)}>
+        <button className="logout-button" type="button" onClick={handleLogOut}>
           Log Out
         </button>
       </header>
