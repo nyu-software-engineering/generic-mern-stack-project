@@ -26,6 +26,19 @@ function App() {
   const [notifications, setNotifications] = useState([])
 
   useEffect(() => {
+    fetchPosts()
+
+    // still including mock data
+    fetch('/api/mockData')
+      .then(res => res.json())
+      .then(data => {
+        setConversations(data.conversations)
+        setNotifications(data.notifications)
+      })
+  }, [])
+
+  // used so that bountyChoice can update back-end of posts
+  const fetchPosts = () => {
     fetch('/api/posts')
       .then(res => {
         if (!res.ok) throw new Error('Failed to fetch posts')
@@ -36,19 +49,7 @@ function App() {
         setCount(data.length)
       })
       .catch(err => console.error(err))
-
-    // still including mock data
-    fetch('/api/mockData')
-      .then(res => res.json())
-      .then(data => {
-        // console.log('Mock posts:', data.posts)
-
-        // setPostsData (prev => [...prev, ...data.posts])
-        // setCount(prev => prev + data.posts.length)
-        setConversations(data.conversations)
-        setNotifications(data.notifications)
-      })
-  }, [])
+  }
 
   const toggle = () => {
     setOpenMenu(prev => !prev)
@@ -111,7 +112,6 @@ function App() {
     ))
   }
 
-  // beware inevitable merge conflict
   return (
     <>
       <Router>
@@ -131,7 +131,7 @@ function App() {
           <Route path="/" element={<Home isLoggedIn={isLoggedIn} postsData={postsData} count={count} curr={curr} setCurr={setCurr} startConversation={startConversation} />} />
           <Route path="/new-post" element={<NewPost postsData={postsData} setPostsData={setPostsData} count={count} setCount={setCount} />} />
           <Route path='/edit-post/:id' element={<EditPost postsData={postsData} setPostsData={setPostsData} curr={curr} count={count} setCount={setCount} />} />
-          <Route path='/resolve-post/:id' element={<BountyChoice postsData={postsData} setPostsData={setPostsData} curr={curr} count={count} setCount={setCount} />} />
+          <Route path='/resolve-post/:id' element={<BountyChoice fetchPosts={fetchPosts} postsData={postsData} setPostsData={setPostsData} curr={curr} count={count} setCount={setCount} />} />
           <Route path="/notifications" element={<Notifications notifications={notifications} setNotifications={setNotifications} />} />
           <Route path="/messages" element={<Messages conversations={conversations} />} />
           <Route path="/messages/:id" element={<PrivateChat conversations={conversations} setConversations={setConversations} sendMessage={sendMessage} />} />

@@ -57,7 +57,7 @@ const PostElement = props => {
 
 const Home = props => {
   const navigate = useNavigate()
-    const [showAllOptions, setShowAllOptions] = useState(false)
+  const [showAllOptions, setShowAllOptions] = useState(false)
 
   useEffect(() => {
     if (!props.isLoggedIn) {
@@ -95,13 +95,15 @@ const Home = props => {
 
       <section id="next-steps">
         {props.postsData.length === 0 && <p>No Posts</p>}
-        {props.postsData.length !== 0 && props.postsData.filter(e => {
+        {props.postsData.length !== 0 && props.postsData
+        .filter(e => {
           console.log(e.category)
           if((e.category == categoryFilter || categoryFilter == "all")
           && (e.title.toLowerCase().includes(titleFilter.toLowerCase()) || titleFilter == "")){
             return e
           }
-        }).map((element, index) => {
+        })
+        .map((element, index) => {
           return (
             <PostElement 
               key={index}
