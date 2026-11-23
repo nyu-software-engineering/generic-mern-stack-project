@@ -1,31 +1,33 @@
-const path = require("path")
-require("dotenv").config()
+const path = require("path");
+require("dotenv").config();
 
-const express = require("express")
-const { getHouseholdActivity } = require("./services/activityService")
-const authService = require("./services/authService")
+const express = require("express");
+const { getHouseholdActivity } = require("./services/activityService");
+const purchaseAssetRouter = require("./services/purchase_asset");
+const authService = require("./services/authService");
 
-const app = express()
+const app = express();
 
-app.use(express.json())
+app.use(express.json());
+app.use(purchaseAssetRouter);
 
 app.get("/api/households/:householdId/activity", async (req, res, next) => {
-  const householdId = Number(req.params.householdId)
+  const householdId = Number(req.params.householdId);
 
   if (!Number.isInteger(householdId)) {
     return res.status(400).json({
       error: "householdId must be a number",
-    })
+    });
   }
 
   try {
-    const result = await getHouseholdActivity(householdId)
+    const result = await getHouseholdActivity(householdId);
 
-    return res.json(result)
+    return res.json(result);
   } catch (error) {
-    return next(error)
+    return next(error);
   }
-})
+});
 
 app.post("/api/login", async (req, res, next) => {
   const { email, password } = req.body || {}
@@ -73,17 +75,13 @@ app.post("/api/register", async (req, res, next) => {
 })
 
 app.use((error, req, res, next) => {
-  console.error(error)
+  console.error(error);
 
   res.status(502).json({
     error: "Could not load activity data",
-  })
-})
+  });
+});
 
-app.use(
-  express.static(
-    path.join(__dirname, "../front-end/dist"),
-  )
-)
+app.use(express.static(path.join(__dirname, "../front-end/dist")));
 
-module.exports = app
+module.exports = app;
