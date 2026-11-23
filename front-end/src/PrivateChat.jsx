@@ -9,6 +9,13 @@ const PrivateChat = ({ conversations, setConversations, sendMessage }) => {
     const convo = conversations.find(c => String(c.id) === id)
 
     useEffect(() => {
+        window.scrollTo({
+            top: document.documentElement.scrollHeight, 
+            behavior: 'instant'
+        })
+    }, [conversations])
+
+    useEffect(() => {
         if (!convo || convo.read) return
 
         setConversations(prev => prev.map(c =>

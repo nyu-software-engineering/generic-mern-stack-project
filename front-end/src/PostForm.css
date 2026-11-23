@@ -4,12 +4,14 @@
     align-items: center;
     gap: 10px;
     font: inherit;
+    width: 100vw;
+    margin: none;
 }
 
 .types {
     display: flex;
     justify-content: center;
-    width: 90vw;
+    width: 90%;
 }
 
 .types .active, 
@@ -41,7 +43,7 @@
     display: flex;
     flex-direction: column;
     max-width: 200px;
-    width: 40vw;
+    width: 40%;
     gap: 5px;
     margin: 0 20px 0 20px;
 }
@@ -66,7 +68,7 @@
 
 #descField {
     max-width: 500px;
-    width: 90vw;
+    width: 90%;
 }
 
 #desc {

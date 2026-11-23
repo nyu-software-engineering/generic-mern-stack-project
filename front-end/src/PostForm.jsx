@@ -44,24 +44,17 @@ const PostForm = props => {
         )
     }, [formData])
 
-    // put the post form data into backend... will do in next sprint
     const submitForm = e => {
         e.preventDefault() // prevent normal browser submit behavior
 
         if (props.origin === 'publish') {
-            // props.setPostsData(prev => [formData, ...prev])
-            // props.setCount(prev => prev + 1)
-
             const post = new FormData(e.currentTarget)
             post.append("id", formData.id)
             post.append('username', formData.username)
             post.append('pfp', formData.pfp)
 
-
             fetch('/api/posts', {
                 method: 'POST',
-                // headers: { 'Content-Type': 'application/json' },
-                // body: JSON.stringify(formData),
                 body: post
             })
             .then(res => res.json())

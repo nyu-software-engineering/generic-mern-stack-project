@@ -17,6 +17,7 @@ import SignUp from './SignUp'
 
 
 function App() {
+  const [openMenu, setOpenMenu] = useState(false)
   const [postsData, setPostsData] = useState([])
   const [count, setCount] = useState(0)
   const [curr, setCurr] = useState(-1)
@@ -25,6 +26,19 @@ function App() {
   const [notifications, setNotifications] = useState([])
 
   useEffect(() => {
+    fetchPosts()
+
+    // still including mock data
+    fetch('/api/mockData')
+      .then(res => res.json())
+      .then(data => {
+        setConversations(data.conversations)
+        setNotifications(data.notifications)
+      })
+  }, [])
+
+  // used so that bountyChoice can update back-end of posts
+  const fetchPosts = () => {
     fetch('/api/posts')
       .then(res => {
         if (!res.ok) throw new Error('Failed to fetch posts')
@@ -35,20 +49,23 @@ function App() {
         setCount(data.length)
       })
       .catch(err => console.error(err))
+  }
 
-    // still including mock data
-    fetch('/api/mockData')
-      .then(res => res.json())
-      .then(data => {
-        // console.log('Mock posts:', data.posts)
+  const toggle = () => {
+    setOpenMenu(prev => !prev)
+  }
 
-        // setPostsData (prev => [...prev, ...data.posts])
-        // setCount(prev => prev + data.posts.length)
-        setConversations(data.conversations)
-        setNotifications(data.notifications)
-      })
-  }, [])
+  const close = () => {
+    setOpenMenu(false)
+  }
 
+  const handleLogo = () => {
+    setOpenMenu(false)
+    window.scrollTo({
+      top: 0, 
+      behavior: 'smooth'
+    })
+  }
 
   const startConversation = post => {
     const existing = conversations.find(c => c.postId === post.id)
@@ -95,24 +112,26 @@ function App() {
     ))
   }
 
-  // beware inevitable merge conflict
   return (
     <>
       <Router>
-        {isLoggedIn && <nav className="nav">
-          <Link className="nav-logo" to="/" style={{textDecoration: 'none'}}>Bounty</Link>
-          <div className="nav-links">
-            <Link className="nav-link" to="/new-post" style={{textDecoration: 'none'}}>New</Link>
-            <Link className="nav-link" to="/messages" style={{textDecoration: 'none'}}>Messages</Link>
-            <Link className="nav-link" to="/notifications" style={{textDecoration: 'none'}}>Notifications</Link>
-            <Link className="nav-link" to="/profile" style={{textDecoration: 'none'}}>Profile</Link>
-          </div>
-        </nav>}
+          {isLoggedIn && <nav className="nav">
+            <Link onClick={handleLogo} className="nav-logo" to="/" style={{textDecoration: 'none'}}>Bounty</Link>
+            <button className='sidemenu' onClick={toggle}>Menu</button>
+          </nav>}
+          {openMenu && <ul className='open-sidemenu' onClick={close}>
+            <li><Link onClick={toggle} className="nav-link" to="/new-post" style={{textDecoration: 'none'}}>New Post</Link></li>
+            <li><Link onClick={toggle} className="nav-link" to="/messages" style={{textDecoration: 'none'}}>Messages</Link></li>
+            <li><Link onClick={toggle} className="nav-link" to="/notifications" style={{textDecoration: 'none'}}>Notifications</Link></li>
+            <li><Link onClick={toggle} className="nav-link" to="/profile" style={{textDecoration: 'none'}}>Profile</Link></li>
+          </ul>}
+          {openMenu && <div id='close-sidemenu' onClick={close}></div>}
+        
         <Routes>
           <Route path="/" element={<Home isLoggedIn={isLoggedIn} postsData={postsData} count={count} curr={curr} setCurr={setCurr} startConversation={startConversation} />} />
           <Route path="/new-post" element={<NewPost postsData={postsData} setPostsData={setPostsData} count={count} setCount={setCount} />} />
           <Route path='/edit-post/:id' element={<EditPost postsData={postsData} setPostsData={setPostsData} curr={curr} count={count} setCount={setCount} />} />
-          <Route path='/resolve-post/:id' element={<BountyChoice postsData={postsData} setPostsData={setPostsData} curr={curr} count={count} setCount={setCount} />} />
+          <Route path='/resolve-post/:id' element={<BountyChoice fetchPosts={fetchPosts} postsData={postsData} setPostsData={setPostsData} curr={curr} count={count} setCount={setCount} />} />
           <Route path="/notifications" element={<Notifications notifications={notifications} setNotifications={setNotifications} />} />
           <Route path="/messages" element={<Messages conversations={conversations} />} />
           <Route path="/messages/:id" element={<PrivateChat conversations={conversations} setConversations={setConversations} sendMessage={sendMessage} />} />

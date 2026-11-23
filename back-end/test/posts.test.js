@@ -1,17 +1,22 @@
 import { expect } from 'chai'
 import request from 'supertest'
 import app from '../app.js'
-import { storage } from '../app.js'
+import { storage, resetPosts } from '../app.js'
 
 describe('GET /api/posts', () => {
   it('responds with a list of posts', async () => {
     const res = await request(app).get('/api/posts')
     expect(res.status).to.equal(200)
     expect(res.body).to.be.an('array')
+    expect(res.body.length).to.equal(2)
   })
 })
 
 describe('POST /api/posts', () => {
+  beforeEach(() => {
+    resetPosts()
+  })
+
   it('rejects if no title', async () => {
     const res = await request(app)
       .post('/api/posts')
@@ -87,8 +92,13 @@ describe('POST /api/posts', () => {
   it('adds a new post to home', async () => {
     const post = { title: 'Lost Keys', desc: 'Please help, I lost my keys!', 
         category: 'lost', location: 'Bobst Library', date: '2026-11-02' }
-    const res = await request(app).post('/api/posts').send(post)
+    let res = await request(app).post('/api/posts').send(post)
     expect(res.status).to.equal(201)
     expect(res.body).to.deep.equal(post)
+    
+    res = await request(app).get('/api/posts')
+    expect(res.status).to.equal(200)
+    expect(res.body[0]).to.deep.equal(post)
+    expect(res.body.length).to.equal(3)
   })
 })
