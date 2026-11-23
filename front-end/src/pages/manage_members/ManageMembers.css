@@ -107,4 +107,19 @@
   padding: 20px;
   margin-bottom: 16px;
   box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+}.removeError,
+.removeSuccess {
+  margin: 0 0 12px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  text-align: center;
+}
+.removeError {
+  color: #b3261e;
+  background: #fdecea;
+}
+.removeSuccess {
+  color: #1e6b34;
+  background: #e6f4ea;
 }
