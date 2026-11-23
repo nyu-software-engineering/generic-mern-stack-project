@@ -8,9 +8,7 @@ function Profile({ setIsLoggedIn }) {
   const [profile, setProfile] = useState(null)
   const [editing, setEditing] = useState(false)
 
-  const navigate = useNavigate()
-
-  useEffect(() => {
+  const callProfile = () => {
     fetch('/api/profile')
       .then(res => {
         if (!res.ok) throw new Error('Failed to fetch profile')
@@ -18,21 +16,18 @@ function Profile({ setIsLoggedIn }) {
       })
       .then(setProfile)
       .catch(err => console.error(err))
+  }
+
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    callProfile()
   }, [])
 
   // send the edited profile to the back-end
   function saveProfile(updated) {
-    fetch('/api/profile', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(updated),
-    })
-      .then(res => res.json())
-      .then(saved => {
-        setProfile(saved)
-        setEditing(false)
-      })
-      .catch(err => console.error(err))
+    setProfile(updated)
+    setEditing(false)
   }
 
 
@@ -46,6 +41,7 @@ function Profile({ setIsLoggedIn }) {
         profile={profile}
         onSave={saveProfile}
         onCancel={() => setEditing(false)}
+        callProfile={callProfile}
       />
     )
   }

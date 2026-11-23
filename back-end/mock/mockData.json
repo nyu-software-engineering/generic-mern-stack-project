@@ -106,6 +106,66 @@
       "fullName": "tt",
       "email": "tt@gmail.com",
       "password": "$2b$10$nbeCTCdfqf71dh2i6fVdtu4fuVDZ9/Y8jzMfssCiTOehjTXHv5Aaq"
+    },
+    {
+      "fullName": "a",
+      "email": "a@gmail.com",
+      "password": "$2b$10$ZxvsdrW/6lfOpLYS33hUbeZIvW.opTPookix1kfhSJEY6DoPitwRi"
+    },
+    {
+      "fullName": "tester",
+      "email": "oops@gmail.com",
+      "password": "$2b$10$qLkp0kFSwK37rkp8z1.JseQ.Gc6d0PCtoFGqf.VIpqpoAjUWL36YW",
+      "securityQuestion": "What was your first pet's name?",
+      "securityAnswer": "$2b$10$TKeUzwjytOxKUbiZrBgXwOAtaw0/bIxut6XG/hhCFGwSku7cEt5li"
+    },
+    {
+      "fullName": "test",
+      "email": "oop@gmail.com",
+      "password": "$2b$10$uuv9q98TAuS1IcPffWQo8OL.kPFCBugVpK62r7s8kRJpz3NShy8M2",
+      "securityQuestion": "What was your first pet's name?",
+      "securityAnswer": "$2b$10$iCdMihkTd0c80PwRD6LKTeJ15ee6BYnr6ARr7ONZe7./i5uiEb36a",
+      "profile": {
+        "name": "Username A",
+        "bio": "Lorem ipsum dolor sit amet",
+        "picture": "https://picsum.photos/200?random=2"
+      }
+    },
+    {
+      "fullName": "oops",
+      "email": "o@gmail.com",
+      "password": "$2b$10$lTNhIX6JbOJcjClHlFn.EuX0WtUHhFq/fR7O8cND7VIwu1LBfIeiq",
+      "securityQuestion": "What was your first pet's name?",
+      "securityAnswer": "$2b$10$x0tKtz3s.CKN215dCxT4OOLp1pboqtUAsuSAXUhyjgRZHaETw2e9y",
+      "profile": {
+        "name": "Username A",
+        "bio": "Lorem ipsum dolor sit amet",
+        "picture": "https://picsum.photos/200?random=2"
+      }
+    },
+    {
+      "fullName": "test",
+      "email": "p@gmail.com",
+      "password": "$2b$10$iibzXWIVRksRqNgdJYxwXOnbZa1s6UEBmW7BSlnGjiN829P88YK7W",
+      "securityQuestion": "What was your first pet's name?",
+      "securityAnswer": "$2b$10$W8EviqjU2QHAS8gezm29.upbmzuj0PeoqudbHAAEFbfdk7L5LAkxC",
+      "profile": {
+        "name": "Username A",
+        "bio": "Lorem ipsum dolor sit amet",
+        "picture": "https://picsum.photos/200?random=2"
+      }
+    },
+    {
+      "fullName": "tt",
+      "email": "AH@gmail.com",
+      "password": "$2b$10$/ceFqCNSkGSkYxnGM/Nwx.ufa8mEkyuezUKMkwDLKuKezntAAo2SW",
+      "securityQuestion": "What was your first pet's name?",
+      "securityAnswer": "$2b$10$8zISY9WfxQIBf4B6WTl11.DdW8qUY9zOPOSdOE6l31/eCozhIS6Ga",
+      "profile": {
+        "name": "testere",
+        "bio": "Lorem ipsum dolor sit amet",
+        "picture": "/uploads/image-1795427554035.png"
+      }
     }
   ],
   "resolvedPosts": [
