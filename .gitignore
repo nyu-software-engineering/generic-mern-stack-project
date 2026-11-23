@@ -129,3 +129,4 @@ typings/
 **/_site/
 
 back-end/node_modules/
+/back-end/uploads/*
