@@ -36,4 +36,41 @@ describe("POST /api/services", () => {
 
         expect(response.status).to.equal(400)
     })
+
+    it("rejects a service with an invalid category", async () => {
+        const newService = {
+            title: "Baking Cookies",
+            userId: 1,
+            category: "Cooking",
+            price: 25
+        }
+
+        const response = await request.execute(app).post("/api/services").send(newService)
+
+        expect(response.status).to.equal(400)
+    })
+
+    it("rejects a service with an invalid userId", async () => {
+        const newService = {
+            title: "Python tutoring",
+            userId: 10,
+            category: "Tutoring",
+            price:25
+        }
+
+        const response = await request.execute(app).post("/api/services").send(newService)
+        expect(response.status).to.equal(400)
+    })
+
+    it("rejects a service with an invalid price", async () => {
+        const newService = {
+            title: "Python tutoring",
+            userId: 1,
+            category: "Tutoring",
+            price:-1
+        }
+
+        const response = await request.execute(app).post("/api/services").send(newService)
+        expect(response.status).to.equal(400)
+    })
 })

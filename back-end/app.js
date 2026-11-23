@@ -62,6 +62,20 @@ app.post("/api/services", (req, res) => {
     if (!newService.title){
         return res.status(400).json({error: "Title is required"})
     }
+
+    if (!categories.includes(newService.category)){
+        return res.status(400).json({error: "Category does not exist"})
+    }
+
+    const user = users.find(user => user.id === newService.userId)
+
+    if(!user) {
+        return res.status(400).json({error: "User does not exist"})
+    }
+
+    if (typeof newService.price !== "number" || newService.price < 0) {
+        return res.status(400).json({error: "Price should be a nonnegative number"})
+    }
     res.json(newService)
 })
 
