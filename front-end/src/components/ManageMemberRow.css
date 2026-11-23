@@ -17,4 +17,20 @@
 }
 .viewButton{
     justify-self: flex-end;
+}.rowButtons{
+    display: flex;
+    gap: 6px;
+}
+.removeButton,
+.confirmRemoveButton{
+    color: #ffffff;
+    background: #b3261e;
+    border: none;
+    border-radius: 6px;
+    padding: 4px 10px;
+    cursor: pointer;
+}
+.removeButton:disabled{
+    opacity: 0.6;
+    cursor: not-allowed;
 }
