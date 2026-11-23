@@ -99,7 +99,7 @@ build/
 .env.development.local
 .env.test.local
 .env.production.local
-
+!.env.example
 # TypeScript v1 declaration files
 typings/
 

@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import BackButton from './Back_Button';
 
 export default function Dashboard() {
   const userName = "Jon";
@@ -43,6 +44,9 @@ export default function Dashboard() {
           Log Out
         </a>
       </header>
+      <section className="mt-2 mx-4 flex justify-start">
+        <BackButton />
+      </section>
 
       <main className="mx-auto w-full max-w-4xl px-6 py-10">
         <section className="mb-8">

@@ -1,5 +1,5 @@
-import axios from 'axios'
-const url = 'https://api.mockaroo.com/api/befa3120?count=20&key=f61ca6a0'
+import axios from "axios";
+const url = "https://api.mockaroo.com/api/befa3120?count=20&key=f61ca6a0";
 
 /* the hook for front-end paper data fetching.
 
@@ -23,35 +23,38 @@ each page that needs articles calls this once, inside a useEffect (see Catalog.j
 */
 
 const fetchArticles = () => {
-  return axios.get(url) // returns a promise, use .data
-}
+  return axios
+    .get("/api/articles")
+    .then((response) => ({ ...response, data: response.data.articles }));
+  // return axios.get(url) // returns a promise, use .data
+};
 
 const findArticleById = (articles, id) => {
-  return articles.find(article => String(article.id) === String(id))
-}
+  return articles.find((article) => String(article.id) === String(id));
+};
 
 // search if title, keywords or jargon terms contain searchTerm. topic is selected using buttons
 const searchArticles = (articles, searchTerm, topic) => {
-  const term = (searchTerm || '').trim().toLowerCase()
+  const term = (searchTerm || "").trim().toLowerCase();
 
-  return articles.filter(article => {
-    if (topic && topic !== 'All' && article.topic !== topic) {
-      return false
+  return articles.filter((article) => {
+    if (topic && topic !== "All" && article.topic !== topic) {
+      return false;
     }
 
     // empty search: keep every article
-    if (term === '') {
-      return true
+    if (term === "") {
+      return true;
     }
 
-    const matches = text => text.toLowerCase().includes(term) // case insensitive matching
+    const matches = (text) => text.toLowerCase().includes(term); // case insensitive matching
 
-    const titleMatches = matches(article.title)
-    const keywordMatches = article.keywords.some(keyword => matches(keyword))
-    const jargonMatches = article.jargon.some(item => matches(item.term))
+    const titleMatches = matches(article.title);
+    const keywordMatches = article.keywords.some((keyword) => matches(keyword));
+    const jargonMatches = article.jargon.some((item) => matches(item.term));
 
-    return titleMatches || keywordMatches || jargonMatches
-  })
-}
+    return titleMatches || keywordMatches || jargonMatches;
+  });
+};
 
-export {fetchArticles, findArticleById, searchArticles}
+export { fetchArticles, findArticleById, searchArticles };

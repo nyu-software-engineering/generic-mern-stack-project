@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import BackButton from './Back_Button';
 import { fetchArticles } from "./mock_data";
 export default function Favorite() {
   const [favorites, setFavorites] = useState([]);
@@ -50,6 +51,9 @@ export default function Favorite() {
           My Dashboard
         </a>
       </header>
+      <section className="mt-2 mx-4 flex justify-start">
+        <BackButton />
+      </section>
 
       <main className="mx-auto w-full max-w-4xl px-6 py-10">
         <section className="mb-8">
