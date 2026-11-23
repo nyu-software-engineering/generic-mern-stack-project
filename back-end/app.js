@@ -6,6 +6,7 @@ const app = express()
 const services = require("./services.json")
 const categories = require("./categories.json")
 const users = require("./users.json")
+const { SORT_OPTIONS, sortServices } = require("./serviceSort")
 
 const path = require("path")
 
@@ -24,6 +25,12 @@ app.use(express.json())
 app.use("/api/uploads", express.static("uploads"))
 
 app.get("/api/services", (req, res) => {
+    const { sort } = req.query
+
+    if (sort !== undefined && !SORT_OPTIONS.includes(sort)) {
+        return res.status(400).json({ error: `Sort must be one of: ${SORT_OPTIONS.join(", ")}` })
+    }
+
     // res.send("CampusMart Server is Running!")
     const serviceWithProviders = services.map(service => {
         const user = users.find(user => user.id === service.userId)
@@ -33,7 +40,7 @@ app.get("/api/services", (req, res) => {
             provider: user ? user.full_name: service.provider
         }
     })
-    res.json(serviceWithProviders)
+    res.json(sort ? sortServices(serviceWithProviders, sort) : serviceWithProviders)
 })
 
 app.get("/api/profile/:id", (req, res) => {
