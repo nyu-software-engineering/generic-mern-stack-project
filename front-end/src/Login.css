@@ -17,6 +17,10 @@
     gap: 20px;
 }
 
+.login .field {
+    width: 40vw;
+}
+
 .error {
     color: red;
 }
