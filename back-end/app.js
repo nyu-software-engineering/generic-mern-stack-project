@@ -9,6 +9,7 @@ const users = require("./users.json")
 app.use(express.json())
 
 app.get("/api/services", (req, res) => {
+    // res.send("CampusMart Server is Running!")
     const serviceWithProviders = services.map(service => {
         const user = users.find(user => user.id === service.userId)
 
@@ -58,6 +59,9 @@ app.put("/api/profile/:id", (req, res) => {
 app.post("/api/services", (req, res) => {
     const newService = req.body
 
+    if (!newService.title){
+        return res.status(400).json({error: "Title is required"})
+    }
     res.json(newService)
 })
 
