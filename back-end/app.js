@@ -84,9 +84,6 @@ app.post('/api/posts/edit', upload.single('image'), (req, res) => {
   if (includeBounty && (!bounty || !bounty.trim())) {
     return res.status(400).json({ error: 'If including bounty, bounty is required' })
   }
-  if (includeBounty && (!bounty || !bounty.trim())) {
-    return res.status(400).json({ error: 'If including bounty, bounty is required' })
-  }
   const existing = posts.some(p => String(p.id) === String(id))
   if (!existing) {
     return res.status(400).json({ error: 'Trying to edit a non existing post' })
