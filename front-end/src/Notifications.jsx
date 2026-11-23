@@ -1,20 +1,36 @@
 import './Notifications.css'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 
+const callApi = (url, options) =>
+    fetch(url, options).then(res => {
+        if (!res.ok) throw new Error('Request failed')
+        return res.json()
+    })
+
 const Notifications = ({ notifications, setNotifications }) => {
+    const [error, setError] = useState('')
     const unreadCount = notifications.filter(n => !n.read).length
 
+    // load the latest notifications from the back-end each time this screen opens
+    useEffect(() => {
+        callApi('/api/notifications')
+            .then(data => setNotifications(data))
+            .catch(() => setError('Could not load notifications. Try again.'))
+    }, [setNotifications])
+
     const markAllRead = () => {
-        setNotifications(prev => prev.map(n => ({
-            ...n,
-            read: true
-        })))
+        callApi('/api/notifications/read-all', { method: 'PATCH' })
+            .then(data => setNotifications(data))
+            .catch(() => setError('Could not reach the server. Try again.'))
     }
 
     const markRead = id => {
-        setNotifications(prev => prev.map(n =>
-            n.id === id ? { ...n, read: true } : n
-        ))
+        callApi(`/api/notifications/${id}/read`, { method: 'PATCH' })
+            .then(updated => setNotifications(prev => prev.map(n =>
+                String(n.id) === String(updated.id) ? updated : n
+            )))
+            .catch(() => setError('Could not reach the server. Try again.'))
     }
 
     return (
@@ -27,6 +43,7 @@ const Notifications = ({ notifications, setNotifications }) => {
                     Mark all as read
                 </button>
             </div>
+            {error && <p className="notificationError">{error}</p>}
             <div className="notificationList">
                 {notifications.length === 0 && (
                     <p>No notifications yet.</p>
