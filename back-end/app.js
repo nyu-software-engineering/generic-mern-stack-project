@@ -10,6 +10,7 @@ const app = express()
 
 app.use(cors())
 app.use(express.json())
+app.use("/uploads", express.static("uploads"))
 app.use("/api", discoverRoutes)
 app.use("/api", profileRoutes)
 app.use(express.urlencoded({ extended: true }))
