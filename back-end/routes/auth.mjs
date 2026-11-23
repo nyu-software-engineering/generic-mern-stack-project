@@ -7,14 +7,16 @@ const mockUser = {
   email: "johnsmith@example.com",
   password: "password",
 };
+const users = [mockUser];
 
 router.post("/login", (req, res) => {
   const body = req.body || {};
   const email = body.email;
   const password = body.password;
 
-  if (email === mockUser.email && password === mockUser.password) {
-    // TODO handled by backend
+  const foundUser = users.find((user) => user.email === email);
+  if (foundUser && foundUser.password === password) {
+    // TODO connect to db
     res.json({
       success: true,
       message: "Logged in",
@@ -30,7 +32,7 @@ router.post("/login", (req, res) => {
 });
 
 router.post("/register", (req, res) => {
-  // TODO connect registration
+  // TODO connect registration to db
   const body = req.body || {};
   const username = body.username;
   const email = body.email;
@@ -42,6 +44,12 @@ router.post("/register", (req, res) => {
       message: "Username, email and password are required",
     });
   } else {
+    users.push({
+      username: username,
+      email: email,
+      password: password,
+    });
+
     res.json({
       success: true,
       message: "Registration received",
@@ -52,7 +60,7 @@ router.post("/register", (req, res) => {
 });
 
 router.post("/logout", (req, res) => {
-  // TODO connect logout
+  // TODO connect logout to db
   res.json({
     success: true,
     message: "Logged out successfully",
@@ -60,7 +68,7 @@ router.post("/logout", (req, res) => {
 });
 
 router.get("/users/me", (req, res) => {
-  // TODO connect logged in uer
+  // TODO connect logged in user to db
   res.json({
     success: true,
     username: mockUser.username,
