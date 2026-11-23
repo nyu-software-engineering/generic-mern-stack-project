@@ -15,7 +15,6 @@ import AccountSettings from './profile/AccountSettings'
 import Login from './Login'
 import SignUp from './SignUp'
 
-
 function App() {
   const [openMenu, setOpenMenu] = useState(false)
   const [postsData, setPostsData] = useState([])
@@ -27,14 +26,12 @@ function App() {
 
   useEffect(() => {
     fetchPosts()
+    fetchConversations()
 
-    // still including mock data
-    fetch('/api/mockData')
+    fetch('/api/notifications')
       .then(res => res.json())
-      .then(data => {
-        setConversations(data.conversations)
-        setNotifications(data.notifications)
-      })
+      .then(data => setNotifications(data))
+      .catch(err => console.error(err))
   }, [])
 
   // used so that bountyChoice can update back-end of posts
@@ -48,6 +45,17 @@ function App() {
         setPostsData(data)
         setCount(data.length)
       })
+      .catch(err => console.error(err))
+  }
+
+  // loads the chats from the back-end
+  const fetchConversations = () => {
+    fetch('/api/conversations')
+      .then(res => {
+        if (!res.ok) throw new Error('Failed to fetch conversations')
+        return res.json()
+      })
+      .then(data => setConversations(data))
       .catch(err => console.error(err))
   }
 
@@ -67,47 +75,42 @@ function App() {
     })
   }
 
-  const startConversation = post => {
-    const existing = conversations.find(c => c.postId === post.id)
-
-    if (existing) return existing.id
-
-    const id = crypto.randomUUID()
-
-    setConversations(prev => [{
-      id,
-      postId: post.id,
-      username: post.username ?? 'Unknown',
-      item: post.title,
-      read: true,
-      messages: [],
-      pfp: post.pfp,
-      location: post.location,
-      includeBounty: post.includeBounty,
-      bounty: post.bounty,
-    }, ...prev])
-
-    return id
+  // starts a chat about a post on the back-end, or gets the one that already exists
+  const startConversation = async post => {
+    const res = await fetch('/api/conversations', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        postId: post.id,
+        username: post.username,
+        pfp: post.pfp,
+        item: post.title,
+        location: post.location,
+        includeBounty: post.includeBounty,
+        bounty: post.bounty
+      })
+    })
+    if (!res.ok) throw new Error('Failed to start conversation')
+    const convo = await res.json()
+    setConversations(prev => [convo, ...prev.filter(c => String(c.id) !== String(convo.id))])
+    return convo.id
   }
 
-  const sendMessage = (convoId, text, sender = 'you') => {
+  // saves a message on the back-end, then adds it to the chat on screen
+  const sendMessage = async (convoId, text, sender = 'you') => {
     if (!text.trim()) return
 
+    const res = await fetch(`/api/conversations/${convoId}/messages`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text, sender })
+    })
+    if (!res.ok) throw new Error('Failed to send message')
+    const message = await res.json()
+
     setConversations(prev => prev.map(c =>
-      c.id === convoId
-        ? {
-            ...c,
-            read: sender === 'you',
-            messages: [...c.messages, {
-              id: crypto.randomUUID(),
-              sender,
-              text: text.trim(),
-              time: new Date().toLocaleTimeString([], {
-                hour: 'numeric',
-                minute: '2-digit'
-              })
-            }]
-          }
+      String(c.id) === String(convoId)
+        ? { ...c, read: sender === 'you', messages: [...c.messages, message] }
         : c
     ))
   }

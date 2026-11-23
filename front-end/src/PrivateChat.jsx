@@ -5,6 +5,7 @@ import { Link, useParams } from 'react-router-dom'
 const PrivateChat = ({ conversations, setConversations, sendMessage }) => {
     const { id } = useParams()
     const [text, setText] = useState('')
+    const [error, setError] = useState('')
 
     const convo = conversations.find(c => String(c.id) === id)
 
@@ -18,9 +19,14 @@ const PrivateChat = ({ conversations, setConversations, sendMessage }) => {
     useEffect(() => {
         if (!convo || convo.read) return
 
-        setConversations(prev => prev.map(c =>
-            String(c.id) === id ? { ...c, read: true } : c
-        ))
+        fetch(`/api/conversations/${id}/read`, { method: 'PATCH' })
+            .then(res => {
+                if (!res.ok) throw new Error('Failed to mark conversation as read')
+                setConversations(prev => prev.map(c =>
+                    String(c.id) === id ? { ...c, read: true } : c
+                ))
+            })
+            .catch(err => console.error(err))
     }, [id, convo?.read, setConversations])
 
     const handleSubmit = e => {
@@ -29,7 +35,11 @@ const PrivateChat = ({ conversations, setConversations, sendMessage }) => {
         if (!text.trim() || !convo) return
 
         sendMessage(convo.id, text.trim())
-        setText('')
+            .then(() => {
+                setText('')
+                setError('')
+            })
+            .catch(() => setError('Could not send your message. Try again.'))
     }
 
     if (!convo) {
@@ -68,6 +78,7 @@ const PrivateChat = ({ conversations, setConversations, sendMessage }) => {
                     </div>
                 ))}
             </div>
+            {error && <p className="chatError">{error}</p>}
 
             <form className="chatForm" onSubmit={handleSubmit}>
                 <label htmlFor="messageInput">Message</label>
