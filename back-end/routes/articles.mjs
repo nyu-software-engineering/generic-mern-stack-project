@@ -1,28 +1,32 @@
 import express from "express";
-import axios from "axios";
+import { getArticles } from "../articles-data.mjs";
 
 const router = express.Router();
-router.get("/", async (req, res) => {
+router.get("/", (req, res) => {
   try {
-    const apiKey = process.env.MOCKAROO_API_KEY;
-    const apiUrl = process.env.MOCKAROO_API_URL;
-    if (!apiKey || !apiUrl) {
-      return res.status(500).json({
-        error: "Mockaroo configuration is missing",
+    return res.json({ articles: getArticles() });
+  } catch (err) {
+    return res.status(503).json({
+      error: "Articles are not available",
+    });
+  }
+});
+
+router.get("/:id", (req, res) => {
+  try {
+    const article = getArticles().find(
+      (item) => String(item.id) === req.params.id
+    );
+    if (!article) {
+      return res.status(404).json({
+        error: "Article not found",
       });
     }
 
-    const response = await axios.get(process.env.MOCKAROO_API_URL, {
-      params: {
-        key: apiKey,
-      },
-    });
-    return res.json({ articles: response.data });
+    return res.json(article);
   } catch (err) {
-    console.error("Mockaroo request failed:", err.message);
-
-    return res.status(502).json({
-      error: "Unable to retrieve articles",
+    return res.status(503).json({
+      error: "Articles are not available",
     });
   }
 });
