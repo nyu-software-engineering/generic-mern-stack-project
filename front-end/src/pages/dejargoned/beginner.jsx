@@ -1,20 +1,57 @@
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import BackButton from '../Back_Button';
 
-// Placeholder page for stakeholder demos
 export default function Beginner() {
     const navigate = useNavigate();
-    const { state } = useLocation();
-    const article = state?.article;
-    let dj = article.dejargoned?.beginner;
-    let jargon = article.jargon;
+    const { id } = useParams();
+    const [article, setArticle] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
+    useEffect(() => {
+        let cancelled = false;
+        setLoading(true);
+        setError(null);
+        setArticle(null);
 
-    if (!article) {
+        axios
+            .get(`/api/articles/${encodeURIComponent(id)}`)
+            .then((response) => {
+                if (!cancelled) {
+                    setArticle(response.data);
+                }
+            })
+            .catch((requestError) => {
+                if (!cancelled) {
+                    setError(
+                        requestError.response?.status === 404
+                            ? "Article not found."
+                            : "Unable to load article."
+                    );
+                }
+            })
+            .finally(() => {
+                if (!cancelled) {
+                    setLoading(false);
+                }
+            });
+
+        return () => {
+            cancelled = true;
+        };
+    }, [id]);
+
+    if (loading) {
         return <p>Loading Article...</p>;
     }
+    if (error || !article) {
+        return <p>{error ?? "Unable to load article."}</p>;
+    }
 
-    
+    const dj = article.dejargoned?.beginner;
+    const jargon = article.jargon;
 
     return(
         <div className="min-h-screen bg-white">

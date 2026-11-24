@@ -1,13 +1,50 @@
-import { useMemo, useState } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
+import axios from "axios";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import BackButton from "./Back_Button";
 
 
 export default function Article() {
     const navigate = useNavigate();
-    const { state } = useLocation();
-    const article = state.article;
+    const { id } = useParams();
+    const [article, setArticle] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const [activeWord, setActiveWord] = useState(null);
+
+    useEffect(() => {
+        let cancelled = false;
+        setLoading(true);
+        setError(null);
+        setArticle(null);
+
+        axios
+            .get(`/api/articles/${encodeURIComponent(id)}`)
+            .then((response) => {
+                if (!cancelled) {
+                    setArticle(response.data);
+                }
+            })
+            .catch((requestError) => {
+                if (!cancelled) {
+                    setError(
+                        requestError.response?.status === 404
+                            ? "Article not found."
+                            : "Unable to load article."
+                    );
+                }
+            })
+            .finally(() => {
+                if (!cancelled) {
+                    setLoading(false);
+                }
+            });
+
+        return () => {
+            cancelled = true;
+        };
+    }, [id]);
+
     const body = typeof article?.body === "string" ? article.body : "";
     const wordMatches = useMemo(
         () => [...body.matchAll(/[\p{L}\p{N}]+(?:['’\-][\p{L}\p{N}]+)*/gu)],
@@ -22,8 +59,11 @@ export default function Article() {
         return new Set(indexes.slice(0, 10));
     }, [wordMatches]);
 
-    if (!article) {
+    if (loading) {
         return <p>Loading Article...</p>;
+    }
+    if (error || !article) {
+        return <p>{error ?? "Unable to load article."}</p>;
     }
 
     let bodyPosition = 0;
