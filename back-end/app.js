@@ -294,11 +294,14 @@ const checkPassword = async (password, hash) => {
   return passCheck
 }
 
-app.post('/api/account/password', (req, res) => {
+app.post('/api/account/password', async (req, res) => {
   const { currentPassword, newPassword } = req.body
-  const user = users.find(u => String(u.email) === currentUser.email)
-  const password = user["password"]
-  if (currentPassword !== password) {
+  if (!currentUser) {
+    return res.status(401).json({ error: 'You need to be logged in to change your password.' })
+  }
+  // stored passwords are hashed, so compare with bcrypt instead of ===
+  const correct = await checkPassword(currentPassword || '', currentUser.password)
+  if (!correct) {
     return res.status(401).json({ error: 'Current password is incorrect.' })
   }
   if (!newPassword || newPassword.length < 8) {
@@ -307,10 +310,8 @@ app.post('/api/account/password', (req, res) => {
   if (newPassword === currentPassword) {
     return res.status(400).json({ error: 'New password must be different from your current one.' })
   }
-  const hash = generateHash(newPassword)
-  const modification = user
-  modification["password"] = hash
-  users[user] = modification
+  currentUser.password = await generateHash(newPassword)
+  updateMockData('users', users)
   res.json({ message: 'Password updated' })
 })
 
