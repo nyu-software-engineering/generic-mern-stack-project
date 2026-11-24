@@ -8,6 +8,7 @@ import Profile from './pages/Profile.jsx'
 import EditProfile from './pages/EditProfile.jsx'
 import MyServices from './pages/MyServices.jsx'
 import EditListing from './pages/EditListing.jsx'
+import CreateListing from './pages/CreateListing.jsx'
 import ServiceDetails from './pages/ServiceDetails.jsx'
 import BookingRequest from './pages/BookingRequest.jsx'
 import Bookings from './pages/Bookings.jsx'
@@ -47,6 +48,13 @@ function App() {
   useEffect(() => {
     axios.get('/api/bookings').then(response => setBookings(response.data)).catch(console.error)
   }, [])
+  async function addService(service) {
+    const response = await axios.post("/api/services", service)
+    const savedService = response.data
+    setServices(function (currentServices) {
+      return currentServices.concat(savedService)
+    })
+  }
   const addBooking = async booking => {
     const response = await axios.post('/api/bookings', booking)
     setBookings(previous => [...previous, response.data])
@@ -97,6 +105,7 @@ function App() {
             <Route path="/profile/edit" element={profile ? <EditProfile profile={profile} setProfile={setProfile}/> : <p>Loading...</p>}/>
             <Route path="/profile/services" element={profile ? <MyServices profile={profile} setProfile={setProfile} services={services} updateService={updateService} removeService={removeService}/> : <p>Loading...</p>}/>
             <Route path="/profile/services/:serviceId/edit" element={profile ? <EditListing profile={profile} services={services} updateService={updateService} removeService={removeService}/> : <p>Loading...</p>}/>
+            <Route path="/profile/services/new" element={profile? <CreateListing userId={profile.id} addService={addService} />: <p>Loading...</p>}/>
 
             {/* Other */}
             <Route path="/login" element={<Navigate to="/" replace />}/>

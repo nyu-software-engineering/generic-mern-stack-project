@@ -13,7 +13,7 @@ export default function MyServices(props) {
     return (
         <section className="my-services">
             <h1>My Services</h1>
-            <button className="profile-button" type="button">Create listing</button>
+            <Link className="profile-button" to="/profile/services/new">Create listing</Link>
             <p className="my-services-count">{myServices.length} listings · Your offered services</p>
 
             {myServices.length === 0 && <p>You haven't listed any services yet.</p>}
