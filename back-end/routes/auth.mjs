@@ -8,6 +8,7 @@ const mockUser = {
   password: "password",
 };
 const users = [mockUser];
+let currentUser = null;
 
 router.post("/login", (req, res) => {
   const body = req.body || {};
@@ -17,11 +18,13 @@ router.post("/login", (req, res) => {
   const foundUser = users.find((user) => user.email === email);
   if (foundUser && foundUser.password === password) {
     // TODO connect to db
+    currentUser = foundUser;
+
     res.json({
       success: true,
       message: "Logged in",
-      username: mockUser.username,
-      email: mockUser.email,
+      username: foundUser.username,
+      email: foundUser.email,
     });
   } else {
     res.status(401).json({
@@ -61,6 +64,8 @@ router.post("/register", (req, res) => {
 
 router.post("/logout", (req, res) => {
   // TODO connect logout to db
+  currentUser = null;
+
   res.json({
     success: true,
     message: "Logged out successfully",
@@ -69,11 +74,18 @@ router.post("/logout", (req, res) => {
 
 router.get("/users/me", (req, res) => {
   // TODO connect logged in user to db
-  res.json({
-    success: true,
-    username: mockUser.username,
-    email: mockUser.email,
-  });
+  if (!currentUser) {
+    res.status(401).json({
+      success: false,
+      message: "Not logged in",
+    });
+  } else {
+    res.json({
+      success: true,
+      username: currentUser.username,
+      email: currentUser.email,
+    });
+  }
 });
 
 export default router;

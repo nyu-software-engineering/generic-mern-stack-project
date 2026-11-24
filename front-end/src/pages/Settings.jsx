@@ -4,18 +4,46 @@ import axios from "axios";
 
 function Settings() {
   const navigate = useNavigate();
-  const [user, setUser] = useState({ username: "", email: "" });
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     axios
       .get("/api/users/me")
       .then((response) => {
-        setUser(response.data);
+        setName(response.data.username);
+        setEmail(response.data.email);
       })
       .catch((err) => {
         console.error(err);
+        setMessage("Could not load account.");
       });
   }, []);
+
+  function handleSave(event) {
+    event.preventDefault();
+    setMessage("");
+
+    if (name.trim() === "" || email.trim() === "") {
+      return setMessage("Name and email are required");
+    }
+
+    axios
+      .put("/api/users/me", { username: name, email: email })
+      .then((response) => {
+        localStorage.setItem("user", JSON.stringify(response.data));
+        setMessage("Changes saved");
+      })
+      .catch((err) => {
+        console.error(err);
+        if (err.response && err.response.data && err.response.data.message) {
+          setMessage(err.response.data.message);
+        } else {
+          setMessage("Could not reach the server.");
+        }
+      });
+  }
 
   function handleLogout() {
     axios.post("/api/logout").catch((err) => {
@@ -32,13 +60,13 @@ function Settings() {
         </h1>
         <p className="mb-10 text-center">Your account information</p>
 
-        <div className="space-y-5">
+        <form onSubmit={handleSave} className="space-y-5">
           <div>
             <label className="block text-sm font-medium mb-2">Full Name</label>
             <input
               type="text"
-              value={user.username}
-              readOnly
+              value={name}
+              onChange={(event) => setName(event.target.value)}
               className="w-full border border-gray-300 rounded-lg p-3"
             />
           </div>
@@ -48,11 +76,22 @@ function Settings() {
             </label>
             <input
               type="email"
-              value={user.email}
-              readOnly
-              className="w-full border border-gray-300 rounde-lg p-3"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              className="w-full border border-gray-300 rounded-lg p-3"
             />
           </div>
+
+          {message !== "" ? (
+            <p className="text-sm text-center">{message}</p>
+          ) : null}
+
+          <button
+            type="submit"
+            className="w-full bg-purple-600 text-white p-3 rounded-lg font-semibold hover:bg-purple-700"
+          >
+            Save Changes
+          </button>
 
           <p className="text-center mt-6">
             <Link
@@ -71,7 +110,7 @@ function Settings() {
             {" "}
             Log Out
           </button>
-        </div>
+        </form>
       </div>
     </div>
   );

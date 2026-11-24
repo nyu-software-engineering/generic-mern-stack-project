@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { fetchArticles } from "./mock_data";
+import axios from "axios";
+
 export default function MainPage() {
-  const userName = "Jon";
+  const [userName, setUsername] = useState("");
   const allTopics = ["AI/ML", "Cybersecurity", "Algorithms", "Computer Vision"];
   const [topics, setTopics] = useState(["AI/ML", "Algorithms"]);
   const [isTopicPickerOpen, setIsTopicPickerOpen] = useState(false);
@@ -37,6 +39,18 @@ export default function MainPage() {
       cancelled = true;
     };
   }, []);
+
+   useEffect(() => {
+    axios
+      .get("/api/users/me")
+      .then((response) => {
+        setUsername(response.data.username);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }, []);
+
   return (
     <div className="min-h-screen bg-white">
       <header className="flex items-center justify-between border-b border-gray-200 px-6 py-4">
