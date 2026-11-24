@@ -52,6 +52,7 @@
 }
 
 .expense-list,
+.expenses-to-be-settled,
 .expense-details,
 .log-new-expense {
   background-color: #a3bcf9;
@@ -65,6 +66,7 @@
 }
 
 .expense-list h1,
+.expenses-to-be-settled h1,
 .expense-details h1,
 .log-new-expense h1 {
   margin: 0 0 16px;
@@ -74,10 +76,12 @@
 }
 
 .expense-item {
+  display: flex;
+  gap: 12px;
   margin-bottom: 12px;
 }
 
-.expense-item button {
+.expense-item button:first-child {
   width: 100%;
   padding: 12px 16px;
   border: 1px solid #576490;
@@ -89,14 +93,45 @@
   font-size: 1rem;
 }
 
-.expense-item button:hover {
+.expense-item button:first-child:hover {
   background-color: #7796cb;
+}
+
+.settleExpenseButton {
+  min-width: 85px;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  background-color: #576490;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.settleExpenseButton:hover {
+  background-color: #47557e;
+}
+
+.settleExpenseButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
 }
 
 .expense-details p {
   margin: 10px 0;
   color: #2b2b2b;
   font-size: 1rem;
+}
+
+.paidMembersList {
+  margin: 10px 0;
+  color: #2b2b2b;
+}
+
+.expense-details h2 {
+  margin-top: 20px;
+  color: #2b2b2b;
+  font-size: 1.2rem;
 }
 
 .log-new-expense form {
@@ -113,7 +148,8 @@
 }
 
 .log-new-expense input,
-.log-new-expense textarea {
+.log-new-expense textarea,
+.log-new-expense select {
   width: 100%;
   box-sizing: border-box;
   border: 1px solid #576490;
@@ -121,7 +157,7 @@
   padding: 10px 12px;
   font-size: 1rem;
   background-color: #f5f6fb;
-  color:#2b2b2b;
+  color: #2b2b2b;
 }
 
 .log-new-expense textarea {
@@ -142,6 +178,17 @@
 
 .log-new-expense button[type="submit"]:hover {
   background-color: #47557e;
+}
+
+.log-new-expense button[type="submit"]:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.expense-error,
+.field-error {
+  color: #8f1d1d;
+  font-weight: 600;
 }
 
 .actionButtons {

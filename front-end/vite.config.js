@@ -5,9 +5,11 @@ import { defineConfig } from 'vite'
 export default defineConfig({
   plugins: [react()],
   server: {
-    // send /api requests to the Express back-end so the front-end and back-end work together
     proxy: {
-      '/api': 'http://localhost:3000',
+      "/api": {
+        target: "http://localhost:3000",
+        changeOrigin: true,
+      },
     },
   },
 })
