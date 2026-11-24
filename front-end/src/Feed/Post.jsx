@@ -27,6 +27,11 @@ function Post({ post }) {
         >
           {liked ? "Liked" : "Like"}
         </button>
+
+        <button className="comment-button">
+          Add comment...
+        </button>
+        
       </div>
     </div>
   )
