@@ -72,6 +72,22 @@ router.post("/logout", (req, res) => {
   });
 });
 
+router.get("/users/me", (req, res) => {
+  // TODO connect logged in user to db
+  if (!currentUser) {
+    res.status(401).json({
+      success: false,
+      message: "Not logged in",
+    });
+  } else {
+    res.json({
+      success: true,
+      username: currentUser.username,
+      email: currentUser.email,
+    });
+  }
+});
+
 router.put("/users/me", (req, res) => {
   // TODO connect account changes to db
   const body = req.body || {};

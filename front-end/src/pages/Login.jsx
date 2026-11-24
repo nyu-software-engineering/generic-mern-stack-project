@@ -20,13 +20,11 @@ function Login() {
     axios
       .post("/api/login", { email: email, password: password })
       .then((response) => {
-        // logged in: save the user as JSON text then navigate
         localStorage.setItem("user", JSON.stringify(response.data));
         navigate("/mainpage");
       })
       .catch((err) => {
         console.error(err);
-        // show the back-end's reason, e.g. "Invalid email or password"
         if (err.response && err.response.data && err.response.data.message) {
           setError(err.response.data.message);
         } else {
@@ -90,7 +88,7 @@ function Login() {
         </form>
 
         <p className="text-center mt-6 text-gray-600">
-          Don't have an account?
+          Don't have an account?{" "}
           <Link
             to="/register"
             className="text-purple-600 font-semibold hover:underline"

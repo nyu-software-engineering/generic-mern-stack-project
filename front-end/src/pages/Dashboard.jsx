@@ -1,8 +1,21 @@
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 import BackButton from './Back_Button';
 
 export default function Dashboard() {
-  const userName = "Jon";
+  const [userName, setUserName] = useState("");
+
+  useEffect(() => {
+    axios
+      .get("/api/users/me")
+      .then((response) => {
+        setUserName(response.data.username);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }, []);
 
   const cards = [
     {
