@@ -72,16 +72,29 @@ router.post("/logout", (req, res) => {
   });
 });
 
-router.get("/users/me", (req, res) => {
-  // TODO connect logged in user to db
+router.put("/users/me", (req, res) => {
+  // TODO connect account changes to db
+  const body = req.body || {};
+  const username = body.username;
+  const email = body.email;
+
   if (!currentUser) {
     res.status(401).json({
       success: false,
       message: "Not logged in",
     });
+  } else if (!username || !email) {
+    res.status(400).json({
+      success: false,
+      message: "Full name and email are required",
+    });
   } else {
+    currentUser.username = username;
+    currentUser.email = email;
+
     res.json({
       success: true,
+      message: "Changes saved",
       username: currentUser.username,
       email: currentUser.email,
     });
