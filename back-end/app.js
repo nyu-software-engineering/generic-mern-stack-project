@@ -55,6 +55,11 @@ export const resetPosts = () => {
 //Current session user
 let currentUser = null
 
+// lets the tests pretend a user is logged in
+export const setCurrentUser = (user) => {
+  currentUser = user
+}
+
 app.get('/api/posts', (req, res) => {
   res.json(posts)
 })
