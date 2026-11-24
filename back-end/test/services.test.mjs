@@ -81,4 +81,12 @@ describe("POST /api/services", () => {
         const response = await request.execute(app).post("/api/services").send(newService)
         expect(response.status).to.equal(400)
     })
+
+    it("creates a service from form data without a photo", async () => {
+        const response = await request.execute(app).post("/api/services").field("title", "Calculus Tutoring").field("userId", "1").field("category", "Tutoring").field("price","25").field("priceUnit", "hour")
+
+        expect(response.status).to.equal(200)
+        expect(response.body.price).to.equal(25)
+        expect(response.body.userId).to.equal(1)
+    })
 })

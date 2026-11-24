@@ -112,6 +112,7 @@ app.post("/api/services", upload.array("photos", 1), (req, res) => {
         }
     }
     newService.id = nextId
+    newService.createdAt = new Date().toISOString().slice(0, 10)
     newService.numReviews = 0
     newService.rating = null
     newService.status = "Active"
