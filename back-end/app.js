@@ -11,9 +11,7 @@ const { SORT_OPTIONS, sortServices } = require("./serviceSort")
 const path = require("path")
 
 const storage = multer.diskStorage({
-    destination: function (req,file, cb) {
-        cb(null, "uploads")
-    },
+    destination: "uploads",
     filename: function (req,file,cb) {
         cb(null, `${Date.now()}${path.extname(file.originalname)}`)
     }
@@ -80,6 +78,14 @@ app.put("/api/profile/:id", (req, res) => {
 
 app.post("/api/services", upload.array("photos", 1), (req, res) => {
     const newService = req.body
+    
+    if(req.is("multipart/form-data")) {
+        newService.userId = Number(newService.userId)
+
+        if (typeof newService.price === "string" && newService.price.trim() !== ""){
+            newService.price = Number(newService.price)
+        }
+    }
 
     if (!newService.title){
         return res.status(400).json({error: "Title is required"})
@@ -106,8 +112,20 @@ app.post("/api/services", upload.array("photos", 1), (req, res) => {
         }
     }
     newService.id = nextId
+    newService.numReviews = 0
+    newService.rating = null
+    newService.status = "Active"
+    newService.recent = true
+    newService.availability = {
+        days: [],
+        startTime: "",
+        endTime: ""
+    }
+    if (req.files && req.files.length > 0) {
+        newService.workSample = "/api/uploads/" + req.files[0].filename
+    }
     services.push(newService)
-    res.json(newService)
+    res.json({...newService, provider: user.full_name})
     // console.log(req.files)
 })
 
