@@ -6,6 +6,7 @@ const { getHouseholdActivity } = require("./services/activityService");
 const purchaseAssetRouter = require("./services/purchase_asset");
 const authService = require("./services/authService");
 const householdService = require("./services/householdService");
+const roommateService = require("./services/roommateService");
 
 const app = express();
 
@@ -83,6 +84,24 @@ app.post("/api/households", (req, res) => {
   }
 
   return res.status(201).json(result)
+})
+
+app.delete("/api/households/:householdId/members/:memberId", async (req, res, next) => {
+  try {
+    const result = await roommateService.removeRoommate({
+      householdId: req.params.householdId,
+      memberId: req.params.memberId,
+      requesterId: (req.body || {}).requesterId,
+    })
+
+    if (result.error) {
+      return res.status(result.status).json({ error: result.error })
+    }
+
+    return res.json({ removed: result.removed })
+  } catch (error) {
+    return next(error)
+  }
 })
 
 app.use((error, req, res, next) => {

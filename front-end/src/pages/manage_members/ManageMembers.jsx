@@ -7,12 +7,41 @@ import './ManageMembers.css';
 import ManageMemberRow from '../../components/ManageMemberRow';
 import MemberQuickView from '../../components/MemberQuickView';
 import HeaderButtons from "../../components/HeaderButtons";
+import { removeRoommate } from './roommateApi';
+import { getCurrentUser } from '../login/authApi';
 
 const ManageMembersPage = () => {
     const navigate = useNavigate();
     const [members, setMembers] = useState([]);
     const [memberSelected, setMemberSelected] = useState(null);
     const [copyCodeSelected, setCopyCodeSelected] = useState(false);
+    const [removingId, setRemovingId] = useState(null);
+    const [removeMessage, setRemoveMessage] = useState(null);
+    const currentUser = getCurrentUser();
+
+    // removes the roommate on the back-end, then takes them off the list
+    const handleRemove = async (member) => {
+        setRemovingId(member.id);
+        setRemoveMessage(null);
+        try {
+            const result = await removeRoommate(member.household_id, member.id, currentUser ? currentUser.id : null);
+
+            if (result.error) {
+                setRemoveMessage({ type: 'error', text: result.error });
+            } else {
+                setMembers((current) => current.filter((m) => m.id !== member.id));
+                if (memberSelected && memberSelected.id === member.id) {
+                    setMemberSelected(null);
+                }
+                setRemoveMessage({ type: 'success', text: `${member.first_name} ${member.last_name} was removed from the household.` });
+            }
+        } catch (e) {
+            console.error(e);
+            setRemoveMessage({ type: 'error', text: 'Could not reach the server. Please try again.' });
+        } finally {
+            setRemovingId(null);
+        }
+    };
 
     useEffect(() => {
         const fetchMembers = async () => {
@@ -48,6 +77,11 @@ const ManageMembersPage = () => {
             </div>    
             <div className='sectionContainer'> {/* Members List Section */}
                 <h2 className="sectionTitle">Members List</h2>
+                {removeMessage && (
+                    <p className={removeMessage.type === 'error' ? 'removeError' : 'removeSuccess'}>
+                        {removeMessage.text}
+                    </p>
+                )}
                 <div className="manageMembersList"> {/* Actual members list */}
                     {
                         members.map(member => (
@@ -56,6 +90,8 @@ const ManageMembersPage = () => {
                                 first_name={member.first_name}
                                 last_name={member.last_name}
                                 onView={() => setMemberSelected(member)}
+                                onRemove={currentUser && currentUser.id !== member.id ? () => handleRemove(member) : undefined}
+                                removing={removingId === member.id}
                             />
                         ))
                     }
