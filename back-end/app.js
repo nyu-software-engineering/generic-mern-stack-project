@@ -5,6 +5,7 @@ const express = require("express");
 const { getHouseholdActivity } = require("./services/activityService");
 const purchaseAssetRouter = require("./services/purchase_asset");
 const authService = require("./services/authService");
+const householdService = require("./services/householdService");
 
 const app = express();
 
@@ -72,6 +73,16 @@ app.post("/api/register", async (req, res, next) => {
   } catch (error) {
     return next(error)
   }
+})
+
+app.post("/api/households", (req, res) => {
+  const result = householdService.createHousehold(req.body || {})
+
+  if (result.errors) {
+    return res.status(400).json({ errors: result.errors })
+  }
+
+  return res.status(201).json(result)
 })
 
 app.use((error, req, res, next) => {
