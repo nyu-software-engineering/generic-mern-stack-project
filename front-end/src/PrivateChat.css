@@ -113,3 +113,12 @@
     background: black;
     color: white;
 }
+
+.chatInput .removeImage {
+    padding: 0 5px;
+    background: none;
+    color: black;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+}
