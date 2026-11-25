@@ -271,12 +271,16 @@ app.patch('/api/conversations/:id/read', (req, res) => {
   res.json(convo)
 })
 
-app.post('/api/conversations/:id/messages', (req, res) => {
+app.post('/api/conversations/:id/messages', upload.single('image'), (req, res) => {
   const convo = conversations.find(c => String(c.id) === req.params.id)
   if (!convo) {
     return res.status(404).json({ error: 'Conversation not found' })
   }
-  const { text, sender } = req.body
+  const { text, sender, image } = req.body
+  console.log(text)
+  console.log(sender)
+  console.log(req.file)
+  console.log((typeof myVar !== 'undefined'))
   if (typeof text !== 'string' || !text.trim()) {
     return res.status(400).json({ error: 'Message text is required' })
   }
@@ -284,9 +288,11 @@ app.post('/api/conversations/:id/messages', (req, res) => {
     id: crypto.randomUUID(),
     sender: sender === 'other' ? 'other' : 'you',
     text: text.trim(),
+    image: req.file ? ((req.file && { image: `/uploads/${req.file.filename}` })).image : null,
     time: new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }),
     createdAt: new Date().toISOString()
   }
+  console.log(message)
   convo.messages.push(message)
   convo.read = message.sender === 'you'
   
