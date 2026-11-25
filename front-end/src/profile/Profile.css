@@ -152,5 +152,12 @@
 
 .profile-error {
   margin: 0;
-  color: #c00;
+  color: red;
+  align-self: center;
+}
+
+.profile-page > h2, 
+.profile-page > p {
+  align-self: center;
+  text-align: center;
 }

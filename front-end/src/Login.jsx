@@ -23,7 +23,7 @@ const Login = props => {
             }
             else{
                 if(response.status === 400){
-                    throw new Error("Account with emaill address does not exist")
+                    throw new Error("Account with email address does not exist")
                 }
                 throw new Error("Password incorrect")
             }

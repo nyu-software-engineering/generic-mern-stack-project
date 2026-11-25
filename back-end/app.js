@@ -80,6 +80,7 @@ app.post('/api/posts', upload.single('image'), (req, res) => {
   }
   posts.unshift(newPost)
   // successfully created new post
+  updateMockData('posts', posts)
   res.status(201).json(newPost)
 })
 

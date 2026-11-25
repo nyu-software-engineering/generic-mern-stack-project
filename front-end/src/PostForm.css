@@ -4,7 +4,7 @@
     align-items: center;
     gap: 10px;
     font: inherit;
-    width: 100vw;
+    width: 100%;
     margin: none;
 }
 
@@ -83,7 +83,7 @@
     flex-direction: row;
 }
 
-.submit, 
+.postForm .submit, 
 .postForm .disabled {
     font: inherit;
     margin-top: 10px;
