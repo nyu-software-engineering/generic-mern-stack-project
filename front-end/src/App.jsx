@@ -24,6 +24,7 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [conversations, setConversations] = useState([])
   const [notifications, setNotifications] = useState([])
+  const [currentUser, setCurrentUser] = useState(null)
 
   useEffect(() => {
     fetchPosts()
@@ -34,6 +35,16 @@ function App() {
       .then(data => setNotifications(data))
       .catch(err => console.error(err))
   }, [])
+
+  useEffect(() => {
+    fetch('/api/user')
+      .then(res => res.json())
+      .then(user => {
+        setCurrentUser(user)
+        console.log(user)
+      })
+      .catch(err => console.error(err))
+  }, [isLoggedIn])
 
   // used so that bountyChoice can update back-end of posts
   const fetchPosts = () => {
@@ -132,15 +143,15 @@ function App() {
           {openMenu && <div id='close-sidemenu' onClick={close}></div>}
         
         <Routes>
-          <Route path="/" element={<Home isLoggedIn={isLoggedIn} postsData={postsData} count={count} curr={curr} setCurr={setCurr} startConversation={startConversation} />} />
-          <Route path="/new-post" element={<NewPost postsData={postsData} setPostsData={setPostsData} count={count} setCount={setCount} />} />
-          <Route path='/edit-post/:id' element={<EditPost fetchPosts={fetchPosts} postsData={postsData} setPostsData={setPostsData} curr={curr} count={count} setCount={setCount} />} />
+          <Route path="/" element={<Home currentUser={currentUser} isLoggedIn={isLoggedIn} postsData={postsData} count={count} curr={curr} setCurr={setCurr} startConversation={startConversation} />} />
+          <Route path="/new-post" element={<NewPost currentUser={currentUser} postsData={postsData} setPostsData={setPostsData} count={count} setCount={setCount} />} />
+          <Route path='/edit-post/:id' element={<EditPost currentUser={currentUser} fetchPosts={fetchPosts} postsData={postsData} setPostsData={setPostsData} curr={curr} count={count} setCount={setCount} />} />
           <Route path='/resolve-post/:id' element={<BountyChoice fetchPosts={fetchPosts} postsData={postsData} setPostsData={setPostsData} curr={curr} count={count} setCount={setCount} />} />
           <Route path="/notifications" element={<Notifications notifications={notifications} setNotifications={setNotifications} />} />
           <Route path="/messages" element={<Messages conversations={conversations} />} />
           <Route path="/messages/:id" element={<PrivateChat conversations={conversations} setConversations={setConversations} sendMessage={sendMessage} />} />
-          <Route path='/profile' element={<Profile setIsLoggedIn={setIsLoggedIn} />} />
-          <Route path='/profile/posts' element={<PostHistory postsData={postsData} />} />
+          <Route path='/profile' element={<Profile currentUser={currentUser} setCurrentUser={setCurrentUser} setIsLoggedIn={setIsLoggedIn} />} />
+          <Route path='/profile/posts' element={<PostHistory currentUser={currentUser} postsData={postsData} />} />
           <Route path='/profile/settings' element={<AccountSettings />} />
           <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
           <Route path="/signup" element={<SignUp setIsLoggedIn={setIsLoggedIn} />} />

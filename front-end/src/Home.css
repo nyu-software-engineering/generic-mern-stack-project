@@ -47,6 +47,8 @@
 .profile > .icon {
   width: min(50px, 12%);
   border-radius: 50%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
   margin: 0;
   padding: 0;
 }
@@ -61,6 +63,14 @@
   border: none;
   height: 50%;
   cursor: pointer;
+  width: 35px;
+  height: 20px;
+  min-width: 35px;
+  white-space: nowrap;
+  writing-mode: horizontal-tb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .bounty-image {

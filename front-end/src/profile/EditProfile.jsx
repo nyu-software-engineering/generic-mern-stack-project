@@ -16,14 +16,14 @@ function EditProfile({ profile, onSave, onCancel, callProfile }) {
     if(pictureFile){
       formData.append('image', pictureFile)
     }
-      fetch('/api/profile', {
+    fetch('/api/profile', {
       method: 'POST',
       body: formData,
     })
       .then(async (res) => {
         const data = await res.json()
         await callProfile()
-        onSave(updatedProfile)
+        onSave(data)
       })
       .catch(() => setError('Could not reach the server. Try again.'))
   }

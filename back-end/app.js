@@ -89,12 +89,18 @@ export const setCurrentUser = (user) => {
   currentUser = user
 }
 
+// made my own user api thing bc i have no idea how currentUser is being used in profile
+// down below...
+app.get('/api/user', (req, res) => {
+  res.json(JSON.parse(fs.readFileSync(mockDataPath, 'utf8')).profile)
+})
+
 app.get('/api/posts', (req, res) => {
   res.json(posts)
 })
 
 app.post('/api/posts', upload.single('image'), (req, res) => {
-  const { id, username, pfp, category, title, desc, date, time, location, image, 
+  const { id, email, username, pfp, category, title, desc, date, time, location, image, 
     includeBounty, bounty } = req.body
   if (!title || !title.trim() || !desc || !desc.trim()) {
     return res.status(400).json({ error: 'Title and description are required' })
@@ -103,7 +109,7 @@ app.post('/api/posts', upload.single('image'), (req, res) => {
     return res.status(400).json({ error: 'If including bounty, bounty is required' })
   }
   const newPost = {
-    id: parseInt(id), username, pfp, category: category || 'lost', title: title.trim(), desc: desc.trim(), date, time, 
+    id: parseInt(id), email, username, pfp, category: category || 'lost', title: title.trim(), desc: desc.trim(), date, time, 
     location, ...(req.file && { image: `/uploads/${req.file.filename}` }), 
     includeBounty, bounty
   }
@@ -114,7 +120,7 @@ app.post('/api/posts', upload.single('image'), (req, res) => {
 })
 
 app.post('/api/posts/edit', upload.single('image'), (req, res) => {
-  const { id, username, pfp, category, title, desc, date, time, location, image, 
+  const { id, email, username, pfp, category, title, desc, date, time, location, image, 
     includeBounty, bounty } = req.body
   if (!title || !title.trim() || !desc || !desc.trim()) {
     return res.status(400).json({ error: 'Title and description are required' })
@@ -127,7 +133,7 @@ app.post('/api/posts/edit', upload.single('image'), (req, res) => {
     return res.status(400).json({ error: 'Trying to edit a non existing post' })
   }
   const editedPost = {
-    id: parseInt(id), username, pfp, category: category || 'lost', title: title.trim(), desc: desc.trim(), date, time, 
+    id: parseInt(id), email, username, pfp, category: category || 'lost', title: title.trim(), desc: desc.trim(), date, time, 
     location, image: req.file ? `/uploads/${req.file.filename}` : image, 
     includeBounty, bounty
   }
@@ -200,6 +206,9 @@ app.post('/api/profile', upload.single('image'), (req, res) => {
   temp.profile = profile
   users[currentUser] = temp
   updateMockData("users", users)
+  temp.profile['email'] = users[currentUser].email
+  updateMockData('profile', temp.profile)
+  res.json(temp.profile)
 })
 
 let notifications = JSON.parse(fs.readFileSync(mockDataPath, 'utf8')).notifications
@@ -376,12 +385,16 @@ app.post('/api/account/create', async (req, res) => {
     "password": hash,
     "securityQuestion": securityQuestion,
     "securityAnswer": hash2,
-    "profile": defaultProfile
+    "profile": {
+      ...defaultProfile, 
+      'email': email
+    }
   }
   users.push(newUser)
   updateMockData("users", users)
   currentUser = newUser
   profile = currentUser.profile
+  updateMockData('profile', newUser.profile)
   res.json({ message: 'Account created' })
 })
 
@@ -398,6 +411,8 @@ app.post('/api/account/login', async (req, res) => {
   }
   currentUser = user
   profile = currentUser.profile
+  profile['email'] = email
+  updateMockData('profile', profile)
   res.json({ message: 'Logged in' })
 })
 
