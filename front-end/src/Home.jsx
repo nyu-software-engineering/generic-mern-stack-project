@@ -93,7 +93,7 @@ const Home = props => {
         />
         <button
           type="button"
-          className="btn"
+          className="filter-btn"
           command="show-modal" commandfor="dialog"
         >
           Filter
@@ -138,16 +138,18 @@ const Home = props => {
         })}
       </section>
       <dialog id="dialog">
-        <p>Item Status</p>
+        <div id='dialog-contents'>
+          <p>Item Category</p>
 
-        <select id="categorySelect">
-          <option value="all"></option>
-          <option value="lost">Lost</option>
-          <option value="found">Found</option>
-          <option value="request">Request</option>
-        </select>
-        <button commandfor="dialog" command="close" onClick={() => handleFilter()}>Apply Filter</button>
-        <button commandfor="dialog" command="close" >Cancel</button>
+          <select id="categorySelect">
+            <option value="all"></option>
+            <option value="lost">Lost</option>
+            <option value="found">Found</option>
+            <option value="request">Request</option>
+          </select>
+          <button commandfor="dialog" command="close" onClick={() => handleFilter()} id='filter'>Apply Filter</button>
+          <button commandfor="dialog" command="close" >Cancel</button>
+        </div>
       </dialog>
     </div>
   )

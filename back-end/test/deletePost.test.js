@@ -34,9 +34,12 @@ describe('DELETE /api/posts/:id', () => {
 		// don't forget mockData is included in origin res.body
 		res = await request(app).get('/api/posts')
 		expect(res.status).to.equal(200)
-    expect(res.body).to.be.an('array')
+		expect(res.body).to.be.an('array')
 		expect(res.body.length).to.equal(2)
 		expect(res.body[0]).to.deep.equal({ id: 1, category: 'lost', title: 'decrement', 
 			desc: 'desc', includeBounty: false, bounty: ' ' })
+		
+		// reset posts in case someone else's tests do smth with mockData's posts
+		resetPosts()
 	})
 })

@@ -36,12 +36,12 @@ const PostForm = props => {
             formData.category !== props.category ||
             formData.title !== props.title ||
             formData.desc !== props.desc ||
-            formData.date !== props.date ||
-            formData.time !== props.time ||
-            formData.location !== props.location ||
-            formData.image !== props.image ||
-            formData.includeBounty !== props.includeBounty ||
-            formData.bounty !== props.bounty
+            formData.date !== (props.date ?? '') ||
+            formData.time !== (props.time ?? '') ||
+            formData.location !== (props.location ?? '') ||
+            formData.image !== (props.image ?? '') ||
+            formData.includeBounty !== (props.includeBounty ?? false) ||
+            formData.bounty !== (props.bounty ?? '')
         )
     }, [formData])
 
@@ -80,7 +80,7 @@ const PostForm = props => {
             .catch(err => console.error(err))
             await props.fetchPosts()
         }
-
+        
         props.setIsSubmitted(true)
     }
 

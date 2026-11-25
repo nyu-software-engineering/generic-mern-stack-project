@@ -45,7 +45,7 @@ const EditPost = props => {
             {!isDeleted && <PostForm 
                 postsData={props.postsData}
                 setPostsData={props.setPostsData}
-                key={formData.title}
+                key={formData.id}
                 {...formData}
                 origin='edit'
                 submitLabel='Save Changes' 

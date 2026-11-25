@@ -1,20 +1,22 @@
 #bg {
   background-color: rgb(232, 232, 232);
   min-height: calc(100vh - 51px);
+  display: flex;
+  flex-direction: column;
 }
 
-.btn {
+.filter-btn {
   font-size: 16px;
   padding: 5px 10px;
   border-radius: 5px;
   color: #000;
   background: #D3D3D3;
-  border: none;
+  border: 1px solid gray;
   transition: border-color 0.3s;
 }
 
-.btn:hover {
-    background: #808080;
+.filter-btn:hover {
+    background: gray;
     color: #000;
     cursor: pointer;
 }
@@ -152,6 +154,16 @@
   padding: 10px;
 }
 
+#searchFilter {
+  width: 25%;
+  min-width: 150px;
+  box-sizing: border-box;
+  background-color: white;
+  color: black;
+  border: 1px solid gray;
+  padding: 10px;
+}
+
 #next-steps {
   display: flex;
   flex-direction: column;
@@ -163,4 +175,49 @@
 #dialog {
   background-color: white;
   border: solid 1px gray;
+}
+
+#dialog-contents {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font: inherit;
+  max-width: 250px;
+  width: 50vw;
+  font-size: inherit;
+  color: white;
+  align-items: center;
+}
+
+#dialog-contents button {
+  font: inherit;
+  margin-top: 10px;
+  max-width: 250px;
+  width: 50%;
+  height: 35px;
+  border: none;
+  font-size: inherit;
+  color: white;
+  background-color: black;
+}
+
+#dialog-contents #filter {
+  background-color: #8C68C4;
+}
+
+#dialog-contents select {
+  height: 35px;
+  font-size: 18px;
+  width: 75%;
+}
+
+#dialog-contents button, 
+#dialog-contents select {
+  cursor: pointer;
+}
+
+#dialog-contents p {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 10px;
 }

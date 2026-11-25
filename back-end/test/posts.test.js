@@ -5,6 +5,7 @@ import { storage, resetPosts } from '../app.js'
 
 describe('GET /api/posts', () => {
   it('responds with a list of posts', async () => {
+    resetPosts()
     const res = await request(app).get('/api/posts')
     expect(res.status).to.equal(200)
     expect(res.body).to.be.an('array')
@@ -90,7 +91,7 @@ describe('POST /api/posts', () => {
   })
 
   it('adds a new post to home', async () => {
-    const post = { title: 'Lost Keys', desc: 'Please help, I lost my keys!', 
+    const post = { id: 2, title: 'Lost Keys', desc: 'Please help, I lost my keys!', 
         category: 'lost', location: 'Bobst Library', date: '2026-11-02' }
     let res = await request(app).post('/api/posts').send(post)
     expect(res.status).to.equal(201)
@@ -100,5 +101,8 @@ describe('POST /api/posts', () => {
     expect(res.status).to.equal(200)
     expect(res.body[0]).to.deep.equal(post)
     expect(res.body.length).to.equal(3)
+
+    // reset posts in case someone else's tests do smth with mockData's posts
+    resetPosts()
   })
 })
