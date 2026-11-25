@@ -194,12 +194,13 @@ app.post('/api/profile', upload.single('image'), (req, res) => {
   if (!name || !name.trim()) {
     return res.status(400).json({ error: 'Name is required' })
   }
-  profile = { name: name.trim(), bio: (bio || '').trim(),
-    picture: ((req.file && { image: `/uploads/${req.file.filename}` })).image }
   const temp = currentUser
+  profile = { name: name.trim(), bio: (bio || '').trim(),
+    picture: req.file ? ((req.file && { image: `/uploads/${req.file.filename}` })).image : temp.profile.picture}
   temp.profile = profile
   users[currentUser] = temp
   updateMockData("users", users)
+  return res.json(profile)
 })
 
 let notifications = JSON.parse(fs.readFileSync(mockDataPath, 'utf8')).notifications

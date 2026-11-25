@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import ProfilePicture from './ProfilePicture'
 
-function EditProfile({ profile, onSave, onCancel, callProfile }) {
+function EditProfile({ profile, onSave, onCancel, callProfile, switchMode }) {
   const [name, setName] = useState(profile.name)
   const [bio, setBio] = useState(profile.bio)
   const [pictureFile, setPictureFile] = useState(undefined)
@@ -16,14 +16,18 @@ function EditProfile({ profile, onSave, onCancel, callProfile }) {
     if(pictureFile){
       formData.append('image', pictureFile)
     }
+    else{
+      formData.append('image', undefined)
+    }
       fetch('/api/profile', {
       method: 'POST',
       body: formData,
     })
       .then(async (res) => {
         const data = await res.json()
+        console.log(data)
         await callProfile()
-        onSave(updatedProfile)
+        onSave(data)
       })
       .catch(() => setError('Could not reach the server. Try again.'))
   }

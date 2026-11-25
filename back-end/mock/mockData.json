@@ -173,9 +173,9 @@
       "securityQuestion": "What was your first pet's name?",
       "securityAnswer": "$2b$10$dqeAflNoNyLjoD.t6Av./.X7bDLDx/./p59RUQa8m8uyEDu/LE7Fu",
       "profile": {
-        "name": "Username A",
-        "bio": "Lorem ipsum dolor sit amet",
-        "picture": "https://picsum.photos/200?random=2"
+        "name": "teste",
+        "bio": "oopsie daisy",
+        "picture": "/uploads/image-1795593514319.png"
       }
     }
   ],
