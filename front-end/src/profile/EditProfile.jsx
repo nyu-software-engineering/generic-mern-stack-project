@@ -29,7 +29,7 @@ function EditProfile({ profile, onSave, onCancel, callProfile, switchMode }) {
         await callProfile()
         onSave(data)
       })
-      .catch(() => setError('Could not reach the server. Try again.'))
+      .catch(() => console.error(err))
   }
   // free a preview that was never saved
   function discardPreview() {
