@@ -83,7 +83,7 @@
     flex-direction: row;
 }
 
-.postForm .submit, 
+.submit, 
 .postForm .disabled {
     font: inherit;
     margin-top: 10px;

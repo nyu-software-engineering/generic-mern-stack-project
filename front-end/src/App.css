@@ -94,7 +94,7 @@ p {
 }
 
 .nav-logo {
-    font-size: 18px;
+    font-size: 24px;
     font-weight: bold;
     letter-spacing: 2px;
     color: #000;
@@ -120,9 +120,11 @@ p {
   color: white;
   border: none;
   width: 75px;
-  height: 25px;
+  /* height: 25px; */
   font: inherit;
   cursor: pointer;
+  box-sizing: border;
+  padding: 5px;
 }
 
 .open-sidemenu {

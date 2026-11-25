@@ -49,7 +49,36 @@ export let posts = JSON.parse(fs.readFileSync(mockDataPath, 'utf8')).posts
 // reset array to be used before each test to avoid post tests from affecting
 // later tests in checking length of array
 export const resetPosts = () => {
-  posts = JSON.parse(fs.readFileSync(mockDataPath, 'utf8')).posts
+  posts = [
+    {
+      "id": 1,
+      "username": "You",
+      "pfp": "https://picsum.photos/200?random=2",
+      "category": "lost",
+      "title": "Lost Keys",
+      "desc": "Please hel",
+      "date": "2026-11-02",
+      "time": "",
+      "location": "Bobst Library",
+      "includeBounty": false,
+      "bounty": ""
+    },
+    {
+      "id": 0,
+      "username": "Alice A.",
+      "pfp": "https://picsum.photos/200?random=1",
+      "category": "lost",
+      "title": "Lost Wallet",
+      "desc": "Has anyone seen my wallet?",
+      "date": "",
+      "time": "",
+      "location": "Warren Weaver Hall, Rm. 109",
+      "image": "",
+      "includeBounty": false,
+      "bounty": ""
+    }
+  ]
+  updateMockData('post', posts)
 }
 
 //Current session user
@@ -130,7 +159,7 @@ app.delete('/api/posts/:id', (req, res) => {
     }
     return post
   })
-
+  updateMockData("posts", posts)
   res.status(200).json({ message: 'success delete' })
 })
 
