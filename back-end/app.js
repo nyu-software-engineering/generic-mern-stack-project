@@ -185,11 +185,17 @@ let profile = JSON.parse(fs.readFileSync(mockDataPath, 'utf8')).profile
 
 //use as a backup
 app.get('/api/profile', (req, res) => {
+  if (!currentUser) {
+    return res.status(401).json({ error: 'You need to be logged in.' })
+  }
   profile = currentUser.profile
   res.json(profile)
 })
 
 app.post('/api/profile', upload.single('image'), (req, res) => {
+  if (!currentUser) {
+    return res.status(401).json({ error: 'You need to be logged in.' })
+  }
   const { name, bio, picture } = req.body
   if (!name || !name.trim()) {
     return res.status(400).json({ error: 'Name is required' })
