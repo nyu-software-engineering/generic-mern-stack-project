@@ -120,10 +120,9 @@ p {
   color: white;
   border: none;
   width: 75px;
-  /* height: 25px; */
   font: inherit;
   cursor: pointer;
-  box-sizing: border;
+  box-sizing: border-box;
   padding: 5px;
 }
 

@@ -78,7 +78,7 @@ export const resetPosts = () => {
       "bounty": ""
     }
   ]
-  updateMockData('post', posts)
+  updateMockData('posts', posts)
 }
 
 //Current session user
