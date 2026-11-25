@@ -165,6 +165,18 @@
         "bio": "Lorem ipsum dolor sit amet",
         "picture": "/uploads/image-1795427554035.png"
       }
+    },
+    {
+      "fullName": "bruh",
+      "email": "bruh@gmail.com",
+      "password": "$2b$10$RfbpUhahsCxZxedzLF5Ml.eCz8g13TrlqvQFB9DWBpgMBVqEnvE5q",
+      "securityQuestion": "What was your first pet's name?",
+      "securityAnswer": "$2b$10$BRIgr71nniLFyZL2d6SKI.PpjGNXhvvSzf7jYymHRrD4lO5vhFBGK",
+      "profile": {
+        "name": "Username A",
+        "bio": "Lorem ipsum dolor sit amet",
+        "picture": "https://picsum.photos/200?random=2"
+      }
     }
   ],
   "resolvedPosts": [
