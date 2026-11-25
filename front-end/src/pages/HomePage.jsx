@@ -79,9 +79,21 @@ function HomePage() {
       </button>
     </form>
 
-    {submittedQuery && (
-      <HotelSearchResults key={submittedQuery} query={submittedQuery} />
-    )}
+      {submittedQuery && (
+        <>
+          <button
+            type="button"
+            className="home-search-button"
+            onClick={() => {
+              setSearchText("");
+              setSubmittedQuery("");
+            }}
+          >
+            ← Back
+          </button>
+          <HotelSearchResults key={submittedQuery} query={submittedQuery} />
+        </>
+      )}
 
 
 
