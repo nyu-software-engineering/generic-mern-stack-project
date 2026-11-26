@@ -34,7 +34,7 @@ function App() {
       .then(res => res.json())
       .then(data => setNotifications(data))
       .catch(err => console.error(err))
-  }, [])
+  }, [isLoggedIn])
 
   useEffect(() => {
     fetch('/api/user')
@@ -150,7 +150,7 @@ function App() {
           <Route path="/notifications" element={<Notifications notifications={notifications} setNotifications={setNotifications} />} />
           <Route path="/messages" element={<Messages conversations={conversations} />} />
           <Route path="/messages/:id" element={<PrivateChat conversations={conversations} setConversations={setConversations} sendMessage={sendMessage} />} />
-          <Route path='/profile' element={<Profile currentUser={currentUser} setCurrentUser={setCurrentUser} setIsLoggedIn={setIsLoggedIn} />} />
+          <Route path='/profile' element={<Profile setCurrentUser={setCurrentUser} setIsLoggedIn={setIsLoggedIn} />} />
           <Route path='/profile/posts' element={<PostHistory currentUser={currentUser} postsData={postsData} />} />
           <Route path='/profile/settings' element={<AccountSettings />} />
           <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />

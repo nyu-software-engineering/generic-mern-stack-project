@@ -66,8 +66,7 @@ const Home = props => {
     }
   }, [])
 
-  // as soon as profile is updated, go back and update old posts to show the updated
-  // username
+  // as soon as profile is updated, go back and update old posts
   useEffect(() => {
     props.postsData.forEach(post => {
       if (post.email === props.currentUser.email) {
@@ -75,7 +74,7 @@ const Home = props => {
         post.pfp = props.currentUser.picture
       }
     })
-  }, [props.currentUser])
+  }, [])
 
   const openChat = post => {
     props.startConversation(post)
@@ -127,8 +126,12 @@ const Home = props => {
               key={index}
               id={props.count - 1 - index}
               email={element.email}
-              username={element.username} 
-              pfp={element.pfp}
+              // username={element.username} 
+              // pfp={element.pfp}
+              username={element.email === props.currentUser.email ? 
+                props.currentUser.name : element.username} 
+              pfp={element.email === props.currentUser.email ? 
+                props.currentUser.picture : element.pfp}
               category={element.category}
               title={element.title}
               desc={element.desc}

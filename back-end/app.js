@@ -52,6 +52,7 @@ export const resetPosts = () => {
   posts = [
     {
       "id": 1,
+      "email": "test1@gmail.com",
       "username": "You",
       "pfp": "https://picsum.photos/200?random=2",
       "category": "lost",
@@ -65,6 +66,7 @@ export const resetPosts = () => {
     },
     {
       "id": 0,
+      "email": "test0@gmail.com",
       "username": "Alice A.",
       "pfp": "https://picsum.photos/200?random=1",
       "category": "lost",
@@ -208,6 +210,14 @@ app.post('/api/profile', upload.single('image'), (req, res) => {
   updateMockData("users", users)
   temp.profile['email'] = users[currentUser].email
   updateMockData('profile', temp.profile)
+  posts = JSON.parse(fs.readFileSync(mockDataPath, 'utf8')).posts
+  posts.forEach(post => {
+    if (post.email === users[currentUser].email) {
+      post.username = users[currentUser].profile.name
+      post.pfp = users[currentUser].profile.picture
+    }
+  })
+  updateMockData('posts', posts)
   res.json(temp.profile)
 })
 
