@@ -109,13 +109,14 @@ function App() {
   }
 
   // saves a message on the back-end, then adds it to the chat on screen
-  const sendMessage = async (convoId, text, sender = 'you') => {
+  const sendMessage = async (formData, sender = 'you') => {
+    const text = formData.get('text')
     if (!text.trim()) return
-
+    const convoId = formData.get('id')
+    formData.append("sender", sender)
     const res = await fetch(`/api/conversations/${convoId}/messages`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text, sender })
+      body: formData
     })
     if (!res.ok) throw new Error('Failed to send message')
     const message = await res.json()

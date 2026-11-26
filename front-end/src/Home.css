@@ -45,7 +45,7 @@
 }
 
 .profile > .icon {
-  width: min(50px, 12%);
+  width: min(45px, 8vw);
   border-radius: 50%;
   aspect-ratio: 1 / 1;
   object-fit: cover;

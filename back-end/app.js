@@ -141,7 +141,7 @@ app.post('/api/posts/edit', upload.single('image'), (req, res) => {
   }
   const targetPost = posts.find(p => String(p.id) === String(id))
   posts[posts.indexOf(targetPost)] = editedPost
-  console.log(posts)
+  // console.log(posts)
   updateMockData("posts", posts)
   res.status(201).json(editedPost)
 })
@@ -198,17 +198,17 @@ app.get('/api/profile', (req, res) => {
 })
 
 app.post('/api/profile', upload.single('image'), (req, res) => {
-  const { name, bio, picture } = req.body
+  const { name, bio, picture, email } = req.body
   if (!name || !name.trim()) {
     return res.status(400).json({ error: 'Name is required' })
   }
-  profile = { name: name.trim(), bio: (bio || '').trim(),
-    picture: ((req.file && { image: `/uploads/${req.file.filename}` })).image }
   const temp = currentUser
+  profile = { name: name.trim(), bio: (bio || '').trim(),
+    picture: req.file ? ((req.file && { image: `/uploads/${req.file.filename}` })).image : temp.profile.picture, 
+    email: temp.email }
   temp.profile = profile
-  users[currentUser] = temp
+  users[currentUser] = temp 
   updateMockData("users", users)
-  temp.profile['email'] = users[currentUser].email
   updateMockData('profile', temp.profile)
   posts = JSON.parse(fs.readFileSync(mockDataPath, 'utf8')).posts
   posts.forEach(post => {
@@ -218,7 +218,7 @@ app.post('/api/profile', upload.single('image'), (req, res) => {
     }
   })
   updateMockData('posts', posts)
-  res.json(temp.profile)
+  return res.json(profile)
 })
 
 let notifications = JSON.parse(fs.readFileSync(mockDataPath, 'utf8')).notifications
@@ -290,12 +290,16 @@ app.patch('/api/conversations/:id/read', (req, res) => {
   res.json(convo)
 })
 
-app.post('/api/conversations/:id/messages', (req, res) => {
+app.post('/api/conversations/:id/messages', upload.single('image'), (req, res) => {
   const convo = conversations.find(c => String(c.id) === req.params.id)
   if (!convo) {
     return res.status(404).json({ error: 'Conversation not found' })
   }
-  const { text, sender } = req.body
+  const { text, sender, image } = req.body
+  // console.log(text)
+  // console.log(sender)
+  // console.log(req.file)
+  // console.log((typeof myVar !== 'undefined'))
   if (typeof text !== 'string' || !text.trim()) {
     return res.status(400).json({ error: 'Message text is required' })
   }
@@ -303,9 +307,11 @@ app.post('/api/conversations/:id/messages', (req, res) => {
     id: crypto.randomUUID(),
     sender: sender === 'other' ? 'other' : 'you',
     text: text.trim(),
+    image: req.file ? ((req.file && { image: `/uploads/${req.file.filename}` })).image : null,
     time: new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }),
     createdAt: new Date().toISOString()
   }
+  // console.log(message)
   convo.messages.push(message)
   convo.read = message.sender === 'you'
   
