@@ -14,7 +14,7 @@ function Profile({ setIsLoggedIn }) {
         if (!res.ok) throw new Error('Failed to fetch profile')
         return res.json()
       })
-      .then(setProfile)
+      .then(saveProfile)
       .catch(err => console.error(err))
   }
 
