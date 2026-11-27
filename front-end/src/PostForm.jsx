@@ -61,10 +61,7 @@ const PostForm = props => {
                 body: post
             })
             .then(res => res.json())
-            .then(saved => {
-                props.setPostsData(prev => [saved, ...prev])
-                props.setCount(prev => prev + 1)
-            })
+            .then(saved => props.setPostsData(prev => [saved, ...prev]))
             .catch(err => console.error(err))
         }
         else if (props.origin === 'edit') {
@@ -75,10 +72,7 @@ const PostForm = props => {
                 body: post,
             })
             .then(res => res.json())
-            .then(saved => {
-                props.setPostsData(prev => [saved, ...prev])
-                props.setCount(prev => prev + 1)
-            })
+            .then(saved => props.setPostsData(prev => [saved, ...prev]))
             .catch(err => console.error(err))
             await props.fetchPosts()
         }

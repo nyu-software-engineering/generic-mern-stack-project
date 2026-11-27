@@ -1,12 +1,13 @@
 {
   "posts": [
     {
-      "id": 1,
-      "username": "You",
+      "id": "test1",
+      "email": "test1@gmail.com",
+      "username": "Carol C.",
       "pfp": "https://picsum.photos/200?random=2",
       "category": "lost",
-      "title": "Lost Keys",
-      "desc": "Please hel",
+      "title": "Lost Book",
+      "desc": "Please help!",
       "date": "2026-11-02",
       "time": "",
       "location": "Bobst Library",
@@ -14,7 +15,8 @@
       "bounty": ""
     },
     {
-      "id": 0,
+      "id": "0",
+      "email": "test0@gmail.com",
       "username": "Alice A.",
       "pfp": "https://picsum.photos/200?random=1",
       "category": "lost",
@@ -32,6 +34,7 @@
     {
       "id": "0",
       "postId": 0,
+      "email": "test0@gmail.com",
       "username": "Alice A.",
       "pfp": "https://picsum.photos/200?random=1",
       "item": "Lost Wallet",
@@ -51,6 +54,7 @@
     {
       "id": "2",
       "postId": 1,
+      "email": "test2@gmail.com",
       "username": "Bob B.",
       "pfp": "https://picsum.photos/200?random=3",
       "item": "Lost Keys",
@@ -93,7 +97,7 @@
   "profile": {
     "name": "Username A",
     "bio": "Lorem ipsum dolor sit amet",
-    "picture": "https://picsum.photos/200?random=2"
+    "picture": "https://picsum.photos/200?random=0"
   },
   "users": [
     {

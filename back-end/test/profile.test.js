@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import request from 'supertest'
-import app, { setCurrentUser } from '../app.js'
+import app, { setCurrentUser, resetPosts } from '../app.js'
 
 // a fake logged-in user with a profile
 const testUser = () => ({
@@ -54,5 +54,34 @@ describe('POST /api/profile', () => {
     setCurrentUser(null)
     const res = await request(app).post('/api/profile').send({ name: 'Test User' })
     expect(res.status).to.equal(401)
+  })
+
+  it('updates old posts with new profile', async () => {
+    setCurrentUser({
+      "fullName": "Carol Carol",
+      "email": "test1@gmail.com",
+      "password": "$2b$10$ifW/INM.bIa3duYg7ULQ3ez5UfQQrfvpIyfe6yCU685Yef8L3Orlm",
+      "securityQuestion": "What was your first pet's name?",
+      "securityAnswer": "$2b$10$V4Sa/QzG6UsCqWyZptohGOfu7GkF3fPm4NaLUxaNWSTdVVRFqC9dO",
+      "profile": {
+        "name": "Carol C.",
+        "bio": "Lorem ipsum dolor sit amet",
+        "picture": "https://picsum.photos/200?random=2",
+        "email": "test1@gmail.com"
+      }
+    })
+    resetPosts()
+    const res = await request(app).post('/api/profile')
+      .send({ name: 'new name', email: 'test1@gmail.com' })
+    expect(res.status).to.equal(200)
+
+    let posts = await request(app).get('/api/posts')
+    posts = posts.body.filter(post => post.email === 'test1@gmail.com')
+    posts.forEach(post => {
+      expect(post.username).to.equal('new name')
+    })
+
+    resetPosts()
+    setCurrentUser(null)
   })
 })

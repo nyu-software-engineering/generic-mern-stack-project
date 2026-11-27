@@ -6,6 +6,7 @@ import Confirmation from './Confirmation'
 const BountyChoice = props => {
     const [bounty, setBounty] = useState('')
     const [choices, setChoices] = useState([])
+    const [choiceSearch, setChoiceSearch] = useState('')
     const [personChosen, setPersonChosen] = useState('')
     const [isSubmitted, setIsSubmitted] = useState(false)
     const [hasBounty, setHasBounty] = useState(false)
@@ -13,19 +14,22 @@ const BountyChoice = props => {
     // the bounty amount is taken from data of the post the user came from
     // where they clicked resolve
     useEffect(() => {
-        const post = props.postsData[props.curr]
+        const index = props.postsData.findIndex(post => post.id === props.curr)
+        const post = props.postsData[index]
         if (!post) return
 
         setBounty(post.bounty)
         setHasBounty(post.includeBounty)
-        // should get choices from list of people in user's messages screen
-        // for now, placeholder:
-        fetch('/api/mockData')
-            .then(res => res.json())
-            .then(data => setChoices(data.conversations))
-            .catch(err => console.error(err))
+        // update conversations
+        props.fetchConversations()
     }, [])
 
+    useEffect(() => {
+        // take list of bounty choices based on conversations
+        const convos = props.conversations.filter((convo, index, self) => 
+            index === self.findIndex(c => c.email === convo.email))
+        setChoices(convos)
+    }, [props.conversations])
 
     const chose = name => {
         if (name === personChosen) {
@@ -41,7 +45,8 @@ const BountyChoice = props => {
         e.preventDefault()
 
         // keep the post in the user's history before removing it from the feed
-        const post = props.postsData[props.curr]
+        const index = props.postsData.findIndex(post => post.id === props.curr)
+        const post = props.postsData[index]
         await fetch('/api/posts/resolved', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -53,9 +58,6 @@ const BountyChoice = props => {
             }),
         }).catch(err => console.error(err))
 
-        // show confirmation notice afterwards
-        setIsSubmitted(true)
-
         // resolving the post is equivalent to deleting the post, so same
         // code here
         const res = await fetch(`/api/posts/${post.id}`, {
@@ -63,7 +65,13 @@ const BountyChoice = props => {
         })
         if (!res.ok) throw new Error('Failed to resolve post')
         await props.fetchPosts()
+
+        // show confirmation notice afterwards
+        setIsSubmitted(true)
     }
+
+    const filtered = choices.filter(c => 
+        c.username.toLowerCase().includes(choiceSearch.toLowerCase()))   
 
     return (
         <div className='bountyChoice'>
@@ -76,13 +84,24 @@ const BountyChoice = props => {
                         <h2>Bounty</h2>
                         <p>{bounty}</p>
                     </div>}
+
+                    {!isSubmitted && <div className="bountyChoiceSearch">
+                        <label htmlFor="choiceSearch">Search choices</label>
+                        <input
+                            id="choiceSearch"
+                            type="text"
+                            placeholder="Search students"
+                            value={choiceSearch}
+                            onChange={e => setChoiceSearch(e.target.value)}
+                        />
+                    </div>}
                         
                     {!isSubmitted && <div className='choices'>
-                        {choices.map(choice => (
+                        {filtered.map(choice => (
                             <button
                                 key={choice.id}
-                                className={personChosen === choice.username ? 'active' : 'choice'}
-                                onClick={() => chose(choice.username)}>
+                                className={personChosen === choice.email ? 'active' : 'choice'}
+                                onClick={() => chose(choice.email)}>
                                 <img className='pfp' src={choice.pfp} alt="" />
                                 <p className='name'>{choice.username}</p>
                             </button>
