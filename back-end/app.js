@@ -379,7 +379,7 @@ app.get('/api/profile/security/:email', (req, res) => {
 const defaultProfile = {
     "name": "Username A",
     "bio": "Lorem ipsum dolor sit amet",
-    "picture": "https://picsum.photos/200?random=2"
+    "picture": "https://picsum.photos/200?random=0"
   }
 
 app.post('/api/account/create', async (req, res) => {
