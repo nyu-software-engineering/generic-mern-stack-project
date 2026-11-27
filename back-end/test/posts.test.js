@@ -91,12 +91,13 @@ describe('POST /api/posts', () => {
   })
 
   it('adds a new post to home', async () => {
-    const post = { id: 2, title: 'Lost Keys', desc: 'Please help, I lost my keys!', 
+    let post = { title: 'Lost Keys', desc: 'Please help, I lost my keys!', 
         category: 'lost', location: 'Bobst Library', date: '2026-11-02' }
     let res = await request(app).post('/api/posts').send(post)
     expect(res.status).to.equal(201)
-    expect(res.body).to.deep.equal(post)
-    
+    expect(res.body).to.include(post)
+
+    post = res.body
     res = await request(app).get('/api/posts')
     expect(res.status).to.equal(200)
     expect(res.body[0]).to.deep.equal(post)

@@ -51,7 +51,7 @@ export let posts = JSON.parse(fs.readFileSync(mockDataPath, 'utf8')).posts
 export const resetPosts = () => {
   posts = [
     {
-      "id": 1,
+      "id": 'test1',
       "email": "test1@gmail.com",
       "username": "You",
       "pfp": "https://picsum.photos/200?random=2",
@@ -65,7 +65,7 @@ export const resetPosts = () => {
       "bounty": ""
     },
     {
-      "id": 0,
+      "id": 'test2',
       "email": "test0@gmail.com",
       "username": "Alice A.",
       "pfp": "https://picsum.photos/200?random=1",
@@ -91,8 +91,6 @@ export const setCurrentUser = (user) => {
   currentUser = user
 }
 
-// made my own user api thing bc i have no idea how currentUser is being used in profile
-// down below...
 app.get('/api/user', (req, res) => {
   res.json(JSON.parse(fs.readFileSync(mockDataPath, 'utf8')).profile)
 })

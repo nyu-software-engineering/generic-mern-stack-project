@@ -6,10 +6,9 @@ const PostElement = props => {
   const [showOptions, setShowOptions] = useState(false)
 
   const toggleOptions = () => {
-    props.setCurr(props.count - 1 - props.id)
+    props.setCurr(props.id)
     props.setShowAllOptions(prev => !prev)
     setShowOptions(prev => !prev)
-    console.log(props.count - 1 - props.id)
   }
 
   const closeOptions = () => {
@@ -124,10 +123,8 @@ const Home = props => {
           return (
             <PostElement 
               key={index}
-              id={props.count - 1 - index}
+              id={element.id}
               email={element.email}
-              // username={element.username} 
-              // pfp={element.pfp}
               username={element.email === props.currentUser.email ? 
                 props.currentUser.name : element.username} 
               pfp={element.email === props.currentUser.email ? 
@@ -144,7 +141,6 @@ const Home = props => {
               setCurr={props.setCurr}
               curr={props.curr}
               postsData={props.postsData}
-              count={props.count}
               showAllOptions={showAllOptions}
               setShowAllOptions={setShowAllOptions}
               onMessage={() => openChat(element)}

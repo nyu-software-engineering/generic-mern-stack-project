@@ -13,7 +13,8 @@ const BountyChoice = props => {
     // the bounty amount is taken from data of the post the user came from
     // where they clicked resolve
     useEffect(() => {
-        const post = props.postsData[props.curr]
+        const index = props.postsData.findIndex(post => post.id === props.curr)
+        const post = props.postsData[index]
         if (!post) return
 
         setBounty(post.bounty)
@@ -43,7 +44,8 @@ const BountyChoice = props => {
         e.preventDefault()
 
         // keep the post in the user's history before removing it from the feed
-        const post = props.postsData[props.curr]
+        const index = props.postsData.findIndex(post => post.id === props.curr)
+        const post = props.postsData[index]
         await fetch('/api/posts/resolved', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },

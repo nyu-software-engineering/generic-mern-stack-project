@@ -21,8 +21,8 @@ const EditPost = props => {
     const [isDeleted, setIsDeleted] = useState(false)
 
     useEffect(() => {
-        setFormData(props.postsData[props.curr])
-        console.log(props.curr)
+        const index = props.postsData.findIndex(post => post.id === props.curr)
+        setFormData(props.postsData[index])
     }, [props.curr])
 
     // remove post data; later shows confirmation screen
@@ -53,7 +53,6 @@ const EditPost = props => {
                 setIsSubmitted={setIsSubmitted} 
                 curr={props.curr} 
                 fetchPosts={props.fetchPosts} 
-                setCount={props.setCount}
             />}
             {(!isSubmitted && !isDeleted) && <Link className='link' id='cancel' to='/'>Cancel</Link>}
             {(!isSubmitted && !isDeleted) && <button className='link' id='delete' onClick={deletePost}>Delete</button>}
