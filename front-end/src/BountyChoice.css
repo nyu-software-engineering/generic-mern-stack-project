@@ -74,6 +74,8 @@
     border-radius: 50%;
     max-width: 100px;
     width: calc(0.2 * 90vw);
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
 }
 
 #submit, 

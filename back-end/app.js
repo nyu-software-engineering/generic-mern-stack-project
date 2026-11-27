@@ -111,7 +111,7 @@ app.post('/api/posts', upload.single('image'), (req, res) => {
     return res.status(400).json({ error: 'If including bounty, bounty is required' })
   }
   const newPost = {
-    id: parseInt(id), email, username, pfp, category: category || 'lost', title: title.trim(), desc: desc.trim(), date, time, 
+    id: crypto.randomUUID(), email, username, pfp, category: category || 'lost', title: title.trim(), desc: desc.trim(), date, time, 
     location, ...(req.file && { image: `/uploads/${req.file.filename}` }), 
     includeBounty, bounty
   }
@@ -135,7 +135,7 @@ app.post('/api/posts/edit', upload.single('image'), (req, res) => {
     return res.status(400).json({ error: 'Trying to edit a non existing post' })
   }
   const editedPost = {
-    id: parseInt(id), email, username, pfp, category: category || 'lost', title: title.trim(), desc: desc.trim(), date, time, 
+    id: crypto.randomUUID(), email, username, pfp, category: category || 'lost', title: title.trim(), desc: desc.trim(), date, time, 
     location, image: req.file ? `/uploads/${req.file.filename}` : image, 
     includeBounty, bounty
   }
@@ -149,7 +149,7 @@ app.post('/api/posts/edit', upload.single('image'), (req, res) => {
 // used to resolve posts, i.e. delete from back-end... should also be used in the 
 // delete for edit posts
 app.delete('/api/posts/:id', (req, res) => {
-  const id = parseInt(req.params.id)
+  const id = req.params.id
   const index = posts.findIndex(post => post.id === id)
 
   if (index === -1) {
@@ -157,16 +157,6 @@ app.delete('/api/posts/:id', (req, res) => {
   }
 
   posts.splice(index, 1)
-
-  posts = posts.map(post => {
-    if (post.id > id) {
-      return {
-        ...post, 
-        id: post.id - 1
-      }
-    }
-    return post
-  })
   updateMockData("posts", posts)
   res.status(200).json({ message: 'success delete' })
 })
@@ -257,7 +247,7 @@ app.get('/api/conversations/:id', (req, res) => {
 
 // starts a chat about a post or returns the chat that already exists for that post
 app.post('/api/conversations', (req, res) => {
-  const { postId, username, pfp, item, location, includeBounty, bounty } = req.body
+  const { postId, email, username, pfp, item, location, includeBounty, bounty } = req.body
   if (postId === undefined || postId === null || postId === '') {
     return res.status(400).json({ error: 'Post id is required' })
   }
@@ -268,6 +258,7 @@ app.post('/api/conversations', (req, res) => {
   const convo = {
     id: crypto.randomUUID(),
     postId,
+    email: email ?? '',
     username: username ?? 'Unknown',
     pfp: pfp ?? '',
     item: item ?? '',
