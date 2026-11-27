@@ -6,6 +6,7 @@ import Confirmation from './Confirmation'
 const BountyChoice = props => {
     const [bounty, setBounty] = useState('')
     const [choices, setChoices] = useState([])
+    const [choiceSearch, setChoiceSearch] = useState('')
     const [personChosen, setPersonChosen] = useState('')
     const [isSubmitted, setIsSubmitted] = useState(false)
     const [hasBounty, setHasBounty] = useState(false)
@@ -69,6 +70,9 @@ const BountyChoice = props => {
         setIsSubmitted(true)
     }
 
+    const filtered = choices.filter(c => 
+        c.username.toLowerCase().includes(choiceSearch.toLowerCase()))   
+
     return (
         <div className='bountyChoice'>
             {hasBounty && 
@@ -80,9 +84,20 @@ const BountyChoice = props => {
                         <h2>Bounty</h2>
                         <p>{bounty}</p>
                     </div>}
+
+                    <div className="bountyChoiceSearch">
+                        <label htmlFor="choiceSearch">Search choices</label>
+                        <input
+                            id="choiceSearch"
+                            type="text"
+                            placeholder="Search students"
+                            value={choiceSearch}
+                            onChange={e => setChoiceSearch(e.target.value)}
+                        />
+                    </div>
                         
                     {!isSubmitted && <div className='choices'>
-                        {choices.map(choice => (
+                        {filtered.map(choice => (
                             <button
                                 key={choice.id}
                                 className={personChosen === choice.email ? 'active' : 'choice'}

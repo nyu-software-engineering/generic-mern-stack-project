@@ -29,13 +29,13 @@ describe('POST /api/profile', () => {
 
   it('updates old posts with new profile', async () => {
     setCurrentUser({
-      "fullName": "You",
+      "fullName": "Carol Carol",
       "email": "test1@gmail.com",
       "password": "$2b$10$ifW/INM.bIa3duYg7ULQ3ez5UfQQrfvpIyfe6yCU685Yef8L3Orlm",
       "securityQuestion": "What was your first pet's name?",
       "securityAnswer": "$2b$10$V4Sa/QzG6UsCqWyZptohGOfu7GkF3fPm4NaLUxaNWSTdVVRFqC9dO",
       "profile": {
-        "name": "You",
+        "name": "Carol C.",
         "bio": "Lorem ipsum dolor sit amet",
         "picture": "https://picsum.photos/200?random=2",
         "email": "test1@gmail.com"
@@ -52,7 +52,7 @@ describe('POST /api/profile', () => {
       expect(post.username).to.equal('new name')
     })
 
-    // resetPosts()
-    // setCurrentUser(null)
+    resetPosts()
+    setCurrentUser(null)
   })
 })

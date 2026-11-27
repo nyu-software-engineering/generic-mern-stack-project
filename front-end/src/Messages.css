@@ -1,37 +1,29 @@
 .messages {
-    /* margin: 0;
-    margin-top: 20px; */
     margin: 20px auto;
     margin-bottom: 40px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* justify-content: center; */
     max-width: 900px;
     width: 100vw;
-    /* padding: 40px 30px; */
     background: white;
     color: black;
-    /* height: 80vh; */
     text-align: left;
 }
 
-/* .messages h1 {
-    font-size: 40px;
-    font-weight: normal;
-    color: black;
-} */
-
-.messageSearch {
+.messageSearch, 
+.bountyChoiceSearch {
     margin-bottom: 25px;
 }
 
-.messageSearch label {
+.messageSearch label, 
+.bountyChoiceSearch label {
     display: block;
     margin-bottom: 10px;
 }
 
-.messageSearch input {
+.messageSearch input, 
+.bountyChoiceSearch input {
     width: 100%;
     box-sizing: border-box;
     padding: 12px;

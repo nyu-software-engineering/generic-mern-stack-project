@@ -29,7 +29,8 @@ const EditPost = props => {
     const deletePost = async () => {
         
         // delete specific post
-        const post = props.postsData[props.curr]
+        const index = props.postsData.findIndex(post => post.id === props.curr)
+        const post = props.postsData[index]
         const res = await fetch(`/api/posts/${post.id}`, {
             method: 'DELETE'
         })

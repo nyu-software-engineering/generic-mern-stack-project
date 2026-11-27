@@ -53,11 +53,11 @@ export const resetPosts = () => {
     {
       "id": 'test1',
       "email": "test1@gmail.com",
-      "username": "You",
+      "username": "Carol C.",
       "pfp": "https://picsum.photos/200?random=2",
       "category": "lost",
-      "title": "Lost Keys",
-      "desc": "Please hel",
+      "title": "Lost Book",
+      "desc": "Please help!",
       "date": "2026-11-02",
       "time": "",
       "location": "Bobst Library",
@@ -65,7 +65,7 @@ export const resetPosts = () => {
       "bounty": ""
     },
     {
-      "id": 'test2',
+      "id": '0',
       "email": "test0@gmail.com",
       "username": "Alice A.",
       "pfp": "https://picsum.photos/200?random=1",
