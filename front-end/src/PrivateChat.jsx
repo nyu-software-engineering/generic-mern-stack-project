@@ -1,5 +1,5 @@
 import './PrivateChat.css'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { RiImageUploadLine } from "react-icons/ri";
 import { IconContext } from "react-icons";
@@ -10,6 +10,10 @@ const PrivateChat = ({ conversations, setConversations, sendMessage }) => {
     const [error, setError] = useState('')
     const [fileName, setFileName] = useState('No File Selected')
     const [pictureFile, setPictureFile] = useState(undefined)
+<<<<<<< HEAD
+=======
+    const fileInputRef = useRef(null)
+>>>>>>> ba93338db995ebf98aaa201281cc9e3888c668cb
 
     const convo = conversations.find(c => String(c.id) === id)
 
@@ -47,6 +51,15 @@ const PrivateChat = ({ conversations, setConversations, sendMessage }) => {
         setPictureFile(file)
     }
 
+<<<<<<< HEAD
+=======
+    const removeImage = () => {
+        setPictureFile(undefined)
+        setFileName('No File Selected')
+        if (fileInputRef.current) fileInputRef.current.value = ''
+    }
+
+>>>>>>> ba93338db995ebf98aaa201281cc9e3888c668cb
     const handleSubmit = e => {
         e.preventDefault()
 
@@ -65,9 +78,10 @@ const PrivateChat = ({ conversations, setConversations, sendMessage }) => {
             .then(() => {
                 setText('')
                 setError('')
+                removeImage()
             })
             .catch(() => setError('Could not send your message. Try again.'))
-    }
+        }
 
     if (!convo) {
         return (
@@ -122,8 +136,18 @@ const PrivateChat = ({ conversations, setConversations, sendMessage }) => {
                     <label htmlFor="imageUpload">
                     <RiImageUploadLine/>
                     </label>
+<<<<<<< HEAD
                     <input id="imageUpload" type="file" accept='image/*' hidden onChange={getFileName}></input>
                     <p>{fileName}</p>
+=======
+                    <input id="imageUpload" ref={fileInputRef} type="file" accept='image/*' hidden onChange={getFileName}></input>
+                    <p>{fileName}</p>
+                    {pictureFile && (
+                        <button type="button" className="removeImage" onClick={removeImage} aria-label="Remove image">
+                            ×
+                        </button>
+                    )}
+>>>>>>> ba93338db995ebf98aaa201281cc9e3888c668cb
                     </IconContext.Provider>
                     <button type="submit" disabled={!text.trim()}>
                         Send
