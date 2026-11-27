@@ -12,7 +12,9 @@ const NewPost = props => {
             {!isSubmitted && <h1>Create Post</h1>}
             <PostForm 
                 id={props.count}
-                username='You'
+                email={props.currentUser.email}
+                username={props.currentUser.name}
+                pfp={props.currentUser.picture}
                 origin='publish' // publish or edit (delete & resolve pass their own message)
                 submitLabel='Publish Post' 
                 isSubmitted={isSubmitted} 

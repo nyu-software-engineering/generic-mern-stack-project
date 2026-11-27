@@ -6,6 +6,7 @@ import Confirmation from './Confirmation'
 const PostForm = props => {
     const [formData, setFormData] = useState({
         id: props.id, 
+        email: props.email ?? '', 
         username: props.username ?? '', 
         pfp: props.pfp ?? 'https://picsum.photos/200?random=2',
         category: props.category ?? 'lost',
@@ -50,6 +51,7 @@ const PostForm = props => {
 
         const post = new FormData(e.currentTarget)
         post.append("id", formData.id)
+        post.append("email", formData.email)
         post.append('username', formData.username)
         post.append('pfp', formData.pfp)
 

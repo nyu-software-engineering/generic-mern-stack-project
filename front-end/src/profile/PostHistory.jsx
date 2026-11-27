@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import './Profile.css'
 
-function PostHistory({ postsData }) {
+function PostHistory({ currentUser, postsData }) {
   const [tab, setTab] = useState('active')
   const [resolvedPosts, setResolvedPosts] = useState([])
   const navigate = useNavigate()
@@ -16,7 +16,7 @@ function PostHistory({ postsData }) {
   }, [])
 
 
-  const activePosts = postsData.filter((post) => post.username === 'You')
+  const activePosts = postsData.filter((post) => post.email === currentUser.email)
   const posts = tab === 'active' ? activePosts : resolvedPosts
 
   return (
