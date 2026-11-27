@@ -85,7 +85,7 @@ const BountyChoice = props => {
                         <p>{bounty}</p>
                     </div>}
 
-                    <div className="bountyChoiceSearch">
+                    {!isSubmitted && <div className="bountyChoiceSearch">
                         <label htmlFor="choiceSearch">Search choices</label>
                         <input
                             id="choiceSearch"
@@ -94,7 +94,7 @@ const BountyChoice = props => {
                             value={choiceSearch}
                             onChange={e => setChoiceSearch(e.target.value)}
                         />
-                    </div>
+                    </div>}
                         
                     {!isSubmitted && <div className='choices'>
                         {filtered.map(choice => (
