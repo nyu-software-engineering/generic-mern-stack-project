@@ -19,7 +19,7 @@ function EditProfile({ profile, onSave, onCancel, callProfile, switchMode }) {
     else{
       formData.append('image', undefined)
     }
-      fetch('/api/profile', {
+    fetch('/api/profile', {
       method: 'POST',
       body: formData,
     })

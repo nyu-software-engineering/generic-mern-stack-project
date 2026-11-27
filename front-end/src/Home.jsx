@@ -31,9 +31,9 @@ const PostElement = props => {
           </div>
           {/* doesn't work yet. needs to be based on ids not text, but yeah it works for demo */}
           {showOptions && <div className='buttons'>
-            {(props.username === 'You') && <Link className="option" to={`/edit-post/${props.id}`} style={{textDecoration: 'none'}}>Edit</Link>}
-            {(props.username === 'You') && <Link className="option" to={`/resolve-post/${props.id}`} style={{textDecoration: 'none'}}>Resolve</Link>}
-            {(props.username !== 'You') && <Link className="option" to="/messages" onClick={e => { e.preventDefault(); closeOptions(); props.onMessage() }} style={{textDecoration: 'none'}}>Message</Link>}         
+            {(props.email === props.currentUser.email) && <Link className="option" to={`/edit-post/${props.id}`} style={{textDecoration: 'none'}}>Edit</Link>}
+            {(props.email === props.currentUser.email) && <Link className="option" to={`/resolve-post/${props.id}`} style={{textDecoration: 'none'}}>Resolve</Link>}
+            {(props.email !== props.currentUser.email) && <Link className="option" to="/messages" onClick={e => { e.preventDefault(); closeOptions(); props.onMessage() }} style={{textDecoration: 'none'}}>Message</Link>}         
           </div>}
           {showOptions && <div className='closeOptions' onClick={closeOptions}></div>}
           <div className='content'>
@@ -64,6 +64,16 @@ const Home = props => {
     if (!props.isLoggedIn) {
       navigate('/login')
     }
+  }, [])
+
+  // as soon as profile is updated, go back and update old posts
+  useEffect(() => {
+    props.postsData.forEach(post => {
+      if (post.email === props.currentUser.email) {
+        post.username = props.currentUser.name
+        post.pfp = props.currentUser.picture
+      }
+    })
   }, [])
 
   const openChat = post => {
@@ -115,8 +125,13 @@ const Home = props => {
             <PostElement 
               key={index}
               id={props.count - 1 - index}
-              username={element.username} 
-              pfp={element.pfp}
+              email={element.email}
+              // username={element.username} 
+              // pfp={element.pfp}
+              username={element.email === props.currentUser.email ? 
+                props.currentUser.name : element.username} 
+              pfp={element.email === props.currentUser.email ? 
+                props.currentUser.picture : element.pfp}
               category={element.category}
               title={element.title}
               desc={element.desc}
@@ -133,6 +148,7 @@ const Home = props => {
               showAllOptions={showAllOptions}
               setShowAllOptions={setShowAllOptions}
               onMessage={() => openChat(element)}
+              currentUser={props.currentUser}
             />
           )
         })}

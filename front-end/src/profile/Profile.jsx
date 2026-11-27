@@ -4,7 +4,7 @@ import EditProfile from './EditProfile'
 import ProfilePicture from './ProfilePicture'
 import './Profile.css'
 
-function Profile({ setIsLoggedIn }) {
+function Profile({ setCurrentUser, setIsLoggedIn }) {
   const [profile, setProfile] = useState(null)
   const [editing, setEditing] = useState(false)
 
@@ -28,8 +28,11 @@ function Profile({ setIsLoggedIn }) {
   function saveProfile(updated) {
     setProfile(updated)
     setEditing(false)
+    setCurrentUser(prev => ({
+      ...prev, 
+      ...updated
+    }))
   }
-
 
   if (!profile) {
     return <div className="profile-page">Loading profile...</div>
