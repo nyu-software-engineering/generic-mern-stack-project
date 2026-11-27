@@ -1,10 +1,23 @@
 import { expect } from 'chai'
 import request from 'supertest'
-import app from '../app.js'
-import { setCurrentUser, resetPosts } from '../app.js'
+import app, { setCurrentUser, resetPosts } from '../app.js'
+
+// a fake logged-in user with a profile
+const testUser = () => ({
+  email: 'tester@nyu.edu',
+  profile: { name: 'Tester', bio: 'Hi', picture: '/uploads/test.png' }
+})
 
 describe('GET /api/profile', () => {
-  it('responds with the profile', async () => {
+  afterEach(() => setCurrentUser(null))
+
+  it('rejects when no one is logged in', async () => {
+    const res = await request(app).get('/api/profile')
+    expect(res.status).to.equal(401)
+  })
+
+  it('responds with the logged-in user profile', async () => {
+    setCurrentUser(testUser())
     const res = await request(app).get('/api/profile')
     expect(res.status).to.equal(200)
     expect(res.body).to.include.all.keys('name', 'bio', 'picture')
@@ -12,6 +25,9 @@ describe('GET /api/profile', () => {
 })
 
 describe('POST /api/profile', () => {
+  beforeEach(() => setCurrentUser(testUser()))
+  afterEach(() => setCurrentUser(null))
+
   it('updates and returns the profile', async () => {
     const res = await request(app)
       .post('/api/profile')
@@ -21,10 +37,23 @@ describe('POST /api/profile', () => {
     expect(res.body.bio).to.equal('Hello')
   })
 
+  it('keeps the old picture when no new one is uploaded', async () => {
+    const res = await request(app)
+      .post('/api/profile')
+      .send({ name: 'Test User', bio: 'Hello' })
+    expect(res.body.picture).to.equal('/uploads/test.png')
+  })
+
   it('rejects an empty name', async () => {
     const res = await request(app).post('/api/profile').send({ name: '   ' })
     expect(res.status).to.equal(400)
     expect(res.body.error).to.equal('Name is required')
+  })
+
+  it('rejects when no one is logged in', async () => {
+    setCurrentUser(null)
+    const res = await request(app).post('/api/profile').send({ name: 'Test User' })
+    expect(res.status).to.equal(401)
   })
 
   it('updates old posts with new profile', async () => {
