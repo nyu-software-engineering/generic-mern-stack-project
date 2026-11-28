@@ -259,7 +259,7 @@ export const resetConversations = () => {
       "messages": [
         {
           "id": "1",
-          "sender": "other",
+          "sender": "test0@gmail.com",
           "text": "Hey, did you find my wallet?",
           "time": "2:04 PM"
         }
@@ -283,7 +283,7 @@ export const resetConversations = () => {
       "messages": [
         {
           "id": "2",
-          "sender": "other",
+          "sender": "test2@gmail.com",
           "text": "I think I found your keys!",
           "time": "1:35 PM"
         }
@@ -365,7 +365,7 @@ app.post('/api/conversations/:id/messages', upload.single('image'), (req, res) =
   const other = 1 - yours
   const message = {
     id: crypto.randomUUID(),
-    sender: sender === currentUser.profile.name ? currentUser.profile.name : convo.owners[other],
+    sender: sender === currentUser.email ? currentUser.email : convo.owners[other],
     text: text.trim(),
     image: req.file ? ((req.file && { image: `/uploads/${req.file.filename}` })).image : null,
     time: new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }),
@@ -373,9 +373,10 @@ app.post('/api/conversations/:id/messages', upload.single('image'), (req, res) =
   }
   // console.log(message)
   convo.messages.push(message)
-  convo.read = message.sender === 'you'
+  convo.read = message.sender === currentUser.email
+  console.log(message.sender)
   
-  if (message.sender === 'other') {
+  if (message.sender !== currentUser.email) {
     notifications.unshift({
       id: crypto.randomUUID(),
       title: `New message • ${convo.username}`,
@@ -388,9 +389,10 @@ app.post('/api/conversations/:id/messages', upload.single('image'), (req, res) =
       pfp: convo.pfp
     })
   }
+  console.log("AHHHHH")
   conversations[index] = convo
   updateMockData("conversations", conversations)
-
+  console.log(convo)
   res.status(201).json(message)
 })
 

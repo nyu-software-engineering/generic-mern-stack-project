@@ -32,6 +32,23 @@
   ],
   "conversations": [
     {
+      "id": "827185df-1a67-4570-a47f-ef28a145ac02",
+      "postId": "notification-test-post",
+      "email": "",
+      "owners": [
+        null,
+        null
+      ],
+      "username": "Test User",
+      "pfp": "",
+      "item": "Test Item",
+      "location": "",
+      "includeBounty": false,
+      "bounty": "",
+      "read": true,
+      "messages": []
+    },
+    {
       "id": "0",
       "postId": 0,
       "email": "test0@gmail.com",
@@ -45,7 +62,7 @@
       "messages": [
         {
           "id": "1",
-          "sender": "other",
+          "sender": "test0@gmail.com",
           "text": "Hey, did you find my wallet?",
           "time": "2:04 PM"
         }
@@ -69,7 +86,7 @@
       "messages": [
         {
           "id": "2",
-          "sender": "other",
+          "sender": "test2@gmail.com",
           "text": "I think I found your keys!",
           "time": "1:35 PM"
         }
