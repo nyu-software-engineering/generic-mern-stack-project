@@ -132,12 +132,12 @@ app.post('/api/posts/edit', upload.single('image'), (req, res) => {
   if (!existing) {
     return res.status(400).json({ error: 'Trying to edit a non existing post' })
   }
+  const targetPost = posts.find(p => String(p.id) === String(id))
   const editedPost = {
-    id: crypto.randomUUID(), email, username, pfp, category: category || 'lost', title: title.trim(), desc: desc.trim(), date, time, 
-    location, image: req.file ? `/uploads/${req.file.filename}` : image, 
+    id: targetPost.id, email, username, pfp, category: category || 'lost', title: title.trim(), desc: desc.trim(), date, time,
+    location, image: req.file ? `/uploads/${req.file.filename}` : image,
     includeBounty, bounty
   }
-  const targetPost = posts.find(p => String(p.id) === String(id))
   posts[posts.indexOf(targetPost)] = editedPost
   // console.log(posts)
   updateMockData("posts", posts)
