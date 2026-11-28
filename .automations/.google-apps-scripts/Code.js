@@ -33,7 +33,7 @@ function doGet(e) {
     const email = decodeURIComponent(e.parameter["email"]);
     Logger.log(`GET request to send grades to email ${email}`);
     const rowNum = getRowNumByEmail(email);
-    if (rowNum) SEND_ONE_ROW_NOW(config.debug_mode, rowNum); // send it!
+    if (rowNum) {SEND_ONE_ROW_NOW(config.debug_mode, rowNum);} // send it!
   }
 }
 
@@ -177,10 +177,10 @@ function sendGrades(rows, debug_mode = getConfig().debug_mode) {
   // console.log(`ROWS: ${rows.length}`);
   // }
 
-  for (var i = 1; i < rows.length; i++) {
+  for (let i = 1; i < rows.length; i++) {
     // changing i = config.headingRow to i = 1
-    var row = rows[i];
-    var data = extractData(columnNames, row); //get this row of data as an associative array with lowercase keys
+    const row = rows[i];
+    const data = extractData(columnNames, row); //get this row of data as an associative array with lowercase keys
 
     // ignore rows that have a Status field set to "dropped" or "incomplete"
     if ("status" in data && data["status"] != "enrolled") {
@@ -193,8 +193,8 @@ function sendGrades(rows, debug_mode = getConfig().debug_mode) {
       // Logger.log(`EMAIL: ${data['email']}`);
 
       // determine recipient
-      let to = debug_mode ? config.debug_mode_recipient : data["email"]; //send to debugging email address when in debug mode
-      let subject = config.courseTitle + " :: Grades"; //prepend course name to subject
+      const to = debug_mode ? config.debug_mode_recipient : data["email"]; //send to debugging email address when in debug mode
+      const subject = config.courseTitle + " :: Grades"; //prepend course name to subject
 
       //SEND EMAIL!
       // set up email options
@@ -213,7 +213,7 @@ function sendGrades(rows, debug_mode = getConfig().debug_mode) {
       // }
 
       try {
-        let message = createMessageFromTemplate(data["email"], data, template);
+        const message = createMessageFromTemplate(data["email"], data, template);
         // Logger.log(`MESSAGE: ${message}`)
         MailApp.sendEmail({
           to: to,
@@ -239,9 +239,9 @@ function sendGrades(rows, debug_mode = getConfig().debug_mode) {
  * Returns an associative array from one row of data.  Keys are the column names.
  **/
 function extractData(columnNames, row) {
-  let data = new Array();
+  const data = new Array();
 
-  for (var i = 0; i < columnNames.length; i++) {
+  for (let i = 0; i < columnNames.length; i++) {
     let columnName = columnNames[i] + "";
     columnName = columnName.toLowerCase();
     try {
@@ -262,7 +262,7 @@ function extractData(columnNames, row) {
  */
 function onOpen() {
   const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
-  let entries = [
+  const entries = [
     {
       name: "Send all grades!!!",
       functionName: "SEND_ALL_GRADES_NOW",
@@ -300,7 +300,7 @@ function onOpen() {
 function getTimeBasedTriggers() {
   const triggers = ScriptApp.getProjectTriggers();
   const timeBasedTriggers = [];
-  for (var i = 0; i < triggers.length; i++) {
+  for (let i = 0; i < triggers.length; i++) {
     const type = triggers[i].getEventType();
     if (type == ScriptApp.EventType.CLOCK) {
       timeBasedTriggers.push(triggers[i]); // add to list
@@ -339,8 +339,8 @@ function createWeeklyTrigger() {
  */
 function cancelWeeklyTrigger() {
   // Deletes all time-based triggers in the current project.
-  var triggers = getTimeBasedTriggers();
-  for (var i = 0; i < triggers.length; i++) {
+  const triggers = getTimeBasedTriggers();
+  for (let i = 0; i < triggers.length; i++) {
     // delete any triggers that shoot out all grades
     if (triggers[i].getHandlerFunction() == "SEND_ALL_GRADES_NOW") {
       Logger.log("Deleted time-based trigger.");
@@ -353,7 +353,7 @@ function getMessageTemplate(templateUrl) {
   // Make sure to update the emailTemplateDocId at the top.
   const docId = DocumentApp.openByUrl(templateUrl).getId();
   try {
-    let template = docToHtml(docId);
+    const template = docToHtml(docId);
     if (!template) {
       throw new Error("Message template is empty!", template);
     }

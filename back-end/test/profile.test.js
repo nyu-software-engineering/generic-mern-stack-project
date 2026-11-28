@@ -1,62 +1,62 @@
-import { expect } from 'chai'
-import request from 'supertest'
-import app, { setCurrentUser, resetPosts } from '../app.js'
+import { expect } from 'chai';
+import request from 'supertest';
+import app, { setCurrentUser, resetPosts } from '../app.js';
 
 // a fake logged-in user with a profile
 const testUser = () => ({
   email: 'tester@nyu.edu',
   profile: { name: 'Tester', bio: 'Hi', picture: '/uploads/test.png' }
-})
+});
 
-describe('GET /api/profile', () => {
-  afterEach(() => setCurrentUser(null))
+describe('GET /api/profile', function() {
+  afterEach(function() { return setCurrentUser(null); });
 
-  it('rejects when no one is logged in', async () => {
-    const res = await request(app).get('/api/profile')
-    expect(res.status).to.equal(401)
-  })
+  it('rejects when no one is logged in', async function() {
+    const res = await request(app).get('/api/profile');
+    expect(res.status).to.equal(401);
+  });
 
-  it('responds with the logged-in user profile', async () => {
-    setCurrentUser(testUser())
-    const res = await request(app).get('/api/profile')
-    expect(res.status).to.equal(200)
-    expect(res.body).to.include.all.keys('name', 'bio', 'picture')
-  })
-})
+  it('responds with the logged-in user profile', async function() {
+    setCurrentUser(testUser());
+    const res = await request(app).get('/api/profile');
+    expect(res.status).to.equal(200);
+    expect(res.body).to.include.all.keys('name', 'bio', 'picture');
+  });
+});
 
-describe('POST /api/profile', () => {
-  beforeEach(() => setCurrentUser(testUser()))
-  afterEach(() => setCurrentUser(null))
+describe('POST /api/profile', function() {
+  beforeEach(function() { return setCurrentUser(testUser()); });
+  afterEach(function() { return setCurrentUser(null); });
 
-  it('updates and returns the profile', async () => {
+  it('updates and returns the profile', async function() {
     const res = await request(app)
       .post('/api/profile')
-      .send({ name: '  Test User  ', bio: 'Hello' })
-    expect(res.status).to.equal(200)
-    expect(res.body.name).to.equal('Test User')
-    expect(res.body.bio).to.equal('Hello')
-  })
+      .send({ name: '  Test User  ', bio: 'Hello' });
+    expect(res.status).to.equal(200);
+    expect(res.body.name).to.equal('Test User');
+    expect(res.body.bio).to.equal('Hello');
+  });
 
-  it('keeps the old picture when no new one is uploaded', async () => {
+  it('keeps the old picture when no new one is uploaded', async function() {
     const res = await request(app)
       .post('/api/profile')
-      .send({ name: 'Test User', bio: 'Hello' })
-    expect(res.body.picture).to.equal('/uploads/test.png')
-  })
+      .send({ name: 'Test User', bio: 'Hello' });
+    expect(res.body.picture).to.equal('/uploads/test.png');
+  });
 
-  it('rejects an empty name', async () => {
-    const res = await request(app).post('/api/profile').send({ name: '   ' })
-    expect(res.status).to.equal(400)
-    expect(res.body.error).to.equal('Name is required')
-  })
+  it('rejects an empty name', async function() {
+    const res = await request(app).post('/api/profile').send({ name: '   ' });
+    expect(res.status).to.equal(400);
+    expect(res.body.error).to.equal('Name is required');
+  });
 
-  it('rejects when no one is logged in', async () => {
-    setCurrentUser(null)
-    const res = await request(app).post('/api/profile').send({ name: 'Test User' })
-    expect(res.status).to.equal(401)
-  })
+  it('rejects when no one is logged in', async function() {
+    setCurrentUser(null);
+    const res = await request(app).post('/api/profile').send({ name: 'Test User' });
+    expect(res.status).to.equal(401);
+  });
 
-  it('updates old posts with new profile', async () => {
+  it('updates old posts with new profile', async function() {
     setCurrentUser({
       "fullName": "Carol Carol",
       "email": "test1@gmail.com",
@@ -69,19 +69,19 @@ describe('POST /api/profile', () => {
         "picture": "https://picsum.photos/200?random=2",
         "email": "test1@gmail.com"
       }
-    })
-    resetPosts()
+    });
+    resetPosts();
     const res = await request(app).post('/api/profile')
-      .send({ name: 'new name', email: 'test1@gmail.com' })
-    expect(res.status).to.equal(200)
+      .send({ name: 'new name', email: 'test1@gmail.com' });
+    expect(res.status).to.equal(200);
 
-    let posts = await request(app).get('/api/posts')
-    posts = posts.body.filter(post => post.email === 'test1@gmail.com')
+    let posts = await request(app).get('/api/posts');
+    posts = posts.body.filter(post => post.email === 'test1@gmail.com');
     posts.forEach(post => {
-      expect(post.username).to.equal('new name')
-    })
+      expect(post.username).to.equal('new name');
+    });
 
-    resetPosts()
-    setCurrentUser(null)
-  })
-})
+    resetPosts();
+    setCurrentUser(null);
+  });
+});
