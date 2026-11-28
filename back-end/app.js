@@ -95,6 +95,7 @@ export const setCurrentUser = (user) => {
 // down below...
 app.get('/api/user', (req, res) => {
   res.json(JSON.parse(fs.readFileSync(mockDataPath, 'utf8')).profile)
+  //res.json(currentUser.profile)
 })
 
 app.get('/api/posts', (req, res) => {
@@ -196,6 +197,12 @@ app.get('/api/profile', (req, res) => {
   profile = currentUser.profile
   res.json(profile)
 })
+app.post('/api/profile/logout', upload.single('image'), (req, res) => {
+  currentUser = null
+  profile = null
+  res.json(true)
+})
+
 
 app.post('/api/profile', upload.single('image'), (req, res) => {
   const { name, bio, picture, email } = req.body
@@ -244,7 +251,9 @@ app.patch('/api/notifications/:id/read', (req, res) => {
 let conversations = JSON.parse(fs.readFileSync(mockDataPath, 'utf8')).conversations
 
 app.get('/api/conversations', (req, res) => {
-  res.json(conversations)
+  const ownedConversations = conversations.filter(c => c.owners.includes(String(currentUser.email)))
+  console.log(ownedConversations)
+  res.json(ownedConversations)
 })
 
 app.get('/api/conversations/:id', (req, res) => {
@@ -257,17 +266,18 @@ app.get('/api/conversations/:id', (req, res) => {
 
 // starts a chat about a post or returns the chat that already exists for that post
 app.post('/api/conversations', (req, res) => {
-  const { postId, username, pfp, item, location, includeBounty, bounty } = req.body
+  const { postId, username, pfp, item, location, includeBounty, bounty, email } = req.body
   if (postId === undefined || postId === null || postId === '') {
     return res.status(400).json({ error: 'Post id is required' })
   }
-  const existing = conversations.find(c => String(c.postId) === String(postId))
+  const existing = conversations.find(c => String(c.postId) === String(postId) && c.owners.includes(String(currentUser.email)))
   if (existing) {
     return res.json(existing)
   }
   const convo = {
     id: crypto.randomUUID(),
     postId,
+    owners: [email, currentUser.email],
     username: username ?? 'Unknown',
     pfp: pfp ?? '',
     item: item ?? '',
@@ -278,6 +288,7 @@ app.post('/api/conversations', (req, res) => {
     messages: []
   }
   conversations.unshift(convo)
+  updateMockData("conversations", conversations)
   res.status(201).json(convo)
 })
 
@@ -292,6 +303,7 @@ app.patch('/api/conversations/:id/read', (req, res) => {
 
 app.post('/api/conversations/:id/messages', upload.single('image'), (req, res) => {
   const convo = conversations.find(c => String(c.id) === req.params.id)
+  const index = conversations.findIndex(c => String(c.id) === req.params.id)
   if (!convo) {
     return res.status(404).json({ error: 'Conversation not found' })
   }
@@ -303,9 +315,11 @@ app.post('/api/conversations/:id/messages', upload.single('image'), (req, res) =
   if (typeof text !== 'string' || !text.trim()) {
     return res.status(400).json({ error: 'Message text is required' })
   }
+  const yours = convo.owners.indexOf(currentUser.email)
+  const other = 1 - yours
   const message = {
     id: crypto.randomUUID(),
-    sender: sender === 'other' ? 'other' : 'you',
+    sender: sender === currentUser.profile.name ? currentUser.profile.name : convo.owners[other],
     text: text.trim(),
     image: req.file ? ((req.file && { image: `/uploads/${req.file.filename}` })).image : null,
     time: new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }),
@@ -328,6 +342,8 @@ app.post('/api/conversations/:id/messages', upload.single('image'), (req, res) =
       pfp: convo.pfp
     })
   }
+  conversations[index] = convo
+  updateMockData("conversations", conversations)
 
   res.status(201).json(message)
 })
@@ -429,6 +445,8 @@ app.post('/api/account/login', async (req, res) => {
   profile = currentUser.profile
   profile['email'] = email
   updateMockData('profile', profile)
+  console.log(currentUser)
+  console.log("Logged in")
   res.json({ message: 'Logged in' })
 })
 

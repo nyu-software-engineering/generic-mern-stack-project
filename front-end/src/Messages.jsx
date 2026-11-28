@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 
 const Messages = ({ conversations }) => {
     const [search, setSearch] = useState('')
-
+    
     const filtered = conversations.filter(c =>
         c.username.toLowerCase().includes(search.toLowerCase()) ||
         c.item.toLowerCase().includes(search.toLowerCase())

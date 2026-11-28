@@ -11,9 +11,9 @@ const PrivateChat = ({ conversations, setConversations, sendMessage }) => {
     const [fileName, setFileName] = useState('No File Selected')
     const [pictureFile, setPictureFile] = useState(undefined)
     const fileInputRef = useRef(null)
+    const [currentUser, setCurrentUser] = useState('')
 
     const convo = conversations.find(c => String(c.id) === id)
-
     useEffect(() => {
         window.scrollTo({
             top: document.documentElement.scrollHeight, 
@@ -23,6 +23,15 @@ const PrivateChat = ({ conversations, setConversations, sendMessage }) => {
 
     useEffect(() => {
         if (!convo || convo.read) return
+            fetch('/api/user')
+      .then(res => {
+        if (!res.ok) throw new Error('Failed to fetch profile')
+        return res.json()
+      })
+      .then(data => {
+        setCurrentUser(data.name)
+      })
+      .catch(err => console.error(err))
 
         fetch(`/api/conversations/${id}/read`, { method: 'PATCH' })
             .then(res => {
@@ -105,11 +114,11 @@ const PrivateChat = ({ conversations, setConversations, sendMessage }) => {
 
             <div className="chatMessages">
                 {convo.messages.map(m => (
-                    <div className={`chatMessage ${m.sender}`} key={m.id}>
+                    <div className={`chatMessage ${m.sender === currentUser ? 'you' : convo.username}`} key={m.id}>
                         <div className="chatBubble">{m.text}</div>
                             {m.image && <div className="chatBubble"><img src={m.image}/></div>}
                         <span>
-                            {m.sender === 'you' ? 'You' : convo.username} · {m.time}
+                            {m.sender === currentUser ? 'You' : convo.username} · {m.time}
                         </span>
                     </div>
                 ))}

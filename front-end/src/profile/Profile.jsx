@@ -8,6 +8,17 @@ function Profile({ setCurrentUser, setIsLoggedIn }) {
   const [profile, setProfile] = useState(null)
   const [editing, setEditing] = useState(false)
 
+  const logOut = () => {
+    fetch('/api/profile/logout', {
+      method: 'POST',
+    })
+      .then(res => {
+        if (!res.ok) throw new Error('Failed to logout')
+        setIsLoggedIn(false)
+        navigate('/login')
+      })
+      .catch(err => console.error(err))
+  }
   const callProfile = () => {
     fetch('/api/profile')
       .then(res => {
@@ -78,8 +89,7 @@ function Profile({ setCurrentUser, setIsLoggedIn }) {
         type="button"
         className="profile-btn-solid"
         onClick={() => {
-          setIsLoggedIn(false)
-          navigate('/login')
+          logOut()
         }}
       >
         Log Out

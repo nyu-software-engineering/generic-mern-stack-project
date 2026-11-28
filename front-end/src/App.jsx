@@ -99,7 +99,8 @@ function App() {
         item: post.title,
         location: post.location,
         includeBounty: post.includeBounty,
-        bounty: post.bounty
+        bounty: post.bounty,
+        email: post.email
       })
     })
     if (!res.ok) throw new Error('Failed to start conversation')
@@ -109,7 +110,8 @@ function App() {
   }
 
   // saves a message on the back-end, then adds it to the chat on screen
-  const sendMessage = async (formData, sender = 'you') => {
+  const sendMessage = async (formData) => {
+    const sender = currentUser.name
     const text = formData.get('text')
     if (!text.trim()) return
     const convoId = formData.get('id')
