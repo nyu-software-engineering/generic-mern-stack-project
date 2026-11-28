@@ -51,13 +51,13 @@ export let posts = JSON.parse(fs.readFileSync(mockDataPath, 'utf8')).posts
 export const resetPosts = () => {
   posts = [
     {
-      "id": 1,
+      "id": 'test1',
       "email": "test1@gmail.com",
-      "username": "You",
+      "username": "Carol C.",
       "pfp": "https://picsum.photos/200?random=2",
       "category": "lost",
-      "title": "Lost Keys",
-      "desc": "Please hel",
+      "title": "Lost Book",
+      "desc": "Please help!",
       "date": "2026-11-02",
       "time": "",
       "location": "Bobst Library",
@@ -65,7 +65,7 @@ export const resetPosts = () => {
       "bounty": ""
     },
     {
-      "id": 0,
+      "id": '0',
       "email": "test0@gmail.com",
       "username": "Alice A.",
       "pfp": "https://picsum.photos/200?random=1",
@@ -91,8 +91,6 @@ export const setCurrentUser = (user) => {
   currentUser = user
 }
 
-// made my own user api thing bc i have no idea how currentUser is being used in profile
-// down below...
 app.get('/api/user', (req, res) => {
   res.json(JSON.parse(fs.readFileSync(mockDataPath, 'utf8')).profile)
   //res.json(currentUser.profile)
@@ -112,7 +110,7 @@ app.post('/api/posts', upload.single('image'), (req, res) => {
     return res.status(400).json({ error: 'If including bounty, bounty is required' })
   }
   const newPost = {
-    id: parseInt(id), email, username, pfp, category: category || 'lost', title: title.trim(), desc: desc.trim(), date, time, 
+    id: crypto.randomUUID(), email, username, pfp, category: category || 'lost', title: title.trim(), desc: desc.trim(), date, time, 
     location, ...(req.file && { image: `/uploads/${req.file.filename}` }), 
     includeBounty, bounty
   }
@@ -135,12 +133,12 @@ app.post('/api/posts/edit', upload.single('image'), (req, res) => {
   if (!existing) {
     return res.status(400).json({ error: 'Trying to edit a non existing post' })
   }
+  const targetPost = posts.find(p => String(p.id) === String(id))
   const editedPost = {
-    id: parseInt(id), email, username, pfp, category: category || 'lost', title: title.trim(), desc: desc.trim(), date, time, 
-    location, image: req.file ? `/uploads/${req.file.filename}` : image, 
+    id: targetPost.id, email, username, pfp, category: category || 'lost', title: title.trim(), desc: desc.trim(), date, time,
+    location, image: req.file ? `/uploads/${req.file.filename}` : image,
     includeBounty, bounty
   }
-  const targetPost = posts.find(p => String(p.id) === String(id))
   posts[posts.indexOf(targetPost)] = editedPost
   // console.log(posts)
   updateMockData("posts", posts)
@@ -150,7 +148,7 @@ app.post('/api/posts/edit', upload.single('image'), (req, res) => {
 // used to resolve posts, i.e. delete from back-end... should also be used in the 
 // delete for edit posts
 app.delete('/api/posts/:id', (req, res) => {
-  const id = parseInt(req.params.id)
+  const id = req.params.id
   const index = posts.findIndex(post => post.id === id)
 
   if (index === -1) {
@@ -158,16 +156,6 @@ app.delete('/api/posts/:id', (req, res) => {
   }
 
   posts.splice(index, 1)
-
-  posts = posts.map(post => {
-    if (post.id > id) {
-      return {
-        ...post, 
-        id: post.id - 1
-      }
-    }
-    return post
-  })
   updateMockData("posts", posts)
   res.status(200).json({ message: 'success delete' })
 })
@@ -194,6 +182,9 @@ let profile = JSON.parse(fs.readFileSync(mockDataPath, 'utf8')).profile
 
 //use as a backup
 app.get('/api/profile', (req, res) => {
+  if (!currentUser) {
+    return res.status(401).json({ error: 'You need to be logged in.' })
+  }
   profile = currentUser.profile
   res.json(profile)
 })
@@ -205,6 +196,9 @@ app.post('/api/profile/logout', upload.single('image'), (req, res) => {
 
 
 app.post('/api/profile', upload.single('image'), (req, res) => {
+  if (!currentUser) {
+    return res.status(401).json({ error: 'You need to be logged in.' })
+  }
   const { name, bio, picture, email } = req.body
   if (!name || !name.trim()) {
     return res.status(400).json({ error: 'Name is required' })
@@ -251,8 +245,7 @@ app.patch('/api/notifications/:id/read', (req, res) => {
 let conversations = JSON.parse(fs.readFileSync(mockDataPath, 'utf8')).conversations
 
 app.get('/api/conversations', (req, res) => {
-  const ownedConversations = conversations.filter(c => c.owners.includes(String(currentUser.email)))
-  console.log(ownedConversations)
+  const ownedConversations = conversations.filter(c => currentUser && (c.owners ?? []).includes(String(currentUser.email)))
   res.json(ownedConversations)
 })
 
@@ -266,18 +259,19 @@ app.get('/api/conversations/:id', (req, res) => {
 
 // starts a chat about a post or returns the chat that already exists for that post
 app.post('/api/conversations', (req, res) => {
-  const { postId, username, pfp, item, location, includeBounty, bounty, email } = req.body
+  const { postId, email, username, pfp, item, location, includeBounty, bounty } = req.body
   if (postId === undefined || postId === null || postId === '') {
     return res.status(400).json({ error: 'Post id is required' })
   }
-  const existing = conversations.find(c => String(c.postId) === String(postId) && c.owners.includes(String(currentUser.email)))
+  const existing = conversations.find(c => String(c.postId) === String(postId) && (c.owners ?? []).includes(String(currentUser?.email)))  
   if (existing) {
     return res.json(existing)
   }
   const convo = {
     id: crypto.randomUUID(),
     postId,
-    owners: [email, currentUser.email],
+    email: email ?? '',
+    owners: [email, currentUser?.email],
     username: username ?? 'Unknown',
     pfp: pfp ?? '',
     item: item ?? '',
@@ -400,7 +394,7 @@ app.get('/api/profile/security/:email', (req, res) => {
 const defaultProfile = {
     "name": "Username A",
     "bio": "Lorem ipsum dolor sit amet",
-    "picture": "https://picsum.photos/200?random=2"
+    "picture": "https://picsum.photos/200?random=0"
   }
 
 app.post('/api/account/create', async (req, res) => {

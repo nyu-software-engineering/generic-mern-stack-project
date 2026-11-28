@@ -19,7 +19,6 @@ import ForgotPassword from "./ForgotPassword"
 function App() {
   const [openMenu, setOpenMenu] = useState(false)
   const [postsData, setPostsData] = useState([])
-  const [count, setCount] = useState(0)
   const [curr, setCurr] = useState(-1)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [conversations, setConversations] = useState([])
@@ -55,7 +54,6 @@ function App() {
       })
       .then(data => {
         setPostsData(data)
-        setCount(data.length)
       })
       .catch(err => console.error(err))
   }
@@ -94,6 +92,7 @@ function App() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         postId: post.id,
+        email: post.email, 
         username: post.username,
         pfp: post.pfp,
         item: post.title,
@@ -146,10 +145,10 @@ function App() {
           {openMenu && <div id='close-sidemenu' onClick={close}></div>}
         
         <Routes>
-          <Route path="/" element={<Home currentUser={currentUser} isLoggedIn={isLoggedIn} postsData={postsData} count={count} curr={curr} setCurr={setCurr} startConversation={startConversation} />} />
-          <Route path="/new-post" element={<NewPost currentUser={currentUser} postsData={postsData} setPostsData={setPostsData} count={count} setCount={setCount} />} />
-          <Route path='/edit-post/:id' element={<EditPost currentUser={currentUser} fetchPosts={fetchPosts} postsData={postsData} setPostsData={setPostsData} curr={curr} count={count} setCount={setCount} />} />
-          <Route path='/resolve-post/:id' element={<BountyChoice fetchPosts={fetchPosts} postsData={postsData} setPostsData={setPostsData} curr={curr} count={count} setCount={setCount} />} />
+          <Route path="/" element={<Home currentUser={currentUser} isLoggedIn={isLoggedIn} postsData={postsData} curr={curr} setCurr={setCurr} startConversation={startConversation} />} />
+          <Route path="/new-post" element={<NewPost currentUser={currentUser} postsData={postsData} setPostsData={setPostsData} />} />
+          <Route path='/edit-post/:id' element={<EditPost currentUser={currentUser} fetchPosts={fetchPosts} postsData={postsData} setPostsData={setPostsData} curr={curr} />} />
+          <Route path='/resolve-post/:id' element={<BountyChoice conversations={conversations} fetchConversations={fetchConversations} fetchPosts={fetchPosts} postsData={postsData} setPostsData={setPostsData} curr={curr} />} />
           <Route path="/notifications" element={<Notifications notifications={notifications} setNotifications={setNotifications} />} />
           <Route path="/messages" element={<Messages conversations={conversations} />} />
           <Route path="/messages/:id" element={<PrivateChat conversations={conversations} setConversations={setConversations} sendMessage={sendMessage} />} />

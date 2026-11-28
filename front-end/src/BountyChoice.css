@@ -33,6 +33,8 @@
     gap: 10px;
     width: 90vw;
     place-items: center;
+    height: 200px;
+    overflow: auto;
 }
 
 .choices .choice, 
@@ -74,6 +76,8 @@
     border-radius: 50%;
     max-width: 100px;
     width: calc(0.2 * 90vw);
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
 }
 
 #submit, 

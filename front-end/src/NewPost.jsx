@@ -11,7 +11,6 @@ const NewPost = props => {
         <div className='newPost'>
             {!isSubmitted && <h1>Create Post</h1>}
             <PostForm 
-                id={props.count}
                 email={props.currentUser.email}
                 username={props.currentUser.name}
                 pfp={props.currentUser.picture}
@@ -21,7 +20,6 @@ const NewPost = props => {
                 setIsSubmitted={setIsSubmitted} 
                 postsData={props.postsData}
                 setPostsData={props.setPostsData}
-                setCount={props.setCount}
                 />
             {!isSubmitted && <Link className='link' to='/'>Cancel</Link>}
         </div>

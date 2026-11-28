@@ -1,24 +1,13 @@
 {
   "posts": [
     {
-      "id": 2,
-      "email": "hoo@gmail.com",
-      "username": "Username A",
+      "id": "test1",
+      "email": "test1@gmail.com",
+      "username": "Carol C.",
       "pfp": "https://picsum.photos/200?random=2",
       "category": "lost",
-      "title": "test",
-      "desc": "tester",
-      "date": "",
-      "time": "",
-      "location": ""
-    },
-    {
-      "id": 1,
-      "username": "You",
-      "pfp": "https://picsum.photos/200?random=2",
-      "category": "lost",
-      "title": "Lost Keys",
-      "desc": "Please hel",
+      "title": "Lost Book",
+      "desc": "Please help!",
       "date": "2026-11-02",
       "time": "",
       "location": "Bobst Library",
@@ -26,7 +15,8 @@
       "bounty": ""
     },
     {
-      "id": 0,
+      "id": "0",
+      "email": "test0@gmail.com",
       "username": "Alice A.",
       "pfp": "https://picsum.photos/200?random=1",
       "category": "lost",
@@ -42,391 +32,42 @@
   ],
   "conversations": [
     {
-      "id": "de970d5d-ee69-443b-9ecb-065d9aeecc90",
-      "postId": 2,
-      "owners": [
-        "hoo@gmail.com",
-        "too@gmail.com"
-      ],
-      "username": "Username A",
-      "pfp": "https://picsum.photos/200?random=2",
-      "item": "test",
-      "location": "",
-      "includeBounty": false,
-      "bounty": "",
-      "read": false,
-      "messages": [
-        {
-          "id": "a3e6a9e1-812c-4c13-8c0f-abe4abbefe75",
-          "sender": "Tester",
-          "text": "CAN I PLEASE TALK TO YOU",
-          "image": null,
-          "time": "5:24 PM",
-          "createdAt": "2026-11-27T22:24:44.981Z"
-        },
-        {
-          "id": "ddffa755-bd56-426e-88db-e5fcf1c9a18a",
-          "sender": "Username A",
-          "text": "YES YOU CAN",
-          "image": null,
-          "time": "5:24 PM",
-          "createdAt": "2026-11-27T22:24:58.350Z"
-        },
-        {
-          "id": "8f52e00e-f497-41b6-adbe-7e4398caedf9",
-          "sender": "Username A",
-          "text": "no",
-          "image": null,
-          "time": "10:12 PM",
-          "createdAt": "2026-11-28T03:12:07.498Z"
-        },
-        {
-          "id": "64fe40e8-1907-4ee6-82e5-e05bae84a4cb",
-          "sender": "Tester",
-          "text": "oops",
-          "image": null,
-          "time": "10:13 PM",
-          "createdAt": "2026-11-28T03:13:03.034Z"
-        }
-      ]
-    },
-    {
-      "id": "f5f83e5b-6518-4a31-987c-ad94a1a113c7",
+      "id": "0",
       "postId": 0,
-      "owners": [
-        null,
-        "hoo@gmail.com"
-      ],
+      "email": "test0@gmail.com",
       "username": "Alice A.",
       "pfp": "https://picsum.photos/200?random=1",
       "item": "Lost Wallet",
       "location": "Warren Weaver Hall, Rm. 109",
       "includeBounty": false,
       "bounty": "",
-      "read": true,
+      "read": false,
       "messages": [
         {
-          "id": "6422e351-bf33-481f-b6d7-5d4fcc107cc1",
-          "sender": "Username A",
-          "text": "CAN I TALK TO YOU",
-          "image": null,
-          "time": "5:24 PM",
-          "createdAt": "2026-11-27T22:24:18.916Z"
+          "id": "1",
+          "sender": "other",
+          "text": "Hey, did you find my wallet?",
+          "time": "2:04 PM"
         }
       ]
     },
     {
-      "id": "d978aac3-65ef-49b5-b76f-edb36ed648d4",
-      "postId": 2,
-      "owners": [
-        "Username A",
-        "Tester"
-      ],
-      "username": "Username A",
-      "pfp": "https://picsum.photos/200?random=2",
-      "item": "test",
-      "location": "",
+      "id": "2",
+      "postId": 1,
+      "email": "test2@gmail.com",
+      "username": "Bob B.",
+      "pfp": "https://picsum.photos/200?random=3",
+      "item": "Lost Keys",
+      "location": "Bobst Library",
       "includeBounty": false,
       "bounty": "",
       "read": false,
       "messages": [
         {
-          "id": "b92a4de7-4e56-47a6-8fdc-7ee38e79517e",
-          "sender": "Tester",
-          "text": "HEY CAN YOU READ THIS",
-          "image": null,
-          "time": "5:18 PM",
-          "createdAt": "2026-11-27T22:18:07.374Z"
-        },
-        {
-          "id": "4aa48927-9f01-4501-b236-387c054f286c",
-          "sender": "Username A",
-          "text": "YES I CAN READ THIS",
-          "image": null,
-          "time": "5:18 PM",
-          "createdAt": "2026-11-27T22:18:35.431Z"
-        }
-      ]
-    },
-    {
-      "id": "f087605f-7a59-43a8-9609-44e6b441ce0a",
-      "postId": 2,
-      "owners": [
-        "Username A",
-        "Username A"
-      ],
-      "username": "Username A",
-      "pfp": "https://picsum.photos/200?random=2",
-      "item": "test",
-      "location": "",
-      "includeBounty": false,
-      "bounty": "",
-      "read": false,
-      "messages": [
-        {
-          "id": "a8f7b68f-20e8-4856-9db7-5989ec63d820",
-          "sender": "Username A",
-          "text": "Can this work please",
-          "image": null,
-          "time": "5:08 PM",
-          "createdAt": "2026-11-27T22:08:15.842Z"
-        }
-      ]
-    },
-    {
-      "id": "703591a1-ac5b-4d1d-834a-588e457e280f",
-      "postId": 0,
-      "owners": [
-        "Alice A.",
-        "Username A"
-      ],
-      "username": "Alice A.",
-      "pfp": "https://picsum.photos/200?random=1",
-      "item": "Lost Wallet",
-      "location": "Warren Weaver Hall, Rm. 109",
-      "includeBounty": false,
-      "bounty": "",
-      "read": true,
-      "messages": [
-        {
-          "id": "9f93d0c6-47e1-4f88-b0a6-d16b484d79e8",
-          "sender": "you",
-          "text": "test",
-          "image": null,
-          "time": "4:34 PM",
-          "createdAt": "2026-11-27T21:34:46.778Z"
-        },
-        {
-          "id": "5a36d5f0-39dc-407c-9b76-42a450b99ff1",
-          "sender": "Username A",
-          "text": "tester",
-          "image": null,
-          "time": "4:36 PM",
-          "createdAt": "2026-11-27T21:36:48.343Z"
-        },
-        {
-          "id": "d15e23cf-4393-4215-9086-893f32d173db",
-          "sender": "Username A",
-          "text": "poot",
-          "image": null,
-          "time": "4:41 PM",
-          "createdAt": "2026-11-27T21:41:24.735Z"
-        },
-        {
-          "id": "e6daacb0-aaf9-48f6-85c3-5d98486abbef",
-          "sender": "Alice A.",
-          "text": "test",
-          "image": null,
-          "time": "4:43 PM",
-          "createdAt": "2026-11-27T21:43:25.075Z"
-        },
-        {
-          "id": "917ca610-55be-4b48-b8d8-184d098a7052",
-          "sender": "Alice A.",
-          "text": "te",
-          "image": null,
-          "time": "4:52 PM",
-          "createdAt": "2026-11-27T21:52:02.016Z"
-        },
-        {
-          "id": "246b46c4-db9c-475c-9e58-b338fbe69af5",
-          "sender": "Alice A.",
-          "text": "te",
-          "image": null,
-          "time": "4:52 PM",
-          "createdAt": "2026-11-27T21:52:24.736Z"
-        },
-        {
-          "id": "0c22b6af-0119-4053-95e3-96d9ef13a1aa",
-          "sender": "Username A",
-          "text": "tea",
-          "image": null,
-          "time": "4:52 PM",
-          "createdAt": "2026-11-27T21:52:44.308Z"
-        },
-        {
-          "id": "03446fb1-0ed8-4132-ae71-4977f68e0cb8",
-          "sender": "Username A",
-          "text": "te",
-          "image": null,
-          "time": "4:52 PM",
-          "createdAt": "2026-11-27T21:52:52.890Z"
-        },
-        {
-          "id": "eeab98f9-5cd2-4657-af16-22a78b34fa87",
-          "sender": "Username A",
-          "text": "te",
-          "image": null,
-          "time": "4:52 PM",
-          "createdAt": "2026-11-27T21:52:53.643Z"
-        },
-        {
-          "id": "3d4cd2e8-66cf-404a-9882-b82aab19bf7c",
-          "sender": "Username A",
-          "text": "te",
-          "image": null,
-          "time": "4:52 PM",
-          "createdAt": "2026-11-27T21:52:54.396Z"
-        },
-        {
-          "id": "9e63c1e2-d78b-4eda-8379-86def90583a8",
-          "sender": "Username A",
-          "text": "te",
-          "image": null,
-          "time": "4:55 PM",
-          "createdAt": "2026-11-27T21:55:04.050Z"
-        },
-        {
-          "id": "6108d3db-9bd2-49c4-99a4-e7c6adcbc12b",
-          "sender": "Username A",
-          "text": "tea",
-          "image": null,
-          "time": "4:55 PM",
-          "createdAt": "2026-11-27T21:55:06.075Z"
-        },
-        {
-          "id": "f21e963d-248c-4450-a22e-bfd46966f006",
-          "sender": "Username A",
-          "text": "tea",
-          "image": null,
-          "time": "4:55 PM",
-          "createdAt": "2026-11-27T21:55:20.169Z"
-        },
-        {
-          "id": "a86758f1-5fc8-4af9-b116-ed853697d4d9",
-          "sender": "Username A",
-          "text": "tester",
-          "image": null,
-          "time": "4:55 PM",
-          "createdAt": "2026-11-27T21:55:31.835Z"
-        },
-        {
-          "id": "4149746c-9672-4575-ad17-94fc7ed4d7e0",
-          "sender": "Username A",
-          "text": "poootis",
-          "image": null,
-          "time": "4:55 PM",
-          "createdAt": "2026-11-27T21:55:37.073Z"
-        },
-        {
-          "id": "49cf65ca-2d12-42e8-abed-0b793cb3e32f",
-          "sender": "Username A",
-          "text": "help",
-          "image": null,
-          "time": "4:55 PM",
-          "createdAt": "2026-11-27T21:55:39.139Z"
-        },
-        {
-          "id": "7004b291-7171-4f90-8569-a77bcc42942f",
-          "sender": "Username A",
-          "text": "helpee",
-          "image": null,
-          "time": "4:55 PM",
-          "createdAt": "2026-11-27T21:55:43.177Z"
-        },
-        {
-          "id": "d7bb64d0-17dc-4211-a17f-41bd8a7b61c8",
-          "sender": "Username A",
-          "text": "tis",
-          "image": null,
-          "time": "4:57 PM",
-          "createdAt": "2026-11-27T21:57:17.958Z"
-        },
-        {
-          "id": "624b4c97-3364-4578-94c5-8fb5da6888c3",
-          "sender": "Username A",
-          "text": "tip",
-          "image": null,
-          "time": "4:57 PM",
-          "createdAt": "2026-11-27T21:57:30.074Z"
-        },
-        {
-          "id": "b2bde770-f1ff-43d0-ac3a-1db0ec24758b",
-          "sender": "Username A",
-          "text": "oop",
-          "image": null,
-          "time": "4:57 PM",
-          "createdAt": "2026-11-27T21:57:37.124Z"
-        },
-        {
-          "id": "185bb26f-3373-4df0-9313-3266b0a9071e",
-          "sender": "Username A",
-          "text": "tester",
-          "image": null,
-          "time": "4:58 PM",
-          "createdAt": "2026-11-27T21:58:05.487Z"
-        },
-        {
-          "id": "7dd844bc-cef9-4a4c-b3b7-b14e401fd288",
-          "sender": "Username A",
-          "text": "test",
-          "image": null,
-          "time": "4:58 PM",
-          "createdAt": "2026-11-27T21:58:48.791Z"
-        },
-        {
-          "id": "34996cf3-9860-4378-808c-691bf9f510f8",
-          "sender": "Username A",
-          "text": "help",
-          "image": null,
-          "time": "5:00 PM",
-          "createdAt": "2026-11-27T22:00:21.850Z"
-        },
-        {
-          "id": "b880a113-cdd9-4c5b-9484-8645bc79658e",
-          "sender": "Username A",
-          "text": "tester",
-          "image": null,
-          "time": "5:00 PM",
-          "createdAt": "2026-11-27T22:00:39.154Z"
-        },
-        {
-          "id": "3e7e241f-8382-4e30-afed-9b3469ff280a",
-          "sender": "Username A",
-          "text": "test",
-          "image": null,
-          "time": "5:02 PM",
-          "createdAt": "2026-11-27T22:02:49.810Z"
-        },
-        {
-          "id": "512520b5-1afc-4049-a8f3-459e3c4ea8d9",
-          "sender": "Username A",
-          "text": "test",
-          "image": null,
-          "time": "5:03 PM",
-          "createdAt": "2026-11-27T22:03:39.393Z"
-        },
-        {
-          "id": "0551a7a5-c310-414b-a8e4-bd5294ff00cf",
-          "sender": "Username A",
-          "text": "tester",
-          "image": null,
-          "time": "5:04 PM",
-          "createdAt": "2026-11-27T22:04:19.226Z"
-        },
-        {
-          "id": "1d5e0f31-e3c6-42b1-8660-f9de666b307e",
-          "sender": "Username A",
-          "text": "test",
-          "image": null,
-          "time": "5:04 PM",
-          "createdAt": "2026-11-27T22:04:34.203Z"
-        },
-        {
-          "id": "a86e88a1-1f4d-47e4-81eb-f1f5e69f9abd",
-          "sender": "Username A",
-          "text": "tester",
-          "image": null,
-          "time": "5:04 PM",
-          "createdAt": "2026-11-27T22:04:39.994Z"
-        },
-        {
-          "id": "c88119f8-5b5b-4206-9871-2bb81bdd9b69",
-          "sender": "Username A",
-          "text": "test",
-          "image": null,
-          "time": "5:05 PM",
-          "createdAt": "2026-11-27T22:05:06.916Z"
+          "id": "2",
+          "sender": "other",
+          "text": "I think I found your keys!",
+          "time": "1:35 PM"
         }
       ]
     }
@@ -456,8 +97,7 @@
   "profile": {
     "name": "Username A",
     "bio": "Lorem ipsum dolor sit amet",
-    "picture": "https://picsum.photos/200?random=2",
-    "email": "hoo@gmail.com"
+    "picture": "https://picsum.photos/200?random=0"
   },
   "users": [
     {
@@ -528,45 +168,6 @@
         "name": "testere",
         "bio": "Lorem ipsum dolor sit amet",
         "picture": "/uploads/image-1795427554035.png"
-      }
-    },
-    {
-      "fullName": "hoo",
-      "email": "hoo@gmail.com",
-      "password": "$2b$10$CUrXEZh/skjN5.kDqh/J7embIhtenyCqwTyupMBSy4S1rmrYJZlg2",
-      "securityQuestion": "What was your first pet's name?",
-      "securityAnswer": "$2b$10$N.Ya/Tu1BP7V.TZE/59rw.cSm3xWT.v0ICeh9qwlKokSiD/PTBdfC",
-      "profile": {
-        "name": "Username A",
-        "bio": "Lorem ipsum dolor sit amet",
-        "picture": "https://picsum.photos/200?random=2",
-        "email": "hoo@gmail.com"
-      }
-    },
-    {
-      "fullName": "soo",
-      "email": "soo@gmail.com",
-      "password": "$2b$10$I.0GsOJT8LkfjqigziIACe5TFyRC0bAxMKeFlOlo3i18Fho.INqf.",
-      "securityQuestion": "What was your first pet's name?",
-      "securityAnswer": "$2b$10$6TzkZJ3zZq7Trs8pCYSwlOlkXFkPSPjU1W2gG9aYBFkRhVM3fidVK",
-      "profile": {
-        "name": "Username A",
-        "bio": "Lorem ipsum dolor sit amet",
-        "picture": "https://picsum.photos/200?random=2",
-        "email": "soo@gmail.com"
-      }
-    },
-    {
-      "fullName": "too",
-      "email": "too@gmail.com",
-      "password": "$2b$10$7mm/LJdGStZzY4i23.4sZuie2fbmKzJmChq5.5deqSpaS7LsKrTf6",
-      "securityQuestion": "What was your first pet's name?",
-      "securityAnswer": "$2b$10$XGN5L7p3gwsfOz4vCXO2e.wstSF.mSkmwB4a0OPLBpGcEzCFf5Ybi",
-      "profile": {
-        "name": "Tester",
-        "bio": "Lorem ipsum dolor sit amet",
-        "picture": "https://picsum.photos/200?random=2",
-        "email": "too@gmail.com"
       }
     }
   ],
