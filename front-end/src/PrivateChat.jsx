@@ -29,7 +29,7 @@ const PrivateChat = ({ conversations, setConversations, sendMessage }) => {
         return res.json()
       })
       .then(data => {
-        setCurrentUser(data.name)
+        setCurrentUser(data.email)
       })
       .catch(err => console.error(err))
 
@@ -114,11 +114,11 @@ const PrivateChat = ({ conversations, setConversations, sendMessage }) => {
 
             <div className="chatMessages">
                 {convo.messages.map(m => (
-                    <div className={`chatMessage ${m.sender === currentUser ? 'you' : convo.username}`} key={m.id}>
+                    <div className={`chatMessage ${m.sender === currentUser ? 'you' : 'other'}`} key={m.id}>
                         <div className="chatBubble">{m.text}</div>
                             {m.image && <div className="chatBubble"><img src={m.image}/></div>}
                         <span>
-                            {m.sender === currentUser ? 'You' : convo.username} · {m.time}
+                            {m.sender === currentUser ? currentUser : convo.email} · {m.time}
                         </span>
                     </div>
                 ))}

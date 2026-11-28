@@ -110,7 +110,7 @@ function App() {
 
   // saves a message on the back-end, then adds it to the chat on screen
   const sendMessage = async (formData) => {
-    const sender = currentUser.name
+    const sender = currentUser.email
     const text = formData.get('text')
     if (!text.trim()) return
     const convoId = formData.get('id')

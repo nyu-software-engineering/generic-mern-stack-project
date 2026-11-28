@@ -361,6 +361,8 @@ app.post('/api/conversations/:id/messages', upload.single('image'), (req, res) =
   if (typeof text !== 'string' || !text.trim()) {
     return res.status(400).json({ error: 'Message text is required' })
   }
+  console.log("Sent")
+  console.log(sender)
   const yours = convo.owners.indexOf(currentUser.email)
   const other = 1 - yours
   const message = {
