@@ -93,7 +93,6 @@ export const setCurrentUser = (user) => {
 
 app.get('/api/user', (req, res) => {
   res.json(JSON.parse(fs.readFileSync(mockDataPath, 'utf8')).profile)
-  //res.json(currentUser.profile)
 })
 
 app.get('/api/posts', (req, res) => {
@@ -244,8 +243,65 @@ app.patch('/api/notifications/:id/read', (req, res) => {
 
 let conversations = JSON.parse(fs.readFileSync(mockDataPath, 'utf8')).conversations
 
+export const resetConversations = () => {
+  conversations = [
+    {
+      "id": "0",
+      "postId": 0,
+      "email": "test0@gmail.com",
+      "username": "Alice A.",
+      "pfp": "https://picsum.photos/200?random=1",
+      "item": "Lost Wallet",
+      "location": "Warren Weaver Hall, Rm. 109",
+      "includeBounty": false,
+      "bounty": "",
+      "read": true,
+      "messages": [
+        {
+          "id": "1",
+          "sender": "other",
+          "text": "Hey, did you find my wallet?",
+          "time": "2:04 PM"
+        }
+      ],
+      "owners": [
+        "test0@gmail.com",
+        "tester@gmail.com"
+      ]
+    },
+    {
+      "id": "2",
+      "postId": 1,
+      "email": "test2@gmail.com",
+      "username": "Bob B.",
+      "pfp": "https://picsum.photos/200?random=3",
+      "item": "Lost Keys",
+      "location": "Bobst Library",
+      "includeBounty": false,
+      "bounty": "",
+      "read": false,
+      "messages": [
+        {
+          "id": "2",
+          "sender": "other",
+          "text": "I think I found your keys!",
+          "time": "1:35 PM"
+        }
+      ],
+      "owners": [
+        "test2@gmail.com",
+        "tester@gmail.com"
+      ]
+    }
+  ]
+  updateMockData("conversations", conversations)
+}
+
 app.get('/api/conversations', (req, res) => {
+  console.log(currentUser)
+  console.log(currentUser.email)
   const ownedConversations = conversations.filter(c => currentUser && (c.owners ?? []).includes(String(currentUser.email)))
+  console.log(ownedConversations)
   res.json(ownedConversations)
 })
 
@@ -302,10 +358,6 @@ app.post('/api/conversations/:id/messages', upload.single('image'), (req, res) =
     return res.status(404).json({ error: 'Conversation not found' })
   }
   const { text, sender, image } = req.body
-  // console.log(text)
-  // console.log(sender)
-  // console.log(req.file)
-  // console.log((typeof myVar !== 'undefined'))
   if (typeof text !== 'string' || !text.trim()) {
     return res.status(400).json({ error: 'Message text is required' })
   }

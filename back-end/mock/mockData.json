@@ -41,7 +41,7 @@
       "location": "Warren Weaver Hall, Rm. 109",
       "includeBounty": false,
       "bounty": "",
-      "read": false,
+      "read": true,
       "messages": [
         {
           "id": "1",
@@ -49,6 +49,10 @@
           "text": "Hey, did you find my wallet?",
           "time": "2:04 PM"
         }
+      ],
+      "owners": [
+        "test0@gmail.com",
+        "tester@gmail.com"
       ]
     },
     {
@@ -69,6 +73,10 @@
           "text": "I think I found your keys!",
           "time": "1:35 PM"
         }
+      ],
+      "owners": [
+        "test2@gmail.com",
+        "tester@gmail.com"
       ]
     }
   ],
@@ -95,9 +103,10 @@
     }
   ],
   "profile": {
-    "name": "Username A",
-    "bio": "Lorem ipsum dolor sit amet",
-    "picture": "https://picsum.photos/200?random=0"
+    "name": "new name",
+    "bio": "",
+    "picture": "https://picsum.photos/200?random=2",
+    "email": "test1@gmail.com"
   },
   "users": [
     {
